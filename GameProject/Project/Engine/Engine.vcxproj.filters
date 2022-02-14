@@ -55,6 +55,9 @@
     <Filter Include="Manager\Instancing">
       <UniqueIdentifier>{bc079f43-8b96-44f0-be44-27a29624abd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\Mouse">
+      <UniqueIdentifier>{75383397-87fa-4c3d-a399-329861585f33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -222,6 +225,9 @@
     <ClInclude Include="InstancingBuffer.h">
       <Filter>Manager\Instancing</Filter>
     </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Manager\Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -376,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="InstancingMgr.cpp">
       <Filter>Manager\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Manager\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

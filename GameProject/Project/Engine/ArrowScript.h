@@ -12,6 +12,7 @@ private:
     float m_fVelocityY;
     float m_fVelocityX;
     float m_fVelocityZ;
+    float a;
     ELEMENT_TYPE m_iType;
     CGameObject* m_pParticle;
     bool m_bMove;

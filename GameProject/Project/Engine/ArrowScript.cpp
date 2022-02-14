@@ -57,13 +57,22 @@ void CArrowScript::Update()
 {
 
 	if (!m_bMove)
-		return;
-	Vec3 vPos = Transform()->GetLocalPos();
+	{
+		Transform()->LookAt(Vec3(-a, a, -a));
+		a += 0.1;
 	
-	vPos.x +=m_fVelocityX;
-	vPos.z += m_fVelocityZ;
+		return;
+	}Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+	Vec3 vDirY = Transform()->GetLocalDir(DIR_TYPE::UP);
+	vPos.x +=vDir.x;
+	vPos.z += vDir.z;
+//	Transform()->LookAt(Vec3(vDir.x * 5, 0, vDir.z * 5));
 	m_fVelocityY -= (GRAVITY * DT) / 100;
 	vPos.y += m_fVelocityY;
+
+	
+	
 	Transform()->SetLocalPos(vPos);
 
 }

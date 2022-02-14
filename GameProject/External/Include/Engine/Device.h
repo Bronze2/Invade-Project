@@ -12,6 +12,7 @@ public:
 	bool m_bWindowed;
 
 private:
+	
 	ComPtr<ID3D12Device> m_pDevice;
 	ComPtr<ID3D12CommandQueue> m_pCmdQueue;
 	
