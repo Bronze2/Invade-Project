@@ -173,7 +173,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Mouse.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="CollisionMgr.h" />
@@ -231,7 +230,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="CollisionMgr.cpp" />

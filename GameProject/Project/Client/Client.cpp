@@ -51,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1280, 768 }, true)))
+    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1920, 1080 }, true)))
     {
         return 0;
     }
@@ -151,6 +151,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+ 
+
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -191,6 +193,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
+
     case WM_INITDIALOG:
         return (INT_PTR)TRUE;
 

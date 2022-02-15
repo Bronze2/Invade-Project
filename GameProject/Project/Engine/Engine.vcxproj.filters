@@ -225,9 +225,6 @@
     <ClInclude Include="InstancingBuffer.h">
       <Filter>Manager\Instancing</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Manager\Mouse</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -382,9 +379,6 @@
     </ClCompile>
     <ClCompile Include="InstancingMgr.cpp">
       <Filter>Manager\Instancing</Filter>
-    </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>Manager\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
