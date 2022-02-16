@@ -25,7 +25,7 @@ public:
     void SetLocalScale(const Vec3& _vScale) { if (m_vLocalScale != _vScale) { m_vLocalScale = _vScale; Changed(); } }
     void SetLocalRot(const Vec3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
     void LookAt(const Vec3& _vLook);
-    
+    Matrix LookAt(const Vec3& Eye, const Vec3& target, const Vec3& _Up);
 
 
     bool IsCasting(const Vec3& _vPos);

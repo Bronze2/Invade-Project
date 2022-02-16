@@ -115,6 +115,34 @@ void CTransform::LookAt(const Vec3& _vLook)
 	}
 }
 
+Matrix CTransform::LookAt(const Vec3& Eye, const Vec3& target, const Vec3& _Up)
+{
+	Vec3 forward = target - Eye;
+	forward.Normalize();
+	Vec3 S = Vec3::Up.Cross(forward);
+	S.Normalize();
+	Vec3 u = forward.Cross(S);
+	Matrix  result;
+	result.m[0][0] = S.x;
+	result.m[0][1] = S.y;
+	result.m[0][2] = S.z;
+	result.m[1][0] = u.x;
+	result.m[1][1] = u.y;
+	result.m[1][2] =u.z;
+	result.m[2][0] = forward.x;
+	result.m[2][1] = forward.y;
+	result.m[2][2] = forward.z;
+	result.m[0][3] = -S.Dot(Eye);
+	result.m[1][3] = -u.Dot(Eye);
+	result.m[2][3] = -forward.Dot(Eye);
+
+
+
+
+
+	return result;
+}
+
 bool CTransform::IsCasting(const Vec3& _vPos)
 {
 	Vec3 vWorldPos = GetWorldPos();

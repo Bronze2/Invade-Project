@@ -74,6 +74,6 @@ void CGameFramework::ChangeWindowSize(HWND _hWnd, const tResolution _resolution)
 	RECT rt = { 0,0,(int)_resolution.fWidth,(int)_resolution.fHeight };
 
 	AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, false);
-	SetWindowPos(_hWnd, nullptr, 10, 10, rt.right - rt.left, rt.bottom - rt.top, 0);
+	SetWindowPos(_hWnd, nullptr, 0, 0, rt.right - rt.left, rt.bottom - rt.top, 0);
 
 }
