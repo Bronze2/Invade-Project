@@ -29,6 +29,7 @@ public:
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
     void SetType(UINT _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }
+   
 private:
   
 public:

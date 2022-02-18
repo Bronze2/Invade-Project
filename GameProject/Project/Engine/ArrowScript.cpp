@@ -86,6 +86,8 @@ void CArrowScript::OnCollisionEnter(CCollider2D* _pOther)
 
 
 
+
+
 CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROWSCRIPT),m_iType(_iType),m_bMove(true)
 {
 }
