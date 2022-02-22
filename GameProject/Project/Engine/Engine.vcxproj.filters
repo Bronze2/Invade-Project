@@ -225,6 +225,9 @@
     <ClInclude Include="InstancingBuffer.h">
       <Filter>Manager\Instancing</Filter>
     </ClInclude>
+    <ClInclude Include="Collider3D.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -379,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="InstancingMgr.cpp">
       <Filter>Manager\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3D.cpp">
+      <Filter>GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

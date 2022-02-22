@@ -155,6 +155,11 @@ enum class COLLIDER2D_TYPE
 	RECT,
 	CIRCLE,
 };
+enum class COLLIDER3D_TYPE {
+	CUBE,
+	CAPSULE,
+	SPHERE
+};
 
 enum class SHADER_PARAM
 {

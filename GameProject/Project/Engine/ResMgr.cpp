@@ -359,6 +359,28 @@ void CResMgr::CreateDefaultMesh()
 	pMesh->SetName(L"CubeMesh");
 	AddRes<CMesh>(pMesh->GetName(), pMesh);
 
+
+	//ColCube
+
+	
+	// ¿Œµ¶Ω∫
+	for (int i = 0; i < 5; i += 2)
+	{
+		vecIdx.push_back(i * 4);
+		vecIdx.push_back(i * 4 + 1);
+		vecIdx.push_back(i * 4 + 2);
+		vecIdx.push_back(i * 4 + 3);
+		vecIdx.push_back(i * 4 );
+	}
+
+	pMesh = new CMesh;
+
+	pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+
+	pMesh->SetName(L"ColCubeMesh");
+	AddRes<CMesh>(pMesh->GetName(), pMesh);
+
 	vecVTX.clear();
 	vecIdx.clear();
 
