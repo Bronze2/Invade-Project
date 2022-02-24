@@ -19,6 +19,7 @@
 #include "Animator3D.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "Collider3D.h"
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
 	, m_frustum(this)
@@ -167,7 +168,10 @@ void CCamera::Render_Forward()
 
 		if (m_vecForward[i]->Collider2D())
 			m_vecForward[i]->Collider2D()->Render();
+		if (m_vecForward[i]->Collider3D())
+			m_vecForward[i]->Collider3D()->Render();
 	}
+
 
 	for (size_t i = 0; i < m_vecParticle.size(); ++i)
 	{
@@ -178,6 +182,8 @@ void CCamera::Render_Forward()
 	{
 		if (m_vecDeferred[i]->Collider2D())
 			m_vecDeferred[i]->Collider2D()->Render();
+		if (m_vecDeferred[i]->Collider3D())
+			m_vecDeferred[i]->Collider3D()->Render();
 	}
 }
 
@@ -208,6 +214,11 @@ void CCamera::Render()
 					{
 						vecObj[i]->Collider2D()->Render();
 					}
+					if (vecObj[i]->Collider3D())
+					{
+						vecObj[i]->Collider3D()->Render();
+					}
+
 				}
 			}
 		}

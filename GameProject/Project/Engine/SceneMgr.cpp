@@ -17,6 +17,7 @@
 #include "Light2D.h"
 #include "Light3D.h"
 #include "MeshData.h"
+#include "Collider3D.h"
 #include "Animator3D.h"
 
 #include "TimeMgr.h"
@@ -162,7 +163,12 @@ void CSceneMgr::Init()
 
 	pObject = pMeshData->Instantiate();
 	pObject->SetName(L"Monster");
+
+	pObject->AddComponent(new CCollider3D);
+
 	pObject->AddComponent(new CPlayerScript);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,10.f,10.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
 	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
@@ -216,8 +222,8 @@ void CSceneMgr::Init()
 		m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
 		m_pArrow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
 
-		m_pArrow->AddComponent(new CCollider2D);
-		m_pArrow->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
+		m_pArrow->AddComponent(new CCollider3D);
+		m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 
 		m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::FIRE));
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow);

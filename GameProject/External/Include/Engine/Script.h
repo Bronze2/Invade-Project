@@ -51,7 +51,9 @@ protected:
     virtual void OnCollision(CCollider2D* _pOther){}
     virtual void OnCollisionExit(CCollider2D* _pOther){}
     
-
+    virtual void OnCollision3DEnter(CCollider3D* _pOther) {}
+    virtual void OnCollision3D(CCollider3D* _pOther) {}
+    virtual void OnCollision3DExit(CCollider3D* _pOther) {}
 public:
     virtual void SaveToScene(FILE* _pFile){}
     virtual void LoadFromScene(FILE* _pFile){}

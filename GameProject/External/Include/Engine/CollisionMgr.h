@@ -11,6 +11,7 @@ union tColID
 
 class CCollider2D;
 class CLayer;
+class CCollider3D;
 
 class CCollisionMgr
 {
@@ -33,5 +34,6 @@ private:
 	bool CollisionRect(CCollider2D* _pCollider1, CCollider2D* _pCollider2);
 	bool CollisionCircle(CCollider2D* _pCollider1, CCollider2D* _pCollider2);
 	bool CollisionRectCircle(CCollider2D* _pCollider1, CCollider2D* _pCollider2);
+	bool CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pCollider2);
 };
 

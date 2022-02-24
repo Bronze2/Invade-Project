@@ -213,7 +213,7 @@ void CResMgr::CreateDefaultMesh()
 	VTX arrCube[24] = {};
 
 	// ¿≠∏È
-	arrCube[0].vPos = Vec3(-0.5f, 0.5f, 0.5f);
+	arrCube[0].vPos = Vec3(-0.5f, 0.5f, 0.5f);  //
 	arrCube[0].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
 	arrCube[0].vUV = Vec2(0.f, 0.f);
 	arrCube[0].vNormal = Vec3(0.f, 1.f, 0.f);
@@ -362,20 +362,15 @@ void CResMgr::CreateDefaultMesh()
 
 	//ColCube
 
-	
+	vecIdx.clear();
 	// ¿Œµ¶Ω∫
-	for (int i = 0; i < 5; i += 2)
-	{
-		vecIdx.push_back(i * 4);
-		vecIdx.push_back(i * 4 + 1);
-		vecIdx.push_back(i * 4 + 2);
-		vecIdx.push_back(i * 4 + 3);
-		vecIdx.push_back(i * 4 );
-	}
-
+	vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(2); vecIdx.push_back(3); vecIdx.push_back(0);
+	vecIdx.push_back(4); vecIdx.push_back(5); vecIdx.push_back(6); vecIdx.push_back(7); vecIdx.push_back(4);
+	vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(6); vecIdx.push_back(7); vecIdx.push_back(0);
+	vecIdx.push_back(3); vecIdx.push_back(2); vecIdx.push_back(5); vecIdx.push_back(4); vecIdx.push_back(3);
 	pMesh = new CMesh;
 
-	pMesh->Create(sizeof(VTX), 24, (BYTE*)arrCube
+	pMesh->Create(sizeof(VTX), 8, (BYTE*)arrCube
 		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
 	pMesh->SetName(L"ColCubeMesh");
@@ -752,6 +747,8 @@ void CResMgr::CreateDefaultMaterial()
 	a = 1;
 	pMtrl->SetData(SHADER_PARAM::INT_0, &a);
 	AddRes(L"Collider2DMtrl_1", pMtrl);
+
+
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
