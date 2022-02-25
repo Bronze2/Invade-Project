@@ -146,6 +146,91 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 	}
 }
 
+void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
+{
+	const vector<CGameObject*>& vecObj1 = _pLayer1->GetObjects();
+	const vector<CGameObject*>& vecObj2 = _pLayer2->GetObjects();
+
+	map<DWORD_PTR, bool>::iterator iter;
+
+	for (size_t i = 0; i < vecObj1.size(); ++i)
+	{
+		CCollider3D* pCollider1 = vecObj1[i]->Collider3D();
+
+		if (nullptr == pCollider1)
+			continue;
+
+		size_t j = 0;
+		if (_pLayer1 == _pLayer2) // 동일한 레이어 간의 충돌을 검사하는 경우
+			j = i + 1;
+
+		for (; j < vecObj2.size(); ++j)
+		{
+			CCollider3D* pCollider2 = vecObj2[j]->Collider3D();
+
+			if (nullptr == pCollider2)
+				continue;
+
+			tColID id;
+			id.iColID1 = pCollider1->GetColID();
+			id.iColID2 = pCollider2->GetColID();
+			iter = m_mapCol.find(id.ID);
+
+			bool IsDead = false;
+			if (pCollider1->GetObj()->IsDead() || pCollider2->GetObj()->IsDead())
+				IsDead = true;
+
+			// 충돌했다.
+			if (IsCollision3D(pCollider1, pCollider2))
+			{
+				// 충돌 중이다
+				if (m_mapCol.end() != iter && iter->second == true)
+				{
+					if (IsDead)
+					{
+						pCollider1->OnCollisionExit(pCollider2);
+						pCollider2->OnCollisionExit(pCollider1);
+						iter->second = false;
+					}
+					else
+					{
+						pCollider1->OnCollision(pCollider2);
+						pCollider2->OnCollision(pCollider1);
+					}
+				}
+				// 처음 충돌했다
+				else
+				{
+					if (IsDead)
+						continue;
+
+					pCollider1->OnCollisionEnter(pCollider2);
+					pCollider2->OnCollisionEnter(pCollider1);
+
+					if (m_mapCol.end() == iter)
+					{
+						m_mapCol.insert(make_pair(id.ID, true));
+					}
+					else
+					{
+						iter->second = true;
+					}
+				}
+			}
+			else // 충돌하지 않는다.
+			{
+				if (m_mapCol.end() != iter && true == iter->second)
+				{
+					pCollider1->OnCollisionExit(pCollider2);
+					pCollider2->OnCollisionExit(pCollider1);
+
+					iter->second = false;
+				}
+			}
+		}
+	}
+}
+
 bool CCollisionMgr::IsCollision(CCollider2D* _pCollider1, CCollider2D* _pCollider2)
 {
 	if (!_pCollider1->IsActive() || !_pCollider1->GetObj()->IsActive() || !_pCollider2->IsActive() || !_pCollider2->GetObj()->IsActive())
@@ -163,6 +248,22 @@ bool CCollisionMgr::IsCollision(CCollider2D* _pCollider1, CCollider2D* _pCollide
 	{
 		return CollisionRectCircle(_pCollider1, _pCollider2);
 	}
+
+
+	return false;
+}
+
+bool CCollisionMgr::IsCollision3D(CCollider3D* _pCollider1, CCollider3D* _pCollider2)
+{
+	if (!_pCollider1->IsActive() || !_pCollider1->GetObj()->IsActive() || !_pCollider2->IsActive() || !_pCollider2->GetObj()->IsActive())
+		return false;
+
+	if (COLLIDER3D_TYPE::CUBE == _pCollider1->GetColliderType() && COLLIDER3D_TYPE::CUBE == _pCollider2->GetColliderType())
+	{
+		return CollisionCube(_pCollider1, _pCollider2);
+	}
+
+
 
 	return false;
 }
