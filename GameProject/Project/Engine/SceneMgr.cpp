@@ -181,7 +181,7 @@ void CSceneMgr::Init()
 	pObject->AddChild(pMainCam);
 
 
-	m_pCurScene->AddGameObject(L"Default", pObject, false);
+	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
 	
 
 	pObject = new CGameObject;

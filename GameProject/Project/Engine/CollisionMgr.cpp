@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "Collider2D.h"
+#include "Collider3D.h"
 
 CCollisionMgr::CCollisionMgr() :m_LayerCheck{} {}
 
@@ -28,6 +29,7 @@ void CCollisionMgr::Update()
 			{
 				// i <= j
 				CollisionLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
+				Collision3DLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(i));
 			}
 		}
 	}
@@ -144,6 +146,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 			}
 		}
 	}
+
 }
 
 void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
