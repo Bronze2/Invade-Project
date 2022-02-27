@@ -29,7 +29,7 @@ void CCollisionMgr::Update()
 			{
 				// i <= j
 				CollisionLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
-				Collision3DLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(i));
+				Collision3DLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
 			}
 		}
 	}

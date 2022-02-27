@@ -169,6 +169,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CPlayerScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,10.f,10.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
 	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
