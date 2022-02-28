@@ -492,6 +492,72 @@ void CResMgr::CreateDefaultMesh()
 
 	vecVTX.clear();
 	vecIdx.clear();
+	v.vPos = Vec3(0.f, 0.f, 0.f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = Vec3(0.f, 0.f, -1.f);
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 1.f, 0.f);
+	v.vUV = Vec2(0.5f, 0.5f);
+
+	vecVTX.push_back(v);
+
+	UINT iSliceCount = 32;
+	float fRadius = 0.5f;
+	float fSliceTheta = XM_2PI / iSliceCount;
+
+	float fCurTheta = 0.f;
+	for (UINT i = 0; i < iSliceCount + 1; ++i)
+	{
+		v.vPos = Vec3(fRadius * cosf(fCurTheta), fRadius * sinf(fCurTheta), 0.f);
+		v.vColor = Vec4(1.f, 0.2f, 0.2f, 1.f);
+		v.vUV = Vec2(0.5f * cosf(fCurTheta), 0.5f * sinf(fCurTheta));
+
+		v.vUV.x += 0.5f;
+		v.vUV.y = (0.5f - v.vUV.y);
+
+		fCurTheta += fSliceTheta;
+
+		vecVTX.push_back(v);
+	}
+	fCurTheta = 0.f;
+	for (UINT i = 0; i < iSliceCount + 1; ++i)
+	{
+		v.vPos = Vec3(0.f, fRadius * sinf(fCurTheta), fRadius * cosf(fCurTheta));
+		v.vColor = Vec4(1.f, 0.2f, 0.2f, 1.f);
+		v.vUV = Vec2(0.5f * cosf(fCurTheta), 0.5f * sinf(fCurTheta));
+
+		v.vUV.x += 0.5f;
+		v.vUV.y = (0.5f - v.vUV.y);
+
+		fCurTheta += fSliceTheta;
+
+		vecVTX.push_back(v);
+	}
+	fCurTheta = 0.f;
+	for (UINT i = 0; i < iSliceCount + 1; ++i)
+	{
+		v.vPos = Vec3(fRadius * sinf(fCurTheta),0.f, fRadius * cosf(fCurTheta));
+		v.vColor = Vec4(1.f, 0.2f, 0.2f, 1.f);
+		v.vUV = Vec2(0.5f * cosf(fCurTheta), 0.5f * sinf(fCurTheta));
+
+		v.vUV.x += 0.5f;
+		v.vUV.y = (0.5f - v.vUV.y);
+
+		fCurTheta += fSliceTheta;
+
+		vecVTX.push_back(v);
+	}
+
+	for (UINT i = 1; i < (iSliceCount+2)*3; ++i)
+	{
+		vecIdx.push_back(i);
+	}
+
+	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
+
+	AddRes(L"ColSphereMesh", pMesh);
+
 }
 
 void CResMgr::CreateDefaultShader()

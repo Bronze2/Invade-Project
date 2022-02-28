@@ -70,6 +70,7 @@ void CSceneMgr::Init()
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
 	CResMgr::GetInst()->Load<CTexture>(L"Snow", L"Texture\\Particle\\Snow50px.png");
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
+	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
 
@@ -168,7 +169,7 @@ void CSceneMgr::Init()
 
 	pObject->AddComponent(new CPlayerScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,10.f,10.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,40.f,10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
@@ -204,7 +205,7 @@ void CSceneMgr::Init()
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 

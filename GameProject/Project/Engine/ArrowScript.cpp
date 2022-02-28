@@ -15,23 +15,28 @@ void CArrowScript::Awake()
 	{
 	case ELEMENT_TYPE::FROZEN:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Snow"));
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardCircle"));
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.4f, 0.4f, 0.8f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
-		m_pParticle->ParticleSystem()->SetStartScale(5.f);
-		m_pParticle->ParticleSystem()->SetEndScale(10.f);
+		m_pParticle->ParticleSystem()->SetStartScale(2.f);
+		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 
 		break;
 	case ELEMENT_TYPE::FIRE:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"));
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardCircle"));
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
-		m_pParticle->ParticleSystem()->SetStartScale(5.f);
-		m_pParticle->ParticleSystem()->SetEndScale(10.f);
+		m_pParticle->ParticleSystem()->SetStartScale(2.f);
+		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 		break;
 	case ELEMENT_TYPE::DARK:
-
+		m_pParticle->AddComponent(new CParticleSystem);
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardCircle"));
+		m_pParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
+		m_pParticle->ParticleSystem()->SetStartScale(2.f);
+		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 		break;
 	case ELEMENT_TYPE::THUNDER:
 
