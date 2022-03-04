@@ -80,12 +80,12 @@ void CSceneMgr::Init()
 
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
-	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
-	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
-
-	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
-	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
-
+//	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
+//	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
+//
+//	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
+//	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
+//
 
 	m_pCurScene = new CScene;
 	m_pCurScene->SetName(L"Test Scene");
@@ -205,7 +205,7 @@ void CSceneMgr::Init()
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 

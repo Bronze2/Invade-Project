@@ -63,8 +63,39 @@ void CArrowScript::Update()
 
 	if (!m_bMove)
 	{
-		Transform()->LookAt(Vec3(-a, a, -a));
-		a += 0.1;
+		Vec3 vRot = Transform()->GetLocalRot();
+		Vec3 vPos = Transform()->GetLocalPos();
+		if (KEY_HOLD(KEY_TYPE::KEY_Z))
+		{
+			vRot.z += DT * XM_PI;
+
+			// 복사 메테리얼을 MeshRender 에 세팅
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_K))
+		{
+			vRot.y += DT * XM_PI;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_L))
+		{
+			vRot.x += DT * XM_PI;
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_LEFT)) {
+			vPos.x -= DT * 100.f;
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_RIGHT)) {
+			vPos.x += DT * 100.f;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_UP)) {
+			vPos.z -= DT * 100.f;
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_DOWN)) {
+			vPos.z += DT * 100.f;
+		}
+		Transform()->SetLocalRot(vRot);
+		Transform()->SetLocalPos(vPos);
 	
 		return;
 	}Vec3 vPos = Transform()->GetLocalPos();
@@ -75,7 +106,6 @@ void CArrowScript::Update()
 //	Transform()->LookAt(Vec3(vDir.x * 5, 0, vDir.z * 5));
 	m_fVelocityY -= (GRAVITY * DT) / 100;
 	vPos.y += m_fVelocityY;
-
 	
 	
 	Transform()->SetLocalPos(vPos);
