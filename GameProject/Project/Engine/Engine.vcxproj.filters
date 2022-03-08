@@ -4,9 +4,6 @@
     <Filter Include="Device">
       <UniqueIdentifier>{bf809976-7853-4cb0-92aa-b60be16c313e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Default">
-      <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header">
       <UniqueIdentifier>{dec040a5-3102-43a7-91f1-c908fb4b12ed}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Manager\Mouse">
       <UniqueIdentifier>{75383397-87fa-4c3d-a399-329861585f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default">
+      <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

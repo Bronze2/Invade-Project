@@ -80,11 +80,11 @@ void CSceneMgr::Init()
 
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
-//	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
-//	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
+	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
+	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
 //
-//	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
-//	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
+	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
+	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
 //
 
 	m_pCurScene = new CScene;
@@ -159,8 +159,13 @@ void CSceneMgr::Init()
 	// AddGameObject
 	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"Monster", L"MeshData\\monster.mdat");
+//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
+//	pMeshData->Save(pMeshData->GetPath())
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Blacksmith_AmM_SK.fbx");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+
+
+
 
 	pObject = pMeshData->Instantiate();
 	pObject->SetName(L"Monster");
@@ -215,18 +220,18 @@ void CSceneMgr::Init()
 
 
 		m_pArrow->AddComponent(new CTransform());
-		Vec3 vPos = m_pArrow->Transform()->GetLocalPos();
+//		Vec3 vPos = m_pArrow->Transform()->GetLocalPos();
 		m_pArrow->Transform()->SetLocalPos(Vec3(50,150,100));
 		m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-
+//
 		m_pArrow->AddComponent(new CMeshRender);
 		m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TestMtrl"));
-		m_pArrow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-
+		m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+//		m_pArrow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+//
 		m_pArrow->AddComponent(new CCollider3D);
 		m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-
+//
 		m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::FIRE));
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 		m_pArrow->GetScript<CArrowScript>()->SetMove(false);
