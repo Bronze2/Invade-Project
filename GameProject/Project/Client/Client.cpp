@@ -14,6 +14,7 @@
 #pragma comment(lib,"Engine/Engine.lib")
 #endif
 
+#include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
 
 #define MAX_LOADSTRING 100
@@ -51,7 +52,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1920, 1080 }, true)))
+    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 800, 600 }, true)))
     {
         return 0;
     }
