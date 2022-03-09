@@ -58,6 +58,9 @@
     <Filter Include="Default">
       <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{05717180-6278-4931-8beb-85c99c54217b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -228,6 +231,9 @@
     <ClInclude Include="Collider3D.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -385,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="Collider3D.cpp">
       <Filter>GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
