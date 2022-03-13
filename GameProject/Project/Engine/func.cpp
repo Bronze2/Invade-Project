@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "func.h"
+#include "Material.h"
 
 
 namespace RES_TYPE_STR
@@ -226,3 +227,32 @@ Vec3 DeComposeRotMat(const Matrix& _matRot)
 	}
 	return vNewRot;
 }
+
+float Dot(const Vec3& _Value1,const Vec3& _Value2)
+{
+	XMVECTOR v1 = XMLoadFloat3(&_Value1);
+	XMVECTOR v2 = XMLoadFloat3(&_Value2);
+	XMVECTOR x = XMVector3Dot(v1, v2);
+	
+	return XMVectorGetX(x);
+}
+
+Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2)
+{
+	XMVECTOR v1 = XMLoadFloat3(&_Value1);
+	XMVECTOR v2 = XMLoadFloat3(&_Value2);
+	XMVECTOR R = XMVector3Cross(_Value1, _Value2);
+	Vec3 result;
+	XMStoreFloat3(&result, R);
+	return result;
+}
+#include "ResMgr.h"
+void NewMaterial(CMaterial* _Material,const wstring&_ShaderKey, const wstring& _strKey, const wstring& _strPath)
+{
+	wstring strKey = _strKey;
+	wstring strPath = _strPath;
+
+	_Material->SetShader(CResMgr::GetInst()->FindRes<CShader>(_ShaderKey));
+
+}
+

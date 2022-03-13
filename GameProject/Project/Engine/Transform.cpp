@@ -12,6 +12,7 @@ CTransform::CTransform()
 	, m_vLocalPos(Vec3(0.f, 0.f, 0.f))
 	, m_vLocalRot(Vec3(0.f, 0.f, 0.f))
 	, m_vLocalScale(Vec3(1.f, 1.f, 1.f))
+	, m_vQuaternion(Vec4(0.f,0.f,0.f,1.f))
 {
 }
 
@@ -24,9 +25,14 @@ void CTransform::FinalUpdate()
 	Matrix matTranslation = XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
 	Matrix matScale = XMMatrixScaling(m_vLocalScale.x, m_vLocalScale.y, m_vLocalScale.z);
 
+
 	Matrix matRot = XMMatrixRotationX(m_vLocalRot.x);
 	matRot *= XMMatrixRotationY(m_vLocalRot.y);
 	matRot *= XMMatrixRotationZ(m_vLocalRot.z);
+
+	auto rotMat = XMMatrixRotationQuaternion(XMLoadFloat4(&this->m_vQuaternion));
+
+
 
 	static Vec3 arrDefault[(UINT)DIR_TYPE::END] = { Vec3::Right, Vec3::Up, Vec3::Front };
 
@@ -36,7 +42,8 @@ void CTransform::FinalUpdate()
 	}
 
 	// 로컬 x (크기 x 회전 x 이동)(월드행렬)
-	m_matWorld = matScale * matRot * matTranslation;
+	m_matWorld = matScale * matRot*rotMat * matTranslation;
+
 
 	if (GetObj()->GetParent())
 	{

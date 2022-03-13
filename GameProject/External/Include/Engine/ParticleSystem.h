@@ -34,7 +34,7 @@ private:
 public:
 	virtual void FinalUpdate();
 	virtual void Render();
-	void Init(Ptr<CTexture> _pTexture);
+	void Init( Ptr<CTexture> _pTexture);
 
 
 	void SetMinSpeed(float _fMinSpeed) { m_fMinSpeed = _fMinSpeed; }

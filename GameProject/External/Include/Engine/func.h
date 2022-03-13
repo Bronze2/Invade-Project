@@ -36,3 +36,10 @@ void SaveWString(FILE* _pFile, const wstring& _str);
 wchar_t* LoadWString(FILE* _pFile);
 Matrix GetMatrix(FbxAMatrix& _mat);
 Vec3 DeComposeRotMat(const Matrix& _matRot);
+
+float Dot(const Vec3& _Value1,const Vec3& _Value2);
+Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2);
+
+class CMaterial;
+
+void NewMaterial(CMaterial* _Material,const wstring& _ShaderKey,const wstring& _strKey, const wstring& _strPath);

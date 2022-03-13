@@ -14,6 +14,7 @@ struct tParticle
     int arrPadding[3];
 };
 
+
 struct tParticleShared
 {
     int iAddCount;
@@ -29,7 +30,6 @@ RWStructuredBuffer<tParticleShared> tRWSharedData : register(u1);
 struct VTX_IN
 {
     float3 vPos : POSITION;
-    
     float3 vNormal : NORMAL;
     float3 vTangent : TANGENT;
     float3 vBinormal : BINORMAL;

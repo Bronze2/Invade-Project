@@ -3,7 +3,7 @@
 #include "MeshRender.h"
 #include "PlayerScript.h"
 #include "ParticleSystem.h"
-
+#include <math.h>
 void CArrowScript::Awake()
 {
 	
@@ -15,7 +15,7 @@ void CArrowScript::Awake()
 	{
 	case ELEMENT_TYPE::FROZEN:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardCircle"));
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Snow"));
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.4f, 0.4f, 0.8f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
@@ -24,7 +24,7 @@ void CArrowScript::Awake()
 		break;
 	case ELEMENT_TYPE::FIRE:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardCircle"));
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"particle_00"));
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
@@ -32,7 +32,7 @@ void CArrowScript::Awake()
 		break;
 	case ELEMENT_TYPE::DARK:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardCircle"));
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"));
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
@@ -98,18 +98,41 @@ void CArrowScript::Update()
 		Transform()->SetLocalPos(vPos);
 	
 		return;
+
 	}Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-	Vec3 vDirY = Transform()->GetLocalDir(DIR_TYPE::UP);
-	vPos.x +=vDir.x;
-	vPos.z += vDir.z;
-//	Transform()->LookAt(Vec3(vDir.x * 5, 0, vDir.z * 5));
+	Vec3 vFront=vPos;
+	Vec3 vRight=Vec3(1, 0, 0);
+	auto p = XMLoadFloat3(&vRight);
+	auto m = XMLoadFloat4x4(&Transform()->GetWorldMat());
+	auto r = XMVector3TransformNormal(p, m);
+	XMFLOAT3 result;
+	XMStoreFloat3(&result, XMVector3Normalize(r));
+
+//	Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+
+//	Vec3 vWorldDir = Transform()->GetWorldDir(DIR_TYPE::UP);
+	vPos.x += result.x;
+	vPos.z += result.z;
+	//vDir.Normalize();
 	m_fVelocityY -= (GRAVITY * DT) / 100;
 	vPos.y += m_fVelocityY;
+	Vec3 vTarget = vPos-vFront;
+	vTarget.Normalize();	
+//	vValue.Normalize();
+	float vDotValue = Dot(vTarget, result);
+
+	Vec3 vCrossValue=Cross(result, vTarget);
+	if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
+
+		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue));
+		Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
+	}
+
 	
-	
+
 	Transform()->SetLocalPos(vPos);
 
+	
 }
 
 void CArrowScript::OnCollisionEnter(CCollider2D* _pOther)

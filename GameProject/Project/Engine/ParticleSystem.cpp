@@ -49,7 +49,8 @@ void CParticleSystem::Init(Ptr<CTexture> _pTexture)
 	m_pSharedBuffer = new CStructuredBuffer;
 	m_pSharedBuffer->Create(sizeof(tParticleShared), 1, nullptr);
 	m_pMesh = CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh");
-	m_pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleMtrl");
+	m_pMtrl = new CMaterial;
+	m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"ParticleShader"));
 	Ptr<CTexture> pParticle = _pTexture;
 	m_pMtrl->SetData(SHADER_PARAM::TEX_0, pParticle.GetPointer());
 	m_pUpdateMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleUpdateMtrl");
