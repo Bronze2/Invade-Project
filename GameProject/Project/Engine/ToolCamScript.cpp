@@ -8,11 +8,17 @@ void CToolCamScript::Update()
 	Vec3 vPos = Transform()->GetLocalPos();
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
-
-
-	Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 	Vec3 vRot = Transform()->GetLocalRot();
-	vRot.x -= vDrag.y * DT * 3.f;
+	if (!m_bCheckStartMousePoint) {
+		m_bCheckStartMousePoint = true;
+	}
+	else {
+		Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+
+		vRot.x -= vDrag.y * DT * 3.f;
+
+	}
+
 
 
 
@@ -20,7 +26,7 @@ void CToolCamScript::Update()
 	Transform()->SetLocalRot(vRot);
 }
 
-CToolCamScript::CToolCamScript():CScript(0),m_fSpeed(200.f),m_fScaleSpeed(1.f)
+CToolCamScript::CToolCamScript():CScript(0),m_fSpeed(200.f),m_fScaleSpeed(1.f),m_bCheckStartMousePoint(false)
 {
 }
 
