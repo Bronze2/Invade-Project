@@ -16,11 +16,14 @@ private:
     ELEMENT_TYPE m_iType;
     CGameObject* m_pParticle;
     bool m_bMove;
+    float m_fFallSpeed;
 public:
     virtual void Awake();
     virtual void Update();
     virtual void OnCollisionEnter(CCollider2D* _pOther);
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
+
+    void SetFallSpeen(float _fSpeed) { m_fFallSpeed = _fSpeed; }
     void SetDir(Vec3 _vDir) { m_vDir = _vDir; }
     void SetTime(float _fTime) { m_fTime = _fTime; }
     void SetStartPos(Vec3 _vPos) { m_vStartPos = _vPos; }

@@ -110,7 +110,7 @@ void CArrowScript::Update()
 
 //	Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 
-//	Vec3 vWorldDir = Transform()->GetWorldDir(DIR_TYPE::UP);
+//	Vec3 vWorldDir = Transform()SetVelocityY->GetWorldDir(DIR_TYPE::UP);
 	vPos.x += result.x;
 	vPos.z += result.z;
 	//vDir.Normalize();

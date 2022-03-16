@@ -185,7 +185,7 @@ void CSceneMgr::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 	
-	pMainCam->Transform()->SetLocalPos(Vec3(-200,40,-10));
+	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
 	
 	pObject->AddChild(pMainCam);
