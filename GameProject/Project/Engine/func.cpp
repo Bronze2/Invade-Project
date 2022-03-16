@@ -256,3 +256,11 @@ void NewMaterial(CMaterial* _Material,const wstring&_ShaderKey, const wstring& _
 
 }
 
+Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _fzvalue)
+{
+	float diagnal = sqrt(pow(_fxvalue, 2) + pow(_fzvalue, 2));
+	float x = (_fDestination * _fxvalue) / diagnal;
+	float z = (_fDestination * _fzvalue) / diagnal;
+	return Vec2(x,z);
+}
+

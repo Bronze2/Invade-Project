@@ -43,3 +43,6 @@ Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2);
 class CMaterial;
 
 void NewMaterial(CMaterial* _Material,const wstring& _ShaderKey,const wstring& _strKey, const wstring& _strPath);
+
+
+Vec2 GetDiagnal(const float& _fDestination, const float& _fxvalue, const float& _fzvalue);

@@ -235,7 +235,7 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 	, int _iVtxOrder)
 {
 	int iTangentCnt = _pMesh->GetElementTangentCount();
-	if (1 != iTangentCnt)
+	if (1 > iTangentCnt)
 		assert(NULL); 
 
 	// 탄젠트 data 의 시작 주소
@@ -267,7 +267,7 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder)
 {
 	int iBinormalCnt = _pMesh->GetElementBinormalCount();
-	if (1 != iBinormalCnt)
+	if (1 > iBinormalCnt)
 		assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
 
 	// 종법선 data 의 시작 주소
@@ -394,18 +394,37 @@ void CFBXLoader::LoadTexture()
 		{
 			wstring strPath;
 			wstring strFileName;
+			if (m_vecContainer[i].vecMtrl[j].strDiff == L"") {
 
-			strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
-			strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
-			CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+			}
+			else {
+				strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
+				strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
+				CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
 
-			strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
-			strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
-			CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+			}
 
-			strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
-			strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
-			CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+
+			if (m_vecContainer[i].vecMtrl[j].strNormal == L"") {
+
+			}
+			else {
+				strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
+				strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
+				CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+
+			}
+
+
+			if (m_vecContainer[i].vecMtrl[j].strSpec== L"") {
+
+			}
+			else{
+				strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
+				strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
+				CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
+
+			}
 		}
 	}
 }
@@ -450,8 +469,15 @@ void CFBXLoader::CreateMaterial()
 			if (NULL != pTex)
 				pMaterial->SetData(SHADER_PARAM::TEX_2, pTex.GetPointer());
 
+			Ptr<CMaterial> pRes = CResMgr::GetInst()->FindRes<CMaterial>(pMaterial->GetName());
+			if (nullptr != pRes) {
+			}
+			else {
+				CResMgr::GetInst()->AddRes<CMaterial>(pMaterial->GetName(), pMaterial);
+			}
 
-			CResMgr::GetInst()->AddRes<CMaterial>(pMaterial->GetName(), pMaterial);
+
+			
 		}
 	}
 }

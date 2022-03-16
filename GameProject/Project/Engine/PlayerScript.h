@@ -14,7 +14,7 @@ class CPlayerScript :
     public CScript
 {
 private:
-
+    bool m_bCheckStartMousePoint;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
     CGameObject* m_pArrow[20];
@@ -23,6 +23,8 @@ private:
     int m_iPower;
     ELEMENT_TYPE m_iType;
     float m_fArrowSpeed;
+
+    float m_fArcherLocation;
 public:
     virtual void Awake();
     virtual void Update();

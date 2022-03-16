@@ -4,6 +4,7 @@
 #include "TestScript.h"
 #include "MeshRender.h"
 #include "Camera.h"
+#include"ToolCamScript.h"
 
 
 void CPlayerScript::Awake()
@@ -92,26 +93,78 @@ void CPlayerScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
-		Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x, GetObj()->Transform()->GetLocalPos().y + 70, GetObj()->Transform()->GetLocalPos().z);
+
+
+		Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
+	
+
+		CToolCamScript* p=dynamic_cast<CToolCamScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
+		float fDegree= p->GetDegree();
+		fDegree *= -1.f;
+		float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
+
+		Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x+xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70+yValue, GetObj()->Transform()->GetLocalPos().z+xzValue.y);
+
+		
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(GetObj()->Transform()->GetLocalRot());
+		fDegree *= -1.f;
+		
+		Vec3 vFront = vArrowPos;
+		Vec3 vRight = Vec3(1, 0, 0);
+		auto k = XMLoadFloat3(&vRight);
+		auto m = XMLoadFloat4x4(&m_pArrow[m_iCurArrow]->Transform()->GetWorldMat());
+		auto r = XMVector3TransformNormal(k, m);
+		XMFLOAT3 result;
+		XMStoreFloat3(&result, XMVector3Normalize(r));
+
+		float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
+
+
+		vArrowPos.x += result.x;
+		vArrowPos.z += result.z;
+		float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
+		float xValue2 = xValue + flength;
+		float fyValue2 = yValue * xValue2 / xValue;
+		
+		float SubeyValue2Value =fyValue2 - yValue;
+
+
+		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x + fDegree, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
 		m_iCurArrow++;
 		m_iPower = 1;
 		if (m_iCurArrow > 19) {
 			m_iCurArrow = 0;
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		}
 
 	}
 
 	Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+	if (!m_bCheckStartMousePoint) {
+		m_bCheckStartMousePoint = true;
+	}
+	else {
+		vRot.y += vDrag.x * DT * 1.f;
+		float fDegree = XMConvertToDegrees(vRot.y);
+		if (fDegree < -360) {
+			 fDegree+= 360.f;
+			 vRot.y = XMConvertToRadians(fDegree);
+		}
+		else if (fDegree > 360) {
+			fDegree -= 360.f;
+			vRot.y = XMConvertToRadians(fDegree);
+		}
+	}
+	
 
-	vRot.y += vDrag.x * DT * 1.f;
+
+
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
 
 }
 
-CPlayerScript::CPlayerScript():CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
+CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
 {
 }
 

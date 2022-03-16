@@ -164,8 +164,8 @@ void CSceneMgr::Init()
 
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
 //	pMeshData->Save(pMeshData->GetPath())
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\erika_archer.fbx");
-//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_sibal.fbx");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
 
 
@@ -185,7 +185,7 @@ void CSceneMgr::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 	
-	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
+	pMainCam->Transform()->SetLocalPos(Vec3(-200,40,-10));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
 	
 	pObject->AddChild(pMainCam);
