@@ -79,14 +79,12 @@ void CArrowScript::Update()
 		vPos3.z += result.z;
 		//vDir.Normalize();
 		if (KEY_HOLD(KEY_TYPE::KEY_UP)) {
-			m_fTestRotate += 10.f*DT;
+			m_fTestRotate += 10.f * DT;
 		}
 
 		if (KEY_HOLD(KEY_TYPE::KEY_DOWN)) {
 			m_fTestRotate -= 10.f * DT;
 		}
-		
-
 
 		vPos3.y += m_fTestRotate;
 		Vec3 vTarget = vPos3 - vFront;
@@ -99,79 +97,72 @@ void CArrowScript::Update()
 		float b = vTarget.y;
 		float c = vCrossValue.z;
 		if (c < 0) {
-			m_fB = vCrossValue.z;
+			m_fyPos = vCrossValue.z;
 		}
 		else {
-			vCrossValue.z = m_fB;
+			vCrossValue.z = m_fyPos;
 		}
 
 		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue*DT));
+			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue));
 			Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-	
 		}
-
 		Vec3 vRot = Transform()->GetLocalRot();
 		vPos3 = Transform()->GetLocalPos();
-
-
-	
 		Transform()->SetLocalRot(vRot);
 		Transform()->SetLocalPos(vPos3);
-	
+
 		return;
 
 	}
 	Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vFront=vPos;
-	Vec3 vRight=Vec3(1, 0, 0);
+	Vec3 vFront = vPos;
+	Vec3 vRight = Vec3(1, 0, 0);
 	auto p = XMLoadFloat3(&vRight);
 	auto m = XMLoadFloat4x4(&Transform()->GetWorldMat());
 	auto r = XMVector3TransformNormal(p, m);
 	XMFLOAT3 result;
 	XMStoreFloat3(&result, XMVector3Normalize(r));
-
-//	Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-
-//	Vec3 vWorldDir = Transform()SetVelocityY->GetWorldDir(DIR_TYPE::UP);
 	vPos.x += result.x;
 	vPos.z += result.z;
-	//vDir.Normalize();
 	m_fVelocityY -= (GRAVITY * DT) / 100;
-	m_fFallSpeed+= m_fVelocityY;
-	vPos.y += m_fFallSpeed*DT;
-	Vec3 vTarget = vPos-vFront;
-	vTarget.Normalize();	
-//	vValue.Normalize();
+	m_fFallSpeed += m_fVelocityY;
+	vPos.y += m_fFallSpeed * DT;
+
+
+	Vec3 vTarget = vPos - vFront;
+	vTarget.Normalize();
+	//	vValue.Normalize();
 	float vDotValue = Dot(vTarget, result);
-	if (false == m_bSetDotValue) {
+	Vec3 vCrossValue = Cross(result, vTarget);
+	float a = vCrossValue.x;
+	float  c= vCrossValue.z;
+	if (!m_bSetDotValue) {
 		m_bSetDotValue = true;
-		m_fDotValue = vDotValue;
+		m_fyPos = vCrossValue.z;
+		m_fxPos = vCrossValue.x;
 	}
 	else {
-		
+		if (m_fyPos < vCrossValue.z) {
+			vCrossValue.z = m_fyPos;
+			vCrossValue.x = m_fxPos;
+		}
+		else {
+			m_fyPos = vCrossValue.z;
+			m_fxPos = vCrossValue.x;
+		}
 	}
-	
 
-
-	Vec3 vCrossValue=Cross(result, vTarget);
-	float a = vCrossValue.y;
-	float b = vTarget.y;
-	float c = vCrossValue.z;
-	int d = vCrossValue.y;
 	if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 
-		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue));
+		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue*DT*25));
 		Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-		Vec4 v = Transform()->GetQuaternion();
-		int a = 0;
-	
+
 	}
 
 	
 
-//	Transform()->SetLocalPos(vPos);
+	Transform()->SetLocalPos(vPos);
 
 	
 }
