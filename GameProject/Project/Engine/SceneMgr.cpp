@@ -164,7 +164,8 @@ void CSceneMgr::Init()
 
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
 //	pMeshData->Save(pMeshData->GetPath())
-//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_sibal.fbx");
+//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bakery_shop.fbx");
+//	pMeshData->Save(pMeshData->GetPath());
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
 
@@ -228,6 +229,35 @@ void CSceneMgr::Init()
 		m_pArrow->Transform()->SetLocalPos(Vec3(50,150,100));
 		m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
 //
+		Vec3 vArrowPos = m_pArrow->Transform()->GetLocalPos();
+		Vec3 vFront2 = m_pArrow->Transform()->GetLocalPos();
+		Vec3 vRight2 = Vec3(1, 0, 0);
+		auto k = XMLoadFloat3(&vRight2);
+		auto m = XMLoadFloat4x4(&m_pArrow->Transform()->GetWorldMat());
+		auto r = XMVector3TransformNormal(k, m);
+		XMFLOAT3 result;
+		XMStoreFloat3(&result, XMVector3Normalize(r));
+		vArrowPos.x += result.x;
+		vArrowPos.z += result.z;
+	
+		vArrowPos.y += 1.f;
+
+		Vec3 vTarget = vArrowPos - vFront2;
+		vTarget.Normalize();
+		float vDotValue = Dot(vTarget, result);
+		Vec3 vCrossValue;
+		if (vTarget.y > 0.f) {
+			vCrossValue = Cross(vTarget, result);
+		}
+		else {
+			vCrossValue = Cross(result, vTarget);
+		}
+		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
+
+			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(-15.f));
+			m_pArrow->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow->Transform()->GetQuaternion(), xmmatrix));
+
+		}
 		m_pArrow->AddComponent(new CMeshRender);
 		m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 		CMaterial* pMaterial = new CMaterial;
@@ -246,14 +276,6 @@ void CSceneMgr::Init()
 
 
 
-
-
-	int i = 0;
-	Ptr<CMaterial> pCSMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"CSTestMtrl");
-	pCSMtrl->SetData(SHADER_PARAM::INT_0, &i);
-	CDevice::GetInst()->SetUAVToRegister_CS(pTestUAVTexture.GetPointer(), UAV_REGISTER::u0);
-
-	pCSMtrl->Dispatch(1, 1024, 1);
 
 
 

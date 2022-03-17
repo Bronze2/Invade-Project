@@ -133,6 +133,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -191,7 +192,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="global.h" />
-    <ClInclude Include="GridScript.h" />
     <ClInclude Include="InstancingMgr.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Layer.h" />
@@ -219,7 +219,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Sound.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
-    <ClInclude Include="TestScript.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="ToolCamScript.h" />
@@ -246,7 +245,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="func.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GridScript.cpp" />
     <ClCompile Include="InstancingMgr.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="Layer.cpp" />
@@ -275,7 +273,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
-    <ClCompile Include="TestScript.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="ToolCamScript.cpp" />

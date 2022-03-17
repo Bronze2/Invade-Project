@@ -37,7 +37,10 @@ public:
 	Ptr<T> FindRes(const wstring& _strKey);
 
 	template<typename T>
-	Ptr<T> Load(const wstring& _strKey, const wstring& _strPath/*상대 경로*/);
+	Ptr<T> Load(const wstring& _strKey, const wstring& _strPath,bool _bFBX=false/*상대 경로*/);
+
+	template<typename T>
+	Ptr<T> LoadFBXTexture(const wstring& _strKey, const wstring& _strPath/*상대 경로*/);
 
 	Ptr<CTexture> CreateTexture(const wstring& _strName, UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
 		, const D3D12_HEAP_PROPERTIES& _HeapProperty, D3D12_HEAP_FLAGS _eHeapFlag
@@ -113,7 +116,7 @@ inline Ptr<T> CResMgr::FindRes(const wstring& _strKey)
 }
 
 template<typename T>
-inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
+inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath, bool _bFBX)
 {
 	Ptr<T> pRes = FindRes<T>(_strKey);
 
@@ -123,10 +126,85 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 
 	pRes = new T;
 	wstring strFullPath = CPathMgr::GetResPath();
-	strFullPath += _strPath;
+	RES_TYPE eType2 = GetType<T>();
+	if (_bFBX&& RES_TYPE::TEXTURE==eType2) {
+		wstring rFileName;
+		int length = _strPath.length();
+		wchar_t a = _strPath[length - 1];
+		wchar_t path = L'\\';
+		int i = 1;
+		wstring wFBXLoad = L"FBXTexture";
+		while (true)
+		{
+			a = _strPath[length - i];
+
+			rFileName.push_back(a);
+			if (a == path) {
+				break;
+			}
+			i++;
+
+		}
+		wstring FileName;
+		for (int j = 0; j < rFileName.length(); ++j) {
+			FileName.push_back(rFileName[rFileName.length() - j - 1]);
+		}
+		wFBXLoad += FileName;
+
+		strFullPath += wFBXLoad;
+	}
+	else {
+		strFullPath += _strPath;
+	}
+
+	pRes->Load(strFullPath,_bFBX);
+
+	RES_TYPE eType = GetType<T>();
+
+	CResource** ppRes = (CResource**)&pRes;
+	m_mapRes[(UINT)eType].insert(make_pair(_strKey, *ppRes));
+	pRes->SetName(_strKey);
+	pRes->SetPath(_strPath);
+
+	return pRes;
+}
+
+template<typename T>
+inline Ptr<T> CResMgr::LoadFBXTexture(const wstring& _strKey, const wstring& _strPath)
+{
+	Ptr<T> pRes = FindRes<T>(_strKey);
+
+	// 중복키 문제
+	if (nullptr != pRes)
+		return pRes;
+
+	pRes = new T;
+	wstring strFullPath = CPathMgr::GetResPath();
+	wstring rFileName;
+	int length = _strPath.length();
+	wchar_t a = _strPath[length - 1];
+	wchar_t path = L'\\';
+	int i = 1;
+	wstring wFBXLoad = L"FBXTexture";
+	while (true)
+	{
+		a = _strPath[length - i];
+
+		rFileName.push_back(a);
+		if (a == path) {
+			break;
+		}
+		i++;
+
+	}
+	wstring FileName;
+	for (int j = 0; j < rFileName.length(); ++j) {
+		FileName.push_back(rFileName[rFileName.length() - j - 1]);
+	}
+	wFBXLoad += FileName;
+	
+	strFullPath += wFBXLoad;
 	pRes->Load(strFullPath);
-
-
 	RES_TYPE eType = GetType<T>();
 
 	CResource** ppRes = (CResource**)&pRes;

@@ -100,7 +100,10 @@ void CPlayerScript::Update()
 
 		CToolCamScript* p=dynamic_cast<CToolCamScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
 		float fDegree= p->GetDegree();
+		float fDegree2 = fDegree;
 		fDegree *= -1.f;
+	
+	
 		float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
 
 		Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x+xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70+yValue, GetObj()->Transform()->GetLocalPos().z+xzValue.y);
@@ -111,7 +114,7 @@ void CPlayerScript::Update()
 		
 
 
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x + fDegree, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
+		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
 		Vec3 vFront2 = vArrowPos;
 		Vec3 vRight2 = Vec3(1, 0, 0);
 		auto k = XMLoadFloat3(&vRight2);
@@ -130,22 +133,32 @@ void CPlayerScript::Update()
 		float fyValue2 = yValue * xValue2 / xValue;
 	
 		float SubeyValue2Value = fyValue2 - yValue;
-	
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeen(SubeyValue2Value);
+
 		vArrowPos.y += SubeyValue2Value;
 		Vec3 vTarget = vArrowPos - vFront2;
 	
 		vTarget.Normalize();
 		float vDotValue = Dot(vTarget, result);
-		Vec3 vCrossValue = Cross(result, vTarget);
+		Vec3 vCrossValue;
+		if (vTarget.y > 0.f) {
+			vCrossValue = Cross(vTarget, result);
+		}
+		else {
+			vCrossValue = Cross(result, vTarget);
+		}
+		
+		
 		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 	
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue));
+			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(fDegree2));
 			m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
+	
 		}
 		
 		m_iCurArrow++;
 		m_iPower = 1;
-		if (m_iCurArrow > 19) {
+		if (m_iCurArrow > 19) { 
 			m_iCurArrow = 0;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		}

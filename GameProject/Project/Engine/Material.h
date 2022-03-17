@@ -22,7 +22,7 @@ public:
 	void Dispatch(UINT _x, UINT _y, UINT _z);
 
 
-	virtual void Load(const wstring& _strFullPath);
+	virtual void Load(const wstring& _strFullPath,bool _bFBX=false);
 	virtual void Save(const wstring& _strPath);
 
 	Ptr<CShader> GetShader() { return m_pShader;}

@@ -17,6 +17,13 @@ private:
     CGameObject* m_pParticle;
     bool m_bMove;
     float m_fFallSpeed;
+
+    float m_fB=0.f;
+
+    float m_fDotValue;
+    bool m_bSetDotValue = false;
+
+    float m_fTestRotate=0.f;
 public:
     virtual void Awake();
     virtual void Update();

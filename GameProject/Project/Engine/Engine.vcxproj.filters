@@ -186,17 +186,11 @@
     <ClInclude Include="PlayerScript.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="TestScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="MonsterScript.h">
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="GridScript.h">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="FBXLoader.h">
       <Filter>Module</Filter>
@@ -347,13 +341,7 @@
     <ClCompile Include="PlayerScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="TestScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="MonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="GridScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="FBXLoader.cpp">

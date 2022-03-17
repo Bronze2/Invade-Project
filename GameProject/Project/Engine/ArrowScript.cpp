@@ -63,43 +63,67 @@ void CArrowScript::Update()
 
 	if (!m_bMove)
 	{
-		Vec3 vRot = Transform()->GetLocalRot();
-		Vec3 vPos = Transform()->GetLocalPos();
-		if (KEY_HOLD(KEY_TYPE::KEY_Z))
-		{
-			vRot.z += DT * XM_PI;
+		Vec3 vPos3 = Transform()->GetLocalPos();
+		Vec3 vFront = vPos3;
+		Vec3 vRight = Vec3(1, 0, 0);
+		auto p = XMLoadFloat3(&vRight);
+		auto m = XMLoadFloat4x4(&Transform()->GetWorldMat());
+		auto r = XMVector3TransformNormal(p, m);
+		XMFLOAT3 result;
+		XMStoreFloat3(&result, XMVector3Normalize(r));
 
-			// 복사 메테리얼을 MeshRender 에 세팅
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_K))
-		{
-			vRot.y += DT * XM_PI;
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_L))
-		{
-			vRot.x += DT * XM_PI;
-		}
+		//	Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 
-		if (KEY_HOLD(KEY_TYPE::KEY_LEFT)) {
-			vPos.x -= DT * 100.f;
-		}
-
-		if (KEY_HOLD(KEY_TYPE::KEY_RIGHT)) {
-			vPos.x += DT * 100.f;
-		}
+		//	Vec3 vWorldDir = Transform()SetVelocityY->GetWorldDir(DIR_TYPE::UP);
+		vPos3.x += result.x;
+		vPos3.z += result.z;
+		//vDir.Normalize();
 		if (KEY_HOLD(KEY_TYPE::KEY_UP)) {
-			vPos.z -= DT * 100.f;
+			m_fTestRotate += 10.f*DT;
 		}
 
 		if (KEY_HOLD(KEY_TYPE::KEY_DOWN)) {
-			vPos.z += DT * 100.f;
+			m_fTestRotate -= 10.f * DT;
 		}
+		
+
+
+		vPos3.y += m_fTestRotate;
+		Vec3 vTarget = vPos3 - vFront;
+		vTarget.Normalize();
+		//	vValue.Normalize();
+		float vDotValue = Dot(vTarget, result);
+
+		Vec3 vCrossValue = Cross(result, vTarget);
+		float a = vCrossValue.y;
+		float b = vTarget.y;
+		float c = vCrossValue.z;
+		if (c < 0) {
+			m_fB = vCrossValue.z;
+		}
+		else {
+			vCrossValue.z = m_fB;
+		}
+
+		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
+
+			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue*DT));
+			Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
+	
+		}
+
+		Vec3 vRot = Transform()->GetLocalRot();
+		vPos3 = Transform()->GetLocalPos();
+
+
+	
 		Transform()->SetLocalRot(vRot);
-		Transform()->SetLocalPos(vPos);
+		Transform()->SetLocalPos(vPos3);
 	
 		return;
 
-	}Vec3 vPos = Transform()->GetLocalPos();
+	}
+	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vFront=vPos;
 	Vec3 vRight=Vec3(1, 0, 0);
 	auto p = XMLoadFloat3(&vRight);
@@ -115,22 +139,39 @@ void CArrowScript::Update()
 	vPos.z += result.z;
 	//vDir.Normalize();
 	m_fVelocityY -= (GRAVITY * DT) / 100;
-	vPos.y += m_fVelocityY;
+	m_fFallSpeed+= m_fVelocityY;
+	vPos.y += m_fFallSpeed*DT;
 	Vec3 vTarget = vPos-vFront;
 	vTarget.Normalize();	
 //	vValue.Normalize();
 	float vDotValue = Dot(vTarget, result);
+	if (false == m_bSetDotValue) {
+		m_bSetDotValue = true;
+		m_fDotValue = vDotValue;
+	}
+	else {
+		
+	}
+	
+
 
 	Vec3 vCrossValue=Cross(result, vTarget);
+	float a = vCrossValue.y;
+	float b = vTarget.y;
+	float c = vCrossValue.z;
+	int d = vCrossValue.y;
 	if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 
 		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue));
 		Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
+		Vec4 v = Transform()->GetQuaternion();
+		int a = 0;
+	
 	}
 
 	
 
-	Transform()->SetLocalPos(vPos);
+//	Transform()->SetLocalPos(vPos);
 
 	
 }
