@@ -15,7 +15,7 @@ void CTexture::Load(const wstring& _strFullPath)
 			assert(nullptr);
 		}
 	}
-	else if (L".tga" == strExt || L".TGA" == strExt)
+	else if (L".tga" == strExt || L".TGA" == strExt|| L".tip" == strExt || L".meta" == strExt)
 	{
 		if (FAILED(LoadFromTGAFile(_strFullPath.c_str(), nullptr, m_Image)))
 		{

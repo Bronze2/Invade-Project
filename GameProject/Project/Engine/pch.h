@@ -9,11 +9,20 @@
 
 #include <SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN   
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 // 여기에 미리 컴파일하려는 헤더 추가
 
 #include <Windows.h>
 
 #include "global.h"
+
+// 콘솔창 띄우기
+
+#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
+#endif
 
 #endif //PCH_H

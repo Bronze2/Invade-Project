@@ -5,7 +5,7 @@ constexpr int MAX_STR_LEN = 255;
 constexpr int MAX_PACKET_SIZE = 255;
 constexpr auto MAX_BUF_SIZE = 1024;
 constexpr auto MAX_USER = 10000;
-constexpr auto VIEW_RADIUS = 6;
+constexpr auto VIEW_RADIUS = 600;
 
 #define WORLD_WIDTH		400
 #define WORLD_HEIGHT	400
@@ -29,7 +29,7 @@ struct sc_packet_login_ok {
 	char size;
 	char type;
 	int id;
-	short x, y;
+	short x, y, z;
 	short hp;
 	short level;
 	int	exp;
@@ -39,7 +39,7 @@ struct sc_packet_move {
 	char size;
 	char type;
 	int id;
-	short x, y;
+	short x, y, z;
 	unsigned move_time;
 };
 
@@ -47,7 +47,7 @@ struct sc_packet_near {
 	char size;
 	char type;
 	int id;
-	short x, y;
+	short x, y, z;
 	unsigned move_time;
 };
 
@@ -61,7 +61,8 @@ struct sc_packet_enter {
 	int id;
 	char name[MAX_ID_LEN];
 	char o_type;
-	short x, y;
+	short x, y, z;
+
 };
 
 struct sc_packet_leave {

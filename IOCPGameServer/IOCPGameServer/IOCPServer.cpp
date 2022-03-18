@@ -43,7 +43,7 @@ struct CLIENT
 	atomic<C_STATUS> m_status;
 
 	//게임 콘텐츠 
-	short x, y;
+	short x, y, z;
 	char m_name[MAX_ID_LEN + 1];			//lock으로 보호
 
 	unsigned  m_move_time;
@@ -86,6 +86,7 @@ void send_login_ok_packet(int user_id)
 	p.type = S2C_LOGIN_OK;
 	p.x = g_clients[user_id].x;
 	p.y = g_clients[user_id].y;
+	p.z = g_clients[user_id].z;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -104,6 +105,8 @@ void send_move_packet(int user_id, int mover)
 	p.type = S2C_MOVE;
 	p.x = g_clients[mover].x;
 	p.y = g_clients[mover].y;
+	p.z = g_clients[mover].z;
+
 	p.move_time = g_clients[mover].m_move_time;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
@@ -117,6 +120,7 @@ void send_enter_packet(int user_id, int o_id)
 	p.type = S2C_ENTER;
 	p.x = g_clients[o_id].x;
 	p.y = g_clients[o_id].y;
+	p.z = g_clients[o_id].z;
 	strcpy_s(p.name, g_clients[o_id].m_name);
 	p.o_type = O_PLAYER;
 
@@ -137,6 +141,8 @@ void send_near_packet(int client, int new_id)
 	packet.type = S2C_NEAR_PLAYER;
 	packet.x = g_clients[new_id].x;
 	packet.y = g_clients[new_id].y;
+	packet.z = g_clients[new_id].z;
+
 	send_packet(client, &packet);
 }
 void send_leave_packet(int user_id, int o_id)
@@ -166,6 +172,7 @@ void do_move(int user_id, int direction)
 {
 	int x = g_clients[user_id].x;
 	int y = g_clients[user_id].y;
+	int z = g_clients[user_id].z;
 
 	switch (direction)
 	{
@@ -291,7 +298,7 @@ void enter_game(int user_id, char name[])
 			//g_clients[i].m_cLock.unlock();
 		}
 	}
-	
+	cout << "Enter" << endl;
 
 }
 

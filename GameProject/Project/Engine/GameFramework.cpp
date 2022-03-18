@@ -21,6 +21,7 @@ CGameFramework::~CGameFramework() {
 
 int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWindow)
 {
+
 	m_hMainhWnd = _hWnd;
 	ChangeWindowSize(m_hMainhWnd, _resolution);
 	ShowWindow(_hWnd, true);
