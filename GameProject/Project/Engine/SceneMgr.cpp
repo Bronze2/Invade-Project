@@ -164,9 +164,9 @@ void CSceneMgr::Init()
 
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
 //	pMeshData->Save(pMeshData->GetPath())
-//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Bat Lord.fbx");
-//	pMeshData->Save(pMeshData->GetPath());
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Bat Lord.mdat", L"MeshData\\Bat Lord.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Bird.fbx");
+	pMeshData->Save(pMeshData->GetPath());
+//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Bat Lord.mdat", L"MeshData\\Bat Lord.mdat");
 
 
 
@@ -182,7 +182,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
-	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 	
