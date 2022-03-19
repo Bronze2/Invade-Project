@@ -56,29 +56,24 @@ void Network::ProcessPacket(char* ptr)
 	}
 	break;
 
-	//case S2C_ENTER:
-	//{
-	//	sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
-	//	int id = my_packet->id;
+	case S2C_ENTER:
+	{
+		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
+		int id = my_packet->id;
 
-	//	if (id == g_myid) {
-	//		avatar.move(my_packet->x, my_packet->y);
-	//		g_left_x = my_packet->x - (SCREEN_WIDTH / 2);
-	//		g_top_y = my_packet->y - (SCREEN_HEIGHT / 2);
-	//		avatar.show();
-	//	}
-	//	else {
-	//		if (id < NPC_ID_START)
-	//			npcs[id] = OBJECT{ *pieces, 64, 0, 64, 64 };
-	//		else
-	//			npcs[id] = OBJECT{ *pieces, 0, 0, 64, 64 };
-	//		strcpy_s(npcs[id].name, my_packet->name);
-	//		npcs[id].set_name(my_packet->name);
-	//		npcs[id].move(my_packet->x, my_packet->y);
-	//		npcs[id].show();
-	//	}
-	//}
-	//break;
+		if (id == m_Client.id) {
+		}
+		else {
+			//if (id < NPC_ID_START)
+			//	npcs[id] = OBJECT{ *pieces, 64, 0, 64, 64 };
+			//else
+			//	npcs[id] = OBJECT{ *pieces, 0, 0, 64, 64 };
+			//strcpy_s(npcs[id].name, my_packet->name);
+			//npcs[id].set_name(my_packet->name);
+			//npcs[id].move(my_packet->x, my_packet->y);
+		}
+	}
+	break;
 	//case S2C_MOVE:
 	//{
 	//	sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
