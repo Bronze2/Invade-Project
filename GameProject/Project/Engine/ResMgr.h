@@ -149,6 +149,37 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath, boo
 		for (int j = 0; j < rFileName.length(); ++j) {
 			FileName.push_back(rFileName[rFileName.length() - j - 1]);
 		}
+		i = 1;
+		wstring fileexename;
+		path = L'.';
+		length = FileName.length();
+		while (true)
+		{
+			a = FileName[length - i];
+			fileexename.push_back(a);
+			if (a == path) {
+				break;
+			}
+			i++;
+
+		}
+		i = 1;
+		if (fileexename == L"dsp.") {
+			while (true)
+			{
+				if (i == 1)
+					FileName[length - i] = 'g';
+				else if (i == 2)
+					FileName[length - i] = 'n';
+				else if (i == 3)
+					FileName[length - i] = 'p';
+				if (FileName[length - i] == path) {
+					break;
+				}
+				i++;
+
+			}
+		}
 		wFBXLoad += FileName;
 
 		strFullPath += wFBXLoad;
@@ -201,6 +232,42 @@ inline Ptr<T> CResMgr::LoadFBXTexture(const wstring& _strKey, const wstring& _st
 	for (int j = 0; j < rFileName.length(); ++j) {
 		FileName.push_back(rFileName[rFileName.length() - j - 1]);
 	}
+	i = 1;
+	wstring fileexename;
+	path = L'.';
+	length = FileName.length();
+	while (true)
+	{
+		a = FileName[length - i];
+		fileexename.push_back(a);
+		if (a == path) {
+			break;
+		}
+		i++;
+
+	}
+	i = 1;
+	if (fileexename == L"dsp.") {
+		while (true)
+		{
+			if(i==1)
+				FileName[length - i]='g';
+			else if (i == 2)
+				FileName[length - i] = 'n';
+			else if (i == 3)
+				FileName[length - i] = 'p';
+			if (FileName[length - i] == path) {
+				break;
+			}
+			i++;
+
+		}
+	}
+
+	wchar_t szExt[50] = L"";
+	_wsplitpath_s(FileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szExt, 50);
+	wstring strExt = szExt;
+
 	wFBXLoad += FileName;
 	
 	strFullPath += wFBXLoad;

@@ -8,6 +8,8 @@ void CTexture::Load(const wstring& _strFullPath, bool _bFBX)
 	wchar_t szExt[50] = L"";
 	_wsplitpath_s(_strFullPath.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szExt, 50);
 	wstring strExt = szExt;
+
+	
 	if (L".dds" == strExt || L".DDS" == strExt)
 	{
 		if (FAILED(LoadFromDDSFile(_strFullPath.c_str(), DDS_FLAGS_NONE, nullptr, m_Image)))

@@ -60,6 +60,8 @@ void CArrowScript::Awake()
 
 void CArrowScript::Update()
 {
+	
+
 
 	if (!m_bMove)
 	{
@@ -116,6 +118,16 @@ void CArrowScript::Update()
 
 	}
 	Vec3 vPos = Transform()->GetLocalPos();
+	if (vPos.y < 0.f) {
+		GetObj()->SetActive(false);
+		Init();
+			
+	}
+
+
+	
+	
+	
 	Vec3 vFront = vPos;
 	Vec3 vRight = Vec3(1, 0, 0);
 	auto p = XMLoadFloat3(&vRight);
@@ -167,11 +179,6 @@ void CArrowScript::Update()
 	
 }
 
-void CArrowScript::OnCollisionEnter(CCollider2D* _pOther)
-{
-	if (L"Monster Object" == _pOther->GetObj()->GetName())
-		DeleteObject(GetObj());
-}
 
 
 
@@ -180,6 +187,21 @@ void CArrowScript::OnCollisionEnter(CCollider2D* _pOther)
 
 void CArrowScript::Init()
 {
+
+	m_bSetDotValue = false;
+	m_fVelocityY = 0.f;
+	m_fFallSpeed = 0.f;
+	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
+	
+}
+#include "Collider3D.h"
+void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
+{
+	if (L"Monster" == _pColldier->GetObj()->GetName())
+	{
+		GetObj()->SetActive(false);
+		Init();
+	}
 }
 
 CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROWSCRIPT),m_iType(_iType),m_bMove(true)

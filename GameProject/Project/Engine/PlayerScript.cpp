@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "ArrowScript.h"
-#include "TestScript.h"
 #include "MeshRender.h"
 #include "Camera.h"
-#include"ToolCamScript.h"
+#include"CameraScript.h"
 
 
 void CPlayerScript::Awake()
@@ -88,6 +87,7 @@ void CPlayerScript::Update()
 		vPos += vFront * 10.f;
 		pObj->Transform()->SetLocalPos(vPos);
 		m_pArrow[m_iCurArrow]->SetActive(true);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		vRight = pObj->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
@@ -98,7 +98,7 @@ void CPlayerScript::Update()
 		Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
 	
 
-		CToolCamScript* p=dynamic_cast<CToolCamScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
+		CCameraScript* p=dynamic_cast<CCameraScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
 		float fDegree= p->GetDegree();
 		float fDegree2 = fDegree;
 		fDegree *= -1.f;
@@ -115,6 +115,10 @@ void CPlayerScript::Update()
 
 
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
+		if (m_iCurArrow == 0) {
+			int a = 0;
+		}
+		
 		Vec3 vFront2 = vArrowPos;
 		Vec3 vRight2 = Vec3(1, 0, 0);
 		auto k = XMLoadFloat3(&vRight2);
@@ -160,7 +164,7 @@ void CPlayerScript::Update()
 		m_iPower = 1;
 		if (m_iCurArrow > 19) { 
 			m_iCurArrow = 0;
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
+		
 		}
 
 	}

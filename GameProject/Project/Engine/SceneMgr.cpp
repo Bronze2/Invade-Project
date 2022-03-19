@@ -30,7 +30,7 @@
 #include "Device.h"
 
 #include "GridScript.h"
-#include "ToolCamScript.h"
+#include "CameraScript.h"
 #include "PlayerScript.h"
 #include "MonsterScript.h"
 #include "ParticleSystem.h"
@@ -104,7 +104,7 @@ void CSceneMgr::Init()
 	pMainCam->SetName(L"MainCam");
 	pMainCam->AddComponent(new CTransform);
 	pMainCam->AddComponent(new CCamera);
-	pMainCam->AddComponent(new CToolCamScript);
+	pMainCam->AddComponent(new CCameraScript);
 
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
@@ -164,9 +164,9 @@ void CSceneMgr::Init()
 
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
 //	pMeshData->Save(pMeshData->GetPath())
-//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bakery_shop.fbx");
+//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Bat Lord.fbx");
 //	pMeshData->Save(pMeshData->GetPath());
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Bat Lord.mdat", L"MeshData\\Bat Lord.mdat");
 
 
 
@@ -186,7 +186,7 @@ void CSceneMgr::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 	
-	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
+	pMainCam->Transform()->SetLocalPos(Vec3(-300,40,-10));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
 	
 	pObject->AddChild(pMainCam);
@@ -214,7 +214,6 @@ void CSceneMgr::Init()
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
-//	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);

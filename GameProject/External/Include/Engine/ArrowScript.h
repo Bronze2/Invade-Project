@@ -28,7 +28,7 @@ private:
 public:
     virtual void Awake();
     virtual void Update();
-    virtual void OnCollisionEnter(CCollider2D* _pOther);
+
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
 
     void SetFallSpeen(float _fSpeed) { m_fFallSpeed = _fSpeed; }
@@ -41,6 +41,8 @@ public:
     void SetType(UINT _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }
     void Init();
+
+    virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 private:
   
 public:

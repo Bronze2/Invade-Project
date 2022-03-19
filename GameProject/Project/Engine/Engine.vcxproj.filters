@@ -58,6 +58,18 @@
     <Filter Include="Default">
       <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Arrow">
+      <UniqueIdentifier>{e23e784b-bbc3-4157-af68-dc0db9c90e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Minion">
+      <UniqueIdentifier>{06d43ace-832a-40b1-a124-cd7556d85abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Player">
+      <UniqueIdentifier>{c17ff28d-7747-47ce-8fd2-5c294fc04b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Cam">
+      <UniqueIdentifier>{b33d7921-deac-41d3-aabb-c646a3f7afd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -177,15 +189,6 @@
     <ClInclude Include="GameFramework.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="ToolCamScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="MonsterScript.h">
       <Filter>Script</Filter>
     </ClInclude>
@@ -221,6 +224,18 @@
     </ClInclude>
     <ClInclude Include="Collider3D.h">
       <Filter>GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowScript.h">
+      <Filter>Script\Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="CMinionScript.h">
+      <Filter>Script\Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Script\Cam</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,15 +347,6 @@
     <ClCompile Include="func.cpp">
       <Filter>Default</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="ToolCamScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="MonsterScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
@@ -373,6 +379,18 @@
     </ClCompile>
     <ClCompile Include="Collider3D.cpp">
       <Filter>GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowScript.cpp">
+      <Filter>Script\Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="CMinionScript.cpp">
+      <Filter>Script\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Script\Cam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

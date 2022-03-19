@@ -314,3 +314,18 @@ enum class SHADER_POV
 	SHADOWMAP,
 };
 // State Description
+
+
+
+//MINION STATE
+
+enum class MINION_STATE {
+	WALK,
+	ATTACK,
+	FIND,
+};
+
+enum class MINION_CAMP {
+	BLUE,
+	RED,
+};
