@@ -59,7 +59,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 }
 
 
-void CMeshData::Load(const wstring& _strFilePath,bool _bFBX)
+void CMeshData::Load(const wstring& _strFilePath)
 {
 	FILE* pFile = NULL;
 	_wfopen_s(&pFile, _strFilePath.c_str(), L"rb");
@@ -86,7 +86,7 @@ void CMeshData::Load(const wstring& _strFilePath,bool _bFBX)
 		wstring strKey = LoadWString(pFile);
 		wstring strPath = LoadWString(pFile);
 
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->Load<CMaterial>(strKey, strPath,true);
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->Load<CMaterial>(strKey, strPath);
 		m_vecMtrl[i] = pMtrl;
 	}
 

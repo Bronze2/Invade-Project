@@ -147,6 +147,9 @@ int GetSizeofFormat(DXGI_FORMAT _eFormat)
 
 	return iRetByte / 8;
 }
+#include "Layer.h"
+#include "Scene.h"
+
 
 void SaveWString(FILE* _pFile, const wstring& _str)
 {

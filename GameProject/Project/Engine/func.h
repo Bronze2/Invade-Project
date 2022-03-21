@@ -22,6 +22,7 @@ void Safe_Delete_Array(T* (&_arr)[iSize])
 	}
 }
 
+
 template<typename T>
 void Safe_Delete_Vector(vector<T*> _vec)
 {

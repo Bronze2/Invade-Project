@@ -135,9 +135,9 @@ void CArrowScript::Update()
 	auto r = XMVector3TransformNormal(p, m);
 	XMFLOAT3 result;
 	XMStoreFloat3(&result, XMVector3Normalize(r));
-	vPos.x += result.x;
-	vPos.z += result.z;
-	m_fVelocityY -= (GRAVITY * DT) / 100;
+	vPos.x += result.x * m_fSpeed*DT;
+	vPos.z += result.z*m_fSpeed*DT;
+	m_fVelocityY -= (GRAVITY * DT) / 10;
 	m_fFallSpeed += m_fVelocityY;
 	vPos.y += m_fFallSpeed * DT;
 
@@ -167,7 +167,7 @@ void CArrowScript::Update()
 
 	if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 
-		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue*DT*25));
+		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(vDotValue*DT*10));
 		Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
 
 	}

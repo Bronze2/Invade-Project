@@ -51,7 +51,7 @@ public:
 	UINT GetBoneCount() { return (UINT)m_vecBones.size(); }
 
 
-	virtual void Load(const wstring& _strFullPath,bool _bFBX=false);
+	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath);
 
 };
