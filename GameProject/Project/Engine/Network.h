@@ -17,19 +17,26 @@ struct SocketInfo {
 	bool connect;
 };
 
-struct CLIENT {
-	SocketInfo socket_info;
-	int id = 0;
+struct ObjectInfo {
+	float x;
+	float y;
+	float z;
 
 };
 
+struct CLIENT {
+	SocketInfo socket_info;
+	ObjectInfo object_info;
+	int id = 0;
+};
 
-class Network : public CEntity
+
+class Network 
 {
+	SINGLE(Network);
 public:
-	Network();
 
-	void Initialize();
+	void Init();
 	void ClientInit();
 	//void CreateSocket();
 	void ProcessPacket(char* ptr);

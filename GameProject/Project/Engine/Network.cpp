@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "Network.h"
+#include "SceneMgr.h"
 
 
-Network::Network()
-{
-}
+Network::Network() {}
+Network::~Network() {}
 
 
-void Network::Initialize()
+void Network::Init()
 {
 	WSADATA wsadata;
 	if (WSAStartup(MAKEWORD(2, 2), &wsadata) != 0) {

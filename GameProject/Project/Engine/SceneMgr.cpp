@@ -62,8 +62,8 @@ void CSceneMgr::Init()
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
-	m_network = new Network;
-	m_network->Initialize();
+	//m_network = new Network;
+	//m_network->Initialize();
 	//cout << m_network->m_Client.id << endl;
 
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
@@ -260,8 +260,7 @@ void CSceneMgr::Update()
 
 	// 충돌 처리
 	CCollisionMgr::GetInst()->Update();
-	if(m_network->getClientConnect())
-		m_network->RecvData();
+	Network::GetInst()->RecvData();
 }
 
 void CSceneMgr::Enter_Clinet()

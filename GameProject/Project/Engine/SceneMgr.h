@@ -9,7 +9,6 @@ class CSceneMgr
 	SINGLE(CSceneMgr)
 private:
 	CScene* m_pCurScene;
-	Network* m_network;
 
 public:
 	void Init();

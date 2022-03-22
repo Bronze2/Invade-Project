@@ -10,6 +10,7 @@
 #include "SceneMgr.h"
 #include "EventMgr.h"
 #include "InstancingMgr.h"
+#include "Network.h"
 
 CGameFramework::CGameFramework():m_hMainhWnd(nullptr) {
 
@@ -49,6 +50,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	CResMgr::GetInst()->Init();
 
 	CSceneMgr::GetInst()->Init();
+	Network::GetInst()->Init();
 	
 
 	CEventMgr::GetInst()->Init();
