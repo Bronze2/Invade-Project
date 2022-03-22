@@ -29,7 +29,9 @@ struct sc_packet_login_ok {
 	char size;
 	char type;
 	int id;
-	short x, y, z;
+	short x;
+	short y;
+	short z;
 	short hp;
 	short level;
 	int	exp;

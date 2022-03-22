@@ -62,6 +62,9 @@ void CSceneMgr::Init()
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
+	m_network = new Network;
+	m_network->Initialize();
+	//cout << m_network->m_Client.id << endl;
 
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
@@ -156,22 +159,17 @@ void CSceneMgr::Init()
 	// Script 설정
 //	pObject->AddComponent(new CPlayerScript);
 
-	// AddGameObject
-	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
-
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
 //	pMeshData->Save(pMeshData->GetPath())
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_ninja.fbx");
+	// AddGameObject
+	m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject); // 타일??
+
+//--
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
-
-
-
-
 	pObject = pMeshData->Instantiate();
 	pObject->SetName(L"Monster");
-
 	pObject->AddComponent(new CCollider3D);
-
 	pObject->AddComponent(new CPlayerScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,40.f,10.f));
@@ -181,15 +179,11 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-	
 	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
-	
-	pObject->AddChild(pMainCam);
-
-
+	pObject->AddChild(pMainCam); //이거 빠짐.
 	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
-	
+//--	
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Particle");
@@ -237,10 +231,6 @@ void CSceneMgr::Init()
 		m_pArrow->GetScript<CArrowScript>()->SetMove(false);
 
 
-
-
-
-
 	int i = 0;
 	Ptr<CMaterial> pCSMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"CSTestMtrl");
 	pCSMtrl->SetData(SHADER_PARAM::INT_0, &i);
@@ -252,8 +242,10 @@ void CSceneMgr::Init()
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Arrow", L"Monster");
+
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
+
 }
 
 void CSceneMgr::Update()
@@ -268,6 +260,33 @@ void CSceneMgr::Update()
 
 	// 충돌 처리
 	CCollisionMgr::GetInst()->Update();
+	if(m_network->getClientConnect())
+		m_network->RecvData();
+}
+
+void CSceneMgr::Enter_Clinet()
+{
+	CGameObject* pObject;
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");//수정해야됨.
+	pObject = pMeshData->Instantiate();
+	pObject->SetName(L"Monster");
+	pObject->AddComponent(new CCollider3D);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 100.f, 100.f));
+	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
+	pObject->MeshRender()->SetDynamicShadow(true);
+	//pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+
+	tEvent evt = {};
+	evt.eType = EVENT_TYPE::CREATE_OBJECT;
+	evt.wParam = (DWORD_PTR)pObject;
+	evt.lParam = (DWORD_PTR)pObject->GetLayerIdx();
+	CEventMgr::GetInst()->AddEvent(evt);
+
 }
 
 void CSceneMgr::Update_Tool()

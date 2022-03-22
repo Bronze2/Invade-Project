@@ -4,7 +4,6 @@
 
 Network::Network()
 {
-	Initialize();
 }
 
 
@@ -15,7 +14,46 @@ void Network::Initialize()
 
 	//에러코드 삽입하기
 	}
+	BOOL optval = TRUE;
+
+	SOCKADDR_IN ServerAddr;
+	ZeroMemory(&ServerAddr, sizeof(SOCKADDR_IN));
+	ServerAddr.sin_family = AF_INET;
+
+	m_Client.socket_info.m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	setsockopt(m_Client.socket_info.m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
+
+	ServerAddr.sin_port = htons(SERVER_PORT);
+	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	m_Client.socket_info.serverAddr = ServerAddr;
+	m_Client.socket_info.connect = false;
+
+
+	connect(m_Client.socket_info.m_socket, (SOCKADDR*)&m_Client.socket_info.serverAddr, sizeof(SOCKADDR_IN));
+	
+	ULONG on = 1;	
+	ioctlsocket(m_Client.socket_info.m_socket, FIONBIO, &on);
+	
+	m_Client.socket_info.connect = true;
+	std::cout << "Server Connect Sucsess" << std::endl;
+
+	send_login_packet();
+
 }
+
+void Network::RecvData()
+{
+	char buf[BUF_SIZE];
+	int retval = recv(m_Client.socket_info.m_socket, buf, BUF_SIZE, 0);
+	if (retval == SOCKET_ERROR) {
+		if (WSAGetLastError() != WSAEWOULDBLOCK)
+			return;
+	}
+	else if (retval > 0)
+		ProcessData(buf, retval);
+
+}
+
 
 void Network::ProcessData(char* net_buf, size_t io_byte)
 {
@@ -52,6 +90,8 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		m_Client.id = my_packet->id;
+		cout << m_Client.id << "아이디" << endl;
+		
 		//avatar.move(my_packet->x, my_packet->y);
 	}
 	break;
@@ -60,17 +100,10 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-
 		if (id == m_Client.id) {
 		}
 		else {
-			//if (id < NPC_ID_START)
-			//	npcs[id] = OBJECT{ *pieces, 64, 0, 64, 64 };
-			//else
-			//	npcs[id] = OBJECT{ *pieces, 0, 0, 64, 64 };
-			//strcpy_s(npcs[id].name, my_packet->name);
-			//npcs[id].set_name(my_packet->name);
-			//npcs[id].move(my_packet->x, my_packet->y);
+			
 		}
 	}
 	break;
@@ -126,22 +159,55 @@ void Network::ProcessPacket(char* ptr)
 	}
 }
 
-void Network::CreateSocket()
+void Network::send_packet(void* buffer)
 {
-	BOOL optval = TRUE;
-	int retval = 0;
-	ULONG on = 1;
+	char* packet = reinterpret_cast<char*>(buffer);
+	int packet_size = (BYTE)packet[0];
+	int retval = send(m_Client.socket_info.m_socket, packet, packet_size, 0);
+	if (retval == SOCKET_ERROR)
+	{
+		cout << "오류오류" << endl;
+	}
 
-	SOCKADDR_IN ServerAddr;
-	ZeroMemory(&ServerAddr, sizeof(SOCKADDR_IN));
-	ServerAddr.sin_family = AF_INET;
-
-
-	m_Client.m_socket.socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	setsockopt(m_Client.m_socket.socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
-
-	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	ServerAddr.sin_port = htons(SERVER_PORT);
-	ioctlsocket(m_Client.m_socket.socket, FIONBIO, &on);
-	m_Client.m_socket.connect = true;
 }
+
+void Network::send_login_packet()
+{
+	sc_packet_login_ok m_packet;
+	m_packet.type = C2S_LOGIN;
+	m_packet.size = sizeof(m_packet);
+	send_packet(&m_packet);
+	cout << "Send Login Packet" << endl;
+}
+
+void Network::send_move_packet(unsigned char dir)
+{
+	cs_packet_move m_packet;
+	m_packet.type = C2S_MOVE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.direction = dir;
+	send_packet(&m_packet);
+}
+
+
+
+//void Network::CreateSocket()
+//{
+//	BOOL optval = TRUE;
+//	int retval = 0;
+//	ULONG on = 1;
+//
+//	SOCKADDR_IN ServerAddr;
+//	ZeroMemory(&ServerAddr, sizeof(SOCKADDR_IN));
+//	ServerAddr.sin_family = AF_INET;
+//
+//
+//	m_Client.socket_info.m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+//	setsockopt(m_Client.socket_info.m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
+//	cout << "1.1" << endl;
+//	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+//	ServerAddr.sin_port = htons(SERVER_PORT);
+//	retval = connect(m_Client.socket_info.m_socket, (SOCKADDR*)&m_Client.socket_info.serverAddr, sizeof(SOCKADDR_IN));
+//	ioctlsocket(m_Client.socket_info.m_socket, FIONBIO, &on);
+//	m_Client.socket_info.connect = true;
+//}

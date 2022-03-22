@@ -9,13 +9,25 @@
 
 #include <SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN   
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
+
 
 // 여기에 미리 컴파일하려는 헤더 추가
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <Windows.h>
-
 #include "global.h"
+#include <windows.h>
+#include <WS2tcpip.h>
+#include <thread>
+#include <mutex>
+#include <iostream>
+#include <unordered_map>
+#include <chrono>
+
+
+#pragma comment (lib, "WS2_32.lib")
+#pragma comment (lib, "mswsock.lib")
 
 // 콘솔창 띄우기
 
@@ -24,5 +36,8 @@
 #else
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
 #endif
+
+using namespace std;
+using namespace chrono;
 
 #endif //PCH_H

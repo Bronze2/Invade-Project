@@ -87,7 +87,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	// 삼각화(Triangulate)
 	Triangulate(m_pScene->GetRootNode());
 
-	// 메쉬 데이터 얻기
+	// 메쉬 데이터 얻기 
 	LoadMeshDataFromNode(m_pScene->GetRootNode());
 
 	m_pImporter->Destroy();

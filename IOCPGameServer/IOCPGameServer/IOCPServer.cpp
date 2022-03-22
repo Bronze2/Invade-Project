@@ -56,6 +56,7 @@ CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
 
 HANDLE g_iocp;					//iocp 핸들
 SOCKET listenSocket;			//서버 전체에 하나. 한번 정해지고 안바뀌니 데이터레이스 아님. 
+int current_user;
 
 
 //lock으로 보호받고있는 함수
@@ -278,24 +279,31 @@ void enter_game(int user_id, char name[])
 
 	g_clients[user_id].m_cLock.unlock();
 
-	for (int i = 0; i < MAX_USER; i++)
+	for (int i = 0; i < user_id +1; i++)
 	{
 		if (user_id == i) continue;
 		//시야를 벗어났으면 처리하지 말아라 (입장 시 시야처리)
-		if (true == is_near(user_id, i))
+		//if (true == is_near(user_id, i))
+		//{
+		//	//g_clients[i].m_cLock.lock(); //i와 user_id가 같아지는 경우 2중락으로 인한 오류 발생 (데드락)
+		//	//다른 곳에서 status를 바꿀 수 있지만, 실습에서 사용할정도의 복잡도만 유지해야 하기 때문에 일단 놔두기로 한다. 
+		//	//그래도 일단 컴파일러 문제랑 메모리 문제는 해결해야 하기 때문에 status 선언을 atomic으로 바꾼다. 
+		//	if (ST_ACTIVE == g_clients[i].m_status)
+		//	{
+		//		if (i != user_id)		//나에게는 보내지 않는다.
+		//		{
+		//			send_enter_packet(user_id, i);
+		//			send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다
+		//		}
+		//	}
+		//	//g_clients[i].m_cLock.unlock();
+		//}
+		else if (i != user_id)		//나에게는 보내지 않는다.
 		{
-			//g_clients[i].m_cLock.lock(); //i와 user_id가 같아지는 경우 2중락으로 인한 오류 발생 (데드락)
-			//다른 곳에서 status를 바꿀 수 있지만, 실습에서 사용할정도의 복잡도만 유지해야 하기 때문에 일단 놔두기로 한다. 
-			//그래도 일단 컴파일러 문제랑 메모리 문제는 해결해야 하기 때문에 status 선언을 atomic으로 바꾼다. 
-			if (ST_ACTIVE == g_clients[i].m_status)
-			{
-				if (i != user_id)		//나에게는 보내지 않는다.
-				{
-					send_enter_packet(user_id, i);
-					send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다
-				}
-			}
-			//g_clients[i].m_cLock.unlock();
+			cout << "Fuck" << endl;
+
+			send_enter_packet(user_id, i);
+			send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다
 		}
 	}
 	cout << "Enter" << endl;
@@ -309,6 +317,7 @@ void process_packet(int user_id, char* buf)
 	case C2S_LOGIN:
 	{	
 		cs_packet_login *packet = reinterpret_cast<cs_packet_login*>(buf);
+		cout << "Recv Login Packet Client " << endl;
 		enter_game(user_id, packet->name);
 		break;
 	}
@@ -470,13 +479,15 @@ void worker_Thread()
 				g_clients[user_id].m_recv_over.wsabuf.buf = g_clients[user_id].m_recv_over.io_buf;
 				g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
-				g_clients[user_id].x = rand() % WORLD_WIDTH;
-				g_clients[user_id].y = rand() % WORLD_HEIGHT;
+				g_clients[user_id].x = 50;
+				g_clients[user_id].y = 100;
+				g_clients[user_id].z = 100 + user_id * 100;
 
 				g_clients[user_id].view_list.clear();
 				
 				DWORD flags = 0;
 				WSARecv(clientSocket, &g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &g_clients[user_id].m_recv_over.over, NULL);
+				cout << user_id << endl;
 			}
 
 			//소켓 초기화 후 다시 accept
@@ -528,7 +539,6 @@ void main()
 	accept_over.op = OP_ACCEPT;
 	accept_over.c_socket = clientSocket;
 	AcceptEx(listenSocket, clientSocket, accept_over.io_buf , NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
-	
 	//스레드 만들기
 	vector <thread> worker_threads;
 	for (int i = 0; i < 5; ++i)
