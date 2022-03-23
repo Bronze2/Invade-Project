@@ -265,3 +265,9 @@ struct tMTAnimClip
 
 	FbxTime::EMode eMode;
 };
+
+struct tBillBoard {
+	Vec3 vWorldPos;
+	Vec3 vWorldDir;
+	Vec2 vPadding;
+};

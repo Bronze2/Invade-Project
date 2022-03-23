@@ -426,5 +426,8 @@
     <FxCompile Include="animation.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="BillBoard.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -89,12 +89,17 @@ void CSceneMgr::Init()
 //
 
 	m_pCurScene = new CScene;
-	m_pCurScene->SetName(L"Test Scene");
+	m_pCurScene->SetName(L"Play Scene");
 
 	m_pCurScene->GetLayer(0)->SetName(L"Default");
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Arrow");
+	m_pCurScene->GetLayer(4)->SetName(L"Minion");
+	m_pCurScene->GetLayer(5)->SetName(L"Tower");
+
+
+
 	m_pCurScene->GetLayer(31)->SetName(L"Tool");
 
 	CGameObject* pMainCam = nullptr;
@@ -164,16 +169,16 @@ void CSceneMgr::Init()
 
 //	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX( L"FBX\\monster.fbx");
 //	pMeshData->Save(pMeshData->GetPath())
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_archer.fbx");
+//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\ArcherPinkGold.fbx");
 //	pMeshData->Save(pMeshData->GetPath());
-//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
 
-
+	pObject = new CGameObject;
 
 	pObject = pMeshData->Instantiate();
 	pObject->SetName(L"Monster");
-
+	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 
 	pObject->AddComponent(new CPlayerScript);
@@ -182,19 +187,70 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
-	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
+	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 	
 	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
-//	pMainCam->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
 	
 	pObject->AddChild(pMainCam);
-
-
+//
+//
 	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
+	pObject = pMeshData->Instantiate();
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
 	
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(100.f, 100.f, 150.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
+	pObject->MeshRender()->SetDynamicShadow(true);
+
+	pObject->MeshRender()->GetMesh()->GetAnimClip();
+
+	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
+
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\sword_min.mdat", L"MeshData\\sword_min.mdat");
+
+	pObject = pMeshData->Instantiate();
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 100.f, 150.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
+	pObject->MeshRender()->SetDynamicShadow(true);
+
+	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
+
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\wizard_min.mdat", L"MeshData\\wizard_min.mdat");
+	pObject = pMeshData->Instantiate();
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(200.f, 100.f, 150.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
+	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->Animator3D()->SetClipIndex(4);
+	auto p=pObject->MeshRender()->GetMesh()->GetAnimClip()->at(4);
+	
+
+
+
+	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
+
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Particle");
@@ -219,63 +275,6 @@ void CSceneMgr::Init()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject * m_pArrow = new CGameObject;
-	m_pArrow->SetName(L"Arrow");
-
-
-		m_pArrow->AddComponent(new CTransform());
-//		Vec3 vPos = m_pArrow->Transform()->GetLocalPos();
-		m_pArrow->Transform()->SetLocalPos(Vec3(50,150,100));
-		m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-//
-		Vec3 vArrowPos = m_pArrow->Transform()->GetLocalPos();
-		Vec3 vFront2 = m_pArrow->Transform()->GetLocalPos();
-		Vec3 vRight2 = Vec3(1, 0, 0);
-		auto k = XMLoadFloat3(&vRight2);
-		auto m = XMLoadFloat4x4(&m_pArrow->Transform()->GetWorldMat());
-		auto r = XMVector3TransformNormal(k, m);
-		XMFLOAT3 result;
-		XMStoreFloat3(&result, XMVector3Normalize(r));
-		vArrowPos.x += result.x;
-		vArrowPos.z += result.z;
-	
-		vArrowPos.y += 1.f;
-
-		Vec3 vTarget = vArrowPos - vFront2;
-		vTarget.Normalize();
-		float vDotValue = Dot(vTarget, result);
-		Vec3 vCrossValue;
-		if (vTarget.y > 0.f) {
-			vCrossValue = Cross(vTarget, result);
-		}
-		else {
-			vCrossValue = Cross(result, vTarget);
-		}
-		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(-15.f));
-			m_pArrow->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow->Transform()->GetQuaternion(), xmmatrix));
-
-		}
-		m_pArrow->AddComponent(new CMeshRender);
-		m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		CMaterial* pMaterial = new CMaterial;
-		NewMaterial(pMaterial,L"Std3DShader",L"Black",L"Material\\Black.mtrl");
-		
-		m_pArrow->MeshRender()->SetMaterial(pMaterial);
-		m_pArrow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-//
-		m_pArrow->AddComponent(new CCollider3D);
-		m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-//
-		m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::DARK));
-		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow);
-		m_pArrow->GetScript<CArrowScript>()->SetMove(false);
-
-
-
 
 
 
