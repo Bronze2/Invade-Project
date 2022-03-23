@@ -101,9 +101,10 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		if (id == m_Client.id) {
+
 		}
 		else {
-			
+			CSceneMgr::GetInst()->Enter_Clinet(my_packet->x,my_packet->y,my_packet->z);
 		}
 	}
 	break;

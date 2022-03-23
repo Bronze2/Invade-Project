@@ -14,7 +14,8 @@ public:
 	void Init();
 	void Update();
 	void Update_Tool();
-	void Enter_Clinet();
+	void Enter_Client(float x, float y, float z);
+	void Enter_Main_Client(float x, float y, float z);
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);

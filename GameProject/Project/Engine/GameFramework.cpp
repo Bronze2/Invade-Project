@@ -51,8 +51,6 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 
 	CSceneMgr::GetInst()->Init();
 	Network::GetInst()->Init();
-	
-
 	CEventMgr::GetInst()->Init();
 	return S_OK;
 

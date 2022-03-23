@@ -300,7 +300,7 @@ void enter_game(int user_id, char name[])
 		//}
 		else if (i != user_id)		//나에게는 보내지 않는다.
 		{
-			cout << "Fuck" << endl;
+			cout << "Enter Other Client" << endl;
 
 			send_enter_packet(user_id, i);
 			send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다

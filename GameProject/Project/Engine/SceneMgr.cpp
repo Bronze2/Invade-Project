@@ -263,7 +263,13 @@ void CSceneMgr::Update()
 	Network::GetInst()->RecvData();
 }
 
-void CSceneMgr::Enter_Clinet()
+void CSceneMgr::Enter_Main_Client(float x, float y, float z)
+{
+	
+}
+
+
+void CSceneMgr::Enter_Client(float x, float y, float z)
 {
 	CGameObject* pObject;
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");//¼öÁ¤ÇØ¾ßµÊ.
@@ -274,7 +280,7 @@ void CSceneMgr::Enter_Clinet()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 100.f, 100.f));
+	pObject->Transform()->SetLocalPos(Vec3(x, y, z));
 	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	//pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
