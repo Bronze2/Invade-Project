@@ -133,6 +133,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <AdditionalOptions>/std:c++latest /FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -173,6 +174,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CMinionScript.h" />
     <ClInclude Include="Collider3D.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="Collider2D.h" />
@@ -191,7 +193,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="global.h" />
-    <ClInclude Include="GridScript.h" />
     <ClInclude Include="InstancingMgr.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Layer.h" />
@@ -220,10 +221,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Sound.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
-    <ClInclude Include="TestScript.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeMgr.h" />
-    <ClInclude Include="ToolCamScript.h" />
+    <ClInclude Include="CameraScript.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +232,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CMinionScript.cpp" />
     <ClCompile Include="Collider3D.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="Collider2D.cpp" />
@@ -247,7 +248,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="func.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GridScript.cpp" />
     <ClCompile Include="InstancingMgr.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="Layer.cpp" />
@@ -277,10 +277,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
-    <ClCompile Include="TestScript.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
-    <ClCompile Include="ToolCamScript.cpp" />
+    <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>

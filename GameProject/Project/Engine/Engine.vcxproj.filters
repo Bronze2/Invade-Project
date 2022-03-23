@@ -58,8 +58,17 @@
     <Filter Include="Default">
       <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network">
-      <UniqueIdentifier>{05717180-6278-4931-8beb-85c99c54217b}</UniqueIdentifier>
+    <Filter Include="Script\Arrow">
+      <UniqueIdentifier>{e23e784b-bbc3-4157-af68-dc0db9c90e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Minion">
+      <UniqueIdentifier>{06d43ace-832a-40b1-a124-cd7556d85abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Player">
+      <UniqueIdentifier>{c17ff28d-7747-47ce-8fd2-5c294fc04b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Cam">
+      <UniqueIdentifier>{b33d7921-deac-41d3-aabb-c646a3f7afd4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,26 +189,11 @@
     <ClInclude Include="GameFramework.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="ToolCamScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="TestScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="MonsterScript.h">
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="GridScript.h">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="FBXLoader.h">
       <Filter>Module</Filter>
@@ -231,8 +225,20 @@
     <ClInclude Include="Collider3D.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="ArrowScript.h">
+      <Filter>Script\Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="CMinionScript.h">
+      <Filter>Script\Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Script\Cam</Filter>
+    </ClInclude>
     <ClInclude Include="Network.h">
-      <Filter>Network</Filter>
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -344,22 +350,7 @@
     <ClCompile Include="func.cpp">
       <Filter>Default</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="ToolCamScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="MonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="GridScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
@@ -392,8 +383,20 @@
     <ClCompile Include="Collider3D.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="ArrowScript.cpp">
+      <Filter>Script\Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="CMinionScript.cpp">
+      <Filter>Script\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Script\Cam</Filter>
+    </ClCompile>
     <ClCompile Include="Network.cpp">
-      <Filter>Network</Filter>
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

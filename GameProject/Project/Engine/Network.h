@@ -2,6 +2,7 @@
 #include "Entity.h"
 
 #include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
+
 constexpr auto BUF_SIZE = 200;
 //int NPC_ID_START = 10000;
 #define MAX_BUF	8192
