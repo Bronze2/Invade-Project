@@ -24,6 +24,9 @@ public:
 	void FinalUpdate();
 	void Render();
 
+	//ป๓มุ  
+	CGameObject* GetGameObjectById(int id) { return m_vecParentObj[id]; }
+
 private:
 	void SetLayerIdx(int _iIdx) { m_iLayerIdx = _iIdx; }
 public:

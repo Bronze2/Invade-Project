@@ -10,6 +10,7 @@
 #include "SceneMgr.h"
 #include "EventMgr.h"
 #include "InstancingMgr.h"
+#include "Network.h"
 
 CGameFramework::CGameFramework():m_hMainhWnd(nullptr) {
 
@@ -26,6 +27,10 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	ShowWindow(_hWnd, true);
 	if (FAILED(CDevice::GetInst()->Init(_hWnd, _resolution, _bWindow)))
 		return E_FAIL;
+
+	Network::GetInst()->Init();
+
+
 	CRenderMgr::GetInst()->Init(_hWnd, _resolution, _bWindow);
 	CDevice::GetInst()->CreateConstantBuffer(L"TRANSFORM_MATRIX", sizeof(tTransform), 512, CONST_REGISTER::b0);
 	CDevice::GetInst()->CreateConstantBuffer(L"MATERIAL_PARAM", sizeof(tMtrlParam), 512, CONST_REGISTER::b1);
@@ -46,11 +51,10 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	CTimeMgr::GetInst()->Init();
 
 	CResMgr::GetInst()->Init();
-
 	CSceneMgr::GetInst()->Init();
-	
-
 	CEventMgr::GetInst()->Init();
+
+
 	return S_OK;
 
 }
@@ -64,8 +68,8 @@ void CGameFramework::Progress()
 
 	CSceneMgr::GetInst()->Update();
 	CRenderMgr::GetInst()->Render();
-
 	CEventMgr::GetInst()->Update();
+
 
 }
 

@@ -237,6 +237,9 @@
     <ClInclude Include="CameraScript.h">
       <Filter>Script\Cam</Filter>
     </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -391,6 +394,9 @@
     </ClCompile>
     <ClCompile Include="CameraScript.cpp">
       <Filter>Script\Cam</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

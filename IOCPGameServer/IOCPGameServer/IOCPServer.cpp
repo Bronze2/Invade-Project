@@ -481,7 +481,7 @@ void worker_Thread()
 
 				g_clients[user_id].x = 50;
 				g_clients[user_id].y = 100;
-				g_clients[user_id].z = 100 + user_id * 100;
+				g_clients[user_id].z = 100 + user_id * 300;
 
 				g_clients[user_id].view_list.clear();
 				
