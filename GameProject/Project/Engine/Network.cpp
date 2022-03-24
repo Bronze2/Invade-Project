@@ -89,7 +89,7 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		m_Client.id = my_packet->id;
-		cout << m_Client.id << "아이디 ㅅㅂㄹㄴ" << endl;
+		cout << m_Client.id  << "	아이디" << endl;
 
 		CSceneMgr::GetInst()->setMainClient(m_Client.id, my_packet->x, my_packet->y, my_packet->z);
 
@@ -99,13 +99,16 @@ void Network::ProcessPacket(char* ptr)
 
 	case S2C_ENTER:
 	{
+		cout << "EN" << endl;
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		if (id == m_Client.id) {
+			cout << "Enter My ID" << endl;
 		}
 		else {
+			cout << "Enter Other ID :" << id  <<endl;
 
-			//CSceneMgr::GetInst()->EnterClient(id, my_packet->x, my_packet->y, my_packet->z);
+			CSceneMgr::GetInst()->EnterClient(id, my_packet->x, my_packet->y, my_packet->z);
 		}
 	}
 	break;
