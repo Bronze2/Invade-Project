@@ -26,7 +26,6 @@ struct ObjectInfo {
 
 struct CLIENT {
 	SocketInfo socket_info;
-	ObjectInfo object_info;
 	int id = 0;
 };
 
@@ -37,8 +36,6 @@ class Network
 public:
 
 	void Init();
-	void ClientInit();
-	//void CreateSocket();
 	void ProcessPacket(char* ptr);
 	void ProcessData(char* net_buf, size_t io_byte);
 	void RecvData();
@@ -50,7 +47,6 @@ public:
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 private:
 	CLIENT m_Client;
-	CLIENT test;
-	SOCKET test_socket;
+	
 };
 

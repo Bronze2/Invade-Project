@@ -116,9 +116,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="protocol.h" />
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IOCPServer.cpp" />
+    <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

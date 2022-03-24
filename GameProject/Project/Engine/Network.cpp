@@ -28,7 +28,6 @@ void Network::Init()
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
-
 	connect(m_Client.socket_info.m_socket, (SOCKADDR*)&m_Client.socket_info.serverAddr, sizeof(SOCKADDR_IN));
 	
 	ULONG on = 1;	
@@ -89,44 +88,34 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		m_Client.id = my_packet->id;
-		cout << m_Client.id  << "	아이디" << endl;
-
+		cout << "My Client ID :" << m_Client.id <<"로그인 성공"<<endl;
 		CSceneMgr::GetInst()->setMainClient(m_Client.id, my_packet->x, my_packet->y, my_packet->z);
-
-		//avatar.move(my_packet->x, my_packet->y);
 	}
 	break;
 
 	case S2C_ENTER:
 	{
-		cout << "EN" << endl;
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		if (id == m_Client.id) {
-			cout << "Enter My ID" << endl;
 		}
 		else {
-			cout << "Enter Other ID :" << id  <<endl;
-
 			CSceneMgr::GetInst()->EnterClient(id, my_packet->x, my_packet->y, my_packet->z);
 		}
 	}
 	break;
-	//case S2C_MOVE:
-	//{
-	//	sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
-	//	int other_id = my_packet->id;
-	//	if (other_id == g_myid) {
-	//		avatar.move(my_packet->x, my_packet->y);
-	//		g_left_x = my_packet->x - (SCREEN_WIDTH / 2);
-	//		g_top_y = my_packet->y - (SCREEN_HEIGHT / 2);
-	//	}
-	//	else {
-	//		if (0 != npcs.count(other_id))
-	//			npcs[other_id].move(my_packet->x, my_packet->y);
-	//	}
-	//}
-	//break;
+	case S2C_MOVE:
+	{
+		sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
+		int other_id = my_packet->id;
+		if (other_id == m_Client.id) {
+
+		}
+		else {
+			
+		}
+	}
+	break;
 
 	//case S2C_LEAVE:
 	//{

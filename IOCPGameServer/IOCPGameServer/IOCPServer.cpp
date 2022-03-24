@@ -1,21 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <WS2tcpip.h>
 #include <MSWSock.h>
 #include <vector>
+#include <unordered_set>
 #include <thread>
 #include <mutex>
-#include <unordered_set>
 #include <atomic>
+#include <chrono>
+#include <queue>
+
+#include "Server.h"
 
 #include "protocol.h"
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "mswsock.lib")
 
 using namespace std;
+using namespace chrono;
 
-enum ENUMOP { OP_RECV , OP_SEND, OP_ACCEPT };
+enum ENUMOP { OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
 
 enum C_STATUS {ST_FREE, ST_ALLOCATED, ST_ACTIVE};
+
+struct event_type
+{
+	int obj_id;
+	ENUMOP event_id; //힐링, 이동 ...
+	high_resolution_clock::time_point wakeup_time;
+	int target_id;
+
+	constexpr bool operator < (const event_type& left) const
+	{
+		return (wakeup_time > left.wakeup_time);
+	}
+};
+priority_queue<event_type> timer_queue;
+mutex timer_lock;
+
+
+
+
 
 //확장 overlapped 구조체
 struct EXOVER
@@ -57,6 +83,54 @@ CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
 HANDLE g_iocp;					//iocp 핸들
 SOCKET listenSocket;			//서버 전체에 하나. 한번 정해지고 안바뀌니 데이터레이스 아님. 
 int current_user;
+
+
+
+void add_timer(int obj_id, ENUMOP op_type, int duration)
+{
+	timer_lock.lock();
+	event_type ev{ obj_id, op_type,high_resolution_clock::now() + milliseconds(duration), 0 };
+	timer_queue.emplace(ev);
+	timer_lock.unlock();
+}
+
+
+void do_timer()
+{
+	while (true)
+	{
+		this_thread::sleep_for(1ms); //Sleep(1);
+		while (true)
+		{
+			timer_lock.lock();
+			if (timer_queue.empty() == true)
+			{
+				timer_lock.unlock();
+				break;
+			}
+			if (timer_queue.top().wakeup_time > high_resolution_clock::now())
+			{
+				timer_lock.unlock();
+				break;
+			}
+			event_type ev = timer_queue.top();
+			timer_queue.pop();
+			timer_lock.unlock();
+
+			switch (ev.event_id)
+			{
+			case OP_MOVE:
+			{	EXOVER* over = new EXOVER();
+			over->op = ev.event_id;
+			PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
+			}
+			break;
+		
+			}
+		}
+	}
+}
+
 
 
 //lock으로 보호받고있는 함수
@@ -410,7 +484,6 @@ void packet_construct(int user_id, int io_byte)
 void worker_Thread()
 {
 	while (true) {
-
 		DWORD io_byte;
 		ULONG_PTR key;
 		WSAOVERLAPPED* over;
@@ -420,7 +493,7 @@ void worker_Thread()
 		int user_id = static_cast<int>(key);
 
 		CLIENT& cl = g_clients[user_id]; //타이핑 줄이기 위해
-
+		
 		switch (exover->op)
 		{
 		case OP_RECV:			//받은 패킷 처리 -> overlapped구조체 초기화 -> recv
@@ -505,6 +578,9 @@ void worker_Thread()
 
 void main()
 {
+
+	Server* m_Sever = Server::GetInstance();
+
 	//네트워크 초기화
 	WSADATA WSAData;
 	WSAStartup(MAKEWORD(2, 2), &WSAData);
@@ -540,10 +616,14 @@ void main()
 	accept_over.c_socket = clientSocket;
 	AcceptEx(listenSocket, clientSocket, accept_over.io_buf , NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
 	//스레드 만들기
+
+
 	vector <thread> worker_threads;
 	for (int i = 0; i < 5; ++i)
 		worker_threads.emplace_back(worker_Thread);
-
 	//메인 종료 전 모든 스레드 종료 기다리기
+	thread timer_thread{ do_timer };
+	
 	for (auto &th : worker_threads) th.join();
+	timer_thread.join();
 }
