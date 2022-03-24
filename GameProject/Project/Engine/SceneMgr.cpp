@@ -217,7 +217,8 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
 
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\sword_min.mdat", L"MeshData\\sword_min.mdat");
+	 pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\sword_min.fbx");
+ //    pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\sword_min.mdat", L"MeshData\\sword_min.mdat");
 
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
@@ -243,7 +244,7 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(200.f, 100.f, 150.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-	pObject->Animator3D()->SetClipIndex(4);
+
 	auto p=pObject->MeshRender()->GetMesh()->GetAnimClip()->at(4);
 	
 

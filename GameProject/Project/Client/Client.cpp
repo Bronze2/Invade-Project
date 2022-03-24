@@ -149,10 +149,17 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    
     switch (message)
     {
- 
+    case WM_LBUTTONDOWN:
+    case WM_RBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_RBUTTONUP:
+    case WM_MOUSEMOVE:
+        CGameFramework::GetInst()->OnProcessingWindowMessage(hWnd, message, wParam, lParam);
 
+        break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
