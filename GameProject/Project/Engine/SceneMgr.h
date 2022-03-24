@@ -15,8 +15,9 @@ public:
 	void Init();
 	void Update();
 	void Update_Tool();
-	void Enter_Client(float x, float y, float z);
-	//void Enter_Main_Client(float x, float y, float z);
+	void EnterClient(int id, float x, float y, float z);
+	void setMainClient(int id, float x, float y, float z);
+	void setEnableClient(int id);
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);

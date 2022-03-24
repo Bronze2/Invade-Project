@@ -89,13 +89,9 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		m_Client.id = my_packet->id;
-		cout << m_Client.id << "아이디" << endl;
+		cout << m_Client.id << "아이디 ㅅㅂㄹㄴ" << endl;
 
-		//모델한테 아이디 값이 있어야.
-		if(m_Client.id ==0)
-			CSceneMgr::GetInst()->net_setLocalPosByID(0, my_packet->x, my_packet->y, my_packet->z);
-		if (m_Client.id == 1)
-			CSceneMgr::GetInst()->net_setLocalPosByID(0, my_packet->x, my_packet->y, my_packet->z);
+		CSceneMgr::GetInst()->setMainClient(m_Client.id, my_packet->x, my_packet->y, my_packet->z);
 
 		//avatar.move(my_packet->x, my_packet->y);
 	}
@@ -105,20 +101,11 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
-		cout << id << endl;
 		if (id == m_Client.id) {
-			if(id == 1)
-				CSceneMgr::GetInst()->net_setLocalPosByID(id, my_packet->x, my_packet->y, my_packet->z);
-			else
-				CSceneMgr::GetInst()->net_setLocalPosByID(id, 50, 100, 400);
-
 		}
 		else {
-			if (id == 1)
-				CSceneMgr::GetInst()->Enter_Client(50, 100, 400);
-			else
-				CSceneMgr::GetInst()->Enter_Client(50, 100, 100);
 
+			//CSceneMgr::GetInst()->EnterClient(id, my_packet->x, my_packet->y, my_packet->z);
 		}
 	}
 	break;

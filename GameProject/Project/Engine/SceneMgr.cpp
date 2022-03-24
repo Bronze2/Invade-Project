@@ -102,22 +102,22 @@ void CSceneMgr::Init()
 
     m_pCurScene->GetLayer(31)->SetName(L"Tool");
 
-    CGameObject* pMainCam = nullptr;
-    
-    // Camera Object
-    pMainCam = new CGameObject;
-    pMainCam->SetName(L"MainCam");
-    pMainCam->AddComponent(new CTransform);
-    pMainCam->AddComponent(new CCamera);
-    pMainCam->AddComponent(new CCameraScript);
+    //CGameObject* pMainCam = nullptr;
+    //
+    //// Camera Object
+    //pMainCam = new CGameObject;
+    //pMainCam->SetName(L"MainCam");
+    //pMainCam->AddComponent(new CTransform);
+    //pMainCam->AddComponent(new CCamera);
+    //pMainCam->AddComponent(new CCameraScript);
 
-    pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+    //pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
-    //pMainCam->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-    pMainCam->Camera()->SetFar(100000.f);
-    pMainCam->Camera()->SetLayerAllCheck();
+    ////pMainCam->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
+    //pMainCam->Camera()->SetFar(100000.f);
+    //pMainCam->Camera()->SetLayerAllCheck();
 
-    m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
+    //m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
 
     CGameObject* pObject = nullptr;
     
@@ -173,33 +173,37 @@ void CSceneMgr::Init()
     //   pMeshData->Save(pMeshData->GetPath());
     Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
+    //클라이언트 4개 생성
+    for (int i = 0; i < 4; ++i) {
+        pObject = new CGameObject;
 
-    pObject = new CGameObject;
+        pObject = pMeshData->Instantiate();
+        pObject->SetName(L"Monster");
+        pObject->AddComponent(new CTransform);
+        pObject->AddComponent(new CCollider3D);
 
-    pObject = pMeshData->Instantiate();
-    pObject->SetName(L"Monster");
-    pObject->AddComponent(new CTransform);
-    pObject->AddComponent(new CCollider3D);
+        pObject->AddComponent(new CPlayerScript);
+        pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+        pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+        pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+        pObject->FrustumCheck(false);
+        //pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
+        pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
+        pObject->MeshRender()->SetDynamicShadow(true);
+        pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
-    pObject->AddComponent(new CPlayerScript);
-    pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-    pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-    pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-    pObject->FrustumCheck(false);
-    pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
-    pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
-    pObject->MeshRender()->SetDynamicShadow(true);
-    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+ 
+        pObject->Disable();
+        m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+    }
 
-    pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
-    //   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-    pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
+ //pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+ ////   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+ //pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
-    pObject->AddChild(pMainCam);
-    //
-    //
-    m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
-  
+ //pObject->AddChild(pMainCam);
+ //
+ //
 
  /*   pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
     pObject = pMeshData->Instantiate();
@@ -328,34 +332,72 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
 }
 
 
-void CSceneMgr::Enter_Client(float x, float y, float z)
+void CSceneMgr::EnterClient(int id ,float x, float y, float z)
 {
-    CGameObject* pObject;
-    Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");//수정해야됨.
-    pObject = pMeshData->Instantiate();
-    pObject->SetName(L"Monster");
-    pObject->AddComponent(new CCollider3D);
-    pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-    pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-    pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-    pObject->FrustumCheck(false);
-    pObject->Transform()->SetLocalPos(Vec3(x, y, z));
-    pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
-    pObject->MeshRender()->SetDynamicShadow(true);
-    //pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-    m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
-    m_player.push_back(pObject);
+    //CGameObject* pObject;
+    //Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");//수정해야됨.
+    //pObject = pMeshData->Instantiate();
+    //pObject->SetName(L"Monster");
+    //pObject->AddComponent(new CCollider3D);
+    //pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+    //pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+    //pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+    //pObject->FrustumCheck(false);
+    //pObject->Transform()->SetLocalPos(Vec3(x, y, z));
+    //pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
+    //pObject->MeshRender()->SetDynamicShadow(true);
+    ////pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+    //m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+    //m_player.push_back(pObject);
 
-    tEvent evt = {};
-    evt.eType = EVENT_TYPE::CREATE_OBJECT;
-    evt.wParam = (DWORD_PTR)pObject;
-    evt.lParam = (DWORD_PTR)pObject->GetLayerIdx();
-    CEventMgr::GetInst()->AddEvent(evt);
+    //tEvent evt = {};
+    //evt.eType = EVENT_TYPE::CREATE_OBJECT;
+    //evt.wParam = (DWORD_PTR)pObject;
+    //evt.lParam = (DWORD_PTR)pObject->GetLayerIdx();
+    //CEventMgr::GetInst()->AddEvent(evt);
+    cout << "생성된 Player 개수 : " << m_pCurScene->FindLayer(L"Monster")->GetObjects().size();
+
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Enable();
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
+   
 
 }
 
 void CSceneMgr::net_setLocalPosByID(int id, float x , float y, float z) 
 {
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x,y,z));
+}
+
+void CSceneMgr::setMainClient(int id, float x, float y, float z)
+{
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Enable();
+
+    CGameObject* pMainCam = nullptr;
+    // Camera Object
+    pMainCam = new CGameObject;
+    pMainCam->SetName(L"MainCam");
+    pMainCam->AddComponent(new CTransform);
+    pMainCam->AddComponent(new CCamera);
+    pMainCam->AddComponent(new CCameraScript);
+
+    pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+
+    //pMainCam->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
+    pMainCam->Camera()->SetFar(100000.f);
+    pMainCam->Camera()->SetLayerAllCheck();
+
+    m_pCurScene->FindLayer(L"Default")->AddGameObject(pMainCam);
+
+    pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+    //   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+    pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
+
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->AddChild(pMainCam);
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
+
+}
+void CSceneMgr::setEnableClient(int id)
+{
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Enable();
 
 }
