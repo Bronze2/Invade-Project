@@ -4,7 +4,7 @@
 #include "MeshRender.h"
 #include "Camera.h"
 #include"CameraScript.h"
-
+#include "Network.h"
 
 void CPlayerScript::Awake()
 {
@@ -43,8 +43,9 @@ void CPlayerScript::Update()
 	Vec3 vRot = Transform()->GetLocalRot();
 	
 
-	if (KEY_TAB(KEY_TYPE::KEY_W)) {
+	if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+		Network::GetInst()->send_move_packet(0);
 		vPos += vFront * 200.f * DT;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_S)) {

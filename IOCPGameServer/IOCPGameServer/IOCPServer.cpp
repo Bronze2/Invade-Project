@@ -120,9 +120,11 @@ void do_timer()
 			switch (ev.event_id)
 			{
 			case OP_MOVE:
-			{	EXOVER* over = new EXOVER();
-			over->op = ev.event_id;
-			PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
+			{	
+				cout << "MoveTimerOn" << endl;
+				EXOVER* over = new EXOVER();
+				over->op = ev.event_id;
+				PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
 		
@@ -398,7 +400,8 @@ void process_packet(int user_id, char* buf)
 	case C2S_MOVE:
 	{	cs_packet_move *packet = reinterpret_cast<cs_packet_move*>(buf);
 		g_clients[user_id].m_move_time = packet->move_time;
-		do_move(user_id, packet->direction);
+		add_timer(user_id, OP_MOVE, 1000);
+		//do_move(user_id, packet->direction);
 		break;
 	}
 	default:
@@ -526,7 +529,7 @@ void worker_Thread()
 			for (int i = 0; i < MAX_USER; ++i)
 			{
 				lock_guard<mutex> gl{ g_clients[i].m_cLock }; //이렇게 하면 unlock이 필요 없다. 이 블록에서 빠져나갈때 unlock을 자동으로 해준다.
-				if (ST_FREE == g_clients[i].m_status )
+				if (ST_FREE == g_clients[i].m_status)
 				{
 					g_clients[i].m_status = ST_ALLOCATED;
 					user_id = i;
@@ -536,7 +539,7 @@ void worker_Thread()
 
 			//main에서 소켓을 worker스레드로 옮겨오기 위해 listen소켓은 전역변수로, client소켓은 멤버로 가져왔다.
 			SOCKET clientSocket = exover->c_socket;
-			
+
 			if (-1 == user_id)
 				closesocket(clientSocket); // send_login_fail_packet();
 			else
@@ -557,7 +560,7 @@ void worker_Thread()
 				g_clients[user_id].z = 100 + user_id * 300;
 
 				g_clients[user_id].view_list.clear();
-				
+
 				DWORD flags = 0;
 				WSARecv(clientSocket, &g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &g_clients[user_id].m_recv_over.over, NULL);
 				cout << user_id << endl;
@@ -568,6 +571,11 @@ void worker_Thread()
 			exover->c_socket = clientSocket; //새로 받는 소켓을 넣어준다. 안그러면 클라들이 같은 소켓을 공유한다.
 			ZeroMemory(&exover->over, sizeof(exover->over)); //accept_over를 exover라는 이름으로 받았으니 exover를 재사용
 			AcceptEx(listenSocket, clientSocket, exover->io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
+
+		}
+			break;
+		case OP_MOVE:
+		{
 
 		}
 			break;
