@@ -686,6 +686,7 @@ void CFBXLoader::LoadKeyFrameTransform(FbxNode* _pNode, FbxCluster* _pCluster
 
 	FbxTime::EMode eTimeMode = m_pScene->GetGlobalSettings().GetTimeMode();
 
+
 	FbxLongLong llStartFrame = m_vecAnimClip[0]->tStartTime.GetFrameCount(eTimeMode);
 	FbxLongLong llEndFrame = m_vecAnimClip[0]->tEndTime.GetFrameCount(eTimeMode);
 

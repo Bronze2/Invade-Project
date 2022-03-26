@@ -72,7 +72,7 @@ void CAnimator3D::FinalUpdate()
 	double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
 	m_iFrameIdx = (int)(dFrameIdx);
 
-	if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
+	if (m_iFrameIdx >= m_pVecClip->at(m_iCurClip).iFrameLength - 1)
 		m_iNextFrameIdx = m_iFrameIdx;
 	else
 		m_iNextFrameIdx = m_iFrameIdx + 1;
