@@ -220,6 +220,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Sound.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="CameraScript.h" />
@@ -275,6 +276,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="CameraScript.cpp" />
@@ -330,6 +332,10 @@ call EngineCopy.bat</Command>
       </ObjectFileOutput>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
+    </FxCompile>
+    <FxCompile Include="terrain.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="tool.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>

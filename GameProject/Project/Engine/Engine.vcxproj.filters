@@ -70,6 +70,9 @@
     <Filter Include="Script\Cam">
       <UniqueIdentifier>{b33d7921-deac-41d3-aabb-c646a3f7afd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Component\Terrain">
+      <UniqueIdentifier>{84247d70-f99f-4f79-852d-78d0fbb6f0e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -237,6 +240,9 @@
     <ClInclude Include="CameraScript.h">
       <Filter>Script\Cam</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>GameObject\Component\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -392,6 +398,9 @@
     <ClCompile Include="CameraScript.cpp">
       <Filter>Script\Cam</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>GameObject\Component\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -427,6 +436,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="BillBoard.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="terrain.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

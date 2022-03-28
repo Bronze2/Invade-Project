@@ -145,5 +145,18 @@ void Skinning(inout float3 _vPos,  inout float4 _vWeight, inout float4 _vIndices
     _vPos = info.vPos;
     
 }
+float CalTessLevel(in float3 _vWorldCamPos, float3 _vPatchPos, float _fMin, float _fMax, float _fMaxLv)
+{
+    float fLen = length(_vPatchPos - _vWorldCamPos);
+    float fLevel = (_fMaxLv - 1.f) * ((1.f - saturate((fLen - _fMax) / (_fMax - _fMin))));
+    if (fLevel == _fMaxLv - 1.f)
+    {
+        fLevel += 1.f;
+    }
+    fLevel = pow(2, fLevel);
+    return fLevel;
+}
+
+
 
 #endif

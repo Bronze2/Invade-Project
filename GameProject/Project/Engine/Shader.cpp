@@ -179,7 +179,7 @@ void CShader::CreateGeometryShader(const wstring& _strPath, const string& _strFu
 {
 	int iFlag = 0;
 #ifdef _DEBUG
-	iFlag = D3DCOMPILE_DEBUG;
+	iFlag = D3DCOMPILE_DEBUG ;
 #endif
 
 	wstring strPath = CPathMgr::GetResPath();
@@ -202,7 +202,7 @@ void CShader::CreateComputeShader(const wstring& _strPath, const string& _strFun
 {
 	int iFlag = 0;
 #ifdef _DEBUG
-	iFlag = D3DCOMPILE_DEBUG;
+	iFlag = D3DCOMPILE_DEBUG ;
 #endif
 	wstring strPath = CPathMgr::GetResPath();
 	strPath += _strPath;
@@ -217,6 +217,51 @@ void CShader::CreateComputeShader(const wstring& _strPath, const string& _strFun
 	m_tCSStateDesc.CS = { m_pCSBlob->GetBufferPointer(),m_pCSBlob->GetBufferSize() };
 	DEVICE->CreateComputePipelineState(&m_tCSStateDesc, IID_PPV_ARGS(&m_pPipeLineState_CS));
 	m_ePov = SHADER_POV::COMPUTE;
+}
+
+void CShader::CreateHullShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
+{
+	int iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG|D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
+
+	char* pErr = nullptr;
+
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pHSBlob, &m_pErrBlob)))
+	{
+		pErr = (char*)m_pErrBlob->GetBufferPointer();
+		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
+	}
+
+	m_tPipeLine.HS = { m_pHSBlob->GetBufferPointer(), m_pHSBlob->GetBufferSize() };
+
+}
+
+void CShader::CreateDomainShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
+{
+	int iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+	wstring strPath = CPathMgr::GetResPath();
+	strPath += _strPath;
+
+	char* pErr = nullptr;
+
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pDSBlob, &m_pErrBlob)))
+	{
+		pErr = (char*)m_pErrBlob->GetBufferPointer();
+		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
+	}
+
+	m_tPipeLine.DS = { m_pDSBlob->GetBufferPointer(), m_pDSBlob->GetBufferSize() };
 }
 
 void CShader::UpdateData()

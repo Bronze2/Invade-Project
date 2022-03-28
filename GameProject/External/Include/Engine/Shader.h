@@ -44,6 +44,9 @@ public:
     void CreatePixelShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateGeometryShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
+    void CreateHullShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
+    void CreateDomainShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
+
 
     void SetBlendState(BLEND_TYPE _eType) { m_eBlendType = _eType; }
     void SetDepthStencilType(DEPTH_STENCIL_TYPE _eType) { m_eDSType = _eType; }

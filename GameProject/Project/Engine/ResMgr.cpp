@@ -806,6 +806,18 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"BillBoardShader", pShader);
 
 
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\terrain.fx", "VS_Terrain", "vs_5_0");
+	pShader->CreateHullShader(L"Shader\\terrain.fx", "HS_Terrain", "hs_5_0");
+	pShader->CreateDomainShader(L"Shader\\terrain.fx", "DS_Terrain", "ds_5_0");
+	pShader->CreatePixelShader(L"Shader\\terrain.fx", "PS_Terrain", "ps_5_0");
+
+	pShader->SetRasterizerType(RS_TYPE::WIRE_FRAME);
+	pShader->SetRasterizerType(RS_TYPE::CULL_BACK);
+	pShader->Create(SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	AddRes(L"TerrainShader", pShader);
+
+
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -951,6 +963,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"BillBoardShader"));
 	AddRes(L"BillBoardMtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
+	AddRes(L"TerrainMtrl", pMtrl);
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype
