@@ -42,7 +42,7 @@ public:
 
 	void send_packet(void* packet);
 	void send_login_packet();
-	void send_move_packet(unsigned char dir);
+	void send_move_packet(unsigned char dir, float x, float y , float z);
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 private:

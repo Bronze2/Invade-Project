@@ -45,8 +45,9 @@ void CPlayerScript::Update()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		Network::GetInst()->send_move_packet(0);
-		vPos += vFront * 200.f * DT;
+		Network::GetInst()->send_move_packet(0, vFront.x, vFront.y, vFront.z);
+		//cout << sizeof(Vec3) << endl;
+		//vPos += vFront * 200.f * DT;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_S)) {
 		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);

@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Server">
+    <Filter Include="소스 파일\Server">
       <UniqueIdentifier>{72a64448-1641-4a5d-b93e-fd7ffc1c95fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -25,7 +25,16 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Server.h">
-      <Filter>Server</Filter>
+      <Filter>소스 파일\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -33,7 +42,10 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Server.cpp">
-      <Filter>Server</Filter>
+      <Filter>소스 파일\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -24,14 +24,18 @@ constexpr auto VIEW_RADIUS = 600;
 
 
 #pragma pack(push ,1)
+
+struct p_Vec3 {
+	float x;
+	float y;
+	float z;
+};
  
 struct sc_packet_login_ok {
 	char size;
 	char type;
 	int id;
-	short x;
-	short y;
-	short z;
+	p_Vec3 pos;
 	short hp;
 	short level;
 	int	exp;
@@ -41,7 +45,7 @@ struct sc_packet_move {
 	char size;
 	char type;
 	int id;
-	short x, y, z;
+	p_Vec3 pos;
 	unsigned move_time;
 };
 
@@ -49,7 +53,7 @@ struct sc_packet_near {
 	char size;
 	char type;
 	int id;
-	short x, y, z;
+	p_Vec3 pos;
 	unsigned move_time;
 };
 
@@ -63,7 +67,7 @@ struct sc_packet_enter {
 	int id;
 	char name[MAX_ID_LEN];
 	char o_type;
-	short x, y, z;
+	p_Vec3 pos;
 
 };
 
@@ -88,6 +92,10 @@ struct cs_packet_move {
 	char	size;
 	char	type;
 	char	direction;
+	float dir_x;
+	float dir_y;
+	float dir_z;
+	p_Vec3 dir;
 	unsigned move_time;
 };
 

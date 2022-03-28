@@ -89,7 +89,7 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		m_Client.id = my_packet->id;
 		cout << "My Client ID :" << m_Client.id <<"로그인 성공"<<endl;
-		CSceneMgr::GetInst()->setMainClient(m_Client.id, my_packet->x, my_packet->y, my_packet->z);
+		CSceneMgr::GetInst()->setMainClient(m_Client.id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 	}
 	break;
 
@@ -100,7 +100,7 @@ void Network::ProcessPacket(char* ptr)
 		if (id == m_Client.id) {
 		}
 		else {
-			CSceneMgr::GetInst()->EnterClient(id, my_packet->x, my_packet->y, my_packet->z);
+			CSceneMgr::GetInst()->EnterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 	}
 	break;
@@ -109,7 +109,7 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == m_Client.id) {
-
+			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x+100, my_packet->pos.y, my_packet->pos.z);
 		}
 		else {
 			
@@ -174,12 +174,15 @@ void Network::send_login_packet()
 	cout << "Send Login Packet" << endl;
 }
 
-void Network::send_move_packet(unsigned char dir)
+void Network::send_move_packet(unsigned char dir, float x, float y , float z)
 {
 	cs_packet_move m_packet;
 	m_packet.type = C2S_MOVE;
 	m_packet.size = sizeof(m_packet);
 	m_packet.direction = dir;
+	m_packet.dir.x = x;
+	m_packet.dir.y = y;
+	m_packet.dir.z = z;
 	send_packet(&m_packet);
 }
 

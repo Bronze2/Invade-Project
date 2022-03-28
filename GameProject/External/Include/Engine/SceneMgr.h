@@ -19,9 +19,10 @@ public:
 	void setMainClient(int id, float x, float y, float z);
 	void setEnableClient(int id);
 
+	void net_setLocalPosByID(int id, float x, float y , float z);
+
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
-	void net_setLocalPosByID(int id, float x, float y , float z);
 };
 

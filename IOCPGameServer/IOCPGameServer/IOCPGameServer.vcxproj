@@ -115,13 +115,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IOCPServer.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="SimpleMath.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

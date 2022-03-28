@@ -11,6 +11,7 @@
 #include <chrono>
 #include <queue>
 
+#include "define.h"
 #include "Server.h"
 
 #include "protocol.h"
@@ -39,10 +40,6 @@ struct event_type
 priority_queue<event_type> timer_queue;
 mutex timer_lock;
 
-
-
-
-
 //확장 overlapped 구조체
 struct EXOVER
 {
@@ -69,7 +66,8 @@ struct CLIENT
 	atomic<C_STATUS> m_status;
 
 	//게임 콘텐츠 
-	short x, y, z;
+	Vec3 Pos;
+	Vec3 dir;
 	char m_name[MAX_ID_LEN + 1];			//lock으로 보호
 
 	unsigned  m_move_time;
@@ -124,6 +122,7 @@ void do_timer()
 				cout << "MoveTimerOn" << endl;
 				EXOVER* over = new EXOVER();
 				over->op = ev.event_id;
+				//do_move(ev.obj_id, packet->direction);
 				PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
@@ -161,9 +160,9 @@ void send_login_ok_packet(int user_id)
 	p.level = 0;
 	p.size = sizeof(p);
 	p.type = S2C_LOGIN_OK;
-	p.x = g_clients[user_id].x;
-	p.y = g_clients[user_id].y;
-	p.z = g_clients[user_id].z;
+	p.pos.x = g_clients[user_id].Pos.x;
+	p.pos.y = g_clients[user_id].Pos.x;
+	p.pos.z = g_clients[user_id].Pos.x;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -180,9 +179,9 @@ void send_move_packet(int user_id, int mover)
 	p.id = mover;
 	p.size = sizeof(p);
 	p.type = S2C_MOVE;
-	p.x = g_clients[mover].x;
-	p.y = g_clients[mover].y;
-	p.z = g_clients[mover].z;
+	p.pos.x = g_clients[user_id].Pos.x;
+	p.pos.y = g_clients[user_id].Pos.y;
+	p.pos.z = g_clients[user_id].Pos.z;
 
 	p.move_time = g_clients[mover].m_move_time;
 
@@ -195,9 +194,9 @@ void send_enter_packet(int user_id, int o_id)
 	p.id = o_id;
 	p.size = sizeof(p);
 	p.type = S2C_ENTER;
-	p.x = g_clients[o_id].x;
-	p.y = g_clients[o_id].y;
-	p.z = g_clients[o_id].z;
+	p.pos.x = g_clients[user_id].Pos.x;
+	p.pos.y = g_clients[user_id].Pos.y;
+	p.pos.z = g_clients[user_id].Pos.z;
 	strcpy_s(p.name, g_clients[o_id].m_name);
 	p.o_type = O_PLAYER;
 
@@ -216,9 +215,9 @@ void send_near_packet(int client, int new_id)
 	packet.id = new_id;
 	packet.size = sizeof(packet);
 	packet.type = S2C_NEAR_PLAYER;
-	packet.x = g_clients[new_id].x;
-	packet.y = g_clients[new_id].y;
-	packet.z = g_clients[new_id].z;
+	packet.pos.x = g_clients[new_id].Pos.x;
+	packet.pos.y = g_clients[new_id].Pos.y;
+	packet.pos.z = g_clients[new_id].Pos.z;
 
 	send_packet(client, &packet);
 }
@@ -239,35 +238,41 @@ void send_leave_packet(int user_id, int o_id)
 //a 와 b가 서로 시야에 있나? 
 bool is_near(int a, int b)
 {
-	if (abs(g_clients[a].x - g_clients[b].x) > VIEW_RADIUS) return false;
-	if (abs(g_clients[a].y - g_clients[b].y) > VIEW_RADIUS) return false;
-
+//	if (abs(g_clients[a].x - g_clients[b].x) > VIEW_RADIUS) return false;
+//	if (abs(g_clients[a].y - g_clients[b].y) > VIEW_RADIUS) return false;
+//
 	return true;
 }
 
 void do_move(int user_id, int direction)
 {
-	int x = g_clients[user_id].x;
-	int y = g_clients[user_id].y;
-	int z = g_clients[user_id].z;
+	Vec3 vPos;
+	//vPos.x = g_clients[user_id].Pos.x;
+	//vPos.y = g_clients[user_id].Pos.y;
+	//vPos.z = g_clients[user_id].Pos.z;
+	
+	//switch (direction)
+	//{
+	//case D_UP:
+	//	if (z > 0)	z--;	break;
+	//case D_DOWN:
+	//	if (y < WORLD_HEIGHT - 1)	y++;	break;
+	//case D_LEFT:
+	//	if (x > 0)	x--;	break;
+	//case D_RIGHT:
+	//	if (x < WORLD_WIDTH - 1)	x++;	break;
+	//default:
+	//	cout << "unknown direction from client move packet \n";
+	//	DebugBreak();
+	//}
+	cout <<"계산 전Pos 값" << g_clients[user_id].Pos.x << "," << g_clients[user_id].Pos.y << "," << g_clients[user_id].Pos.z << endl;
+	cout <<"계산 전Dir 값" <<g_clients[user_id].dir.x <<","<<g_clients[user_id].dir.y << "," << g_clients[user_id].dir.z<< endl;
+	g_clients[user_id].Pos += g_clients[user_id].dir * 10.f;
+	cout << "계산 후 Pos 값" << g_clients[user_id].Pos.x << "," << g_clients[user_id].Pos.y << "," << g_clients[user_id].Pos.z << endl;
 
-	switch (direction)
-	{
-	case D_UP:
-		if (y > 0)	y--;	break;
-	case D_DOWN:
-		if (y < WORLD_HEIGHT - 1)	y++;	break;
-	case D_LEFT:
-		if (x > 0)	x--;	break;
-	case D_RIGHT:
-		if (x < WORLD_WIDTH - 1)	x++;	break;
-	default:
-		cout << "unknown direction from client move packet \n";
-		DebugBreak();
-	}
-
-	g_clients[user_id].x = x;
-	g_clients[user_id].y = y;
+//	g_clients[user_id].Pos.x = 200;
+//	g_clients[user_id].Pos.y = 200;
+//	g_clients[user_id].Pos.z = 200;
 
 	//복사해두고 쓴다. 근데 그 이후에 어긋나더라도 그건 감수해야한다. 지금은 이정도로 만족하자
 	g_clients[user_id].m_cLock.lock();
@@ -286,62 +291,62 @@ void do_move(int user_id, int direction)
 	//밑에서 view list로 알려주니까 나한테는 안 알려줌. 그래서 지금 먼저 나한테 이동을 알려줘야 함.
 	send_move_packet(user_id, user_id);
 
-	//시야에 새로 들어온 플레이어 
-	for (auto newPlayer : new_vl)
-	{
-		//old_vl에 없었는데 new_vl에 있다면 새로 생긴 것.
-		if (0 == old_vl.count(newPlayer))
-		{
-			send_enter_packet(user_id, newPlayer);
+	////시야에 새로 들어온 플레이어 
+	//for (auto newPlayer : new_vl)
+	//{
+	//	//old_vl에 없었는데 new_vl에 있다면 새로 생긴 것.
+	//	if (0 == old_vl.count(newPlayer))
+	//	{
+	//		send_enter_packet(user_id, newPlayer);
 
-			g_clients[newPlayer].m_cLock.lock();
-			if (0 == g_clients[newPlayer].view_list.count(user_id)) //멀티쓰레드 프로그램이니까, 다른 스레드에서 미리 시야 처리를 했을 수 있다.
-			{
-				g_clients[newPlayer].m_cLock.unlock();
-				send_enter_packet(newPlayer, user_id);
-			}
-			else
-			{
-				g_clients[newPlayer].m_cLock.unlock();
-				send_move_packet(newPlayer, user_id);
-			}
-		}
-		//새로 들어온 플레이어가 아니라 옛날에도 보였던 애라면 이동을 알려줌
-		else
-		{
-			//상대방이 이동하면서 시야에서 나를 뺐을 수 있다. 그러니까 상대방 viewlist를 확인하고 보내야 한다.
-			g_clients[newPlayer].m_cLock.lock();
-			if (0 != g_clients[newPlayer].view_list.count(user_id))
-			{
-				g_clients[newPlayer].m_cLock.unlock();
-				send_move_packet(newPlayer, user_id);
-			}
-			else
-			{
-				g_clients[newPlayer].m_cLock.unlock();
-				send_enter_packet(newPlayer, user_id);
-			}
-		}
-	}
+	//		g_clients[newPlayer].m_cLock.lock();
+	//		if (0 == g_clients[newPlayer].view_list.count(user_id)) //멀티쓰레드 프로그램이니까, 다른 스레드에서 미리 시야 처리를 했을 수 있다.
+	//		{
+	//			g_clients[newPlayer].m_cLock.unlock();
+	//			send_enter_packet(newPlayer, user_id);
+	//		}
+	//		else
+	//		{
+	//			g_clients[newPlayer].m_cLock.unlock();
+	//			send_move_packet(newPlayer, user_id);
+	//		}
+	//	}
+	//	//새로 들어온 플레이어가 아니라 옛날에도 보였던 애라면 이동을 알려줌
+	//	else
+	//	{
+	//		//상대방이 이동하면서 시야에서 나를 뺐을 수 있다. 그러니까 상대방 viewlist를 확인하고 보내야 한다.
+	//		g_clients[newPlayer].m_cLock.lock();
+	//		if (0 != g_clients[newPlayer].view_list.count(user_id))
+	//		{
+	//			g_clients[newPlayer].m_cLock.unlock();
+	//			send_move_packet(newPlayer, user_id);
+	//		}
+	//		else
+	//		{
+	//			g_clients[newPlayer].m_cLock.unlock();
+	//			send_enter_packet(newPlayer, user_id);
+	//		}
+	//	}
+	//}
 
 
-	//시야에서 벗어난 플레이어
-	for (auto oldPlayer : old_vl)
-	{
-		if (0 == new_vl.count(oldPlayer))
-		{
-			send_leave_packet(user_id, oldPlayer);
+	////시야에서 벗어난 플레이어
+	//for (auto oldPlayer : old_vl)
+	//{
+	//	if (0 == new_vl.count(oldPlayer))
+	//	{
+	//		send_leave_packet(user_id, oldPlayer);
 
-			g_clients[oldPlayer].m_cLock.lock();
-			if (0 != g_clients[oldPlayer].view_list.count(user_id))
-			{
-				g_clients[oldPlayer].m_cLock.unlock();
-				send_leave_packet(oldPlayer, user_id);
-			}
-			else
-				g_clients[oldPlayer].m_cLock.unlock();
-		}
-	}
+	//		g_clients[oldPlayer].m_cLock.lock();
+	//		if (0 != g_clients[oldPlayer].view_list.count(user_id))
+	//		{
+	//			g_clients[oldPlayer].m_cLock.unlock();
+	//			send_leave_packet(oldPlayer, user_id);
+	//		}
+	//		else
+	//			g_clients[oldPlayer].m_cLock.unlock();
+	//	}
+	//}
 }
 
 void enter_game(int user_id, char name[])
@@ -400,8 +405,12 @@ void process_packet(int user_id, char* buf)
 	case C2S_MOVE:
 	{	cs_packet_move *packet = reinterpret_cast<cs_packet_move*>(buf);
 		g_clients[user_id].m_move_time = packet->move_time;
-		add_timer(user_id, OP_MOVE, 1000);
-		//do_move(user_id, packet->direction);
+		g_clients[user_id].dir.x = packet->dir.x;
+		g_clients[user_id].dir.y = packet->dir.y;
+		g_clients[user_id].dir.z = packet->dir.z;
+
+		//add_timer(user_id, OP_MOVE, 1000);
+		do_move(user_id, packet->direction);
 		break;
 	}
 	default:
@@ -555,9 +564,9 @@ void worker_Thread()
 				g_clients[user_id].m_recv_over.wsabuf.buf = g_clients[user_id].m_recv_over.io_buf;
 				g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
-				g_clients[user_id].x = 50;
-				g_clients[user_id].y = 100;
-				g_clients[user_id].z = 100 + user_id * 300;
+				g_clients[user_id].Pos.x = 50;
+				g_clients[user_id].Pos.y = 100;
+				g_clients[user_id].Pos.z = 100 + user_id * 300;
 
 				g_clients[user_id].view_list.clear();
 
