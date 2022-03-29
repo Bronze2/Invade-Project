@@ -223,7 +223,8 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(150.f, 100.f, 150.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-	//pObject->Animator3D()->SetClipIndex(1);
+	//pObject->Animator3D()->SetAnimClip(1);
+	pObject->Animator3D()->SetClipIndex(2);
 
 
 	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);

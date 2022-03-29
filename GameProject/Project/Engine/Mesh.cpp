@@ -4,6 +4,9 @@
 #include "Device.h"
 #include "PathMgr.h"
 
+#include <iostream>
+using namespace std;
+
 CMesh::CMesh():CResource(RES_TYPE::MESH)
 ,m_pVB(nullptr),m_tVtxView{},m_iVtxSize(0),m_iVtxCount(0),m_pVtxSysMem(nullptr)
 {}
@@ -186,6 +189,7 @@ void CMesh::Load(const wstring& _strFullPath, bool _bFBX)
 	// Animation 이 있는 Mesh 경우 Bone StructuredBuffer 만들기
 	if (m_vecAnimClip.size() > 0 && m_vecBones.size() > 0)
 	{
+		cout << "ㅅㅂ" <<endl;
 		wstring strBone = GetName();
 
 		// BoneOffet 행렬

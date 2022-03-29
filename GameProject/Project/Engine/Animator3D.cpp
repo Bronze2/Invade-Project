@@ -6,11 +6,13 @@
 #include "ResMgr.h"
 #include "StructuredBuffer.h"
 
+#include <iostream>
+using namespace std;
+
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
 {
 	m_pVecClip = _vecAnimClip;
 	m_vecClipUpdateTime.resize(m_pVecClip->size());
-
 	static float fTime = 0.f;
 	fTime += 1.f;
 	m_vecClipUpdateTime[0] = fTime;
@@ -55,6 +57,7 @@ void CAnimator3D::Update()
 void CAnimator3D::LateUpdate()
 {
 }
+
 
 void CAnimator3D::FinalUpdate()
 {

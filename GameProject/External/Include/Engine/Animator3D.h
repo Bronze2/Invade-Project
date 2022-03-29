@@ -29,7 +29,7 @@ private:
 public:
 	void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
 	void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
-	void SetClipIndex(const int& _iCurClip) { m_iCurClip = _iCurClip; }
+	void SetClipIndex(int _iCurClip) { m_iCurClip = _iCurClip; }
 
 
 

@@ -156,10 +156,11 @@ CGameObject* CMeshData::Instantiate()
 		return pNewObj;
 
 	CAnimator3D* pAnimator = new CAnimator3D;
-	pNewObj->AddComponent(pAnimator);
 
 	pAnimator->SetBones(m_pMesh->GetBones());
 	pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
+	pNewObj->AddComponent(pAnimator);
+
 	
 
 	return pNewObj;

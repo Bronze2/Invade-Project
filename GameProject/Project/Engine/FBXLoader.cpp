@@ -6,6 +6,7 @@
 #include "PathMgr.h"
 
 #include "Material.h"
+#include <iostream>
 
 CFBXLoader::CFBXLoader()
 	: m_pManager(NULL)
@@ -498,7 +499,7 @@ void CFBXLoader::LoadSkeleton_Re(FbxNode* _pNode, int _iDepth, int _iIdx, int _i
 		tBone* pBone = new tBone;
 
 		string strBoneName = _pNode->GetName();
-
+		std::cout << strBoneName << std::endl;
 		pBone->strBoneName = wstring(strBoneName.begin(), strBoneName.end());
 		pBone->iDepth = _iDepth++;
 		pBone->iParentIndex = _iParentIdx;
@@ -516,7 +517,6 @@ void CFBXLoader::LoadSkeleton_Re(FbxNode* _pNode, int _iDepth, int _iIdx, int _i
 void CFBXLoader::LoadAnimationClip()
 {
 	int iAnimCount = m_arrAnimName.GetCount();
-
 	for (int i = 0; i < iAnimCount; ++i)
 	{
 		FbxAnimStack* pAnimStack = m_pScene->FindMember<FbxAnimStack>(m_arrAnimName[i]->Buffer());
@@ -525,18 +525,22 @@ void CFBXLoader::LoadAnimationClip()
 			continue;
 
 		tAnimClip* pAnimClip = new tAnimClip;
-
 		string strClipName = pAnimStack->GetName();
 		pAnimClip->strName = wstring(strClipName.begin(), strClipName.end());
-
+		std::cout << strClipName << std::endl;
 		FbxTakeInfo* pTakeInfo = m_pScene->GetTakeInfo(pAnimStack->GetName());
+		
 		pAnimClip->tStartTime = pTakeInfo->mLocalTimeSpan.GetStart();
 		pAnimClip->tEndTime = pTakeInfo->mLocalTimeSpan.GetStop();
-
+		
+		//std::cout << pAnimClip->tStartTime << "," << pAnimClip->tEndTime << "!!" << std::endl;
 		pAnimClip->eMode = m_pScene->GetGlobalSettings().GetTimeMode();
+		
 		pAnimClip->llTimeLength = pAnimClip->tEndTime.GetFrameCount(pAnimClip->eMode) - pAnimClip->tStartTime.GetFrameCount(pAnimClip->eMode);
-
+		
 		m_vecAnimClip.push_back(pAnimClip);
+
+		
 	}
 }
 
