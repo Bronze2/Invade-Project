@@ -210,7 +210,7 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
 
-	 pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\sword_min.fbx");
+	 pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\zebal.fbx");
  //    pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\sword_min.mdat", L"MeshData\\sword_min.mdat");
 
 	pObject = pMeshData->Instantiate();
@@ -220,11 +220,11 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 100.f, 150.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 200.f, 150.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	//pObject->Animator3D()->SetAnimClip(1);
-	pObject->Animator3D()->SetClipIndex(2);
+	//pObject->Animator3D()->SetClipIndex(2);
 
 
 	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);

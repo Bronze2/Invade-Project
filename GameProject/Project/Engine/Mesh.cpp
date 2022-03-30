@@ -189,7 +189,6 @@ void CMesh::Load(const wstring& _strFullPath, bool _bFBX)
 	// Animation 이 있는 Mesh 경우 Bone StructuredBuffer 만들기
 	if (m_vecAnimClip.size() > 0 && m_vecBones.size() > 0)
 	{
-		cout << "ㅅㅂ" <<endl;
 		wstring strBone = GetName();
 
 		// BoneOffet 행렬
@@ -211,7 +210,6 @@ void CMesh::Load(const wstring& _strFullPath, bool _bFBX)
 		}
 		m_pBoneOffset = new CStructuredBuffer;
 		m_pBoneOffset->Create(sizeof(Matrix), (UINT)vecOffset.size(), vecOffset.data());
-
 		m_pBoneFrameData = new CStructuredBuffer;
 		m_pBoneFrameData->Create(sizeof(tFrameTrans)
 			, (UINT)vecOffset.size() * (UINT)_iFrameCount
