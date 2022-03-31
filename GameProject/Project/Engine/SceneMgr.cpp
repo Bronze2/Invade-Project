@@ -165,6 +165,7 @@ void CSceneMgr::Init()
     pObject->MeshRender()->SetDynamicShadow(true);
     m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\zeb.fbx");
     Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
     //클라이언트 4개 생성
@@ -221,7 +222,6 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMinionScript);
-	;
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
@@ -288,8 +288,8 @@ void CSceneMgr::Init()
 	//
 	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\wizard_min.fbx");
-	//	pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\zeb.fbx");
+		//pMeshData->Save(pMeshData->GetPath());
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\wizard_min.mdat", L"MeshData\\wizard_min.mdat");
 	pObject = pMeshData->Instantiate();
 

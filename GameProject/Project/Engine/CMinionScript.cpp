@@ -6,7 +6,7 @@ void CMinionScript::Init()
 {
 	m_eState = MINION_STATE::WALK;
 	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
-		m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE");
+		m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
 	}
 
 	
