@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "Animation3D.h"
 
 class CStructuredBuffer;
 class CAnimator3D :
@@ -23,16 +24,32 @@ private:
 	Ptr<CMaterial> m_pBoneMtrl;
 	CStructuredBuffer* m_pBoneFinalMat;
 	bool m_bFinalMatUpdate;
+	double m_dStartFrameTime;
 
+	CAnimation* m_pAnimation;
 
 
 public:
+
+	void SetAnimation(CAnimation* _pAni) { m_pAnimation = _pAni; }
+	CAnimation* GetAnimation() { return m_pAnimation; }
+
+	bool m_bTestCheck = false;
 	void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
 	void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
+	void SetClipIndex(const int& _iCurClip) { m_iCurClip = _iCurClip; }
+	int GetFrameIdx() { return m_iFrameIdx; }
+	void SetFrmaeIdx(const int& _idx) { m_iFrameIdx = _idx; }
+	void SetCurTime(const double& _CurTime) { m_vecClipUpdateTime[m_iCurClip] = _CurTime; }
+	int GetFrameCount() { return m_iFrameCount; }
+
+	void SetStartFrameTime(const double& _uStarFrameTime) { m_dStartFrameTime = _uStarFrameTime; }
+
 
 	void UpdateData();
 	
 
+	//void SetStartFrame(const UINT& _uStartFrame){m_uStartFrame=_uStartFrame};
 	void SetClipTime(int _iClipIdx, float _fTime) { m_vecClipUpdateTime[_iClipIdx] = _fTime; }
 
 	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }

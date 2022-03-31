@@ -146,6 +146,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,
 	LIGHT3D,
 	PARTICLESYSTEM,
+	TERRAIN,
 	END,
 	SCRIPT,
 };
@@ -323,6 +324,7 @@ enum class MINION_STATE {
 	WALK,
 	ATTACK,
 	FIND,
+	DIE,
 };
 
 enum class MINION_CAMP {

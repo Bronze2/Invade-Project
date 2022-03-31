@@ -74,7 +74,7 @@ void CCamera::FinalUpdate()
 
 	m_frustum.FinalUpdate();
 	if(!m_bModule)
-	CRenderMgr::GetInst()->RegisterCamera(this);
+		CRenderMgr::GetInst()->RegisterCamera(this);
 }
 
 void CCamera::SortGameObject()

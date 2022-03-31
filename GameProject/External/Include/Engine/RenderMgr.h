@@ -28,7 +28,7 @@ private:
 	
 	vector<CLight3D*> m_vecLight3D;
 	vector<CCamera*> m_vecCam;
-
+	CCamera* m_pCamera;
 	HWND m_hWnd;
 
 	bool m_bWindowed;
@@ -50,7 +50,8 @@ private:
 	void CreateMRT();
 
 public:
-
+	CCamera* GetCamera() { return m_pCamera; }
+	void SetCamera(CCamera* _pCamera) { m_pCamera = _pCamera; }
 	void RegisterLight2D(const tLight2D& _Light2D) {
 		if (100 <= m_tLight2DInfo.iCount)
 			return;

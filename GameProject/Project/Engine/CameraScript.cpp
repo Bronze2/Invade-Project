@@ -27,10 +27,34 @@ void CCameraScript::Update()
 
 		
 	}
-
-
-
-
+//	if (KEY_HOLD(KEY_TYPE::KEY_W))
+//	{
+//		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+//		vPos += vFront * fSpeed * DT*200;
+//	}
+//
+//	if (KEY_HOLD(KEY_TYPE::KEY_S))
+//	{
+//		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
+//		vPos += vBack * fSpeed * DT*200;
+//	}
+//
+//	if (KEY_HOLD(KEY_TYPE::KEY_A))
+//	{
+//		Vec3 vLeft = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+//		vPos += vLeft * fSpeed * DT*200;
+//	}
+//
+//	if (KEY_HOLD(KEY_TYPE::KEY_D))
+//	{
+//		Vec3 vRight = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+//		vPos += vRight * fSpeed * DT*200;
+//	}
+//	Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+//	vRot.x -= vDrag.y * DT * 3.f;
+//	vRot.y += vDrag.x * DT * 1.5f;
+//
+//
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
 }

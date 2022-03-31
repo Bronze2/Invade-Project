@@ -62,7 +62,7 @@ void CKeyMgr::Init()
 	for (UINT i = 0; i < (UINT)KEY_TYPE::KEY_END; ++i) {
 		m_vecKey.push_back(tKeyState{ KEY_STATE::STATE_NONE, false });
 	}
-	ShowCursor(false);
+	//SetCursor(NULL);
 }
 
 void CKeyMgr::Update()
@@ -107,34 +107,7 @@ void CKeyMgr::Update()
 	GetCursorPos(&m_ptMouse);
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &m_ptMouse);
 
-	m_vDragDir = Vec2((float)(m_ptMouse.x - m_ptOldMouse.x), (float)(m_ptOldMouse.y - m_ptMouse.y));
+	CGameFramework::GetInst()->ProcessInput();
 
-	if (m_ptMouse.x > CRenderMgr::GetInst()->GetResolution().fWidth) {
-		if(m_ptMouse.y < 0) {
-			SetCursorPos(CRenderMgr::GetInst()->GetResolution().fWidth - 0.001, 0.0001);
-		}
-	else if (m_ptMouse.y > CRenderMgr::GetInst()->GetResolution().fHeight) {
-		SetCursorPos(CRenderMgr::GetInst()->GetResolution().fWidth - 0.001, CRenderMgr::GetInst()->GetResolution().fHeight - 0.0001);
-	}
-	else {
-			SetCursorPos(CRenderMgr::GetInst()->GetResolution().fWidth - 0.001, m_ptMouse.y);
-	}
-		
-		
-	}
-	if (m_ptMouse.x < 0) {
-		if (m_ptMouse.y < 0) {
-			SetCursorPos(0.0001, 0.0001);
-		}
-		else if (m_ptMouse.y > CRenderMgr::GetInst()->GetResolution().fHeight) {
-			SetCursorPos(0.0001, CRenderMgr::GetInst()->GetResolution().fHeight-0.0001);
-		}
-		else {
-			SetCursorPos(0.001, m_ptMouse.y);
-		}
-		
-	}
-
-
-
+	m_vDragDir = CGameFramework::GetInst()->GetMouseMove();
 }

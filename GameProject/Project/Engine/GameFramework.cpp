@@ -62,6 +62,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 void CGameFramework::Progress()
 {
 	CKeyMgr::GetInst()->Update();
+
 	CTimeMgr::GetInst()->Update();
 	CSound::g_pFMOD->update();
 	CEventMgr::GetInst()->Clear();
@@ -71,6 +72,57 @@ void CGameFramework::Progress()
 	CEventMgr::GetInst()->Update();
 
 
+}
+
+void CGameFramework::ProcessInput()
+{
+
+	POINT ptCursorPos;
+	
+		SetCursor(NULL);
+		GetCursorPos(&ptCursorPos);
+		m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
+		m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
+		m_vMouseMove.y *= -1.f;
+
+		m_ptOldCursorPos = ptCursorPos;
+	//	SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+	
+}
+
+void CGameFramework::OnProcessingMouseMessage(HWND _hWnd, UINT _uMessageID, WPARAM _wParam, LPARAM _lParam)
+{
+	switch (_uMessageID)
+	{
+		
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+		SetCapture(_hWnd);
+		GetCursorPos(&m_ptOldCursorPos);
+		break;
+	case WM_RBUTTONUP:
+	case WM_LBUTTONUP:
+		ReleaseCapture();
+	default:
+		break;
+	}
+}
+
+LRESULT CGameFramework::OnProcessingWindowMessage(HWND _hWnd, UINT _uMessageID, WPARAM _wParam, LPARAM _lParam)
+{
+	switch (_uMessageID)
+	{
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MOUSEMOVE:
+		OnProcessingMouseMessage(_hWnd, _uMessageID, _wParam, _lParam);
+		break;
+	default:
+		break;
+	}
+	return (0);
 }
 
 void CGameFramework::ChangeWindowSize(HWND _hWnd, const tResolution _resolution)

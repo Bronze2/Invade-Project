@@ -775,6 +775,8 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"ParticleShader", pShader);
 
+
+
 	// ======================
 	// Particle Update Shader
 	// ======================
@@ -785,6 +787,37 @@ void CResMgr::CreateDefaultShader()
 	pShader = new CShader;
 	pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
 	AddRes(L"Animation3DUpdateShader", pShader);
+
+
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\BillBoard.fx", "VS_BillBoard", "vs_5_0");
+	pShader->CreateGeometryShader(L"Shader\\BillBoard.fx", "GS_BillBoard", "gs_5_0");
+	pShader->CreatePixelShader(L"Shader\\BillBoard.fx", "PS_BillBoard", "ps_5_0");
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
+
+	pShader->Create(SHADER_POV::PARTICLE, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1
+
+	pShader->AddShaderParam(tShaderParam{ L"Start Scalex", SHADER_PARAM::FLOAT_0 });
+	pShader->AddShaderParam(tShaderParam{ L"End Scalex", SHADER_PARAM::FLOAT_1 });
+	pShader->AddShaderParam(tShaderParam{ L"Start Scaley", SHADER_PARAM::FLOAT_2 });
+	pShader->AddShaderParam(tShaderParam{ L"End Scaley", SHADER_PARAM::FLOAT_3 });
+
+	AddRes(L"BillBoardShader", pShader);
+
+
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\terrain.fx", "VS_Terrain", "vs_5_0");
+	pShader->CreateHullShader(L"Shader\\terrain.fx", "HS_Terrain", "hs_5_0");
+	pShader->CreateDomainShader(L"Shader\\terrain.fx", "DS_Terrain", "ds_5_0");
+	pShader->CreatePixelShader(L"Shader\\terrain.fx", "PS_Terrain", "ps_5_0");
+
+	pShader->SetRasterizerType(RS_TYPE::WIRE_FRAME);
+	pShader->SetRasterizerType(RS_TYPE::CULL_BACK);
+	pShader->Create(SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	AddRes(L"TerrainShader", pShader);
+
+
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -925,6 +958,16 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"ShadowMapShader"));
 	AddRes(L"ShadowMapMtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"BillBoardShader"));
+	AddRes(L"BillBoardMtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
+	AddRes(L"TerrainMtrl", pMtrl);
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype
