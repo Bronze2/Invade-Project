@@ -1,15 +1,54 @@
 #include "pch.h"
 #include "CMinionScript.h"
+#include "Animator3D.h"
 
 void CMinionScript::Init()
 {
+	m_eState = MINION_STATE::WALK;
+	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
+		m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE");
+	}
+
+	
+
 }
 
 void CMinionScript::Update()
 {
+	switch (m_eState)
+	{
+	case MINION_STATE::WALK:
+	{
+		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
+			if (GetObj()->Animator3D()->GetFrameIdx() == m_CurAnimation->EndFrame) {
+				GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+				GetObj()->Animator3D()->SetCurTime(0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(time);
+			}
+
+
+		}
+	}
+
+		break;
+	case MINION_STATE::ATTACK:
+		break;
+	case MINION_STATE::FIND:
+		break;
+	case MINION_STATE::DIE:
+
+		break;
+	default:
+		break;
+	}
+
+
+
+
 }
 
-CMinionScript::CMinionScript():CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT)
+CMinionScript::CMinionScript():CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_eState(MINION_STATE::WALK)
 {
 }
 

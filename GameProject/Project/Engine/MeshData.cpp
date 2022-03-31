@@ -59,7 +59,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 }
 
 
-void CMeshData::Load(const wstring& _strFilePath, bool _bFBX)
+void CMeshData::Load(const wstring& _strFilePath)
 {
 	FILE* pFile = NULL;
 	_wfopen_s(&pFile, _strFilePath.c_str(), L"rb");
@@ -86,7 +86,7 @@ void CMeshData::Load(const wstring& _strFilePath, bool _bFBX)
 		wstring strKey = LoadWString(pFile);
 		wstring strPath = LoadWString(pFile);
 
-		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->Load<CMaterial>(strKey, strPath,true);
+		Ptr<CMaterial> pMtrl = CResMgr::GetInst()->Load<CMaterial>(strKey, strPath);
 		m_vecMtrl[i] = pMtrl;
 	}
 
@@ -150,6 +150,9 @@ CGameObject* CMeshData::Instantiate()
 	for (UINT i = 0; i < m_vecMtrl.size(); ++i)
 	{
 		pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
+		if (pNewObj->MeshRender()->GetSharedMaterial()->GetName() == L"Material#28.mtrl") {
+			int a = 0;
+		}
 	}
 
 	if (false == m_pMesh->IsAnimMesh())

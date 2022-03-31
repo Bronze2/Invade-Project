@@ -73,6 +73,9 @@
     <Filter Include="GameObject\Component\Terrain">
       <UniqueIdentifier>{84247d70-f99f-4f79-852d-78d0fbb6f0e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Component\Animator\3D">
+      <UniqueIdentifier>{7c94d6d0-4ef2-414f-be91-114c27a8c22b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -204,9 +207,6 @@
     <ClInclude Include="MeshData.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Animator3D.h">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClInclude>
     <ClInclude Include="MRT.h">
       <Filter>Rendering\MRT</Filter>
     </ClInclude>
@@ -242,6 +242,12 @@
     </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>GameObject\Component\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator3D.h">
+      <Filter>GameObject\Component\Animator\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation3D.h">
+      <Filter>GameObject\Component\Animator\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -362,9 +368,6 @@
     <ClCompile Include="MeshData.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Animator3D.cpp">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClCompile>
     <ClCompile Include="MRT.cpp">
       <Filter>Rendering\MRT</Filter>
     </ClCompile>
@@ -400,6 +403,12 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>GameObject\Component\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator3D.cpp">
+      <Filter>GameObject\Component\Animator\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation3D.cpp">
+      <Filter>GameObject\Component\Animator\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -400,7 +400,7 @@ void CFBXLoader::LoadTexture()
 			else {
 				strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
 				strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
-				CResMgr::GetInst()->LoadFBXTexture<CTexture>(strFileName, strPath);
+				CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
 
 			}
 
@@ -411,7 +411,7 @@ void CFBXLoader::LoadTexture()
 			else {
 				strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
 				strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strNormal.c_str());
-				CResMgr::GetInst()->LoadFBXTexture<CTexture>(strFileName, strPath);
+				CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
 
 			}
 
@@ -422,7 +422,7 @@ void CFBXLoader::LoadTexture()
 			else{
 				strPath = CPathMgr::GetRelativePath(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
 				strFileName = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strSpec.c_str());
-				CResMgr::GetInst()->LoadFBXTexture<CTexture>(strFileName, strPath);
+				CResMgr::GetInst()->Load<CTexture>(strFileName, strPath);
 
 			}
 		}
@@ -440,10 +440,12 @@ void CFBXLoader::CreateMaterial()
 		{
 			CMaterial* pMaterial = new CMaterial;
 
+			
 			// Material ÀÌ¸§Áþ±â
 			strKey = m_vecContainer[i].vecMtrl[j].strMtrlName;
 			if (strKey.empty())
 				strKey = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strDiff.c_str());
+			
 
 			strPath = L"Material\\";
 			strPath += strKey;
@@ -685,6 +687,7 @@ void CFBXLoader::LoadKeyFrameTransform(FbxNode* _pNode, FbxCluster* _pCluster
 	m_vecBone[_iBoneIdx]->matBone = _matNodeTransform;
 
 	FbxTime::EMode eTimeMode = m_pScene->GetGlobalSettings().GetTimeMode();
+
 
 
 	FbxLongLong llStartFrame = m_vecAnimClip[0]->tStartTime.GetFrameCount(eTimeMode);

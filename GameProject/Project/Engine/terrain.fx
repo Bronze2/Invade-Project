@@ -34,7 +34,7 @@ struct PatchTess
 
 PatchTess PatchConstFunc_Terrain(InputPatch<VS_OUTPUT, 3> _input, int _iPatchID : SV_PrimitiveID)
 {
-    PatchTess output = { 0.f, 0.f, 0.f, 0.f };
+    PatchTess output = { 0.f, { 0.f, 0.f, 0.f } };
     float3 vCenterPos = (_input[0].vLocalPos + _input[1].vLocalPos) / 2.f;
     float3 vSidePos = float3(vCenterPos.x - (vCenterPos.x - _input[0].vLocalPos.x), vCenterPos.y, vCenterPos.z);
     float3 vUpPos = float3(vCenterPos.x, vCenterPos.y - (vCenterPos.z - _input[1].vLocalPos.z), vCenterPos.z);

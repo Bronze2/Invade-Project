@@ -28,7 +28,7 @@ void CTerrain::Init()
 	pMtrl->SetData(SHADER_PARAM::INT_1, &m_iFaceX);
 	pMtrl->SetData(SHADER_PARAM::INT_2, &m_iFaceZ);
 
-	m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\HeightMap.png");
+	m_pHeightMap = CResMgr::GetInst()->Load<CTexture>(L"HeightMap", L"Texture\\Terrain\\HeightMap.jpg");
 	Vec2 vHeightMapRes = Vec2(m_pHeightMap->Width(), m_pHeightMap->Height());
 
 	pMtrl->SetData(SHADER_PARAM::TEX_2, m_pHeightMap.GetPointer());

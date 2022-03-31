@@ -3,7 +3,7 @@
 #include "Device.h"
 
 #include <wincodec.h>
-void CTexture::Load(const wstring& _strFullPath, bool _bFBX)
+void CTexture::Load(const wstring& _strFullPath)
 {
 	wchar_t szExt[50] = L"";
 	_wsplitpath_s(_strFullPath.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szExt, 50);

@@ -324,6 +324,7 @@ enum class MINION_STATE {
 	WALK,
 	ATTACK,
 	FIND,
+	DIE,
 };
 
 enum class MINION_CAMP {

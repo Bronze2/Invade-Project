@@ -133,7 +133,7 @@ void CMaterial::Dispatch(UINT _x, UINT _y, UINT _z)
 	CDevice::GetInst()->ClearDummyDescriptorHeap_CS();
 }
 
-void CMaterial::Load(const wstring& _strFullPath,bool _bFBX)
+void CMaterial::Load(const wstring& _strFullPath)
 {
 	FILE* pFile = nullptr;
 	_wfopen_s(&pFile, _strFullPath.c_str(), L"rb");
@@ -160,7 +160,7 @@ void CMaterial::Load(const wstring& _strFullPath,bool _bFBX)
 			m_arrTex[i] = CResMgr::GetInst()->FindRes<CTexture>(strKey);
 			if (nullptr == m_arrTex[i])
 			{
-				m_arrTex[i] = CResMgr::GetInst()->Load<CTexture>(strKey, strPath,_bFBX);
+				m_arrTex[i] = CResMgr::GetInst()->Load<CTexture>(strKey, strPath);
 			}
 		}
 	}

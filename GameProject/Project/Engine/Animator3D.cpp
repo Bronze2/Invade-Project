@@ -58,21 +58,30 @@ void CAnimator3D::LateUpdate()
 
 void CAnimator3D::FinalUpdate()
 {
-	m_dCurTime = 0.f;
-	// 현재 재생중인 Clip 의 시간을 진행한다.
 	m_vecClipUpdateTime[m_iCurClip] += DT;
-	auto p=m_pVecClip->at(m_iCurClip);
-	if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
-	{
-		m_vecClipUpdateTime[m_iCurClip] = 0.f;
+	if (nullptr==m_pAnimation) {
+		m_dCurTime = 0.f;
+		// 현재 재생중인 Clip 의 시간을 진행한다.
+		
+		if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+		{
+			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		}
+
+		m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
 	}
+	else {
+		if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+		{
+			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		}
 
-	m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
-
+		m_dCurTime = m_dStartFrameTime + m_vecClipUpdateTime[m_iCurClip];
+	}
 	double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
 	m_iFrameIdx = (int)(dFrameIdx);
 
-	if (m_iFrameIdx >= m_pVecClip->at(m_iCurClip).iFrameLength - 1)
+	if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
 		m_iNextFrameIdx = m_iFrameIdx;
 	else
 		m_iNextFrameIdx = m_iFrameIdx + 1;
@@ -97,4 +106,5 @@ CAnimator3D::CAnimator3D():CComponent(COMPONENT_TYPE::ANIMATOR3D),m_iCurClip(0),
 CAnimator3D::~CAnimator3D()
 {
 	SAFE_DELETE(m_pBoneFinalMat);
+	SAFE_DELETE(m_pAnimation);
 }

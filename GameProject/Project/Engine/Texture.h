@@ -22,7 +22,7 @@ private:
 	D3D12_RESOURCE_STATES m_eState;
 
 public:
-	virtual void Load(const wstring& _strFullPath,bool _bFBX=false);
+	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strFullPath);
 	void Create(UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
 		, const D3D12_HEAP_PROPERTIES& _HeapProperty, D3D12_HEAP_FLAGS _eHeapFlag

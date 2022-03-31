@@ -16,7 +16,7 @@ CMesh::~CMesh(){
 	SAFE_DELETE(m_pBoneFrameData);
 	SAFE_DELETE(m_pBoneOffset);
 }
-void CMesh::Load(const wstring& _strFullPath, bool _bFBX)
+void CMesh::Load(const wstring& _strFullPath)
 {
 	FILE* pFile = nullptr;
 	_wfopen_s(&pFile, _strFullPath.c_str(), L"rb");
