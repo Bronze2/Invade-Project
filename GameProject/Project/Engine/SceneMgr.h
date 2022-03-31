@@ -15,11 +15,13 @@ public:
 	void Init();
 	void Update();
 	void Update_Tool();
-	void EnterClient(int id, float x, float y, float z);
-	void setMainClient(int id, float x, float y, float z);
-	void setEnableClient(int id);
-
+	
+	
+	void net_enterClient(int id, float x, float y, float z);
+	void net_setMainClient(int id, float x, float y, float z);
+	void net_setEnableClient(int id);	//지울가능성 높음
 	void net_setLocalPosByID(int id, float x, float y , float z);
+	void net_setRotationByID(int id, float x, float y, float z);
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);

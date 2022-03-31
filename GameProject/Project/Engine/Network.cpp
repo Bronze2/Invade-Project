@@ -89,7 +89,9 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
 		m_Client.id = my_packet->id;
 		cout << "My Client ID :" << m_Client.id <<"로그인 성공"<<endl;
-		CSceneMgr::GetInst()->setMainClient(m_Client.id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+		CSceneMgr::GetInst()->net_setMainClient(m_Client.id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+
+		cout << my_packet->pos.x <<","<< my_packet->pos.y << ","<<my_packet->pos.z << endl;
 	}
 	break;
 
@@ -100,7 +102,7 @@ void Network::ProcessPacket(char* ptr)
 		if (id == m_Client.id) {
 		}
 		else {
-			CSceneMgr::GetInst()->EnterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 	}
 	break;
@@ -109,10 +111,22 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == m_Client.id) {
-			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x+100, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 		else {
-			
+			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+		}
+	}
+	break;
+	case S2C_MOUSE:
+	{
+		sc_packet_mouse* my_packet = reinterpret_cast<sc_packet_mouse*>(ptr);
+		int other_id = my_packet->id;
+		if (other_id == m_Client.id) {
+			//CSceneMgr::GetInst()->net_setRotationByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+		}
+		else {
+			CSceneMgr::GetInst()->net_setRotationByID(my_packet->id, my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z);
 		}
 	}
 	break;
@@ -176,6 +190,7 @@ void Network::send_login_packet()
 
 void Network::send_move_packet(unsigned char dir, float x, float y , float z)
 {
+	//cs 수정 필요 지금귀찮;
 	cs_packet_move m_packet;
 	m_packet.type = C2S_MOVE;
 	m_packet.size = sizeof(m_packet);
@@ -186,6 +201,16 @@ void Network::send_move_packet(unsigned char dir, float x, float y , float z)
 	send_packet(&m_packet);
 }
 
+void Network::send_rotation_packet(Vec3 Rot)
+{
+	cs_packet_mouse m_packet;
+	m_packet.type = C2S_MOUSE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.Rot.x = Rot.x;
+	m_packet.Rot.y = Rot.y;
+	m_packet.Rot.z = Rot.z;
+	send_packet(&m_packet);
+}
 
 
 //void Network::CreateSocket()

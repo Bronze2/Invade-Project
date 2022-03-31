@@ -195,7 +195,7 @@ void CSceneMgr::Init()
         m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
         pObject->SetActive(false);
     }
-    cout << "积己等 Player 俺荐 纠 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << endl;;
+    std::cout << "积己等 Player 俺荐 纠 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << std::endl;
 
  //pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
  ////   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
@@ -332,7 +332,7 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
 }
 
 
-void CSceneMgr::EnterClient(int id ,float x, float y, float z)
+void CSceneMgr::net_enterClient(int id ,float x, float y, float z)
 {
     //CGameObject* pObject;
     //Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");//荐沥秦具凳.
@@ -366,12 +366,17 @@ void CSceneMgr::EnterClient(int id ,float x, float y, float z)
 
 }
 
+void CSceneMgr::net_setRotationByID(int id, float x, float y, float z)
+{
+    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalRot(Vec3(x, y, z));
+}
+
 void CSceneMgr::net_setLocalPosByID(int id, float x , float y, float z) 
 {
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x,y,z));
 }
 
-void CSceneMgr::setMainClient(int id, float x, float y, float z)
+void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
 {
 
 
@@ -400,7 +405,7 @@ void CSceneMgr::setMainClient(int id, float x, float y, float z)
 
 
 }
-void CSceneMgr::setEnableClient(int id)
+void CSceneMgr::net_setEnableClient(int id)
 {
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Enable();
 

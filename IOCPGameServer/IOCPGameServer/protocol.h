@@ -15,12 +15,16 @@ constexpr auto VIEW_RADIUS = 600;
 //받는 입장에서는 패킷 type이 날아온다. 보내는 입장에서는 이걸 담아 보내야 알려줄 수 있다.
 #define C2S_LOGIN	1
 #define C2S_MOVE	2
+#define C2S_MOUSE	3
 
 #define S2C_LOGIN_OK		1
 #define S2C_MOVE			2
 #define S2C_ENTER			3
 #define S2C_LEAVE			4
 #define S2C_NEAR_PLAYER		5
+
+#define S2C_MOUSE			6
+
 
 
 #pragma pack(push ,1)
@@ -46,6 +50,14 @@ struct sc_packet_move {
 	char type;
 	int id;
 	p_Vec3 pos;
+	unsigned move_time;
+};
+
+struct sc_packet_mouse {
+	char size;
+	char type;
+	int id;
+	p_Vec3 Rot;
 	unsigned move_time;
 };
 
@@ -96,6 +108,13 @@ struct cs_packet_move {
 	float dir_y;
 	float dir_z;
 	p_Vec3 dir;
+	unsigned move_time;
+};
+
+struct cs_packet_mouse {
+	char	size;
+	char	type;
+	p_Vec3 Rot;
 	unsigned move_time;
 };
 

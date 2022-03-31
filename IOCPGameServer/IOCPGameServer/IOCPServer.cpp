@@ -68,6 +68,7 @@ struct CLIENT
 	//게임 콘텐츠 
 	Vec3 Pos;
 	Vec3 dir;
+	Vec3 Rot;
 	char m_name[MAX_ID_LEN + 1];			//lock으로 보호
 
 	unsigned  m_move_time;
@@ -161,8 +162,8 @@ void send_login_ok_packet(int user_id)
 	p.size = sizeof(p);
 	p.type = S2C_LOGIN_OK;
 	p.pos.x = g_clients[user_id].Pos.x;
-	p.pos.y = g_clients[user_id].Pos.x;
-	p.pos.z = g_clients[user_id].Pos.x;
+	p.pos.y = g_clients[user_id].Pos.y;
+	p.pos.z = g_clients[user_id].Pos.z;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -179,14 +180,30 @@ void send_move_packet(int user_id, int mover)
 	p.id = mover;
 	p.size = sizeof(p);
 	p.type = S2C_MOVE;
-	p.pos.x = g_clients[user_id].Pos.x;
-	p.pos.y = g_clients[user_id].Pos.y;
-	p.pos.z = g_clients[user_id].Pos.z;
+	p.pos.x = g_clients[mover].Pos.x;
+	p.pos.y = g_clients[mover].Pos.y;
+	p.pos.z = g_clients[mover].Pos.z;
 
 	p.move_time = g_clients[mover].m_move_time;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
+
+void send_mouse_packet(int user_id, int mover)
+{
+	sc_packet_move p;
+	p.id = mover;
+	p.size = sizeof(p);
+	p.type = S2C_MOUSE;
+	p.pos.x = g_clients[mover].Rot.x;
+	p.pos.y = g_clients[mover].Rot.y;
+	p.pos.z = g_clients[mover].Rot.z;
+
+	p.move_time = g_clients[mover].m_move_time;
+
+	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
+}
+
 
 void send_enter_packet(int user_id, int o_id)
 {
@@ -194,9 +211,9 @@ void send_enter_packet(int user_id, int o_id)
 	p.id = o_id;
 	p.size = sizeof(p);
 	p.type = S2C_ENTER;
-	p.pos.x = g_clients[user_id].Pos.x;
-	p.pos.y = g_clients[user_id].Pos.y;
-	p.pos.z = g_clients[user_id].Pos.z;
+	p.pos.x = g_clients[o_id].Pos.x;
+	p.pos.y = g_clients[o_id].Pos.y;
+	p.pos.z = g_clients[o_id].Pos.z;
 	strcpy_s(p.name, g_clients[o_id].m_name);
 	p.o_type = O_PLAYER;
 
@@ -247,32 +264,7 @@ bool is_near(int a, int b)
 void do_move(int user_id, int direction)
 {
 	Vec3 vPos;
-	//vPos.x = g_clients[user_id].Pos.x;
-	//vPos.y = g_clients[user_id].Pos.y;
-	//vPos.z = g_clients[user_id].Pos.z;
-	
-	//switch (direction)
-	//{
-	//case D_UP:
-	//	if (z > 0)	z--;	break;
-	//case D_DOWN:
-	//	if (y < WORLD_HEIGHT - 1)	y++;	break;
-	//case D_LEFT:
-	//	if (x > 0)	x--;	break;
-	//case D_RIGHT:
-	//	if (x < WORLD_WIDTH - 1)	x++;	break;
-	//default:
-	//	cout << "unknown direction from client move packet \n";
-	//	DebugBreak();
-	//}
-	cout <<"계산 전Pos 값" << g_clients[user_id].Pos.x << "," << g_clients[user_id].Pos.y << "," << g_clients[user_id].Pos.z << endl;
-	cout <<"계산 전Dir 값" <<g_clients[user_id].dir.x <<","<<g_clients[user_id].dir.y << "," << g_clients[user_id].dir.z<< endl;
 	g_clients[user_id].Pos += g_clients[user_id].dir * 10.f;
-	cout << "계산 후 Pos 값" << g_clients[user_id].Pos.x << "," << g_clients[user_id].Pos.y << "," << g_clients[user_id].Pos.z << endl;
-
-//	g_clients[user_id].Pos.x = 200;
-//	g_clients[user_id].Pos.y = 200;
-//	g_clients[user_id].Pos.z = 200;
 
 	//복사해두고 쓴다. 근데 그 이후에 어긋나더라도 그건 감수해야한다. 지금은 이정도로 만족하자
 	g_clients[user_id].m_cLock.lock();
@@ -290,6 +282,11 @@ void do_move(int user_id, int direction)
 
 	//밑에서 view list로 알려주니까 나한테는 안 알려줌. 그래서 지금 먼저 나한테 이동을 알려줘야 함.
 	send_move_packet(user_id, user_id);
+	for (int i = 0; i < current_user; ++i) {
+		if (i == user_id) continue;
+		else
+			send_move_packet(i, user_id);
+	}
 
 	////시야에 새로 들어온 플레이어 
 	//for (auto newPlayer : new_vl)
@@ -330,23 +327,7 @@ void do_move(int user_id, int direction)
 	//}
 
 
-	////시야에서 벗어난 플레이어
-	//for (auto oldPlayer : old_vl)
-	//{
-	//	if (0 == new_vl.count(oldPlayer))
-	//	{
-	//		send_leave_packet(user_id, oldPlayer);
 
-	//		g_clients[oldPlayer].m_cLock.lock();
-	//		if (0 != g_clients[oldPlayer].view_list.count(user_id))
-	//		{
-	//			g_clients[oldPlayer].m_cLock.unlock();
-	//			send_leave_packet(oldPlayer, user_id);
-	//		}
-	//		else
-	//			g_clients[oldPlayer].m_cLock.unlock();
-	//	}
-	//}
 }
 
 void enter_game(int user_id, char name[])
@@ -355,7 +336,9 @@ void enter_game(int user_id, char name[])
 
 	strcpy_s(g_clients[user_id].m_name, name);
 	g_clients[user_id].m_name[MAX_ID_LEN] = NULL;
+
 	send_login_ok_packet(user_id);
+
 	g_clients[user_id].m_status = ST_ACTIVE;
 
 	g_clients[user_id].m_cLock.unlock();
@@ -388,6 +371,16 @@ void enter_game(int user_id, char name[])
 		}
 	}
 	cout << "Enter" << endl;
+}
+
+void do_Rotation(int user_id)
+{
+	send_mouse_packet(user_id, user_id);
+	for (int i = 0; i < current_user; ++i) {
+		if (i == user_id) continue;
+		else
+			send_mouse_packet(i, user_id);
+	}
 
 }
 
@@ -411,6 +404,17 @@ void process_packet(int user_id, char* buf)
 
 		//add_timer(user_id, OP_MOVE, 1000);
 		do_move(user_id, packet->direction);
+		break;
+	}
+	case C2S_MOUSE:
+	{
+		cs_packet_mouse * packet = reinterpret_cast<cs_packet_mouse*>(buf);
+		g_clients[user_id].m_move_time = packet->move_time;
+		g_clients[user_id].Rot.x = packet->Rot.x;
+		g_clients[user_id].Rot.y = packet->Rot.y;
+		g_clients[user_id].Rot.z = packet->Rot.z;
+
+		do_Rotation(user_id);
 		break;
 	}
 	default:
@@ -566,7 +570,7 @@ void worker_Thread()
 
 				g_clients[user_id].Pos.x = 50;
 				g_clients[user_id].Pos.y = 100;
-				g_clients[user_id].Pos.z = 100 + user_id * 300;
+				g_clients[user_id].Pos.z = 100 + user_id * 900;
 
 				g_clients[user_id].view_list.clear();
 
@@ -580,7 +584,7 @@ void worker_Thread()
 			exover->c_socket = clientSocket; //새로 받는 소켓을 넣어준다. 안그러면 클라들이 같은 소켓을 공유한다.
 			ZeroMemory(&exover->over, sizeof(exover->over)); //accept_over를 exover라는 이름으로 받았으니 exover를 재사용
 			AcceptEx(listenSocket, clientSocket, exover->io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
-
+			current_user++;
 		}
 			break;
 		case OP_MOVE:

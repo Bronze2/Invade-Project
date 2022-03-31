@@ -51,15 +51,21 @@ void CPlayerScript::Update()
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_S)) {
 		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		vPos += vBack * 200.f * DT;
+		Network::GetInst()->send_move_packet(0, vBack.x, vBack.y, vBack.z);
+
+		//vPos += vBack * 200.f * DT;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_A)) {
 		Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vLeft * 200.f * DT;
+		Network::GetInst()->send_move_packet(0, vLeft.x, vLeft.y, vLeft.z);
+
+		//vPos += vLeft * 200.f * DT;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_D)) {
 		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vRight * 200.f * DT;
+		Network::GetInst()->send_move_packet(0, vRight.x, vRight.y, vRight.z);
+
+		//vPos += vRight * 200.f * DT;
 	}
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pObj=GetObj()->GetChild()[0];
@@ -172,6 +178,8 @@ void CPlayerScript::Update()
 
 	}
 
+	//플레이어 회전 부분
+
 	Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 	if (!m_bCheckStartMousePoint) {
 		m_bCheckStartMousePoint = true;
@@ -187,14 +195,11 @@ void CPlayerScript::Update()
 			fDegree -= 360.f;
 			vRot.y = XMConvertToRadians(fDegree);
 		}
+		Network::GetInst()->send_rotation_packet(vRot);
 	}
 	
-
-
-
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
-
 }
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
