@@ -249,15 +249,7 @@ Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2)
 	XMStoreFloat3(&result, R);
 	return result;
 }
-#include "ResMgr.h"
-void NewMaterial(CMaterial* _Material,const wstring&_ShaderKey, const wstring& _strKey, const wstring& _strPath)
-{
-	wstring strKey = _strKey;
-	wstring strPath = _strPath;
 
-	_Material->SetShader(CResMgr::GetInst()->FindRes<CShader>(_ShaderKey));
-
-}
 
 Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _fzvalue)
 {

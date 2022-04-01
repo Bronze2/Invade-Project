@@ -74,14 +74,13 @@ void CGameFramework::ProcessInput()
 {
 
 	POINT ptCursorPos;
-	
-		SetCursor(NULL);
-		GetCursorPos(&ptCursorPos);
-		m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
-		m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
-		m_vMouseMove.y *= -1.f;
+	SetCursor(NULL);
+	GetCursorPos(&ptCursorPos);
+	m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
+	m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
+	m_vMouseMove.y *= -1.f;
 
-		m_ptOldCursorPos = ptCursorPos;
+	m_ptOldCursorPos = ptCursorPos;
 	//	SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
 	
 }
