@@ -4,6 +4,8 @@
 #include "ConstantBuffer.h"
 #include "Device.h"
 
+
+
 tTransform	g_transform;
 Vec3 vAsis[3] = { Vec3::Right,Vec3::Up,Vec3::Front };
 
@@ -22,6 +24,52 @@ CTransform::~CTransform()
 
 void CTransform::FinalUpdate()
 {
+	if (m_bBillBoard) {
+
+
+		Matrix matTranslation = XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
+		Matrix matScale = XMMatrixScaling(m_vLocalScale.x, m_vLocalScale.y, m_vLocalScale.z);
+		Vec3 vPos = m_pCamera->Transform()->GetWorldPos();
+		float angle = atan2(GetWorldPos().x - m_pCamera->Transform()->GetWorldPos().x, GetWorldPos().z - m_pCamera->Transform()->GetWorldPos().z)*(180/PI);
+		float rotate = angle * 0.0174532925f;
+		
+		Matrix matRot = XMMatrixRotationX(m_vLocalRot.x);
+		matRot *= XMMatrixRotationY(rotate);
+		matRot *= XMMatrixRotationZ(m_vLocalRot.z);
+
+
+		static Vec3 arrDefault[(UINT)DIR_TYPE::END] = { Vec3::Right, Vec3::Up, Vec3::Front };
+
+		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+		{
+			m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
+		}
+
+		// 로컬 x (크기 x 회전 x 이동)(월드행렬)
+		m_matWorld = matScale * matRot * matTranslation;
+
+
+		if (GetObj()->GetParent())
+		{
+			m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
+
+			for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+			{
+				m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
+				m_vWorldDir[i].Normalize();
+			}
+		}
+		else
+		{
+			memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vec3) * 3);
+		}
+
+		// 역행렬 계산
+		m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
+		
+		return;
+	}
+
 	Matrix matTranslation = XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
 	Matrix matScale = XMMatrixScaling(m_vLocalScale.x, m_vLocalScale.y, m_vLocalScale.z);
 

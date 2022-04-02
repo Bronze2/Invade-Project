@@ -143,20 +143,20 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-	//pObject = new CGameObject;
-	//pObject->SetName(L"Terrain");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//pObject->AddComponent(new CTerrain);
-	//
-	//pObject->FrustumCheck(false);
-	//pObject->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(50.f, 400.f, 50.f));
-	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
-	//pObject->Terrain()->Init();
-	//
-	//
-	//m_pCurScene->FindLayer(L"Terrain")->AddGameObject(pObject);
+	pObject = new CGameObject;
+	pObject->SetName(L"Terrain");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CTerrain);
+	
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(50.f, 400.f, 50.f));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
+	pObject->Terrain()->Init();
+	
+	
+	m_pCurScene->FindLayer(L"Terrain")->AddGameObject(pObject);
 
 	
 //	pMeshData->Save(pMeshData->GetPath());
@@ -495,15 +495,18 @@ void CSceneMgr::Init()
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetLocalPos(Vec3(-200.f, 150.f, 150.f));
+	pObject->Transform()->SetLocalScale(Vec3(100.f, 150.f, 1.f));
+	pObject->Transform()->SetBillBoard(true);
+	pObject->Transform()->SetCamera(pMainCam);
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
-	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std2DShader"));
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"Tree1Mtrl1", pMtrl);
 	pObject->MeshRender()->SetMaterial(pMtrl);
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTreeTex1.GetPointer());
-	pObject->Transform()->SetLocalPos(Vec3(-150.f, 100.f, 150.f));
-	pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 	
 	pObject = new CGameObject;
@@ -511,14 +514,20 @@ void CSceneMgr::Init()
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetLocalPos(Vec3(-250.f, 150.f, 150.f));
+	pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 1.f));
+	pObject->Transform()->SetBillBoard(true);
+	pObject->Transform()->SetCamera(pMainCam);
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
 	 pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
-	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std3DShader"));
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"Tree1Mtrl2", pMtrl);
 	pObject->MeshRender()->SetMaterial(pMtrl);
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTreeTex2.GetPointer());
-	pObject->Transform()->SetLocalPos(Vec3(-200.f, 100.f, 150.f));
+
+	pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 1.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 

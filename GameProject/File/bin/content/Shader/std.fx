@@ -156,10 +156,12 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
     float4 vColor = (float4) 0.f;
 
     if (tex_0)
-        vColor = g_tex_0.Sample(g_sam_1, _input.vUV);
+        vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
     else
         vColor = float4(1.f, 0.f, 1.f, 1.f);
 
+    clip(vColor.a - 0.9f);
+    
     return vColor;
 }
 
@@ -240,7 +242,7 @@ VTX_OUTPUT VS_Std2D(VTX_INPUT _input)
 float4 PS_Std2D(VTX_OUTPUT _input) : SV_Target
 {
     float4 vColor = (float4) 0.f;
-    return float4(1.f, 0.f, 0.f, 1.f);
+
     if (IsAnim2D)
     {
         float2 vUV = g_vLT + (g_vLen * _input.vUV);
