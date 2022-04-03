@@ -331,3 +331,19 @@ enum class MINION_CAMP {
 	BLUE,
 	RED,
 };
+
+enum class SPAWN_PATTERN {
+	PATTERN1=1,
+	PATTERN2,
+	PATTERN3,
+};
+enum class SPAWN_COUNT {
+	SIX=1,
+	SIX2,
+	SEVEN,
+};
+
+enum class CAMP_STATE {
+	RED,
+	BLUE,
+};

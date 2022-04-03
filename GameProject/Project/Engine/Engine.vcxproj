@@ -175,7 +175,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
-    <ClInclude Include="CMinionScript.h" />
+    <ClInclude Include="MinionScript.h" />
     <ClInclude Include="Collider3D.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="Collider2D.h" />
@@ -219,12 +219,14 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="CameraScript.h" />
+    <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -234,7 +236,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
-    <ClCompile Include="CMinionScript.cpp" />
+    <ClCompile Include="MinionScript.cpp" />
     <ClCompile Include="Collider3D.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="Collider2D.cpp" />
@@ -277,11 +279,13 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="CameraScript.cpp" />
+    <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>

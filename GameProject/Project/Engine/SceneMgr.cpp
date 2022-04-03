@@ -36,9 +36,10 @@
 #include "MonsterScript.h"
 #include "ParticleSystem.h"
 #include "ArrowScript.h"
-#include "CMinionScript.h"
+#include "MinionScript.h"
 #include "GameFramework.h"
 #include "Animation3D.h"
+#include "SpawnScript.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -102,6 +103,7 @@ void CSceneMgr::Init()
 	m_pCurScene->GetLayer(3)->SetName(L"Arrow");
 	m_pCurScene->GetLayer(4)->SetName(L"Minion");
 	m_pCurScene->GetLayer(5)->SetName(L"Tower");
+	
 
 	m_pCurScene->GetLayer(6)->SetName(L"Terrain");
 
@@ -143,20 +145,20 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-	pObject = new CGameObject;
-	pObject->SetName(L"Terrain");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	pObject->AddComponent(new CTerrain);
-	
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(50.f, 400.f, 50.f));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
-	pObject->Terrain()->Init();
-	
-	
-	m_pCurScene->FindLayer(L"Terrain")->AddGameObject(pObject);
+//	pObject = new CGameObject;
+//	pObject->SetName(L"Terrain");
+//	pObject->AddComponent(new CTransform);
+//	pObject->AddComponent(new CMeshRender);
+//	pObject->AddComponent(new CTerrain);
+//	
+//	pObject->FrustumCheck(false);
+//	pObject->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
+//	pObject->Transform()->SetLocalScale(Vec3(50.f, 400.f, 50.f));
+//	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TerrainMtrl"));
+//	pObject->Terrain()->Init();
+//	
+//	
+//	m_pCurScene->FindLayer(L"Terrain")->AddGameObject(pObject);
 
 	
 //	pMeshData->Save(pMeshData->GetPath());
@@ -331,7 +333,7 @@ void CSceneMgr::Init()
 	pNewAnimation = new CAnimation;
 
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 34, true, false);
-	pNewAnimation->InsertAnimation(L"WALK", 35, 59, false, false);
+	pNewAnimation->InsertAnimation(L"WALK", 36, 59, false, false);
 	pNewAnimation->InsertAnimation(L"ATTACK", 60, 84, false, false);
 	pNewAnimation->InsertAnimation(L"DIE", 110, 159, false, false);
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -354,7 +356,7 @@ void CSceneMgr::Init()
 	pNewAnimation = new CAnimation;
 
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
-	pNewAnimation->InsertAnimation(L"WALK", 30, 49, false, false);
+	pNewAnimation->InsertAnimation(L"WALK", 31, 49, false, false);
 	pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
 	pNewAnimation->InsertAnimation(L"DIE", 100, 149, false, false);
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -529,6 +531,19 @@ void CSceneMgr::Init()
 
 	pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 1.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+	
+	pObject = new CGameObject;
+	pObject->SetName(L"Spawn_Place");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CSpawnScript);
+	pObject->Transform()->SetLocalPos(Vec3(500.f, 100.f, 500.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+
+	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
+
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
 
 
 	

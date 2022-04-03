@@ -76,6 +76,12 @@
     <Filter Include="GameObject\Component\Animator\3D">
       <UniqueIdentifier>{7c94d6d0-4ef2-414f-be91-114c27a8c22b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Spawn">
+      <UniqueIdentifier>{90ced85d-f274-470f-96ae-fc2aaa6dcd24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Tower">
+      <UniqueIdentifier>{0701d9c0-6639-42ef-8583-f95aefac6691}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -231,7 +237,7 @@
     <ClInclude Include="ArrowScript.h">
       <Filter>Script\Arrow</Filter>
     </ClInclude>
-    <ClInclude Include="CMinionScript.h">
+    <ClInclude Include="MinionScript.h">
       <Filter>Script\Minion</Filter>
     </ClInclude>
     <ClInclude Include="PlayerScript.h">
@@ -248,6 +254,12 @@
     </ClInclude>
     <ClInclude Include="Animation3D.h">
       <Filter>GameObject\Component\Animator\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnScript.h">
+      <Filter>Script\Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerScript.h">
+      <Filter>Script\Tower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -392,7 +404,7 @@
     <ClCompile Include="ArrowScript.cpp">
       <Filter>Script\Arrow</Filter>
     </ClCompile>
-    <ClCompile Include="CMinionScript.cpp">
+    <ClCompile Include="MinionScript.cpp">
       <Filter>Script\Minion</Filter>
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp">
@@ -409,6 +421,12 @@
     </ClCompile>
     <ClCompile Include="Animation3D.cpp">
       <Filter>GameObject\Component\Animator\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnScript.cpp">
+      <Filter>Script\Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="TowerScript.cpp">
+      <Filter>Script\Tower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
