@@ -17,6 +17,17 @@ void CMinionScript::Init()
 
 void CMinionScript::Update()
 {
+	if (KEY_TAB(KEY_TYPE::KEY_Q)) {
+		m_eState = MINION_STATE::DIE;
+		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
+			m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE");
+			GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+			double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+			GetObj()->Animator3D()->SetCurTime(0.f);
+			GetObj()->Animator3D()->SetStartFrameTime(time);
+		}
+
+	}
 	switch (m_eState)
 	{
 	case MINION_STATE::WALK:
@@ -37,6 +48,14 @@ void CMinionScript::Update()
 	case MINION_STATE::FIND:
 		break;
 	case MINION_STATE::DIE:
+		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
+			if (GetObj()->Animator3D()->GetFrameIdx() == m_CurAnimation->EndFrame) {
+				GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+				GetObj()->Animator3D()->SetCurTime(0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(time);
+			}
+		}
 		break;
 	default:
 		break;

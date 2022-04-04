@@ -228,9 +228,6 @@
     <ClInclude Include="ArrowScript.h">
       <Filter>Script\Arrow</Filter>
     </ClInclude>
-    <ClInclude Include="CMinionScript.h">
-      <Filter>Script\Minion</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerScript.h">
       <Filter>Script\Player</Filter>
     </ClInclude>
@@ -239,6 +236,13 @@
     </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation3D.h" />
+    <ClInclude Include="SpawnScript.h" />
+    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TowerScript.h" />
+    <ClInclude Include="MinionScript.h">
+      <Filter>Script\Minion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -386,9 +390,6 @@
     <ClCompile Include="ArrowScript.cpp">
       <Filter>Script\Arrow</Filter>
     </ClCompile>
-    <ClCompile Include="CMinionScript.cpp">
-      <Filter>Script\Minion</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerScript.cpp">
       <Filter>Script\Player</Filter>
     </ClCompile>
@@ -397,6 +398,13 @@
     </ClCompile>
     <ClCompile Include="Network.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation3D.cpp" />
+    <ClCompile Include="SpawnScript.cpp" />
+    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TowerScript.cpp" />
+    <ClCompile Include="MinionScript.cpp">
+      <Filter>Script\Minion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -432,5 +440,7 @@
     <FxCompile Include="animation.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="BillBoard.fx" />
+    <FxCompile Include="terrain.fx" />
   </ItemGroup>
 </Project>
