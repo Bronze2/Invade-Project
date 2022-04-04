@@ -27,28 +27,28 @@ void CCameraScript::Update()
 
 		
 	}
-//	if (KEY_HOLD(KEY_TYPE::KEY_W))
+//	if (KEY_HOLD(KEY_TYPE::KEY_UP))
 //	{
 //		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-//		vPos += vFront * fSpeed * DT*200;
+//		vPos += vFront * fSpeed * DT;
 //	}
 //
-//	if (KEY_HOLD(KEY_TYPE::KEY_S))
+//	if (KEY_HOLD(KEY_TYPE::KEY_DOWN))
 //	{
 //		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-//		vPos += vBack * fSpeed * DT*200;
+//		vPos += vBack * fSpeed * DT;
 //	}
 //
-//	if (KEY_HOLD(KEY_TYPE::KEY_A))
+//	if (KEY_HOLD(KEY_TYPE::KEY_LEFT))
 //	{
 //		Vec3 vLeft = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-//		vPos += vLeft * fSpeed * DT*200;
+//		vPos += vLeft * fSpeed * DT;
 //	}
 //
-//	if (KEY_HOLD(KEY_TYPE::KEY_D))
+//	if (KEY_HOLD(KEY_TYPE::KEY_RIGHT))
 //	{
 //		Vec3 vRight = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-//		vPos += vRight * fSpeed * DT*200;
+//		vPos += vRight * fSpeed * DT;
 //	}
 //	Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 //	vRot.x -= vDrag.y * DT * 3.f;

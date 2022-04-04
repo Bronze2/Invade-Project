@@ -575,7 +575,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Test", "ps_5_0");
 
 	// BlendState 설정
-	//pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+//	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	pShader->Create(SHADER_POV::FORWARD);
 
@@ -594,7 +594,7 @@ void CResMgr::CreateDefaultShader()
 	// pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	// DSState
-	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
 
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
@@ -668,6 +668,8 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_EQUAL);
 	pShader->Create(SHADER_POV::FORWARD);
 	AddRes(L"SkyboxShader", pShader);
+
+
 
 	// ============
 	// GridShader
@@ -814,7 +816,7 @@ void CResMgr::CreateDefaultShader()
 
 	pShader->SetRasterizerType(RS_TYPE::WIRE_FRAME);
 	pShader->SetRasterizerType(RS_TYPE::CULL_BACK);
-	pShader->Create(SHADER_POV::DEFERRED, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	pShader->Create(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 	AddRes(L"TerrainShader", pShader);
 
 
