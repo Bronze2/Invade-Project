@@ -22,7 +22,6 @@ private:
     clock_t m_uiSpawnInterval;
 
     SPAWN_PATTERN m_eSpawnPattern;
-    SPAWN_COUNT m_eSpawnCount;
     
     CAMP_STATE m_eCampState;
 private:

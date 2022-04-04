@@ -47,7 +47,7 @@ void CMinionScript::Update()
 		break;
 	}
 	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-	vPos.z -= 10.f * DT;
+	vPos.z -= 50.f * DT;
 
 	GetObj()->Transform()->SetLocalPos(vPos);
 
