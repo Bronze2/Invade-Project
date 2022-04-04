@@ -37,7 +37,7 @@
 #include "ArrowScript.h"
 #include "GameFramework.h"
 #include "Network.h"
-#include "CMinionScript.h"
+#include "MinionScript.h"
 #include "Animation3D.h"
 
 CScene* CSceneMgr::GetCurScene()
