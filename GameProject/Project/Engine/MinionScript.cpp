@@ -11,11 +11,9 @@ void CMinionScript::Init()
 		double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 		GetObj()->Animator3D()->SetCurTime(0.f);
 		GetObj()->Animator3D()->SetStartFrameTime(time);
-	}
-
-	
-
+	}	
 }
+
 
 void CMinionScript::Update()
 {
@@ -30,8 +28,6 @@ void CMinionScript::Update()
 				GetObj()->Animator3D()->SetCurTime(0.f);
 				GetObj()->Animator3D()->SetStartFrameTime(time);
 			}
-
-
 		}
 	}
 
@@ -41,7 +37,6 @@ void CMinionScript::Update()
 	case MINION_STATE::FIND:
 		break;
 	case MINION_STATE::DIE:
-
 		break;
 	default:
 		break;
