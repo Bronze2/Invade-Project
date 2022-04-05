@@ -165,7 +165,7 @@ void CSceneMgr::Init()
     pObject->MeshRender()->SetDynamicShadow(true);
     m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\zeb.fbx");
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\112121.fbx");
     Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
     //클라이언트 4개 생성
@@ -181,9 +181,10 @@ void CSceneMgr::Init()
         pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
         pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
         pObject->FrustumCheck(false);
-        //pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
-        pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
-        pObject->MeshRender()->SetDynamicShadow(true);
+        pObject->Transform()->SetLocalPos(Vec3(50.f, 1100.f, 100.f));
+		pObject->Transform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
+		
+		pObject->MeshRender()->SetDynamicShadow(true);
         //pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
  
@@ -191,6 +192,30 @@ void CSceneMgr::Init()
         pObject->SetActive(false);
     }
     std::cout << "생성된 Player 개수 씬 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << std::endl;
+	
+	//Ptr<CMeshData> psMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\tesSmallBow01.fbx");
+	//pObject = new CGameObject;
+
+	//pObject = psMeshData->Instantiate();
+	//pObject->SetName(L"Monster");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CCollider3D);
+
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	//pObject->FrustumCheck(false);
+	////pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
+	//Vec3(50.f, 1100.f, 100.f
+	//pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
+	//pObject->MeshRender()->SetDynamicShadow(true);
+	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+
+
+
+
+
+
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
 	pObject = pMeshData->Instantiate();
 
@@ -433,8 +458,8 @@ void CSceneMgr::Init()
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
 
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle03.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle03.mdat", L"MeshData\\castle03.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
@@ -444,7 +469,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(150.f, 135.f, 700.f));
-	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 6, 3.14f, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(-PI/2, 0, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
@@ -591,7 +616,7 @@ void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
 
 
     cout << "Set Loacl Pos" << endl;
-    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
+	m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(50.f, 1100.f, 100.f));
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->AddComponent(new CPlayerScript);
 
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
