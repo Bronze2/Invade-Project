@@ -15,6 +15,7 @@ class CPlayerScript :
 {
 private:
     bool m_bCheckStartMousePoint;
+    bool m_bCheckZoomMaxPos;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
     CGameObject* m_pArrow[20];
@@ -23,6 +24,8 @@ private:
     int m_iPower;
     ELEMENT_TYPE m_iType;
     float m_fArrowSpeed;
+    float m_fZoomSpeed;
+    Vec3 m_vFront;
 
     float m_fArcherLocation;
 public:

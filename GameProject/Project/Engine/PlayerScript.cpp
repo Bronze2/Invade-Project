@@ -60,33 +60,40 @@ void CPlayerScript::Update()
 		vPos += vRight * 200.f * DT;
 	}
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		CGameObject* pObj=GetObj()->GetChild()[0];
-		Vec3 vPos=pObj->Transform()->GetLocalPos();
+		CGameObject* pObj = GetObj()->GetChild()[0];
+		Vec3 vPos = pObj->Transform()->GetLocalPos();
 		Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		Vec3 vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		m_vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		m_vZoomPos = vPos;
 		m_vRestorePos = vPos;
-		vPos += vRight * 10.f;
-		vPos += vFront * 10.f;
 		pObj->Transform()->SetLocalPos(vPos);
 		m_fArrowSpeed = 200.f;
-		
+		m_fZoomSpeed = 50.0f;
+		m_bCheckZoomMaxPos = false;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 1000.f*DT;
+		CGameObject* pObj = GetObj()->GetChild()[0];
+
+		m_fArrowSpeed += 3000.f * DT;
 		if (m_fArrowSpeed > 2000.f) {
 			m_fArrowSpeed = 2000.f;
+			m_bCheckZoomMaxPos = true;
 		}
-	}
 
+		if (!m_bCheckZoomMaxPos) {
+			m_vZoomPos += m_vFront * m_fZoomSpeed * DT;
+		}
+
+		pObj->Transform()->SetLocalPos(m_vZoomPos);
+	}
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pObj = GetObj()->GetChild()[0];
 		Vec3 vPos = pObj->Transform()->GetLocalPos();
-		Vec3 vRight =-pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		Vec3 vRight = -pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vFront = -pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vRestorePos = vPos;
-		vPos += vRight * 10.f;
-		vPos += vFront * 10.f;
-		pObj->Transform()->SetLocalPos(vPos);
+
+		pObj->Transform()->SetLocalPos(m_vRestorePos);
+
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		vRight = pObj->Transform()->GetWorldDir(DIR_TYPE::FRONT);
@@ -170,25 +177,24 @@ void CPlayerScript::Update()
 
 	}
 
-	Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-	if (!m_bCheckStartMousePoint) {
-		m_bCheckStartMousePoint = true;
-	}
-	else {
-		vRot.y += vDrag.x * DT * 1.f;
-		float fDegree = XMConvertToDegrees(vRot.y);
-		if (fDegree < -360) {
-			 fDegree+= 360.f;
-			 vRot.y = XMConvertToRadians(fDegree);
+	if (!(KEY_HOLD(KEY_TYPE::KEY_LBTN))) {
+		Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+		if (!m_bCheckStartMousePoint) {
+			m_bCheckStartMousePoint = true;
 		}
-		else if (fDegree > 360) {
-			fDegree -= 360.f;
-			vRot.y = XMConvertToRadians(fDegree);
+		else {
+			vRot.y += vDrag.x * DT * 1.f;
+			float fDegree = XMConvertToDegrees(vRot.y);
+			if (fDegree < -360) {
+				fDegree += 360.f;
+				vRot.y = XMConvertToRadians(fDegree);
+			}
+			else if (fDegree > 360) {
+				fDegree -= 360.f;
+				vRot.y = XMConvertToRadians(fDegree);
+			}
 		}
 	}
-	
-
-
 
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
