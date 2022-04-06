@@ -23,7 +23,9 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 	pObject->Transform()->SetLocalScale(_vLocalScale);
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Animator3D()->SetAnimation(_pAnimation);
+	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
 	pObject->GetScript<CMinionScript>()->Init();
+	
 
 	return pObject;
 }
@@ -46,6 +48,228 @@ void CSpawnScript::Update()
 			CAnimation* pNewAnimation = new CAnimation;
 			switch (m_eCampState)
 			{
+			case CAMP_STATE::RED:
+			{
+				switch (m_eSpawnPattern)
+				{
+				case SPAWN_PATTERN::PATTERN1:
+				{
+					if (!m_bSpawnStart) {
+						m_uiSpawnStart = clock();
+						m_bSpawnStart = true;
+					}
+					else {
+						m_uiSpawnEnd = clock();
+						m_uiSpawnInterval = (m_uiSpawnEnd - m_uiSpawnStart) / CLOCKS_PER_SEC;
+						switch (m_uiCount)
+						{
+						case 0:
+						case 1:
+						case 2:
+						{
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 30, 49, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 75, 114, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+						
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+						}
+						break;
+						case 3:
+						case 4:
+						case 5:
+						{
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 31, 49, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 100, 149, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+						
+								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+					
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+						}
+						break;
+						case 6:
+							m_uiCount = 0;
+							m_bPatternOn = false;
+							m_bSpawnStart = false;
+
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN2;
+							break;
+
+						default:
+							break;
+						}
+
+
+					}
+				}
+
+				break;
+				case SPAWN_PATTERN::PATTERN2:
+				{
+					if (!m_bSpawnStart) {
+						m_uiSpawnStart = clock();
+						m_bSpawnStart = true;
+					}
+					else {
+						m_uiSpawnEnd = clock();
+						m_uiSpawnInterval = (m_uiSpawnEnd - m_uiSpawnStart) / CLOCKS_PER_SEC;
+						switch (m_uiCount)
+						{
+						case 0:
+						case 1:
+						case 2:
+						{
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 30, 49, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 75, 114, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+						
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+								
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+						}
+						break;
+						case 3:
+						case 4:
+						case 5:
+						{
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 31, 49, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 100, 149, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+						
+								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+						}
+						break;
+						case 6:
+							m_uiCount = 0;
+							m_bPatternOn = false;
+							m_bSpawnStart = false;
+
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN3;
+							break;
+
+						default:
+							break;
+						}
+					}
+				}
+				break;
+				case SPAWN_PATTERN::PATTERN3:
+				{
+					if (!m_bSpawnStart) {
+						m_uiSpawnStart = clock();
+						m_bSpawnStart = true;
+					}
+					else {
+						m_uiSpawnEnd = clock();
+						m_uiSpawnInterval = (m_uiSpawnEnd - m_uiSpawnStart) / CLOCKS_PER_SEC;
+						switch (m_uiCount)
+						{
+						case 0:
+						case 1:
+						case 2:
+						{
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 30, 49, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 75, 114, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+							
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+								
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+						}
+						break;
+						case 3: {
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 39, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 41, 74, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 75, 99, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 125, 174, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+						
+								CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+
+						}
+							  break;
+						case 4:
+						case 5:
+						case 6:
+						{
+							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+								pNewAnimation->InsertAnimation(L"IDLE", 0, 29, true, false);
+								pNewAnimation->InsertAnimation(L"WALK", 31, 49, false, false);
+								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+								pNewAnimation->InsertAnimation(L"DIE", 100, 149, false, false);
+								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+							
+								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								CreateObject(pObject, L"Minion");
+								m_uiCount += 1;
+								m_uiSpawnStart = m_uiSpawnEnd;
+							}
+						}
+						break;
+						case 7:
+							m_uiCount = 0;
+							m_bPatternOn = false;
+							m_bSpawnStart = false;
+
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
+							break;
+
+						default:
+							break;
+						}
+
+
+					}
+
+				}
+
+				break;
+				}
+			}
+				break;
+
 			case CAMP_STATE::BLUE:
 			{
 				switch (m_eSpawnPattern)
@@ -71,8 +295,7 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 75, 124, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -89,8 +312,7 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 60, 84, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 110, 159, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -135,8 +357,8 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 75, 124, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+		
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -153,8 +375,8 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 60, 84, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 110, 159, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+					
+								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -196,8 +418,8 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 75, 124, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -211,8 +433,8 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 80, 104, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 105, 154, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -230,8 +452,8 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimation(L"ATTACK", 60, 84, false, false);
 								pNewAnimation->InsertAnimation(L"DIE", 110, 159, false, false);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-								vPos.z += m_uiCount * 25;
-								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.25f, 0.25f, 0.25f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
+							
+								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(10.f, 40.f, 10.f), pNewAnimation);
 								CreateObject(pObject, L"Minion");
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
@@ -259,9 +481,8 @@ void CSpawnScript::Update()
 			}
 
 			}
-			case CAMP_STATE::RED:
-
-				break;
+			break;
+	
 
 			}
 

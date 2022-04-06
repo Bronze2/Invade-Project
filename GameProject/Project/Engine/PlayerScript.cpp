@@ -4,7 +4,90 @@
 #include "MeshRender.h"
 #include "Camera.h"
 #include"CameraScript.h"
+#include "Animator3D.h"
 
+void CPlayerScript::m_FAnimation()
+{
+	if (m_ePrevState != m_eState) {
+		switch (m_eState)
+		{
+		case PLAYER_STATE::IDLE:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
+				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
+				GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+				GetObj()->Animator3D()->SetCurTime(0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(time);
+				m_ePrevState = PLAYER_STATE::IDLE;
+			}
+		}
+			break;
+		case PLAYER_STATE::WALK:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
+				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK");
+				GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+				GetObj()->Animator3D()->SetCurTime(0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(time);
+				m_ePrevState = PLAYER_STATE::WALK;
+			}
+		}
+		break;
+
+		default:
+			break;
+		}
+	}
+	else {
+		switch (m_eState)
+		{
+		case PLAYER_STATE::IDLE:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
+				if (GetObj()->Animator3D()->GetFrameIdx() == m_pCurAnimation->EndFrame) {
+					GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+					GetObj()->Animator3D()->SetCurTime(0.f);
+					GetObj()->Animator3D()->SetStartFrameTime(time);
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::WALK:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
+				if (GetObj()->Animator3D()->GetFrameIdx() == m_pCurAnimation->EndFrame) {
+					GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+					GetObj()->Animator3D()->SetCurTime(0.f);
+					GetObj()->Animator3D()->SetStartFrameTime(time);
+				}
+			}
+		}
+		break;
+
+		default:
+			break;
+		}
+	}
+}
+
+void CPlayerScript::Init()
+{
+	m_eState = PLAYER_STATE::IDLE;
+	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
+		m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
+		GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+		double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+		GetObj()->Animator3D()->SetCurTime(0.f);
+		GetObj()->Animator3D()->SetStartFrameTime(time);
+		m_eState = PLAYER_STATE::IDLE;
+		m_ePrevState = PLAYER_STATE::IDLE;
+	}
+
+}
 
 void CPlayerScript::Awake()
 {
@@ -46,19 +129,45 @@ void CPlayerScript::Update()
 	if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 		vPos += vFront * 200.f * DT;
+		m_eState = PLAYER_STATE::WALK;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_S)) {
 		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 		vPos += vBack * 200.f * DT;
+		m_eState = PLAYER_STATE::WALK;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_A)) {
 		Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		vPos += vLeft * 200.f * DT;
+		m_eState = PLAYER_STATE::WALK;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_D)) {
 		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		vPos += vRight * 200.f * DT;
+		m_eState = PLAYER_STATE::WALK;
 	}
+
+	if (KEY_AWAY(KEY_TYPE::KEY_W)) {
+		m_eState = PLAYER_STATE::IDLE;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_S)) {
+		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+		vPos += vBack * 200.f * DT;
+		m_eState = PLAYER_STATE::IDLE;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_A)) {
+		Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vPos += vLeft * 200.f * DT;
+		m_eState = PLAYER_STATE::IDLE;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_D)) {
+		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vPos += vRight * 200.f * DT;
+		m_eState = PLAYER_STATE::IDLE;
+	}
+
+
+
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pObj=GetObj()->GetChild()[0];
 		Vec3 vPos=pObj->Transform()->GetLocalPos();
@@ -192,6 +301,8 @@ void CPlayerScript::Update()
 
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
+
+	m_FAnimation();
 
 }
 

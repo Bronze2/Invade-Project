@@ -190,7 +190,12 @@ void CSceneMgr::Init()
 	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
 //	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
-	
+
+	CAnimation* pNewAnimation = new CAnimation;
+	pNewAnimation->InsertAnimation(L"IDLE", 568, 837, true, false);
+	pNewAnimation->InsertAnimation(L"WALK", 885, 909, false, false);
+	pObject->Animator3D()->SetAnimation(pNewAnimation);
+	pObject->GetScript<CPlayerScript>()->Init();
 	pObject->AddChild(pMainCam);
 //
 //
@@ -213,7 +218,7 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 
-	CAnimation* pNewAnimation =new CAnimation;
+	pNewAnimation =new CAnimation;
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 30, true, false);
 	pNewAnimation->InsertAnimation(L"WALK", 31, 54, false, false);
 	pNewAnimation->InsertAnimation(L"ATTACK", 80, 104, false, false);
@@ -260,7 +265,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(250.f, 100.f, 150.f));
+	pObject->Transform()->SetLocalPos(Vec3(250.f, 0.f, 150.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pNewAnimation = new CAnimation;
@@ -309,7 +314,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(350.f, 100.f, 150.f));
+	pObject->Transform()->SetLocalPos(Vec3(350.f, 0.f, 150.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.25f, 0.25f, 0.25f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pNewAnimation = new CAnimation;
@@ -356,7 +361,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(300.f, 0.f, 200.f)); 
+	pObject->Transform()->SetLocalPos(Vec3(300.f, 0.f, 550.f)); 
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f/2, 0.f, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(7.f, 7.f, 7.f));
@@ -376,7 +381,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 0.f, 400.f));
+	pObject->Transform()->SetLocalPos(Vec3(-100.f, 0.f, 1100.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 
@@ -393,7 +398,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 0.f, -200.f));
+	pObject->Transform()->SetLocalPos(Vec3(-200.f, 0.f, -200.f));
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 2, 3.14f, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(7.f, 7.f, 7.f));
@@ -413,25 +418,27 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 0.f, -400.f));
+	pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, -650.f));
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 
 
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle03.mdat", L"MeshData\\castle03.mdat");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\test_castle.mdat", L"MeshData\\test_castle.mdat");
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI/2, PI/2, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
-	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->MeshRender()->SetDynamicShadow(false);
 
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
+
+	CGameObject* pNexus=nullptr;
 
 
 //	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
@@ -445,13 +452,28 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
 	
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 35.f, -700.f));
+	pObject->Transform()->SetLocalPos(Vec3(-50.f, 35.f, -1250.f));
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f/6, 0.F, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
+	pNexus = pObject;
+	pObject = new CGameObject;
+	pObject->SetName(L"Spawn_Place");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CSpawnScript);
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 0.f, 1600.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+
+	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
+	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
+
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+
+
 
 
 //	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus.fbx");
@@ -464,34 +486,36 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 35.f, 700.f));
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 35.f, 1500.f));
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 6, 3.14f, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
+	pNexus = pObject;
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Cover.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Cover.mdat", L"MeshData\\Cover.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
-	pObject = pMeshData->Instantiate();
+
+	pNexus = pObject;
+	pObject = new CGameObject;
+	pObject->SetName(L"Spawn_Place");
 	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(-100.f, 100.f, 150.f));
-	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
-	pObject->MeshRender()->SetDynamicShadow(true);
-	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
+	pObject->AddComponent(new CSpawnScript);
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 0.f, -1150.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+
+	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
+	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
+
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+
+
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Tree");
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
-	pObject->Transform()->SetLocalPos(Vec3(-200.f, 150.f, 150.f));
+	pObject->Transform()->SetLocalPos(Vec3(-200.f, 0.f, 150.f));
 	pObject->Transform()->SetLocalScale(Vec3(100.f, 150.f, 1.f));
 	pObject->Transform()->SetBillBoard(true);
 	pObject->Transform()->SetCamera(pMainCam);
@@ -510,7 +534,7 @@ void CSceneMgr::Init()
 	pObject->FrustumCheck(false);
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
-	pObject->Transform()->SetLocalPos(Vec3(-250.f, 150.f, 150.f));
+	pObject->Transform()->SetLocalPos(Vec3(-250.f, 0.f, 150.f));
 	pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 1.f));
 	pObject->Transform()->SetBillBoard(true);
 	pObject->Transform()->SetCamera(pMainCam);
@@ -527,16 +551,6 @@ void CSceneMgr::Init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 	
-	pObject = new CGameObject;
-	pObject->SetName(L"Spawn_Place");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CSpawnScript);
-	pObject->Transform()->SetLocalPos(Vec3(500.f, 100.f, 500.f));
-	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-
-	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
-
-	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 
 
@@ -549,7 +563,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CMeshRender);
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky02.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 

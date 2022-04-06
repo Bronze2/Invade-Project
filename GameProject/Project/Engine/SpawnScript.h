@@ -22,6 +22,10 @@ private:
     clock_t m_uiSpawnInterval;
 
     SPAWN_PATTERN m_eSpawnPattern;
+    CGameObject* m_pNexus;
+
+
+
     
     CAMP_STATE m_eCampState;
 private:
@@ -30,6 +34,8 @@ public:
 
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }
     virtual void Update();
+
+    void SetEnemyNexus(CGameObject* _pNexus) { m_pNexus=_pNexus; }
 
     CSpawnScript();
     virtual ~CSpawnScript();

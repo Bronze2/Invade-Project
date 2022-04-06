@@ -15,6 +15,7 @@ void CMinionScript::Init()
 		m_eState = MINION_STATE::WALK;
 		m_ePrevState = MINION_STATE::WALK;
 	}	
+	m_pTarget = m_pNexus;
 }
 
 
@@ -32,16 +33,19 @@ void CMinionScript::Update()
 		vRot.y = rotate;
 
 	}
+	Vec3 vLocalPos = Transform()->GetLocalPos();
 	
 	m_FAnimation();
-
-//	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-//	vPos.z -= 50.f * DT;
+	Vec3 vWorldDir=GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	vLocalPos.x -= vWorldDir.x *100.f*DT;
+	vLocalPos.z -= vWorldDir.z * 100.f * DT;
 //
 //	GetObj()->Transform()->SetLocalPos(vPos);
 //
+	Transform()->SetLocalPos(vLocalPos);
 	Transform()->SetLocalRot(vRot);
 
+	
 }
 
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
