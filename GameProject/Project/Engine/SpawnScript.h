@@ -1,7 +1,7 @@
 #pragma once
 #include "Script.h"
 
-#define PATTERNINTEVAL 10
+#define PATTERNINTEVAL 20
 #define SPAWNINTEVAL 1
 class CAnimation;
 class CSpawnScript :

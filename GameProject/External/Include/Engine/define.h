@@ -337,6 +337,7 @@ enum class SPAWN_PATTERN {
 	PATTERN1=1,
 	PATTERN2,
 	PATTERN3,
+	END,
 };
 enum class SPAWN_COUNT {
 	SIX=1,

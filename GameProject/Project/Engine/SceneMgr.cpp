@@ -500,7 +500,7 @@ void CSceneMgr::Init()
 	pObject->SetName(L"Spawn_Place");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CSpawnScript);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 0.f, -1150.f));
+	pObject->Transform()->SetLocalPos(Vec3(-50.f, 0.f, -1150.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);

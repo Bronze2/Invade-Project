@@ -253,7 +253,7 @@ void CSpawnScript::Update()
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
+							m_eSpawnPattern = SPAWN_PATTERN::END;
 							break;
 
 						default:
@@ -465,7 +465,7 @@ void CSpawnScript::Update()
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
+							m_eSpawnPattern = SPAWN_PATTERN::END;
 							break;
 
 						default:
