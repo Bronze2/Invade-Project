@@ -1,12 +1,20 @@
 #pragma once
 #include "Script.h"
-
+#include "Animation3D.h"
 enum class ELEMENT_TYPE {
     FROZEN=0,
     FIRE=1,
     DARK=2,
     THUNDER=3,
     WIND=4
+};
+
+enum class PLAYER_STATE {
+    IDLE,
+    WALK,
+    ATTACK,
+    JUMP,
+    DIE,
 };
 
 class CTexture;
@@ -25,6 +33,8 @@ private:
     float m_fArrowSpeed;
 
     float m_fArcherLocation;
+
+    tAnimation* m_pCurAnimation;
 public:
     virtual void Awake();
     virtual void Update();

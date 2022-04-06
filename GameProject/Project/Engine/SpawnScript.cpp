@@ -257,9 +257,12 @@ void CSpawnScript::Update()
 
 				break;
 			}
-			default:
-				break;
+
 			}
+			case CAMP_STATE::RED:
+
+				break;
+
 			}
 
 

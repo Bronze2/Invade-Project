@@ -56,6 +56,12 @@ protected:
     virtual void OnCollision3DEnter(CCollider3D* _pOther) {}
     virtual void OnCollision3D(CCollider3D* _pOther) {}
     virtual void OnCollision3DExit(CCollider3D* _pOther) {}
+
+
+    virtual void OnDetectionEnter(CGameObject* _pOther)  {}
+    virtual void OnDetection(CGameObject* _pOther) {}
+    virtual void OnDetectionExit(CGameObject* _pOther) {}
+
 public:
     virtual void SaveToScene(FILE* _pFile){}
     virtual void LoadFromScene(FILE* _pFile){}
@@ -64,5 +70,6 @@ public:
     virtual ~CScript();
     friend class CCollider2D;
     friend class CCollider3D;
+    friend class CSensor;
 };
 

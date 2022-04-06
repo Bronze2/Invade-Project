@@ -169,8 +169,6 @@ call EngineCopy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animation2D.h" />
-    <ClInclude Include="Animator2D.h" />
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="Camera.h" />
@@ -216,6 +214,8 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMgr.h" />
     <ClInclude Include="Script.h" />
+    <ClInclude Include="Sensor.h" />
+    <ClInclude Include="SensorMgr.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="Sound.h" />
@@ -230,8 +230,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation2D.cpp" />
-    <ClCompile Include="Animator2D.cpp" />
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -276,6 +274,8 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Sound.cpp" />

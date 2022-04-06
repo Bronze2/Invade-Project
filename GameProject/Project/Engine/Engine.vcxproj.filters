@@ -52,9 +52,6 @@
     <Filter Include="Manager\Instancing">
       <UniqueIdentifier>{bc079f43-8b96-44f0-be44-27a29624abd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Manager\Mouse">
-      <UniqueIdentifier>{75383397-87fa-4c3d-a399-329861585f33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Default">
       <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,45 @@
     </Filter>
     <Filter Include="Script\Tower">
       <UniqueIdentifier>{0701d9c0-6639-42ef-8583-f95aefac6691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\Sensor">
+      <UniqueIdentifier>{d6a916a4-a938-493a-9a8b-3be43fe16ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\Light">
+      <UniqueIdentifier>{6b0ebcf0-a6bb-472c-9669-d33e6ded7c0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\Collider">
+      <UniqueIdentifier>{1c98d53d-3a61-456b-be8c-a495984ea60f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\MeshRender">
+      <UniqueIdentifier>{68a22e15-472a-4d34-9b1b-3aacf9e29af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\Particle">
+      <UniqueIdentifier>{c9006da7-4642-42a8-8120-cdc15a47cb29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\Transform">
+      <UniqueIdentifier>{08e9816f-0cbe-47a4-8532-eb9d11093c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component\Script">
+      <UniqueIdentifier>{86aab668-6639-456c-969f-2543199c42d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Collision">
+      <UniqueIdentifier>{b34ddbce-8745-42e6-88f8-bae65878e756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Event">
+      <UniqueIdentifier>{e9cc7da9-7d0c-42ad-9385-b2e97fdfe362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Keyboard">
+      <UniqueIdentifier>{e5072ec1-319b-4441-a577-b083715739b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Path">
+      <UniqueIdentifier>{5fc22fc5-9e72-4632-9042-1bd0e8536552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Time">
+      <UniqueIdentifier>{1ac94e75-0c2c-49a8-bc08-f74df12ca08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Sensor">
+      <UniqueIdentifier>{cdb18eab-7434-441a-bd85-aeebf64c116b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,21 +171,6 @@
     <ClInclude Include="Sound.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="TimeMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="EventMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="PathMgr.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="SceneMgr.h">
       <Filter>Manager\Scene</Filter>
     </ClInclude>
@@ -165,25 +186,7 @@
     <ClInclude Include="GameObject.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider2D.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Light2D.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Light3D.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshRender.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Script.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
@@ -191,12 +194,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>GameObject\Component\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator2D.h">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation2D.h">
-      <Filter>GameObject\Component\Animator</Filter>
     </ClInclude>
     <ClInclude Include="GameFramework.h">
       <Filter>Framework</Filter>
@@ -219,9 +216,6 @@
     <ClInclude Include="ResMgr.h">
       <Filter>Manager\RES</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
     <ClInclude Include="StructuredBuffer.h">
       <Filter>Device</Filter>
     </ClInclude>
@@ -230,9 +224,6 @@
     </ClInclude>
     <ClInclude Include="InstancingBuffer.h">
       <Filter>Manager\Instancing</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider3D.h">
-      <Filter>GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="ArrowScript.h">
       <Filter>Script\Arrow</Filter>
@@ -260,6 +251,51 @@
     </ClInclude>
     <ClInclude Include="TowerScript.h">
       <Filter>Script\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Sensor.h">
+      <Filter>GameObject\Component\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="Light3D.h">
+      <Filter>GameObject\Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light2D.h">
+      <Filter>GameObject\Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider2D.h">
+      <Filter>GameObject\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider3D.h">
+      <Filter>GameObject\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRender.h">
+      <Filter>GameObject\Component\MeshRender</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>GameObject\Component\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>GameObject\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>GameObject\Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMgr.h">
+      <Filter>Manager\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMgr.h">
+      <Filter>Manager\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMgr.h">
+      <Filter>Manager\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="PathMgr.h">
+      <Filter>Manager\Path</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>Manager\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorMgr.h">
+      <Filter>Manager\Sensor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,21 +335,6 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="EventMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="PathMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="SceneMgr.cpp">
       <Filter>Manager\Scene</Filter>
     </ClCompile>
@@ -335,35 +356,11 @@
     <ClCompile Include="Component.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider2D.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Light2D.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Light3D.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshRender.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>GameObject\Component\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>GameObject\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator2D.cpp">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation2D.cpp">
-      <Filter>GameObject\Component\Animator</Filter>
     </ClCompile>
     <ClCompile Include="GameFramework.cpp">
       <Filter>Framework</Filter>
@@ -386,9 +383,6 @@
     <ClCompile Include="ResMgr.cpp">
       <Filter>Manager\RES</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
     <ClCompile Include="StructuredBuffer.cpp">
       <Filter>Device</Filter>
     </ClCompile>
@@ -397,9 +391,6 @@
     </ClCompile>
     <ClCompile Include="InstancingMgr.cpp">
       <Filter>Manager\Instancing</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider3D.cpp">
-      <Filter>GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="ArrowScript.cpp">
       <Filter>Script\Arrow</Filter>
@@ -427,6 +418,51 @@
     </ClCompile>
     <ClCompile Include="TowerScript.cpp">
       <Filter>Script\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="Sensor.cpp">
+      <Filter>GameObject\Component\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="Light2D.cpp">
+      <Filter>GameObject\Component\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light3D.cpp">
+      <Filter>GameObject\Component\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2D.cpp">
+      <Filter>GameObject\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3D.cpp">
+      <Filter>GameObject\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRender.cpp">
+      <Filter>GameObject\Component\MeshRender</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>GameObject\Component\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>GameObject\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>GameObject\Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMgr.cpp">
+      <Filter>Manager\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMgr.cpp">
+      <Filter>Manager\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyMgr.cpp">
+      <Filter>Manager\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="PathMgr.cpp">
+      <Filter>Manager\Path</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>Manager\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorMgr.cpp">
+      <Filter>Manager\Sensor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
