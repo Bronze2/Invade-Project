@@ -14,7 +14,7 @@ class CLight3D;
 class CCamera;
 class CParticleSystem;
 class CTerrain;
-
+class CSensor;
 class CGameObject :public CEntity
 {
 private:
@@ -55,6 +55,7 @@ public:
 	CLight3D* Light3D() { return (CLight3D*)m_arrCom[(UINT)COMPONENT_TYPE::LIGHT3D]; }
 	CParticleSystem* ParticleSystem() { return (CParticleSystem*)m_arrCom[(UINT)COMPONENT_TYPE::PARTICLESYSTEM]; }
 	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN]; }
+	CSensor* Sensor() { return (CSensor*)m_arrCom[(UINT)COMPONENT_TYPE::SENSOR]; }
 	const vector<CScript*>& GetScripts()const { return m_vecScript; }
 
 	template<typename T>

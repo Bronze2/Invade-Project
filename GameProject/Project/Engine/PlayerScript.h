@@ -1,13 +1,20 @@
 #pragma once
 #include "Script.h"
 #include "Animation3D.h"
-
 enum class ELEMENT_TYPE {
     FROZEN=0,
     FIRE=1,
     DARK=2,
     THUNDER=3,
     WIND=4
+};
+
+enum class PLAYER_STATE {
+    IDLE,
+    WALK,
+    ATTACK,
+    JUMP,
+    DIE,
 };
 
 class CTexture;
@@ -24,24 +31,23 @@ private:
     int m_iPower;
     ELEMENT_TYPE m_iType;
     float m_fArrowSpeed;
-    bool mainClient;
 
     float m_fArcherLocation;
 
-    MINION_STATE m_eState;
-    tAnimation* m_CurAnimation;
-
+    tAnimation* m_pCurAnimation;
+    PLAYER_STATE m_eState;
+    PLAYER_STATE m_ePrevState;
 public:
+    void m_FAnimation();
     void Init();
     virtual void Awake();
     virtual void Update();
     void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
-    void SetMain() { mainClient = true; }
-    void SetState(MINION_STATE state);
+  
 
     CPlayerScript();
     virtual ~CPlayerScript();
-    void do_Animation();
+
 
 
     CLONE(CPlayerScript);

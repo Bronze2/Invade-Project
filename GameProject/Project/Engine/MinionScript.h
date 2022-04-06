@@ -1,11 +1,6 @@
 #pragma once
 #include "Script.h"
 #include "Animation3D.h"
-enum class ATTACKTYPE {
-    MELEE,
-    RANGE,
-    CANON,
-};
 
 class CMinionScript :
     public CScript
@@ -24,14 +19,14 @@ class CMinionScript :
 
     vector<CGameObject*> m_arrEnemy;
     vector<CGameObject*> m_pEnemyPlayers;
-
-    ATTACKTYPE m_eAttackType;
+    
+    bool m_bFinishAnimation;
 
 
 public:
-    void SetAttackType(ATTACKTYPE _eType) { m_eAttackType = _eType; }
+    
     CLONE(CMinionScript)
-        void Init();
+    void Init();
 
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();
@@ -39,27 +34,32 @@ public:
     const MINION_STATE& GetState()const { return m_eState; }
     const MINION_CAMP& GetCamp()const { return m_eCamp; }
 
-
+    
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);
     virtual void OnDetectionExit(CGameObject* _pOther);
 
     void AddObject(CGameObject* _pObject);
     void PushPlayer(CGameObject* _pObject) { m_pEnemyPlayers.push_back(_pObject); }
+   
+    
+    void SetAttackRange(float _fRange) { m_fAttackRange = _fRange; }
+    float GetRange() { return m_fAttackRange; }
 
-
+    void CheckRange();
 
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
-
-
-
+    
+    
+    
     void m_FAnimation();
     void m_FFind();
 
 
-
+   
     CMinionScript();
-    CMinionScript(float _fSpeed, float _fRange, MINION_STATE _eState, MINION_CAMP _eCamp);
+    CMinionScript(float _fSpeed,float _fRange,MINION_STATE _eState,MINION_CAMP _eCamp);
     virtual ~CMinionScript();
 };
+

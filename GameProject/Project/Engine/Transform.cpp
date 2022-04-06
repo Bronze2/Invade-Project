@@ -25,8 +25,6 @@ CTransform::~CTransform()
 void CTransform::FinalUpdate()
 {
 	if (m_bBillBoard) {
-
-
 		Matrix matTranslation = XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
 		Matrix matScale = XMMatrixScaling(m_vLocalScale.x, m_vLocalScale.y, m_vLocalScale.z);
 		Vec3 vPos = m_pCamera->Transform()->GetWorldPos();
