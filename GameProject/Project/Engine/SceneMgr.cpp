@@ -166,7 +166,8 @@ void CSceneMgr::Init()
     m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
 
 	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\112121.fbx");
-    Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+  // Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
 
     //클라이언트 4개 생성
     for (int i = 0; i < 4; ++i) {
@@ -183,12 +184,14 @@ void CSceneMgr::Init()
         pObject->FrustumCheck(false);
         pObject->Transform()->SetLocalPos(Vec3(50.f, 1100.f, 100.f));
 		pObject->Transform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
-		
+
 		pObject->MeshRender()->SetDynamicShadow(true);
 		pObject->AddComponent(new CPlayerScript);
 
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 		CAnimation* pNewAnimation = new CAnimation;
+
+	
 		pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
 		pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
 		pNewAnimation->InsertAnimation(L"ATTACK", 80, 104, false, false);
@@ -461,6 +464,7 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
+
 
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Cover.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Cover.mdat", L"MeshData\\Cover.mdat");

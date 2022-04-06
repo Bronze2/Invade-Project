@@ -60,7 +60,14 @@ void CPlayerScript::Update()
 	if (mainClient) {
 		Vec3 vPos = Transform()->GetLocalPos();
 		Vec3 vRot = Transform()->GetLocalRot();
-
+		if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D))
+		{
+			SetState(MINION_STATE::WALK);
+		}
+		if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D))
+		{
+			SetState(MINION_STATE::IDLE);
+		}
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			Network::GetInst()->send_move_packet(0, vFront.x, vFront.y, vFront.z);
@@ -70,7 +77,6 @@ void CPlayerScript::Update()
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
 			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			Network::GetInst()->send_move_packet(0, vBack.x, vBack.y, vBack.z);
-
 			//vPos += vBack * 200.f * DT;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
@@ -274,13 +280,24 @@ void CPlayerScript::SetState(MINION_STATE state)
 	m_eState = state;
 	switch (m_eState)
 	{
-	case MINION_STATE::WALK:
+	case MINION_STATE::IDLE:
 		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
+
 			m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
 			GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
 			double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 			GetObj()->Animator3D()->SetCurTime(0.f);
 			GetObj()->Animator3D()->SetStartFrameTime(time);
+		}
+		break;
+	case MINION_STATE::WALK:
+		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
+
+			m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK");
+			GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+			double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+			GetObj()->Animator3D()->SetCurTime(0.f);
+			GetObj()->Animator3D()->SetStartFrameTime(time);		
 		}
 		break;
 	case MINION_STATE::ATTACK:
