@@ -127,25 +127,19 @@ void CPlayerScript::Update()
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
 
-
 			Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
-
 
 			CCameraScript* p = dynamic_cast<CCameraScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
 			float fDegree = p->GetDegree();
 			float fDegree2 = fDegree;
 			fDegree *= -1.f;
 
-
 			float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
 
 			Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x + xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70 + yValue, GetObj()->Transform()->GetLocalPos().z + xzValue.y);
 
-
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 			fDegree *= -1.f;
-
-
 
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
 			if (m_iCurArrow == 0) {
@@ -162,13 +156,11 @@ void CPlayerScript::Update()
 
 			float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
 
-
 			vArrowPos.x += result.x;
 			vArrowPos.z += result.z;
 			float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
 			float xValue2 = xValue + flength;
 			float fyValue2 = yValue * xValue2 / xValue;
-
 			float SubeyValue2Value = fyValue2 - yValue;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeen(SubeyValue2Value);
 
@@ -184,7 +176,6 @@ void CPlayerScript::Update()
 			else {
 				vCrossValue = Cross(result, vTarget);
 			}
-
 
 			if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 
