@@ -50,6 +50,7 @@ struct sc_packet_move {
 	char type;
 	int id;
 	p_Vec3 pos;
+	int state;
 	unsigned move_time;
 };
 
@@ -108,6 +109,7 @@ struct cs_packet_move {
 	float dir_y;
 	float dir_z;
 	p_Vec3 dir;
+	int state;
 	unsigned move_time;
 };
 

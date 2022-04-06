@@ -69,6 +69,7 @@ struct CLIENT
 	Vec3 Pos;
 	Vec3 dir;
 	Vec3 Rot;
+	int animState;
 	char m_name[MAX_ID_LEN + 1];			//lock으로 보호
 
 	unsigned  m_move_time;
@@ -183,7 +184,7 @@ void send_move_packet(int user_id, int mover)
 	p.pos.x = g_clients[mover].Pos.x;
 	p.pos.y = g_clients[mover].Pos.y;
 	p.pos.z = g_clients[mover].Pos.z;
-
+	p.state = g_clients[mover].animState;
 	p.move_time = g_clients[mover].m_move_time;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
@@ -401,7 +402,7 @@ void process_packet(int user_id, char* buf)
 		g_clients[user_id].dir.x = packet->dir.x;
 		g_clients[user_id].dir.y = packet->dir.y;
 		g_clients[user_id].dir.z = packet->dir.z;
-
+		g_clients[user_id].animState = packet->state;
 		//add_timer(user_id, OP_MOVE, 1000);
 		do_move(user_id, packet->direction);
 		break;
@@ -569,8 +570,8 @@ void worker_Thread()
 				g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
 				g_clients[user_id].Pos.x = 50;
-				g_clients[user_id].Pos.y = 100;
-				g_clients[user_id].Pos.z = 100 + user_id * 900;
+				g_clients[user_id].Pos.y = 0;
+				g_clients[user_id].Pos.z = 100 + user_id * 100;
 
 				g_clients[user_id].view_list.clear();
 

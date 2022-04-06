@@ -37,13 +37,16 @@ private:
     tAnimation* m_pCurAnimation;
     PLAYER_STATE m_eState;
     PLAYER_STATE m_ePrevState;
+
+    bool isMain;
 public:
     void m_FAnimation();
     void Init();
     virtual void Awake();
     virtual void Update();
     void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
-  
+    void SetMain() { isMain = true; };
+    void SetState(int state);
 
     CPlayerScript();
     virtual ~CPlayerScript();

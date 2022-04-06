@@ -42,8 +42,9 @@ public:
 
 	void send_packet(void* packet);
 	void send_login_packet();
-	void send_move_packet(unsigned char dir, float x, float y , float z);
+	void send_move_packet(unsigned char dir, float x, float y , float z, int state);
 	void send_rotation_packet(Vec3 Rot);
+	void send_animation_packet(int state);
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 private:

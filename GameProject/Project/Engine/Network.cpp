@@ -115,7 +115,7 @@ void Network::ProcessPacket(char* ptr)
 		}
 		else {
 			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, MINION_STATE::WALK);
+			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
 		}
 	}
 	break;
@@ -189,7 +189,7 @@ void Network::send_login_packet()
 	cout << "Send Login Packet" << endl;
 }
 
-void Network::send_move_packet(unsigned char dir, float x, float y , float z)
+void Network::send_move_packet(unsigned char dir, float x, float y , float z,int state)
 {
 	//cs ¼öÁ¤ ÇÊ¿ä Áö±Ý±ÍÂú;
 	cs_packet_move m_packet;
@@ -199,7 +199,21 @@ void Network::send_move_packet(unsigned char dir, float x, float y , float z)
 	m_packet.dir.x = x;
 	m_packet.dir.y = y;
 	m_packet.dir.z = z;
+	m_packet.state = state;
 	send_packet(&m_packet);
+}
+
+void Network::send_animation_packet(int state)
+{
+	////cs ¼öÁ¤ ÇÊ¿ä Áö±Ý±ÍÂú;
+	//cs_packet_move m_packet;
+	//m_packet.type = C2S_MOVE;
+	//m_packet.size = sizeof(m_packet);
+	//m_packet.direction = dir;
+	//m_packet.dir.x = x;
+	//m_packet.dir.y = y;
+	//m_packet.dir.z = z;
+	//send_packet(&m_packet);
 }
 
 void Network::send_rotation_packet(Vec3 Rot)
