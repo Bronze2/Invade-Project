@@ -1,11 +1,6 @@
 #pragma once
 #include "Script.h"
 #include "Animation3D.h"
-enum class ATTACKTYPE {
-    MELEE,
-    RANGE,
-    CANON,
-};
 
 class CMinionScript :
     public CScript
@@ -25,11 +20,11 @@ class CMinionScript :
     vector<CGameObject*> m_arrEnemy;
     vector<CGameObject*> m_pEnemyPlayers;
     
-    ATTACKTYPE m_eAttackType;
+    bool m_bFinishAnimation;
 
 
 public:
-    void SetAttackType(ATTACKTYPE _eType) { m_eAttackType = _eType; }
+    
     CLONE(CMinionScript)
     void Init();
 
@@ -48,6 +43,10 @@ public:
     void PushPlayer(CGameObject* _pObject) { m_pEnemyPlayers.push_back(_pObject); }
    
     
+    void SetAttackRange(float _fRange) { m_fAttackRange = _fRange; }
+    float GetRange() { return m_fAttackRange; }
+
+    void CheckRange();
 
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
