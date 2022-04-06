@@ -185,35 +185,22 @@ void CSceneMgr::Init()
 		pObject->Transform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
 		
 		pObject->MeshRender()->SetDynamicShadow(true);
-        //pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+		pObject->AddComponent(new CPlayerScript);
+
+		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+		CAnimation* pNewAnimation = new CAnimation;
+		pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
+		pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
+		pNewAnimation->InsertAnimation(L"ATTACK", 80, 104, false, false);
+		pNewAnimation->InsertAnimation(L"DIE", 105, 154, false, false);
+		pObject->Animator3D()->SetAnimation(pNewAnimation);
+		pObject->GetScript<CPlayerScript>()->Init();
 
  
         m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
         pObject->SetActive(false);
     }
     std::cout << "积己等 Player 俺荐 纠 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << std::endl;
-	
-	//Ptr<CMeshData> psMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\tesSmallBow01.fbx");
-	//pObject = new CGameObject;
-
-	//pObject = psMeshData->Instantiate();
-	//pObject->SetName(L"Monster");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CCollider3D);
-
-	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	//pObject->FrustumCheck(false);
-	////pObject->Transform()->SetLocalPos(Vec3(50.f, 100.f, 100.f));
-	//Vec3(50.f, 1100.f, 100.f
-	//pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
-	//pObject->MeshRender()->SetDynamicShadow(true);
-	//m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
-
-
-
-
 
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
@@ -458,9 +445,9 @@ void CSceneMgr::Init()
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
 
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle03.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle03.mdat", L"MeshData\\castle03.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_castle.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\test_castle.mdat", L"MeshData\\test_castle.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
@@ -468,14 +455,14 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(150.f, 135.f, 700.f));
+	pObject->Transform()->SetLocalPos(Vec3(150.f, 100.f, 700.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI/2, 0, 0.f));
 
-	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
+	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Cover.fbx");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Cover.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Cover.mdat", L"MeshData\\Cover.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
@@ -557,35 +544,12 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
 
 void CSceneMgr::net_enterClient(int id ,float x, float y, float z)
 {
-    //CGameObject* pObject;
-    //Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");//荐沥秦具凳.
-    //pObject = pMeshData->Instantiate();
-    //pObject->SetName(L"Monster");
-    //pObject->AddComponent(new CCollider3D);
-    //pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-    //pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-    //pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-    //pObject->FrustumCheck(false);
-    //pObject->Transform()->SetLocalPos(Vec3(x, y, z));
-    //pObject->Transform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
-    //pObject->MeshRender()->SetDynamicShadow(true);
-    ////pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-    //m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
-    //m_player.push_back(pObject);
-
-    //tEvent evt = {};
-    //evt.eType = EVENT_TYPE::CREATE_OBJECT;
-    //evt.wParam = (DWORD_PTR)pObject;
-    //evt.lParam = (DWORD_PTR)pObject->GetLayerIdx();
-    //CEventMgr::GetInst()->AddEvent(evt);
-
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->SetActive(true);
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Awake();
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Start();
 
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
-    cout << "积己等 Player 俺荐 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << endl;
-   
+    cout << "积己等 Player 俺荐 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << endl; 
 
 }
 
@@ -617,10 +581,7 @@ void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
 
     cout << "Set Loacl Pos" << endl;
 	m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(50.f, 1100.f, 100.f));
-    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->AddComponent(new CPlayerScript);
-
-    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-
+	m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetMain();
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->SetActive(true);
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Awake();
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Start();
@@ -632,4 +593,9 @@ void CSceneMgr::net_setEnableClient(int id)
 {
     m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Enable();
 
+}
+
+void CSceneMgr::net_setAnimationByID(int id, MINION_STATE state)
+{
+	m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }

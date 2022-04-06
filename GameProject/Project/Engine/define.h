@@ -321,6 +321,7 @@ enum class SHADER_POV
 //MINION STATE
 
 enum class MINION_STATE {
+	IDLE,
 	WALK,
 	ATTACK,
 	FIND,

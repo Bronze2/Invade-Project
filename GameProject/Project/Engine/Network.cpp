@@ -115,6 +115,7 @@ void Network::ProcessPacket(char* ptr)
 		}
 		else {
 			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, MINION_STATE::WALK);
 		}
 	}
 	break;

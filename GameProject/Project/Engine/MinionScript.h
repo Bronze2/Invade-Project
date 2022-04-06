@@ -9,6 +9,7 @@ class CMinionScript :
     float m_fRange;
     MINION_CAMP m_eCamp;
     tAnimation* m_CurAnimation;
+    
 public:
     CLONE(CMinionScript)
     void Init();
