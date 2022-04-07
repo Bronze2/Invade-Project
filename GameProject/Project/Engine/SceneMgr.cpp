@@ -192,8 +192,8 @@ void CSceneMgr::Init()
 	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
 
 	CAnimation* pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 568, 837, true, false);
-	pNewAnimation->InsertAnimation(L"WALK", 885, 909, false, false);
+	pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
+	pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->GetScript<CPlayerScript>()->Init();
 	pObject->AddChild(pMainCam);
