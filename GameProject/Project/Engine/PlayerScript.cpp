@@ -59,6 +59,13 @@ void CPlayerScript::Update()
 		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		vPos += vRight * 200.f * DT;
 	}
+
+	// 카메라쉐이킹 테스트 용도 (추후 수정 예정)
+	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
+		CGameObject* pObj = GetObj()->GetChild()[0];
+		pObj->GetScript<CCameraScript>()->CameraShake(10.0f * DT);
+	}
+
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pObj = GetObj()->GetChild()[0];
 		Vec3 vPos = pObj->Transform()->GetLocalPos();
