@@ -302,14 +302,13 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-
-
+	
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\test_castle.mdat", L"MeshData\\test_castle.mdat");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 350.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI/2, PI/2, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
