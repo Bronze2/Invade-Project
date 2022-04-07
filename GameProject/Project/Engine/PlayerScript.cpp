@@ -46,7 +46,7 @@ void CPlayerScript::m_FAnimation()
 		case PLAYER_STATE::IDLE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() == m_pCurAnimation->EndFrame) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
 					GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
 					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 					GetObj()->Animator3D()->SetCurTime(0.f);
@@ -58,7 +58,7 @@ void CPlayerScript::m_FAnimation()
 		case PLAYER_STATE::WALK:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() == m_pCurAnimation->EndFrame) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
 					GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
 					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 					GetObj()->Animator3D()->SetCurTime(0.f);
