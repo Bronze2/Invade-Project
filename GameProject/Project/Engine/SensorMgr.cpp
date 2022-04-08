@@ -74,13 +74,13 @@ void CSensorMgr::DetectionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 		if (nullptr == pSensor1)
 			continue;
 		size_t j = 0;
-		if (_pLayer1 == _pLayer2) {
-
-		}
+		if (_pLayer1 == _pLayer2) // 동일한 레이어 간의 충돌을 검사하는 경우
+			j = i + 1;
 		for (; j < vecObj2.size(); ++j) {
 			CSensor* pSensor2 = vecObj2[j]->Sensor();
 			if (nullptr == pSensor2)
 				continue;
+
 
 			tSensorID id;
 			id.iSensorID1 = pSensor1->GetSensorID();

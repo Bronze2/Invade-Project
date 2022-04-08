@@ -27,13 +27,21 @@ void CMinionScript::Update()
 	Vec3 vPos = Transform()->GetWorldPos(); 
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
-	if (nullptr != m_pTarget) {
+	if (nullptr != m_pTarget&&!m_bAllienceCol) {
 		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 		float rotate = angle * 0.0174532925f;
 		vRot.y = rotate;
 
 	}
+	if (m_bAllienceCol) {
+		if (m_bRotate) {
+			vRot.y += PI / 2;
+			m_bRotate = false;
+		}
+	}
+
+
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	
 
@@ -57,9 +65,11 @@ void CMinionScript::Update()
 		break;
 	}
 	m_FAnimation();
-
-	
+	Transform()->SetLocalPos(vLocalPos);
+	Transform()->SetLocalRot(vRot);
 }
+
+
 
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 {
@@ -250,10 +260,52 @@ CMinionScript::CMinionScript():CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_eState
 }
 
 CMinionScript::CMinionScript(float _fSpeed, float _fRange, MINION_STATE _eState, MINION_CAMP _eCamp)
-	: CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_fSpeed(_fSpeed),m_fRange(_fRange),m_eState(_eState),m_eCamp(_eCamp),m_bFinishAnimation(false)
+	: CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_fSpeed(_fSpeed),m_fRange(_fRange),m_eState(_eState),m_eCamp(_eCamp), m_bAllienceCol(false),m_bFinishAnimation(false)
+	,m_bRotate(false)
 {
 }
 
 CMinionScript::~CMinionScript()
 {
+}
+
+#include "Collider3D.h"
+
+void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
+{
+	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
+	
+	}
+	else {
+		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp&&m_eState==MINION_STATE::WALK) {
+			m_bAllienceCol = true;
+			m_bRotate = true;
+			m_iAllienceCol += 1;
+		}
+	}
+
+
+
+}
+
+void CMinionScript::OnCollision3D(CCollider3D* _pOther)
+{
+}
+
+void CMinionScript::OnCollision3DExit(CCollider3D* _pOther)
+{
+	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
+
+	}
+	else {
+		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp && m_eState == MINION_STATE::WALK) {
+			
+			m_iAllienceCol -= 1;
+
+			if (m_iAllienceCol == 0) {
+				m_bAllienceCol = false;
+			}
+		}
+	}
+
 }

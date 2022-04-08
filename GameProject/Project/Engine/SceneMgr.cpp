@@ -103,11 +103,12 @@ void CSceneMgr::Init()
 	m_pCurScene->GetLayer(0)->SetName(L"Default");
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
-	m_pCurScene->GetLayer(3)->SetName(L"Minion");
-	m_pCurScene->GetLayer(4)->SetName(L"Tower");
-	m_pCurScene->GetLayer(5)->SetName(L"Arrow");
+	m_pCurScene->GetLayer(3)->SetName(L"Blue");
+	m_pCurScene->GetLayer(4)->SetName(L"Red");
+	m_pCurScene->GetLayer(5)->SetName(L"Tower");
+	m_pCurScene->GetLayer(6)->SetName(L"Arrow");
 
-	m_pCurScene->GetLayer(6)->SetName(L"Terrain");
+	m_pCurScene->GetLayer(7)->SetName(L"Terrain");
 
 	m_pCurScene->GetLayer(31)->SetName(L"Tool");
 
@@ -228,7 +229,7 @@ void CSceneMgr::Init()
 	pObject->GetScript<CMinionScript>()->SetAttackRange(50.f);
 	pObject->Sensor()->SetRadius(150.f);
 
-	m_pCurScene->FindLayer(L"Minion")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject);
 
 
 
@@ -238,8 +239,8 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(15.f, 20.f, 27.5f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 100.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(300.f, 0.f, 550.f)); 
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f/2, 0.f, 0.f));
@@ -258,8 +259,8 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-100.f, 0.f, 1100.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
@@ -275,8 +276,8 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(15.f, 20.f, 27.5f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 100.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-200.f, 0.f, -200.f));
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 2, 3.14f, 0.f));
@@ -295,8 +296,8 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, -650.f));
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
@@ -455,7 +456,14 @@ void CSceneMgr::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Tower");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Arrow", L"Monster");
-	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Minion");
+
+
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+
+
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
 }

@@ -21,13 +21,23 @@ class CMinionScript :
     vector<CGameObject*> m_pEnemyPlayers;
     
     bool m_bFinishAnimation;
+    bool m_bAllienceCol;
 
 
+    bool m_bRotate;
+
+    UINT m_iAllienceCol;
+
+
+private:
+    void m_FColRotate();
 public:
     
     CLONE(CMinionScript)
     void Init();
 
+
+   
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();
     void SetState(const MINION_STATE& _eState) { m_eState = _eState; }
@@ -61,5 +71,12 @@ public:
     CMinionScript();
     CMinionScript(float _fSpeed,float _fRange,MINION_STATE _eState,MINION_CAMP _eCamp);
     virtual ~CMinionScript();
+
+
+
+
+    virtual void OnCollision3DEnter(CCollider3D* _pOther);
+    virtual void OnCollision3D(CCollider3D* _pOther);
+    virtual void OnCollision3DExit(CCollider3D* _pOther);
 };
 
