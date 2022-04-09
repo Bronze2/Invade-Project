@@ -64,7 +64,7 @@ void CParticleSystem::LoadFromScene(FILE* _pFile)
 {
 }
 
-CParticleSystem::CParticleSystem():CComponent(COMPONENT_TYPE::PARTICLESYSTEM),m_pParticleBuffer(nullptr),m_pSharedBuffer(nullptr),m_iMaxParticle(1000),m_fFrequency(0.1f),m_fAccTime(0.4f),m_fMinLifeTime(0.1f),
+CParticleSystem::CParticleSystem():CComponent(COMPONENT_TYPE::PARTICLESYSTEM),m_pParticleBuffer(nullptr),m_pSharedBuffer(nullptr),m_iMaxParticle(10),m_fFrequency(0.1f),m_fAccTime(0.4f),m_fMinLifeTime(0.1f),
 m_fMaxLifeTime(0.5f),m_fMinSpeed(10),m_fMaxSpeed(20.f),m_fStartScale(1.f),m_fEndScale(2.f),m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 {
 

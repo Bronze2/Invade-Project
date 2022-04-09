@@ -40,10 +40,11 @@ Vec3 DeComposeRotMat(const Matrix& _matRot);
 
 float Dot(const Vec3& _Value1,const Vec3& _Value2);
 Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2);
+class CGameObejct;
+bool lengthCompare(Vec3 _vbeforeObject, Vec3 _vAfterPos,CGameObject* _pAfterObject, Vec3 _vTargetObject);
+
 
 class CMaterial;
-
-
 
 
 Vec2 GetDiagnal(const float& _fDestination, const float& _fxvalue, const float& _fzvalue);

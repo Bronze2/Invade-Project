@@ -8,7 +8,7 @@ class CMinionScript :
     MINION_STATE m_eState;
     float m_fSpeed;
     float m_fRange;
-    MINION_CAMP m_eCamp;
+    CAMP_STATE m_eCamp;
     tAnimation* m_CurAnimation;
     CGameObject* m_pTarget;
     CGameObject* m_pNexus;
@@ -27,22 +27,25 @@ class CMinionScript :
     bool m_bRotate;
 
     UINT m_iAllienceCol;
+    UINT m_uiMaxHp;
+    int m_iCurHp;
 
-
-private:
-    void m_FColRotate();
+    bool m_bSeparate;
 public:
     
     CLONE(CMinionScript)
     void Init();
 
+    void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
 
    
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();
     void SetState(const MINION_STATE& _eState) { m_eState = _eState; }
     const MINION_STATE& GetState()const { return m_eState; }
-    const MINION_CAMP& GetCamp()const { return m_eCamp; }
+    const CAMP_STATE& GetCamp()const { return m_eCamp; }
+
+    void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
 
     
     virtual void OnDetectionEnter(CGameObject* _pOther);
@@ -69,7 +72,7 @@ public:
 
    
     CMinionScript();
-    CMinionScript(float _fSpeed,float _fRange,MINION_STATE _eState,MINION_CAMP _eCamp);
+    CMinionScript(float _fSpeed,float _fRange,MINION_STATE _eState, CAMP_STATE _eCamp);
     virtual ~CMinionScript();
 
 

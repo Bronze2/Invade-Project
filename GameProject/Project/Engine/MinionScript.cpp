@@ -34,9 +34,14 @@ void CMinionScript::Update()
 		vRot.y = rotate;
 
 	}
-	if (m_bAllienceCol) {
+	if (m_bAllienceCol&&!m_bSeparate) {
 		if (m_bRotate) {
-			vRot.y += PI / 2;
+			if (m_eCamp == CAMP_STATE::RED) {
+				vRot.y -= PI / 2;
+			}
+			else {
+				vRot.y += PI / 2;
+			}
 			m_bRotate = false;
 		}
 	}
@@ -56,6 +61,14 @@ void CMinionScript::Update()
 	}
 		break;
 	case MINION_STATE::ATTACK:
+	{
+		if (m_ePrevState != m_eState) {
+			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+		}
+	}
 		break;
 	case MINION_STATE::FIND:
 		break;
@@ -64,9 +77,11 @@ void CMinionScript::Update()
 	default:
 		break;
 	}
-	m_FAnimation();
 	Transform()->SetLocalPos(vLocalPos);
 	Transform()->SetLocalRot(vRot);
+
+	m_FAnimation();
+
 }
 
 
@@ -94,6 +109,7 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 	}
 	if (Sensor()->GetDetectionCount() == 0) {
 		m_bFindNear = false;
+		m_pTarget = m_pNexus;
 	}
 }
 
@@ -259,9 +275,9 @@ CMinionScript::CMinionScript():CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_eState
 {
 }
 
-CMinionScript::CMinionScript(float _fSpeed, float _fRange, MINION_STATE _eState, MINION_CAMP _eCamp)
+CMinionScript::CMinionScript(float _fSpeed, float _fRange, MINION_STATE _eState, CAMP_STATE _eCamp)
 	: CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_fSpeed(_fSpeed),m_fRange(_fRange),m_eState(_eState),m_eCamp(_eCamp), m_bAllienceCol(false),m_bFinishAnimation(false)
-	,m_bRotate(false)
+	,m_bRotate(false),m_bSeparate(false)
 {
 }
 
@@ -270,6 +286,8 @@ CMinionScript::~CMinionScript()
 }
 
 #include "Collider3D.h"
+
+static bool iSeparate=true;
 
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
@@ -280,13 +298,25 @@ void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp&&m_eState==MINION_STATE::WALK) {
 			m_bAllienceCol = true;
 			m_bRotate = true;
+			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
+				float Value=_pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
+				if (Value >= 0) {
+					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
+					GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
+				}
+				else {
+					GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
+					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
+				}
+			
+				}
+			}
 			m_iAllienceCol += 1;
 		}
-	}
-
-
-
 }
+
+
+
 
 void CMinionScript::OnCollision3D(CCollider3D* _pOther)
 {

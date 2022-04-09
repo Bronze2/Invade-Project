@@ -124,45 +124,50 @@ void CPlayerScript::Update()
 {
 
 	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vPos2 = Transform()->GetLocalPos();
+	Vec3 vPos3 = Transform()->GetWorldPos();
 	Vec3 vRot = Transform()->GetLocalRot();
+	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) {
+		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			vPos += vFront * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
 
-	if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		vPos += vFront * 200.f * DT;
-		m_eState = PLAYER_STATE::WALK;
-	}
-	if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		vPos += vBack * 200.f * DT;
-		m_eState = PLAYER_STATE::WALK;
-	}
-	if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-		Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vLeft * 200.f * DT;
-		m_eState = PLAYER_STATE::WALK;
-	}
-	if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vRight * 200.f * DT;
-		m_eState = PLAYER_STATE::WALK;
+			m_eState = PLAYER_STATE::WALK;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			vPos += vBack * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+			m_eState = PLAYER_STATE::WALK;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			vPos += vLeft * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+			m_eState = PLAYER_STATE::WALK;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			vPos += vRight * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+			m_eState = PLAYER_STATE::WALK;
+		}
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_W)) {
 		m_eState = PLAYER_STATE::IDLE;
 	}
 	if (KEY_AWAY(KEY_TYPE::KEY_S)) {
-		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		vPos += vBack * 200.f * DT;
+
 		m_eState = PLAYER_STATE::IDLE;
 	}
 	if (KEY_AWAY(KEY_TYPE::KEY_A)) {
-		Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vLeft * 200.f * DT;
+
 		m_eState = PLAYER_STATE::IDLE;
 	}
 	if (KEY_AWAY(KEY_TYPE::KEY_D)) {
-		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vPos += vRight * 200.f * DT;
+
 		m_eState = PLAYER_STATE::IDLE;
 	}
 
@@ -211,6 +216,7 @@ void CPlayerScript::Update()
 		CCameraScript* p=dynamic_cast<CCameraScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
 		float fDegree= p->GetDegree();
 		float fDegree2 = fDegree;
+
 		fDegree *= -1.f;
 	
 	
@@ -261,8 +267,7 @@ void CPlayerScript::Update()
 		else {
 			vCrossValue = Cross(result, vTarget);
 		}
-		
-		
+
 		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 	
 			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(fDegree2));
@@ -295,7 +300,10 @@ void CPlayerScript::Update()
 			vRot.y = XMConvertToRadians(fDegree);
 		}
 	}
-	
+	if (m_bMoveCheck) {
+		vPos = vPos2;
+		m_bMoveCheck = false;
+	}
 
 
 
@@ -305,8 +313,57 @@ void CPlayerScript::Update()
 	m_FAnimation();
 
 }
+#include "Collider3D.h"
+void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
+{
+	if (m_bColCheck) {
+		for (int i = 0; i < m_arrColObject.size(); ++i) {
+			Vec3 vTargetPos = m_arrColObject[i]->Transform()->GetWorldPos();
+			m_bMoveCheck=lengthCompare(_vBeforePos, _vAfterPos,GetObj(), vTargetPos);
+			if (m_bMoveCheck) {
+				return;
+			}
+		}
+	}
+}
+void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
+{
+	int a = 0;
+	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
+
+	}
+	else {
+		m_arrColObject.push_back(_pOther->GetObj());
+		m_bColCheck = true;
+	}
+}
+
+void CPlayerScript::OnCollision3D(CCollider3D* _pOther)
+{
+}
+
+void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
+{
+
+	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
+
+	}
+	else {
+		vector<CGameObject*>::iterator iter = m_arrColObject.begin();
+		for (int i = 0; iter != m_arrColObject.end(); ++iter, ++i) {
+			if (m_arrColObject[i] == _pOther->GetObj()) {
+				m_arrColObject.erase(iter);
+				return;
+			}
+
+		}
+	}
+	
+
+}
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
+,m_bColCheck(false),m_bMoveCheck(false)
 {
 }
 

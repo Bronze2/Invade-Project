@@ -26,10 +26,11 @@ private:
 
 
 
+
     
     CAMP_STATE m_eCampState;
 private:
-    CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale,float _fAttackRange ,CAnimation* _pAnimation);
+    CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale,float _fAttackRange ,CAnimation* _pAnimation,CAMP_STATE _eState);
 public:
 
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }

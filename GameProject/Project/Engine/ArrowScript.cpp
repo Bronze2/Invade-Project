@@ -123,6 +123,7 @@ void CArrowScript::Update()
 		Init();
 			
 	}
+	Vec3 vRot = Transform()->GetLocalRot();
 
 
 	
@@ -164,6 +165,7 @@ void CArrowScript::Update()
 			m_fxPos = vCrossValue.x;
 		}
 	}
+
 
 	if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
 
