@@ -77,8 +77,8 @@ void CGameFramework::ProcessInput()
 	SetCursor(NULL);
 	GetCursorPos(&ptCursorPos);
 	RECT rt;
-	GetClientRect(m_hMainhWnd, &rt);
-
+	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rt);
+	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
 	if (rt.right < ptCursorPos.x) {
 		ptCursorPos.x = rt.left + 2;
 		m_ptOldCursorPos.x = rt.left;
@@ -89,6 +89,19 @@ void CGameFramework::ProcessInput()
 		m_ptOldCursorPos.x = rt.right;
 		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
 	}
+	if (rt.bottom < ptCursorPos.y) {
+		ptCursorPos.y = rt.top + 2;
+		m_ptOldCursorPos.y = rt.top;
+		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
+	}
+	if (rt.top >= ptCursorPos.y) {
+		ptCursorPos.y = rt.bottom - 2;
+		m_ptOldCursorPos.y = rt.bottom;
+		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
+	}
+
+
+
 
 	m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
 	m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
