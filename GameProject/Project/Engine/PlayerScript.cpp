@@ -127,6 +127,19 @@ void CPlayerScript::Update()
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
 	Vec3 vRot = Transform()->GetLocalRot();
+	int rotydegree = XMConvertToDegrees(vRot.y);
+	int reminder = rotydegree % 360 + 90;
+	if (0 <= reminder && reminder <= 180) {
+		m_bCheckDegree = true;
+	}
+	else {
+		m_bCheckDegree = false;
+	}
+	if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
+		int a = 0;
+	}
+
+
 	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) {
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -175,13 +188,13 @@ void CPlayerScript::Update()
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pObj=GetObj()->GetChild()[0];
-		Vec3 vPos=pObj->Transform()->GetLocalPos();
+		Vec3 vPos4=pObj->Transform()->GetLocalPos();
 		Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vRestorePos = vPos;
-		vPos += vRight * 10.f;
-		vPos += vFront * 10.f;
-		pObj->Transform()->SetLocalPos(vPos);
+		m_vRestorePos = vPos4;
+		vPos4 += vRight * 10.f;
+		vPos4 += vFront * 10.f;
+		pObj->Transform()->SetLocalPos(vPos4);
 		m_fArrowSpeed = 200.f;
 		
 	}
@@ -194,13 +207,13 @@ void CPlayerScript::Update()
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pObj = GetObj()->GetChild()[0];
-		Vec3 vPos = pObj->Transform()->GetLocalPos();
+		Vec3 vPos4 = pObj->Transform()->GetLocalPos();
 		Vec3 vRight =-pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vFront = -pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vRestorePos = vPos;
-		vPos += vRight * 10.f;
-		vPos += vFront * 10.f;
-		pObj->Transform()->SetLocalPos(vPos);
+		m_vRestorePos = vPos4;
+		vPos4 += vRight * 10.f;
+		vPos4 += vFront * 10.f;
+		pObj->Transform()->SetLocalPos(vPos4);
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		vRight = pObj->Transform()->GetWorldDir(DIR_TYPE::FRONT);
@@ -269,8 +282,12 @@ void CPlayerScript::Update()
 		}
 
 		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-	
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(fDegree2));
+			float value= XMConvertToRadians(fDegree2);
+
+			if (!m_bCheckDegree) {
+				value *= -1.f;
+			}
+			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
 			m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
 	
 		}
@@ -363,7 +380,7 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 }
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
-,m_bColCheck(false),m_bMoveCheck(false)
+,m_bColCheck(false),m_bMoveCheck(false), m_bCheckDegree(false)
 {
 }
 

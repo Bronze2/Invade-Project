@@ -2,6 +2,12 @@
 #include "Script.h"
 #include "Animation3D.h"
 
+enum class MINION_ATTACK_TYPE {
+    MELEE,//50
+    RANGE,//150
+    CANON//200
+};
+
 class CMinionScript :
     public CScript
 {
@@ -29,15 +35,18 @@ class CMinionScript :
     UINT m_iAllienceCol;
     UINT m_uiMaxHp;
     int m_iCurHp;
+    UINT m_uiAttackDamage;
 
+    MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
 public:
-    
+    void CheckHp();
     CLONE(CMinionScript)
     void Init();
 
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
-
+    
+    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
    
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();
@@ -57,6 +66,8 @@ public:
    
     
     void SetAttackRange(float _fRange) { m_fAttackRange = _fRange; }
+
+    void SetAttackType(MINION_ATTACK_TYPE _eType) { m_eAttackType = _eType; }
     float GetRange() { return m_fAttackRange; }
 
     void CheckRange();

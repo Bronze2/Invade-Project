@@ -1,5 +1,6 @@
 #pragma once
 #include "Script.h"
+#include "MinionScript.h"
 
 #define PATTERNINTEVAL 10
 #define SPAWNINTEVAL 1
@@ -30,7 +31,7 @@ private:
     
     CAMP_STATE m_eCampState;
 private:
-    CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale,float _fAttackRange ,CAnimation* _pAnimation,CAMP_STATE _eState);
+    CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange ,CAnimation* _pAnimation,CAMP_STATE _eState);
 public:
 
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }

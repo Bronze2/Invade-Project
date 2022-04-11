@@ -39,7 +39,7 @@ private:
     PLAYER_STATE m_ePrevState;
 
 
-
+    bool m_bCheckDegree;
     bool m_bColCheck;
     bool m_bMoveCheck;
     vector<CGameObject*>m_arrColObject;

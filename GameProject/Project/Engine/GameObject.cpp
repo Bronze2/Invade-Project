@@ -147,6 +147,16 @@ void CGameObject::SetDead()
 	}
 }
 
+void CGameObject::SetFallDown()
+{
+	m_bFallDown = true;
+
+	for (size_t i = 0; i < m_vecChild.size(); ++i)
+	{
+		m_vecChild[i]->SetFallDown();
+	}
+}
+
 void CGameObject::AddComponent(CComponent* _pCom)
 {
 	COMPONENT_TYPE eType = _pCom->GetComponentType();

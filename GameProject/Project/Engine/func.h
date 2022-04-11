@@ -40,7 +40,7 @@ Vec3 DeComposeRotMat(const Matrix& _matRot);
 
 float Dot(const Vec3& _Value1,const Vec3& _Value2);
 Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2);
-class CGameObejct;
+class CGameObject;
 bool lengthCompare(Vec3 _vbeforeObject, Vec3 _vAfterPos,CGameObject* _pAfterObject, Vec3 _vTargetObject);
 
 

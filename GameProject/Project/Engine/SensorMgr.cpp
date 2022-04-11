@@ -69,7 +69,7 @@ void CSensorMgr::DetectionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 	const vector<CGameObject*>& vecObj2 = _pLayer2->GetObjects();
 	map<DWORD_PTR, bool>::iterator iter;
 	bool IsDead = false;
-	for (int i = 0; i < vecObj1.size(); ++i) {
+	for (size_t i = 0; i < vecObj1.size(); ++i) {
 		CSensor* pSensor1 = vecObj1[i]->Sensor();
 		if (nullptr == pSensor1)
 			continue;
@@ -87,7 +87,7 @@ void CSensorMgr::DetectionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 			id.iSensorID2 = pSensor2->GetSensorID();
 			iter = m_mapSensor.find(id.ID);
 			bool IsDead = false;
-			if (pSensor1->GetObj()->IsDead() || pSensor2->GetObj()->IsDead())
+			if (pSensor1->GetObj()->IsFallDown() || pSensor2->GetObj()->IsFallDown())
 				IsDead = true;
 			if (IsDetection(pSensor1, pSensor2)) {
 				if (m_mapSensor.end() != iter && iter->second == true) {
