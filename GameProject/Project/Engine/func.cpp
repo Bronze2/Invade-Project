@@ -250,6 +250,32 @@ Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2)
 	return result;
 }
 
+#include "GameObject.h"
+#include "Transform.h"
+bool lengthCompare(Vec3 _vbeforeObject,  Vec3 _vAfterPos, CGameObject* _pAfterObject, Vec3 _vTargetObject)
+{
+	Vec3 vScale=_pAfterObject->Transform()->GetLocalScale();
+	Vec3 vRot = _pAfterObject->Transform()->GetLocalRot();
+
+	Matrix matTranslation = XMMatrixTranslation(_vAfterPos.x, _vAfterPos.y, _vAfterPos.z);
+	Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+
+	Matrix matRot = XMMatrixRotationX(vRot.x);
+	matRot *= XMMatrixRotationY(vRot.y);
+	matRot *= XMMatrixRotationZ(vRot.z);
+
+	Matrix matWorld = matScale * matRot * matTranslation;
+	Vec3 vPos = matWorld.Translation();
+
+	float length1=sqrt(pow(_vbeforeObject.x - _vTargetObject.x, 2) + pow(_vbeforeObject.z - _vTargetObject.z, 2));
+	float length2 = sqrt(pow(vPos.x - _vTargetObject.x, 2) + pow(vPos.z - _vTargetObject.z, 2));
+	if (length1 < length2) {
+		return false;
+	}
+	else
+		return true;
+}
+
 
 Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _fzvalue)
 {

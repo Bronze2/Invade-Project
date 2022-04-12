@@ -24,7 +24,9 @@ private:
     float m_fDotValue;
     bool m_bSetDotValue = false;
 
-    float m_fTestRotate=0.f;
+    bool m_bCheckDegree;
+
+
 public:
     virtual void Awake();
     virtual void Update();

@@ -26,7 +26,7 @@ private:
 	bool m_bDead;
 	bool m_bActive;
 	bool m_bFrustumCheck;
-
+	bool m_bFallDown = false;
 
 public:
 	void Awake();
@@ -70,9 +70,11 @@ public:
 
 	bool IsDead() { return m_bDead; }
 	void SetDead();
+	bool IsFallDown() { return m_bFallDown; }
+	void SetFallDown();
 
 	void RegisterToLayer();
-
+	
 	CLONE(CGameObject);
 
 private:

@@ -69,25 +69,25 @@ void CSensorMgr::DetectionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 	const vector<CGameObject*>& vecObj2 = _pLayer2->GetObjects();
 	map<DWORD_PTR, bool>::iterator iter;
 	bool IsDead = false;
-	for (int i = 0; i < vecObj1.size(); ++i) {
+	for (size_t i = 0; i < vecObj1.size(); ++i) {
 		CSensor* pSensor1 = vecObj1[i]->Sensor();
 		if (nullptr == pSensor1)
 			continue;
 		size_t j = 0;
-		if (_pLayer1 == _pLayer2) {
-
-		}
+		if (_pLayer1 == _pLayer2) // 동일한 레이어 간의 충돌을 검사하는 경우
+			j = i + 1;
 		for (; j < vecObj2.size(); ++j) {
 			CSensor* pSensor2 = vecObj2[j]->Sensor();
 			if (nullptr == pSensor2)
 				continue;
+
 
 			tSensorID id;
 			id.iSensorID1 = pSensor1->GetSensorID();
 			id.iSensorID2 = pSensor2->GetSensorID();
 			iter = m_mapSensor.find(id.ID);
 			bool IsDead = false;
-			if (pSensor1->GetObj()->IsDead() || pSensor2->GetObj()->IsDead())
+			if (pSensor1->GetObj()->IsFallDown() || pSensor2->GetObj()->IsFallDown())
 				IsDead = true;
 			if (IsDetection(pSensor1, pSensor2)) {
 				if (m_mapSensor.end() != iter && iter->second == true) {

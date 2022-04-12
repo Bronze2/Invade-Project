@@ -80,6 +80,41 @@ void CGameFramework::ProcessInput()
 	POINT ptCursorPos;
 	SetCursor(NULL);
 	GetCursorPos(&ptCursorPos);
+	POINT ptCursorPos2;
+	GetCursorPos(&ptCursorPos2);
+	RECT rt;
+	RECT rt2;
+	GetWindowRect(CRenderMgr::GetInst()->GethWnd(),&rt2);
+	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rt);
+	LONG CursorPosy = ptCursorPos2.y;
+	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
+	if (rt.right < ptCursorPos.x) {
+		int left=rt2.left+13;
+		ptCursorPos.x = left;
+		
+		m_ptOldCursorPos.x = rt2.left+10;
+		SetCursorPos(ptCursorPos.x, CursorPosy);
+	}
+	if (2 >= ptCursorPos.x) {
+		ptCursorPos.x = rt2.right-13	 ;
+		m_ptOldCursorPos.x = rt2.right-10;
+
+		SetCursorPos(ptCursorPos.x, CursorPosy);
+	}
+//	if (rt.bottom < ptCursorPos.y) {
+//		ptCursorPos.y = rt.bottom;
+//		m_ptOldCursorPos.y = rt.bottom;
+//		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
+//	}
+//	if (rt.top >= ptCursorPos.y) {
+//		ptCursorPos.y = rt.top+5;
+//		m_ptOldCursorPos.y = rt.top+5;
+//		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
+//	}
+
+
+
+
 	m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
 	m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
 	m_vMouseMove.y *= -1.f;
@@ -129,6 +164,6 @@ void CGameFramework::ChangeWindowSize(HWND _hWnd, const tResolution _resolution)
 	RECT rt = { 0,0,(int)_resolution.fWidth,(int)_resolution.fHeight };
 
 	AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, false);
-	SetWindowPos(_hWnd, nullptr, 0, 0, rt.right - rt.left, rt.bottom - rt.top, 0);
+	SetWindowPos(_hWnd, nullptr, -10, 0, rt.right - rt.left, rt.bottom - rt.top, 0);
 
 }
