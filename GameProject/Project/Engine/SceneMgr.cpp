@@ -1,4 +1,5 @@
 #include "pch.h"
+#include<iostream>
 
 #include "SceneMgr.h"
 
@@ -42,6 +43,7 @@
 #include "Animation3D.h"
 //#include "SpawnScript.h"
 #include "Sensor.h"
+
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -100,14 +102,13 @@ void CSceneMgr::Init()
     m_pCurScene = new CScene;
     m_pCurScene->SetName(L"Play Scene");
 
-    m_pCurScene->GetLayer(0)->SetName(L"Default");
-    m_pCurScene->GetLayer(1)->SetName(L"Player");
-    m_pCurScene->GetLayer(2)->SetName(L"Monster");
-    m_pCurScene->GetLayer(3)->SetName(L"Arrow");
-    m_pCurScene->GetLayer(4)->SetName(L"Minion");
-    m_pCurScene->GetLayer(5)->SetName(L"Tower");
-    m_pCurScene->GetLayer(6)->SetName(L"Terrain");
-
+	m_pCurScene->GetLayer(0)->SetName(L"Default");
+	m_pCurScene->GetLayer(1)->SetName(L"Player");
+	m_pCurScene->GetLayer(2)->SetName(L"Monster");
+	m_pCurScene->GetLayer(3)->SetName(L"Blue");
+	m_pCurScene->GetLayer(4)->SetName(L"Red");
+	m_pCurScene->GetLayer(5)->SetName(L"Tower");
+	m_pCurScene->GetLayer(6)->SetName(L"Arrow");
 
     m_pCurScene->GetLayer(31)->SetName(L"Tool");
 
@@ -144,37 +145,7 @@ void CSceneMgr::Init()
     m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 
-
-
-    //   pMeshData->Save(pMeshData->GetPath());
-       // MeshData 로드
-
-
-
-
-    //   // Temp Object
-    //pObject = new CGameObject;
-    //pObject->SetName(L"Player Object");
-    //pObject->AddComponent(new CTransform);
-    //pObject->AddComponent(new CMeshRender);
-
-    //// Transform 설정
-    //pObject->Transform()->SetLocalPos(Vec3(0.f, 100.f, 0.f));
-    //pObject->Transform()->SetLocalScale(Vec3(1000.f, 1000.f, 100.f));
-    //pObject->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
-    //// MeshRender 설정
-    //pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-    //pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-    //pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-    //pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-    //pObject->MeshRender()->SetDynamicShadow(true);
-    //m_pCurScene->FindLayer(L"Player")->AddGameObject(pObject);
-
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\112121.fbx");
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
-  // Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
-
     //클라이언트 4개 생성
     for (int i = 0; i < 4; ++i) {
         pObject = new CGameObject;
@@ -206,10 +177,12 @@ void CSceneMgr::Init()
 		pObject->GetScript<CPlayerScript>()->Init();
 
  
-        m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+		m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject, false);
         pObject->SetActive(false);
     }
     std::cout << "생성된 Player 개수 씬 : " << m_pCurScene->FindLayer(L"Monster")->GetParentObj().size() << std::endl;
+
+
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
 	pObject = pMeshData->Instantiate();
@@ -316,11 +289,11 @@ void CSceneMgr::Init()
 
 
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\test_castle.mdat", L"MeshData\\test_castle.mdat");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 350.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
