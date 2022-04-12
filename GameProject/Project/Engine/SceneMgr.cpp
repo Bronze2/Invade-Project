@@ -613,37 +613,21 @@ void CSceneMgr::Init()
 	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
 
 
-	pObject = new CGameObject;
-	pObject->SetName(L"Cover");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->AddComponent(new CMeshRender);
-
-	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f,200.f));
-	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(pMtrl);
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
-
-	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Cover");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
-	pObject->AddComponent(new CMeshRender);
+//	pObject->AddComponent(new CMeshRender);
 
-	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 200.f));
+	pObject->Transform()->SetLocalPos(Vec3(-390.f, 0.f, 200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(pMtrl);
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+//	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+//	pObject->MeshRender()->SetMaterial(pMtrl);
+//	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
 	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
 
@@ -652,16 +636,16 @@ void CSceneMgr::Init()
 	pObject->SetName(L"Cover");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
-	pObject->AddComponent(new CMeshRender);
+//	pObject->AddComponent(new CMeshRender);
 
-	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 200.f));
+	pObject->Transform()->SetLocalPos(Vec3(390.f, 0.f, 200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(pMtrl);
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+//	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+//	pObject->MeshRender()->SetMaterial(pMtrl);
+//	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
 	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
 
@@ -672,7 +656,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
 
-	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 4350.f));
+	pObject->Transform()->SetLocalPos(Vec3(-390.f, 0.f, 4325.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
@@ -690,7 +674,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
 
-	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 4350.f));
+	pObject->Transform()->SetLocalPos(Vec3(390.f, 0.f, 4325.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
