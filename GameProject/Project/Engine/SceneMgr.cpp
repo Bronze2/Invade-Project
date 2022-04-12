@@ -281,9 +281,12 @@ void CSceneMgr::Init()
 	pBlueSecondTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueSecondTower->MeshRender()->SetDynamicShadow(true);
 
-
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
+	
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
+	//pMeshData->Save(pMeshData->GetPath());
+
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
