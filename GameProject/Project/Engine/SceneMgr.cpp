@@ -168,6 +168,8 @@ void CSceneMgr::Init()
 
 
 
+	//Ptr<CMeshData>pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\archer005.fbx");
+	//pMeshData->Save(pMeshData->GetPath());
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 
 	pObject = new CGameObject;
@@ -251,9 +253,9 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Tower")->AddGameObject(pObject);
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\SecondTower.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\archer011.fbx");
 	//pMeshData->Save(pMeshData->GetPath());
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
@@ -261,8 +263,8 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(-100.f, 0.f, 1100.f));
-	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Transform()->SetLocalPos(Vec3(-700.f, 0.f, 1100.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 
 
