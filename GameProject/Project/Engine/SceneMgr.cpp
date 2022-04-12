@@ -283,7 +283,7 @@ void CSceneMgr::Init()
 
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\test_castle.mdat", L"MeshData\\test_castle.mdat");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
