@@ -37,6 +37,10 @@ private:
 
     vector<CGameObject*>	m_vecDeferred;
     vector<CGameObject*>	m_vecForward;
+
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F; // Foward
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D; // Deferred
+    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj; // Single Object
 public:
 
     virtual void FinalUpdate();

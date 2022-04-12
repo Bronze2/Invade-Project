@@ -597,6 +597,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _Loader)
 
 void CMesh::Render(UINT _iSubset)
 {
+	assert(_iSubset < m_vecIdxInfo.size());
 	CDevice::GetInst()->UpdateTable();
 
 
@@ -607,10 +608,28 @@ void CMesh::Render(UINT _iSubset)
 
 void CMesh::Render_Particle(UINT _iInstanceCount, UINT _iSubset)
 {
+	assert(_iSubset < m_vecIdxInfo.size());
 	CDevice::GetInst()->UpdateTable();
 	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
 	CMDLIST->IASetIndexBuffer(&m_vecIdxInfo[_iSubset].tIdxView);
 	CMDLIST->DrawIndexedInstanced(m_vecIdxInfo[_iSubset].iIdxCount, _iInstanceCount, 0, 0, 0);
 }
 #include "InstancingBuffer.h"
+
+void CMesh::Render_Instancing(UINT _iSubset, CInstancingBuffer* _pInstBuffer)
+{
+	assert(_iSubset < m_vecIdxInfo.size());
+
+	CDevice::GetInst()->UpdateTable();
+
+	D3D12_VERTEX_BUFFER_VIEW arrBuffer[2] = { m_tVtxView, *_pInstBuffer->GetBufferView() };
+
+	UINT		  iStride[2] = { m_iVtxSize	, sizeof(tInstancingData) };
+	UINT		  iOffset[2] = { 0, 0 };
+
+	CMDLIST->IASetVertexBuffers(0, 2, arrBuffer);
+	CMDLIST->IASetIndexBuffer(&m_vecIdxInfo[_iSubset].tIdxView);
+	CMDLIST->DrawIndexedInstanced(m_vecIdxInfo[_iSubset].iIdxCount, _pInstBuffer->GetInstanceCount(), 0, 0, 0);
+
+}
 

@@ -27,7 +27,6 @@ void CRenderMgr::Render()
 	static CConstantBuffer* pGlobalBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b5);
 	CDevice::GetInst()->SetConstBufferToRegister(pGlobalBuffer, pGlobalBuffer->AddData(&g_global));
 	// 광원 정보 업데이트
-	UpdateLight2D();
 	UpdateLight3D();
 
 	// SwapChain MRT 초기화

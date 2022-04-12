@@ -56,7 +56,7 @@ void CTowerScript::m_FAttack()
 		else {
 			m_cAttackEnd = clock();
 			m_cAttackInterval = (m_cAttackEnd - m_cAttackStart) / CLOCKS_PER_SEC;
-			if (m_cAttackInterval == ATTACK_INTERVAL) {
+			if (m_cAttackInterval >= ATTACK_INTERVAL) {
 				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
 					m_pTarget->GetScript<CMinionScript>()->GetDamage(150);
 				}

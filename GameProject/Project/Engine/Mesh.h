@@ -37,6 +37,7 @@ public:
 	static CMesh* CreateFromContainer(CFBXLoader& _Loader);
 	void Render(UINT _iSubset=0);
 	void Render_Particle(UINT _iInstanceCount, UINT _iSubset = 0);
+	void Render_Instancing(UINT _iSubset, CInstancingBuffer* _pInstBuffer);
 
 	CMesh();
 	virtual ~CMesh();
