@@ -6,6 +6,8 @@
 #include "Layer.h"
 #include "GameObject.h"
 
+#include "GamePlayScene.h"
+
 #include "ResMgr.h"
 #include "Shader.h"
 #include "Mesh.h"
@@ -64,6 +66,7 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init()
 {
+	/*
 	// 필요한 리소스 로딩
 	// Texture 로드
 
@@ -93,10 +96,12 @@ void CSceneMgr::Init()
 //
 	Ptr<CTexture> pTreeTex1= CResMgr::GetInst()->Load<CTexture>(L"TreeTex1", L"Texture\\Tree01.png");
 	Ptr<CTexture> pTreeTex2 =CResMgr::GetInst()->Load<CTexture>(L"TreeTex2", L"Texture\\Tree02.png");
+	*/
 
-	m_pCurScene = new CScene;
+	m_pCurScene = new CGamePlayScene;
 	m_pCurScene->SetName(L"Play Scene");
 
+	/*
 	m_pCurScene->GetLayer(0)->SetName(L"Default");
 	m_pCurScene->GetLayer(1)->SetName(L"Player");
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
@@ -108,7 +113,7 @@ void CSceneMgr::Init()
 	m_pCurScene->GetLayer(6)->SetName(L"Terrain");
 
 	m_pCurScene->GetLayer(31)->SetName(L"Tool");
-
+	 
 	CGameObject* pMainCam = nullptr;
 
 	// Camera Object
@@ -206,19 +211,22 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-	
-	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
-//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
-	
-	pObject->AddChild(pMainCam);
-//
-//
+
+	pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+	//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
+	 pObject->AddChild(pMainCam);
+
 	m_pCurScene->FindLayer(L"Monster")->AddGameObject(pObject, false);
+	
+	//Vec3 vPlayerPos = pObject->Transform()->GetLocalPos();
+	//pMainCam->Transform()->SetLocalPos(Vec3((vPlayerPos.x - 110.0f), (vPlayerPos.y - 60.0f), (vPlayerPos.z - 110.f)));
+	////	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+	//pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
 
-	 pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
-	 pObject = pMeshData->Instantiate();
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Canon_min.mdat", L"MeshData\\Canon_min.mdat");
+	pObject = pMeshData->Instantiate();
 
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
@@ -567,6 +575,8 @@ void CSceneMgr::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Monster");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Player", L"Tower");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Arrow", L"Monster");
+	*/
+
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
 }

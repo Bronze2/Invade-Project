@@ -2,6 +2,7 @@
 class CScene;
 class CCamera;
 class CGameObject;
+
 class CSceneMgr
 {
 	SINGLE(CSceneMgr)
@@ -17,4 +18,3 @@ public:
 	void ChangeScene(CScene* _pNextScene);
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 };
-

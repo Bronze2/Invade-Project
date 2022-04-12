@@ -1,20 +1,26 @@
 #pragma once
 #include "Script.h"
+
 class CCameraScript :
     public CScript
 {
 private:
     float m_fSpeed;
-    float m_fShakeTime;
     float m_fScaleSpeed;
     float m_fShakeNum;
+    float m_fZoomSpeed;
+    float m_fZoomElapsedTime;
+    
     bool m_bCheckStartMousePoint;
-    bool m_bCheckCameraShake;
 
     float m_fDegree;
   
     Vec2 m_vStartMousePoint;
+    Vec3 m_vZoomRestoreFront;
     Vec3 m_vRestorePos;
+
+
+    CAMERA_EFFECT_TYPE m_tEffectType;
 
 public:
     CCameraScript();
@@ -26,10 +32,11 @@ public:
 
     void SetStartMousePoint(const Vec2& _vStartMousePoint) { m_vStartMousePoint = _vStartMousePoint; }
 
-    void CameraShake(float _fTime);
+    Vec3 CameraShake(Vec3 _vPos);
+    Vec3 CameraZoom(Vec3 _vPos);
+
+    void Init();
 
     CLONE(CCameraScript);
-
-
 };
 

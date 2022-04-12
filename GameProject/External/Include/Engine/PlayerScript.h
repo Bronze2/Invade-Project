@@ -31,6 +31,7 @@ private:
 public:
     virtual void Awake();
     virtual void Update();
+    virtual void LateUpdate();
     void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
   
 

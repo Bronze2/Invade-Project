@@ -13,8 +13,8 @@ void CPlayerScript::Awake()
 	for (int i = 0; i < 20; ++i) {
 		m_pArrow[i] = new CGameObject;
 		m_pArrow[i]->SetName(L"Arrow");
-	
-	
+
+
 		m_pArrow[i]->AddComponent(new CTransform());
 		Vec3 vPos = m_pArrow[i]->Transform()->GetLocalPos();
 		m_pArrow[i]->Transform()->SetLocalPos(vPos);
@@ -23,7 +23,7 @@ void CPlayerScript::Awake()
 		m_pArrow[i]->AddComponent(new CMeshRender);
 		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 		m_pArrow[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+		//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
 
 		m_pArrow[i]->AddComponent(new CCollider2D);
 		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
@@ -39,85 +39,61 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
+	//CGameObject* pChild = GetObj()->GetChild()[0];
+	//Vec3 vChildPos = pChild->Transform()->GetLocalPos();
+	//Vec3 vChildRot = pChild->Transform()->GetLocalRot();
 
-	if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
+
+
+	if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 		vPos += vFront * 200.f * DT;
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+	if (KEY_HOLD(KEY_TYPE::KEY_S) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 		vPos += vBack * 200.f * DT;
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+	if (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		vPos += vLeft * 200.f * DT;
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+	if (KEY_HOLD(KEY_TYPE::KEY_D) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		vPos += vRight * 200.f * DT;
 	}
-
-	// 카메라쉐이킹 테스트 용도 (추후 수정 예정)
-	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
-		CGameObject* pObj = GetObj()->GetChild()[0];
-		pObj->GetScript<CCameraScript>()->CameraShake(10.0f * DT);
-	}
-
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		CGameObject* pObj = GetObj()->GetChild()[0];
-		Vec3 vPos = pObj->Transform()->GetLocalPos();
-		Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		m_vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vZoomPos = vPos;
-		m_vRestorePos = vPos;
-		pObj->Transform()->SetLocalPos(vPos);
 		m_fArrowSpeed = 200.f;
-		m_fZoomSpeed = 50.0f;
-		m_bCheckZoomMaxPos = false;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		CGameObject* pObj = GetObj()->GetChild()[0];
-
 		m_fArrowSpeed += 3000.f * DT;
 		if (m_fArrowSpeed > 2000.f) {
 			m_fArrowSpeed = 2000.f;
-			m_bCheckZoomMaxPos = true;
 		}
-
-		if (!m_bCheckZoomMaxPos) {
-			m_vZoomPos += m_vFront * m_fZoomSpeed * DT;
-		}
-
-		pObj->Transform()->SetLocalPos(m_vZoomPos);
 	}
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		CGameObject* pObj = GetObj()->GetChild()[0];
-		Vec3 vPos = pObj->Transform()->GetLocalPos();
-		Vec3 vRight = -pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		Vec3 vFront = -pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
-		pObj->Transform()->SetLocalPos(m_vRestorePos);
-
+		Vec3 vPos = Transform()->GetLocalPos();
+		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
-		vRight = pObj->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vRight = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
 
-
 		Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
 	
-
-		CCameraScript* p=dynamic_cast<CCameraScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
+		CCameraScript* p = dynamic_cast<CCameraScript*>(pCurScene->FindLayer(L"Camera")->GetObjects()[0]->GetScripts()[0]);
+		
 		float fDegree= p->GetDegree();
 		float fDegree2 = fDegree;
 		fDegree *= -1.f;
-	
 	
 		float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
 
@@ -127,7 +103,6 @@ void CPlayerScript::Update()
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 		fDegree *= -1.f;
 		
-
 
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
 		if (m_iCurArrow == 0) {
@@ -194,8 +169,7 @@ void CPlayerScript::Update()
 			float fDegree = XMConvertToDegrees(vRot.y);
 			if (fDegree < -360) {
 				fDegree += 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
+				vRot.y = XMConvertToRadians(fDegree);}
 			else if (fDegree > 360) {
 				fDegree -= 360.f;
 				vRot.y = XMConvertToRadians(fDegree);
@@ -205,6 +179,10 @@ void CPlayerScript::Update()
 
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
+}
+
+void CPlayerScript::LateUpdate()
+{
 
 }
 

@@ -41,6 +41,7 @@ typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
 typedef DirectX::SimpleMath::Vector4 Vec4;
 using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Quaternion;
 
 enum class CONST_REGISTER
 {
@@ -232,12 +233,12 @@ enum class DBG_TYPE
 
 enum class EVENT_TYPE
 {
-	CREATE_OBJECT,	// wParam : GameObject, lParam : Layer Idx
-	DELETE_OBJECT,	// wParam : GameObject,
-	ADD_CHILD,		// wParam : Parent Object, lParam : Child Object
-	CLEAR_PARENT,	// wParam : Target Object
-	TRANSFER_LAYER,	// wParam : Target Object, lParam : (HIWORD)Layer Index (LOWORD)bMoveAll
-	TRANSFER_SCENE,
+	CREATE_OBJECT,			// wParam : GameObject, lParam : Layer Idx
+	DELETE_OBJECT,			// wParam : GameObject,
+	ADD_CHILD,				// wParam : Parent Object, lParam : Child Object
+	CLEAR_PARENT,			// wParam : Target Object
+	TRANSFER_LAYER,			// wParam : Target Object, lParam : (HIWORD)Layer Index (LOWORD)bMoveAll
+	TRANSFER_SCENE,			// wParam : Scene
 	ACTIVATE_GAMEOBJECT,	// wParam : GameObject Adress
 	DEACTIVATE_GAMEOBJECT,	// wParam : GameObject Adress
 
@@ -245,6 +246,15 @@ enum class EVENT_TYPE
 	DEACTIVATE_COMPONENT,	// wParam : Component Adress
 
 	END,
+};
+
+enum class SCENE_TYPE
+{
+	TITLE_SCENE,
+	LOGIN_SCENE,
+	LOBBY_SCENE,
+	GAMEPLAY_SCENE,
+	RESULT_SCENE,
 };
 
 enum class LIGHT_TYPE
@@ -346,4 +356,12 @@ enum class SPAWN_COUNT {
 enum class CAMP_STATE {
 	RED,
 	BLUE,
+};
+
+enum class CAMERA_EFFECT_TYPE {
+	NONE,
+	ZOOMIN,
+	SHAKING,
+	DEMAGED,
+	LIGHTNING,
 };

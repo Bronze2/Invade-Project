@@ -261,6 +261,9 @@
     <ClInclude Include="TowerScript.h">
       <Filter>Script\Tower</Filter>
     </ClInclude>
+    <ClInclude Include="GamePlayScene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -427,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="TowerScript.cpp">
       <Filter>Script\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayScene.cpp">
+      <Filter>Manager\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -175,6 +175,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
+    <ClInclude Include="GamePlayScene.h" />
     <ClInclude Include="MinionScript.h" />
     <ClInclude Include="Collider3D.h" />
     <ClInclude Include="InstancingBuffer.h" />
@@ -236,6 +237,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
+    <ClCompile Include="GamePlayScene.cpp" />
     <ClCompile Include="MinionScript.cpp" />
     <ClCompile Include="Collider3D.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />

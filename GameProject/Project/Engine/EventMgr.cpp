@@ -96,7 +96,7 @@ void CEventMgr::Execute(tEvent& _event)
 		break;
 
 	case EVENT_TYPE::TRANSFER_SCENE:
-
+		CSceneMgr::GetInst()->ChangeScene((CScene*)_event.wParam);
 		break;
 	}
 }

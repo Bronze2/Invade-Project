@@ -75,6 +75,8 @@ public:
     const Matrix& GetProjMat() { return m_matProj; }
     const Matrix& GetProjInvMat() { return m_matProjInv; }
 
+    void SetViewMat(Matrix _matView) { m_matView = _matView; Changed(); }
+
     void SetWidth(float _fWidth) { m_fWidth = _fWidth; }
     void SetHeight(float _fHeight) { m_fHeight = _fHeight; }
     CCamera();

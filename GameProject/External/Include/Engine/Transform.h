@@ -33,10 +33,12 @@ public:
     void SetWorldMat(const Matrix& _mMatrix) { m_matWorld = _mMatrix; }
     const Vec3& GetLocalDir(DIR_TYPE _eType) { return m_vLocalDir[(UINT)_eType]; }
     const Vec3& GetWorldDir(DIR_TYPE _eType) { return m_vWorldDir[(UINT)_eType]; }
+    void SetLocalDir(DIR_TYPE _eType, Vec3 _vDir) { if (m_vLocalDir[(UINT)_eType] != _vDir) { m_vLocalDir[(UINT)_eType] = _vDir; Changed(); } }
     void SetLocalPos(const Vec3& _vPos) { if (m_vLocalPos != _vPos) { m_vLocalPos = _vPos; Changed(); } }
     void SetLocalScale(const Vec3& _vScale) { if (m_vLocalScale != _vScale) { m_vLocalScale = _vScale; Changed(); } }
     void SetLocalRot(const Vec3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
     void LookAt(const Vec3& _vLook);
+    void LookAt(const Vec3& _vLook, const Vec3& _vRot);
 
    // const Vec3 GetLocalDir() { return m_vLocalDir; }
    

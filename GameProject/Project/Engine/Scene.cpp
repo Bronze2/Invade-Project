@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "EventMgr.h"
+
 CScene::CScene():m_arrLayer{}
 {
     for (UINT i = 0; i < MAX_LAYER; ++i) {
