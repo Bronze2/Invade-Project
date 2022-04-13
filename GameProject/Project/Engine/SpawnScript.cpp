@@ -502,6 +502,18 @@ void CSpawnScript::Update()
 	//}
 
 }
+void CSpawnScript::SpawnObjectByPattern()
+{
+	CAnimation* pNewAnimation = new CAnimation;
+	pNewAnimation->InsertAnimation(L"IDLE", 0, 34, true, false);
+	pNewAnimation->InsertAnimation(L"WALK", 35, 49, false, false);
+	pNewAnimation->InsertAnimation(L"ATTACK", 50, 74, false, false);
+	pNewAnimation->InsertAnimation(L"DIE", 75, 124, false, false);
+	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+	CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 20.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE, pNewAnimation, m_eCampState);
+	CreateObject(pObject, L"Blue");
+	cout << " OH?" << endl;
+}
 
 CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN1)
 ,m_bSpawnStart(false),m_uiCount(0),m_bPatternOn(false)
@@ -511,3 +523,5 @@ CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockSt
 CSpawnScript::~CSpawnScript()
 {
 }
+
+

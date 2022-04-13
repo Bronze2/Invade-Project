@@ -3,6 +3,7 @@
 #include "SceneMgr.h"
 
 
+
 Network::Network() {}
 Network::~Network() {}
 
@@ -129,6 +130,13 @@ void Network::ProcessPacket(char* ptr)
 		else {
 			CSceneMgr::GetInst()->net_setRotationByID(my_packet->id, my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z);
 		}
+	}
+	break;
+
+	case S2C_SPAWN_MINION:
+	{
+		sc_packet_spawn_minion* my_packet = reinterpret_cast<sc_packet_spawn_minion*>(ptr);
+		CSceneMgr::GetInst()->net_spawnMinion(my_packet->id);
 	}
 	break;
 

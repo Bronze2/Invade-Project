@@ -24,16 +24,26 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_NEAR_PLAYER		5
 
 #define S2C_MOUSE			6
+#define S2C_SPAWN_MINION	7
 
-
-
-#pragma pack(push ,1)
 
 struct p_Vec3 {
 	float x;
 	float y;
 	float z;
 };
+
+struct MINION {
+	int m_id;
+	p_Vec3 Pos;
+	p_Vec3 Dir;
+	p_Vec3 Rot;
+};
+
+
+#pragma pack(push ,1)
+
+
  
 struct sc_packet_login_ok {
 	char size;
@@ -119,5 +129,26 @@ struct cs_packet_mouse {
 	p_Vec3 Rot;
 	unsigned move_time;
 };
+
+constexpr unsigned char BLUE = 0;
+constexpr unsigned char RED = 1;
+struct sc_packet_spawn_minion {
+	char	size;
+	char	type;
+	char	camp;
+	int id;
+	p_Vec3  pos;
+	p_Vec3  dir;
+	p_Vec3  rot;
+
+};
+
+
+
+
+
+
+
+
 
 #pragma pack (pop)

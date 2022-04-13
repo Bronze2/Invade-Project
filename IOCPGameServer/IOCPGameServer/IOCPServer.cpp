@@ -10,6 +10,7 @@
 #include <atomic>
 #include <chrono>
 #include <queue>
+#include <unordered_map>
 
 #include "define.h"
 #include "Server.h"
@@ -21,7 +22,7 @@
 using namespace std;
 using namespace chrono;
 
-enum ENUMOP { OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
+enum ENUMOP {OP_SPAWN, OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
 
 enum C_STATUS {ST_FREE, ST_ALLOCATED, ST_ACTIVE};
 
@@ -78,6 +79,9 @@ struct CLIENT
 };
 
 
+unordered_map<int, MINION> g_minion;
+int g_minionindex;
+
 CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
 
 HANDLE g_iocp;					//iocp 핸들
@@ -128,6 +132,13 @@ void do_timer()
 				PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
+			case OP_SPAWN:
+			{
+				EXOVER* over = new EXOVER();
+				over->op = ev.event_id;
+				PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
+			}
+				break;
 		
 			}
 		}
@@ -251,6 +262,22 @@ void send_leave_packet(int user_id, int o_id)
 	g_clients[user_id].m_cLock.unlock();
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
+}
+
+void send_spawn_minion_packet(int minion_id)
+{
+	sc_packet_spawn_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_SPAWN_MINION;
+	packet.camp = BLUE;
+	packet.id = minion_id;
+	packet.pos = g_minion[minion_id].Pos;
+	packet.dir = g_minion[minion_id].Dir;
+	packet.rot = g_minion[minion_id].Rot;
+
+	for (int i = 0; i < current_user; ++i)
+		send_packet(i, &packet);
+
 }
 
 bool is_near(int a, int b)
@@ -535,6 +562,10 @@ void worker_Thread()
 				DWORD flags = 0;
 				WSARecv(clientSocket, &g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &g_clients[user_id].m_recv_over.over, NULL);
 				cout << user_id << endl;
+				current_user++;
+
+				add_timer(user_id, OP_SPAWN, 1000);
+
 			}
 
 			//소켓 초기화 후 다시 accept
@@ -542,7 +573,6 @@ void worker_Thread()
 			exover->c_socket = clientSocket; //새로 받는 소켓을 넣어준다. 안그러면 클라들이 같은 소켓을 공유한다.
 			ZeroMemory(&exover->over, sizeof(exover->over)); //accept_over를 exover라는 이름으로 받았으니 exover를 재사용
 			AcceptEx(listenSocket, clientSocket, exover->io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
-			current_user++;
 		}
 			break;
 		case OP_MOVE:
@@ -550,6 +580,22 @@ void worker_Thread()
 
 		}
 			break;
+
+		case OP_SPAWN:
+		{
+			g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
+			g_minion[g_minionindex].Pos.y = 0.f;
+			g_minion[g_minionindex].Pos.z = 4150.f;
+			
+			send_spawn_minion_packet(g_minionindex);
+			
+			
+			
+			g_minionindex++;
+
+			add_timer(user_id, OP_SPAWN, 1000);
+		}
+		break;
 		}
 	}
 

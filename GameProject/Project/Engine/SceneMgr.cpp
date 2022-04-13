@@ -112,6 +112,10 @@ void CSceneMgr::Init()
 	m_pCurScene->GetLayer(6)->SetName(L"Arrow");
 	m_pCurScene->GetLayer(7)->SetName(L"Terrain");
 
+	m_pCurScene->GetLayer(8)->SetName(L"BlueSpawnPlace");
+	m_pCurScene->GetLayer(9)->SetName(L"RedSpawnPlace");
+
+
 	m_pCurScene->GetLayer(31)->SetName(L"Tool");
     CGameObject* pMainCam = nullptr;
     
@@ -309,6 +313,7 @@ void CSceneMgr::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject);
+	
 	pNexus = pObject;
 	pObject = new CGameObject;
 	pObject->SetName(L"Spawn_Place");
@@ -320,7 +325,7 @@ void CSceneMgr::Init()
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 
-	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"RedSpawnPlace")->AddGameObject(pObject);
 
 
 
@@ -353,7 +358,7 @@ void CSceneMgr::Init()
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 
-	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"BlueSpawnPlace")->AddGameObject(pObject);
 
 
 
@@ -761,3 +766,9 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 {
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }
+
+void CSceneMgr::net_spawnMinion(int id)
+{
+	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObjectByPattern();
+}
+

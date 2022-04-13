@@ -33,6 +33,8 @@ private:
 private:
     CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange ,CAnimation* _pAnimation,CAMP_STATE _eState);
 public:
+    void SpawnObjectByPattern();
+
 
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }
     virtual void Update();

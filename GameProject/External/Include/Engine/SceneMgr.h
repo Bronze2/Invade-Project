@@ -23,6 +23,7 @@ public:
 	void net_setLocalPosByID(int id, float x, float y , float z);
 	void net_setRotationByID(int id, float x, float y, float z);
 	void net_setAnimationByID(int id , int state);
+	void net_spawnMinion(int id);
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
