@@ -229,19 +229,6 @@ void CCamera::Render_Deferred()
 			int iRowIdx = 0;
 			for (UINT i = 0; i < pair.second.size(); ++i)
 			{
-				if (pair.second[i].pObj->Animator2D())//|| pair.second[i].pObj->Animator3D())
-				{
-					map<INT_PTR, vector<tInstObj>>::iterator iter
-						= m_mapSingleObj.find((INT_PTR)pair.second.at(0).pObj);
-
-					if (iter != m_mapSingleObj.end())
-						iter->second.push_back(pair.second[i]);
-					else
-					{
-						m_mapSingleObj.insert(make_pair((INT_PTR)pair.second[0].pObj, vector<tInstObj>{pair.second[i]}));
-					}
-					continue;
-				}
 
 				// 데이터를 모아서 인스턴싱 버퍼에 전달
 				tInstData.matWorld = pair.second[i].pObj->Transform()->GetWorldMat();
