@@ -26,6 +26,9 @@ using namespace Microsoft::WRL;
 #include <map>
 
 #include <fbxsdk.h>
+
+
+
 #ifdef _DEBUG
 #pragma comment(lib, "FBXLoader/x64/debug/libfbxsdk-md.lib")
 #else
