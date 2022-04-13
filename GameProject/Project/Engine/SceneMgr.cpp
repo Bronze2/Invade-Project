@@ -329,7 +329,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CSpawnScript);
 	pObject->Transform()->SetLocalPos(Vec3(-50.f, 0.f, 4150.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-
+	pObject->FrustumCheck(false);
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 
@@ -363,7 +363,7 @@ void CSceneMgr::Init()
 	pObject->SetName(L"Spawn_Place");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CSpawnScript);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-50.f, 0.f, 400.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
@@ -422,7 +422,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(287.f, 0.f, 578.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -444,7 +444,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(287.f, 100.f, 578.f+193.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -475,7 +475,7 @@ void CSceneMgr::Init()
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 150.f, 0.f));
 		}
 		
-
+		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		pObject->Collider3D()->SetOffsetScale(Vec3(25.f, 300.f, 25.f));
@@ -500,7 +500,7 @@ void CSceneMgr::Init()
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CMeshRender);
-
+		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalPos(Vec3(-293.f, 0.f, 578.f + (i * 192.5)));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -517,7 +517,7 @@ void CSceneMgr::Init()
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CMeshRender);
-
+		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalPos(Vec3(287.f, 0.f, 3986.f - (i * 192.5)));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -535,7 +535,7 @@ void CSceneMgr::Init()
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CMeshRender);
-
+		pObject->FrustumCheck(false);
 		if (i == 1 || i == 4) {
 			pObject->Transform()->SetLocalPos(Vec3(-293.f, 100.f, 3986.f - (i * 192.5)));
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 150.f, 0.f));
@@ -564,7 +564,7 @@ void CSceneMgr::Init()
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CMeshRender);
-
+		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalPos(Vec3(-480.f, 0.f, 900.f*(i+1)));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -582,7 +582,7 @@ void CSceneMgr::Init()
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CMeshRender);
-
+		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalPos(Vec3(480.f, 0.f, 900.f * (i + 1)));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -600,7 +600,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -618,7 +618,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f,200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -635,7 +635,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -653,7 +653,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -671,7 +671,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 4350.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -689,7 +689,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
-
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 4350.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);

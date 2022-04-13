@@ -29,6 +29,7 @@ public:
 		m_vecData.clear();
 		m_iAnimInstCount = 0;
 		m_bUpdated = false;
+		m_BufferID = 0;
 	}
 	void AddInstancingData(tInstancingData& _tData, bool _bAnim) {
 		m_vecData.push_back(_tData);
