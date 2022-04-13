@@ -618,6 +618,7 @@ void main()
 	serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY); //모든 클라로부터 접속을 받아야 한다
 	::bind(listenSocket, reinterpret_cast<SOCKADDR *>(&serverAddr), sizeof(serverAddr)); //그냥 bind를 쓰면 c++11에 있는 키워드로 연결된다. 따라서 앞에 ::를 붙인다.
 
+
 	listen(listenSocket, SOMAXCONN);
 
 	//IOCP 핸들 할당, IOCP객체 만들기
@@ -628,7 +629,6 @@ void main()
 
 	//listen소켓 등록
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(listenSocket), g_iocp, 999, 0);
-
 	//원래 accept는 소켓을 리턴하는데, 이 함수는 미리 소켓을 만들어 두고 그 소켓을 클라와 연결시켜준다. 동작이 좀 다름.
 	//비동기로 acceptEx호출. 
 	SOCKET clientSocket = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
@@ -637,9 +637,8 @@ void main()
 	accept_over.op = OP_ACCEPT;
 	accept_over.c_socket = clientSocket;
 	AcceptEx(listenSocket, clientSocket, accept_over.io_buf , NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
+	
 	//스레드 만들기
-
-
 	vector <thread> worker_threads;
 	for (int i = 0; i < 5; ++i)
 		worker_threads.emplace_back(worker_Thread);
