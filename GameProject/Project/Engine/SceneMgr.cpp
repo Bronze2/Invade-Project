@@ -108,11 +108,11 @@ void CSceneMgr::Init()
 	m_pCurScene->GetLayer(2)->SetName(L"Monster");
 	m_pCurScene->GetLayer(3)->SetName(L"Blue");
 	m_pCurScene->GetLayer(4)->SetName(L"Red");
-	m_pCurScene->GetLayer(5)->SetName(L"Tower");
+	m_pCurScene->GetLayer(5)->SetName(L"Cover");
 	m_pCurScene->GetLayer(6)->SetName(L"Arrow");
 	m_pCurScene->GetLayer(7)->SetName(L"Terrain");
-    m_pCurScene->GetLayer(31)->SetName(L"Tool");
 
+	m_pCurScene->GetLayer(31)->SetName(L"Tool");
     CGameObject* pMainCam = nullptr;
     
     // Camera Object
