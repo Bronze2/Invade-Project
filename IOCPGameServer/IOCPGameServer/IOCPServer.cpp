@@ -253,12 +253,9 @@ void send_leave_packet(int user_id, int o_id)
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
 
-//a 와 b가 서로 시야에 있나? 
 bool is_near(int a, int b)
 {
-//	if (abs(g_clients[a].x - g_clients[b].x) > VIEW_RADIUS) return false;
-//	if (abs(g_clients[a].y - g_clients[b].y) > VIEW_RADIUS) return false;
-//
+
 	return true;
 }
 
@@ -288,46 +285,6 @@ void do_move(int user_id, int direction)
 		else
 			send_move_packet(i, user_id);
 	}
-
-	////시야에 새로 들어온 플레이어 
-	//for (auto newPlayer : new_vl)
-	//{
-	//	//old_vl에 없었는데 new_vl에 있다면 새로 생긴 것.
-	//	if (0 == old_vl.count(newPlayer))
-	//	{
-	//		send_enter_packet(user_id, newPlayer);
-
-	//		g_clients[newPlayer].m_cLock.lock();
-	//		if (0 == g_clients[newPlayer].view_list.count(user_id)) //멀티쓰레드 프로그램이니까, 다른 스레드에서 미리 시야 처리를 했을 수 있다.
-	//		{
-	//			g_clients[newPlayer].m_cLock.unlock();
-	//			send_enter_packet(newPlayer, user_id);
-	//		}
-	//		else
-	//		{
-	//			g_clients[newPlayer].m_cLock.unlock();
-	//			send_move_packet(newPlayer, user_id);
-	//		}
-	//	}
-	//	//새로 들어온 플레이어가 아니라 옛날에도 보였던 애라면 이동을 알려줌
-	//	else
-	//	{
-	//		//상대방이 이동하면서 시야에서 나를 뺐을 수 있다. 그러니까 상대방 viewlist를 확인하고 보내야 한다.
-	//		g_clients[newPlayer].m_cLock.lock();
-	//		if (0 != g_clients[newPlayer].view_list.count(user_id))
-	//		{
-	//			g_clients[newPlayer].m_cLock.unlock();
-	//			send_move_packet(newPlayer, user_id);
-	//		}
-	//		else
-	//		{
-	//			g_clients[newPlayer].m_cLock.unlock();
-	//			send_enter_packet(newPlayer, user_id);
-	//		}
-	//	}
-	//}
-
-
 
 }
 
@@ -640,7 +597,7 @@ void main()
 	
 	//스레드 만들기
 	vector <thread> worker_threads;
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 12; ++i)
 		worker_threads.emplace_back(worker_Thread);
 	//메인 종료 전 모든 스레드 종료 기다리기
 	thread timer_thread{ do_timer };

@@ -281,10 +281,7 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
-
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
@@ -292,17 +289,11 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
-
-
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-
-
+	
 	CGameObject* pNexus = nullptr;
 
-
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
@@ -333,11 +324,7 @@ void CSceneMgr::Init()
 
 
 
-
-
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
@@ -368,45 +355,6 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-
-	/* {
-		pObject = new CGameObject;
-		pObject->SetName(L"Tree");
-		pObject->FrustumCheck(false);
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
-		pObject->Transform()->SetLocalPos(Vec3(-200.f, 0.f, 150.f));
-		pObject->Transform()->SetLocalScale(Vec3(100.f, 150.f, 1.f));
-		pObject->Transform()->SetBillBoard(true);
-		pObject->Transform()->SetCamera(pMainCam);
-		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pMtrl = new CMaterial;
-		pMtrl->DisableFileSave();
-		pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-		CResMgr::GetInst()->AddRes(L"Tree1Mtrl1", pMtrl);
-		pObject->MeshRender()->SetMaterial(pMtrl);
-		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTreeTex1.GetPointer());
-		m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-		pObject = new CGameObject;
-		pObject->SetName(L"Tree");
-		pObject->FrustumCheck(false);
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
-		pObject->Transform()->SetLocalPos(Vec3(-250.f, 0.f, 150.f));
-		pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 1.f));
-		pObject->Transform()->SetBillBoard(true);
-		pObject->Transform()->SetCamera(pMainCam);
-		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-		pMtrl = new CMaterial;
-		pMtrl->DisableFileSave();
-		pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-		CResMgr::GetInst()->AddRes(L"Tree1Mtrl2", pMtrl);
-		pObject->MeshRender()->SetMaterial(pMtrl);
-		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTreeTex2.GetPointer());
-		pObject->Transform()->SetLocalScale(Vec3(100.f, 100.f, 1.f));
-		m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
-	}*/
 
 
 	pObject = new CGameObject;
