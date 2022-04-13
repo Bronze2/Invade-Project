@@ -656,7 +656,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexInstShader(L"Shader\\std3d.fx", "VS_Std3D_Inst", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std3d.fx", "PS_Std3D", "ps_5_0");
 
-	pShader->Create(SHADER_POV::FORWARD);
+	pShader->Create(SHADER_POV::DEFERRED);
 	AddRes(L"Std3DShader", pShader);
 
 	// =============
