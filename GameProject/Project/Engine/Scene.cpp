@@ -18,6 +18,7 @@ CScene::~CScene()
 }
 
 
+
 void CScene::Awake()
 {
     for (UINT i = 0; i < MAX_LAYER; ++i) {

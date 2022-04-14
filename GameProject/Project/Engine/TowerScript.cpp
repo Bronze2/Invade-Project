@@ -82,6 +82,9 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
+	if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
+		ChangeScene(SCENE_TYPE::INGAME);
+	}
 	FindNearObject(m_arrEnemy);
 	m_FRotate();
 	m_FAttack();

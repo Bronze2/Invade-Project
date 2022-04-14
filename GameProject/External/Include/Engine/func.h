@@ -1,5 +1,5 @@
 #pragma once
-
+#include "SceneMgr.h"
 int GetSizeofFormat(DXGI_FORMAT _eFormat);
 
 template<typename T1, typename T2>
@@ -45,6 +45,8 @@ bool lengthCompare(Vec3 _vbeforeObject, Vec3 _vAfterPos,CGameObject* _pAfterObje
 
 
 class CMaterial;
+
+void ChangeScene(SCENE_TYPE _eNextScene);
 
 
 Vec2 GetDiagnal(const float& _fDestination, const float& _fxvalue, const float& _fzvalue);

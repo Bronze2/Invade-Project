@@ -10,6 +10,7 @@ private:
 	CLayer* m_arrLayer[MAX_LAYER];
 
 public:
+	virtual void Init() {}
 	void Awake();
 	void Start();
 	void Update();
