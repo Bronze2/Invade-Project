@@ -13,12 +13,20 @@ private:
     vector<Ptr<CMaterial>>  m_vecMtrl;
 
     bool m_bDynamicShadow;
+    bool m_bAttachItem;
+    bool m_bAttachTarget;
 public:
     void SetMesh(Ptr<CMesh> _pMesh) { m_pMesh = _pMesh; }
     void SetMaterial(Ptr<CMaterial> _pMtrl,UINT _iSubset=0);
 
     void SetDynamicShadow(bool _bTrue) { m_bDynamicShadow = _bTrue; }
     bool IsDynamicShadow() { return m_bDynamicShadow; }
+
+    void SetAttachItem(bool _bTrue) { m_bAttachItem = _bTrue; }
+    bool IsAttachItem() { return m_bAttachItem; }
+
+    void SetAttachTarget(bool _bTrue) { m_bAttachTarget = _bTrue; }
+    bool IsAttachTarget() { return m_bAttachTarget; }
 
     Ptr<CMesh> GetMesh() { return m_pMesh; }
     Ptr<CMaterial> GetCloneMaterial(UINT _iSubset=0);

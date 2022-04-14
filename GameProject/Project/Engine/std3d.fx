@@ -43,17 +43,26 @@ VS_STD3D_OUTPUT VS_Std3D(VS_STD3D_INPUT _in)
 {
     VS_STD3D_OUTPUT output = (VS_STD3D_OUTPUT) 0.f;
         
-    if (g_int_0)
+    if (g_int_0 > 0)
     {
-        Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeight, _in.vIndices, 0); 
+        Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeight, _in.vIndices, 0, g_int_0); 
     }
+
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
-    
     output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV).xyz;
     output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV).xyz);
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV).xyz);
     output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV).xyz);
     output.vUV = _in.vUV;
+
+  /*  if (g_int_0 == 2)
+    {
+        output.vPosition = mul(output.vPosition, g_matHandBoneMat[17]);
+        output.vViewPos = mul(float4(output.vViewPos, 1.f), g_matHandBoneMat[17]);
+        output.vViewTangent = mul(float4(output.vViewTangent, 1.f), g_matHandBoneMat[17]);
+        output.vViewNormal = mul(float4(output.vViewNormal, 1.f), g_matHandBoneMat[17]);
+        output.vViewBinormal = mul(float4(output.vViewBinormal, 1.f), g_matHandBoneMat[17]);
+    }*/
     
     return output;
 }

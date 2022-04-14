@@ -92,7 +92,6 @@ void CBowScript::Awake()
 
 void CBowScript::Update()
 {
-
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
 	{
 		m_eState = BOW_STATE::ATTACK;

@@ -23,6 +23,8 @@ private:
 	float m_fRatio;
 	Ptr<CMaterial> m_pBoneMtrl;
 	CStructuredBuffer* m_pBoneFinalMat;
+	CStructuredBuffer* m_pTargetBoneMat;
+
 	bool m_bFinalMatUpdate;
 	double m_dStartFrameTime;
 
@@ -53,6 +55,8 @@ public:
 	void SetClipTime(int _iClipIdx, float _fTime) { m_vecClipUpdateTime[_iClipIdx] = _fTime; }
 
 	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }
+	CStructuredBuffer* GetTargetBoneMat() { return m_pTargetBoneMat; }
+
 	UINT GetBoneCount() { return(UINT)m_pVecBones->size(); }
 private:
 	void Check_Mesh(Ptr<CMesh>_pMesh);

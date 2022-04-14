@@ -125,6 +125,8 @@ Texture2D g_tex_6 : register(t6);
 
 StructuredBuffer<Matrix> g_arrFinalBoneMat : register(t7);
 
+StructuredBuffer<Matrix> g_matHandBoneMat : register(t8);
+
 
 
 Texture2D g_tex_anim2D : register(t12);

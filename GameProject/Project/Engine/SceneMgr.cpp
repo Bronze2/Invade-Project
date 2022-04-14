@@ -171,7 +171,10 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, 100.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->MeshRender()->SetAttachTarget(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+
+	pMeshData->GetMesh();
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 34, true, false); // 0, 32
@@ -194,12 +197,11 @@ void CSceneMgr::Init()
 	pBow->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pBow->FrustumCheck(false);
-	pBow->Transform()->SetLocalPos(Vec3(0.0f, 100.f, 100.f));
+	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
 	pBow->Transform()->SetLocalRot(Vec3(0.0f, 90.0f, 0.0f));
 	pBow->MeshRender()->SetDynamicShadow(true);
-
-	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
+	pBow->MeshRender()->SetAttachItem(true);
 
 	pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 1, true, false);
@@ -208,6 +210,7 @@ void CSceneMgr::Init()
 	pBow->GetScript<CBowScript>()->Init();
 	//pObject->AddChild(pBow);
 
+	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
