@@ -136,7 +136,7 @@ void Network::ProcessPacket(char* ptr)
 	case S2C_SPAWN_MINION:
 	{
 		sc_packet_spawn_minion* my_packet = reinterpret_cast<sc_packet_spawn_minion*>(ptr);
-		//CSceneMgr::GetInst()->net_spawnMinion(my_packet->id);
+		CSceneMgr::GetInst()->net_spawnMinion(my_packet->id);
 	}
 	break;
 
