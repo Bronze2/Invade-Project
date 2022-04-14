@@ -773,15 +773,7 @@ void CInGameScene::Init()
 		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
 		FindLayer(L"Cover")->AddGameObject(pObject);
-
-
 	}
-
-
-
-
-
-
 
 
 	pObject = new CGameObject;

@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IOCPServer.cpp" />
+    <ClCompile Include="PhysX.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
   </ItemGroup>

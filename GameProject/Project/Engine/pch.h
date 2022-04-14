@@ -47,7 +47,8 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d3d11.lib")
 
-
+#pragma comment (lib, "WS2_32.lib")
+#pragma comment (lib, "mswsock.lib")
 
 // 콘솔창 띄우기
 

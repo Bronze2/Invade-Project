@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
+#include <WS2tcpip.h>
 
 constexpr auto BUF_SIZE = 200;
 //int NPC_ID_START = 10000;

@@ -87,14 +87,31 @@ void Network::ProcessPacket(char* ptr)
 	{
 	case S2C_LOGIN_OK:
 	{
-		sc_packet_login_ok* my_packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
+		sc_packet_lobby_enter* my_packet = reinterpret_cast<sc_packet_lobby_enter*>(ptr);
 		m_Client.id = my_packet->id;
-		cout << "My Client ID :" << m_Client.id <<"로그인 성공"<<endl;
-		CSceneMgr::GetInst()->net_setMainClient(m_Client.id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-
-		cout << my_packet->pos.x <<","<< my_packet->pos.y << ","<<my_packet->pos.z << endl;
+		m_Client.camp = my_packet->camp;
+		m_Client.isHost = my_packet->isHost;
+		cout << "My Client ID :" << m_Client.id <<
+			"	Camp :" << (int)m_Client.camp << 
+			"	isHost:"<< boolalpha << m_Client.isHost <<endl;
 	}
 	break;
+	case S2C_LOBBY_ENTER:
+	{
+		sc_packet_lobby_enter* my_packet = reinterpret_cast<sc_packet_lobby_enter*>(ptr);
+		int id = my_packet->id;
+		if (id == m_Client.id) {
+		}
+		else {
+			m_otherClients[id].camp = my_packet->camp;
+			m_otherClients[id].isHost = my_packet->isHost;
+			m_otherClients[id].id = my_packet->id;
+
+			cout << "Other Client ID :" << m_otherClients[id].id <<
+				"	Camp :" << (int)m_otherClients[id].camp <<
+				"	isHost:" << boolalpha << m_otherClients[id].isHost << endl;
+		}
+	}
 
 	case S2C_ENTER:
 	{
@@ -103,7 +120,7 @@ void Network::ProcessPacket(char* ptr)
 		if (id == m_Client.id) {
 		}
 		else {
-			CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			//CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 	}
 	break;

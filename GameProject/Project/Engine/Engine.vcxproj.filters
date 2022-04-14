@@ -243,6 +243,12 @@
     <ClInclude Include="d3dUtil.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="InGameScene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyScene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -403,6 +409,12 @@
     <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="d3dUtil.cpp">
       <Filter>Header</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameScene.cpp">
+      <Filter>Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyScene.cpp">
+      <Filter>Manager\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

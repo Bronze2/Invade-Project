@@ -50,7 +50,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	CPathMgr::Init();
 	CKeyMgr::GetInst()->Init();
 	CTimeMgr::GetInst()->Init();
-
+	//Network::GetInst()->Init();
 	CResMgr::GetInst()->Init();
 	CSceneMgr::GetInst()->Init();
 	CEventMgr::GetInst()->Init();

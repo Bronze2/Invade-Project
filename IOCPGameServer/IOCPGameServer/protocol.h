@@ -25,6 +25,7 @@ constexpr auto VIEW_RADIUS = 600;
 
 #define S2C_MOUSE			6
 #define S2C_SPAWN_MINION	7
+#define S2C_LOBBY_ENTER		8
 
 
 struct p_Vec3 {
@@ -130,8 +131,9 @@ struct cs_packet_mouse {
 	unsigned move_time;
 };
 
-constexpr unsigned char BLUE = 0;
-constexpr unsigned char RED = 1;
+constexpr unsigned char RED = 0;
+constexpr unsigned char BLUE = 1;
+
 struct sc_packet_spawn_minion {
 	char	size;
 	char	type;

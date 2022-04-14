@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include <unordered_map>
 #include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
 constexpr auto BUF_SIZE = 200;
@@ -27,6 +28,14 @@ struct ObjectInfo {
 struct CLIENT {
 	SocketInfo socket_info;
 	int id = 0;
+	bool isHost;
+	char camp;
+};
+
+struct OTHER_CLINET {
+	int id = 0;
+	bool isHost;
+	char camp;
 };
 
 
@@ -47,8 +56,13 @@ public:
 	void send_animation_packet(int state);
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
+
+	int getOtherClientCount() {	return m_OtherClientCount; };
+	bool getHost() { return m_Client.isHost; };
+	int getOtherClientSize() { return m_otherClients.size(); };
 private:
 	CLIENT m_Client;
-	
+	unordered_map<int, OTHER_CLINET> m_otherClients;
+	int m_OtherClientCount = 0;
 };
 

@@ -9,6 +9,9 @@
 #include "KeyMgr.h"
 #include "MeshRender.h"
 #include "TowerScript.h"
+
+#include "Network.h"
+
 void CLobbyScene::Init()
 {
 	ShowCursor(true);
@@ -61,15 +64,15 @@ void CLobbyScene::Init()
 
 	// AddGameObject
 	FindLayer(L"Default")->AddGameObject(pObject);
+	cout << "!" << endl;
 
-
+	
+	Network::GetInst()->send_login_packet();
 	Awake();
 	Start();
 }
 
 void CLobbyScene::Update()
 {
-
 	CScene::Update();
-
 }

@@ -26,6 +26,7 @@ enum ENUMOP {OP_SPAWN, OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
 
 enum C_STATUS {ST_FREE, ST_ALLOCATED, ST_ACTIVE};
 
+
 struct event_type
 {
 	int obj_id;
@@ -63,7 +64,6 @@ struct CLIENT
 	EXOVER	m_recv_over;
 	int		m_prev_size; 
 	char	m_packet_buf[MAX_PACKET_SIZE];		//조각난 거 받아두기 위한 버퍼
-	
 	atomic<C_STATUS> m_status;
 
 	//게임 콘텐츠 
@@ -75,6 +75,8 @@ struct CLIENT
 
 	unsigned  m_move_time;
 
+	char m_camp;
+	bool m_isHost;
 	unordered_set<int> view_list; //순서가 상관없을 땐 unordered 쓰는게 더 속도가 빠르다 
 };
 
@@ -180,6 +182,19 @@ void send_login_ok_packet(int user_id)
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
 
+void send_lobby_login_ok_packet(int user_id)
+{
+	sc_packet_lobby_enter p;
+	p.id = user_id;
+	p.size = sizeof(p);
+	p.type = S2C_LOGIN_OK;
+	p.camp = g_clients[user_id].m_camp;
+	p.isHost = g_clients[user_id].m_isHost;
+
+	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
+}
+
+
 void send_login_fail_packet()
 {
 
@@ -234,6 +249,17 @@ void send_enter_packet(int user_id, int o_id)
 	g_clients[user_id].m_cLock.unlock();
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
+}
+
+void send_enter_lobby_packet(int user_id, int o_id)
+{
+	sc_packet_lobby_enter p;
+	p.id = o_id;
+	p.size = sizeof(p);
+	p.type = S2C_LOBBY_ENTER;
+	p.camp = g_clients[o_id].m_camp;
+	p.isHost = g_clients[o_id].m_isHost;
+	send_packet(user_id, &p);
 }
 
 
@@ -322,8 +348,8 @@ void enter_game(int user_id, char name[])
 	strcpy_s(g_clients[user_id].m_name, name);
 	g_clients[user_id].m_name[MAX_ID_LEN] = NULL;
 
-	send_login_ok_packet(user_id);
-
+	//send_login_ok_packet(user_id);
+	send_lobby_login_ok_packet(user_id);
 	g_clients[user_id].m_status = ST_ACTIVE;
 
 	g_clients[user_id].m_cLock.unlock();
@@ -331,28 +357,41 @@ void enter_game(int user_id, char name[])
 	for (int i = 0; i < user_id +1; i++)
 	{
 		if (user_id == i) continue;
-		//시야를 벗어났으면 처리하지 말아라 (입장 시 시야처리)
-		//if (true == is_near(user_id, i))
-		//{
-		//	//g_clients[i].m_cLock.lock(); //i와 user_id가 같아지는 경우 2중락으로 인한 오류 발생 (데드락)
-		//	//다른 곳에서 status를 바꿀 수 있지만, 실습에서 사용할정도의 복잡도만 유지해야 하기 때문에 일단 놔두기로 한다. 
-		//	//그래도 일단 컴파일러 문제랑 메모리 문제는 해결해야 하기 때문에 status 선언을 atomic으로 바꾼다. 
-		//	if (ST_ACTIVE == g_clients[i].m_status)
-		//	{
-		//		if (i != user_id)		//나에게는 보내지 않는다.
-		//		{
-		//			send_enter_packet(user_id, i);
-		//			send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다
-		//		}
-		//	}
-		//	//g_clients[i].m_cLock.unlock();
-		//}
+
 		else if (i != user_id)		//나에게는 보내지 않는다.
 		{
 			cout << "Enter Other Client" << endl;
 
 			send_enter_packet(user_id, i);
 			send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다
+		}
+	}
+	cout << "Enter" << endl;
+}
+
+void enter_lobby(int user_id, char name[])
+{
+	g_clients[user_id].m_cLock.lock();
+
+	strcpy_s(g_clients[user_id].m_name, name);
+	g_clients[user_id].m_name[MAX_ID_LEN] = NULL;
+
+	//send_login_ok_packet(user_id);
+	send_lobby_login_ok_packet(user_id);
+	g_clients[user_id].m_status = ST_ACTIVE;
+
+	g_clients[user_id].m_cLock.unlock();
+
+	for (int i = 0; i < user_id + 1; i++)
+	{
+		if (user_id == i) continue;
+
+		else if (i != user_id)		//나에게는 보내지 않는다.
+		{
+			cout << "Enter Other Client" << endl;
+
+			send_enter_lobby_packet(user_id, i);
+			send_enter_lobby_packet(i, user_id); //니가 나를 보면 나도 너를 본다
 		}
 	}
 	cout << "Enter" << endl;
@@ -377,7 +416,7 @@ void process_packet(int user_id, char* buf)
 	{	
 		cs_packet_login *packet = reinterpret_cast<cs_packet_login*>(buf);
 		cout << "Recv Login Packet Client " << endl;
-		enter_game(user_id, packet->name);
+		enter_lobby(user_id, packet->name);
 		break;
 	}
 	case C2S_MOVE:
@@ -553,9 +592,13 @@ void worker_Thread()
 				g_clients[user_id].m_recv_over.wsabuf.buf = g_clients[user_id].m_recv_over.io_buf;
 				g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
-				g_clients[user_id].Pos.x = 50;
-				g_clients[user_id].Pos.y = 0;
-				g_clients[user_id].Pos.z = 100 + user_id * 100;
+				if (user_id == 0)
+					g_clients[user_id].m_isHost = true;
+
+				if (user_id % 2 == 0)
+					g_clients[user_id].m_camp = RED;
+				else
+					g_clients[user_id].m_camp = BLUE;
 
 				g_clients[user_id].view_list.clear();
 
@@ -564,7 +607,7 @@ void worker_Thread()
 				cout << user_id << endl;
 				current_user++;
 
-				add_timer(user_id, OP_SPAWN, 1000);
+				//add_timer(user_id, OP_SPAWN, 1000);
 
 			}
 

@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "EventMgr.h"
-CScene::CScene():m_arrLayer{}
+CScene::CScene() :m_arrLayer{}
 {
     for (UINT i = 0; i < MAX_LAYER; ++i) {
         AddLayer(L"", i);
@@ -98,4 +98,3 @@ void CScene::AddLayer(const wstring& _strLayerName, int _iIdx)
     m_arrLayer[_iIdx]->SetName(_strLayerName);
     m_arrLayer[_iIdx]->SetLayerIdx(_iIdx);
 }
-
