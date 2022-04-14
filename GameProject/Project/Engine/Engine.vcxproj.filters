@@ -180,12 +180,6 @@
     <ClInclude Include="Camera.h">
       <Filter>GameObject\Component\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Animator2D.h">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation2D.h">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClInclude>
     <ClInclude Include="GameFramework.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -243,6 +237,11 @@
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="MinionScript.h">
       <Filter>Script\Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="Sensor.h" />
+    <ClInclude Include="SensorMgr.h" />
+    <ClInclude Include="d3dUtil.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -342,12 +341,6 @@
     <ClCompile Include="Frustum.cpp">
       <Filter>GameObject\Component\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Animator2D.cpp">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation2D.cpp">
-      <Filter>GameObject\Component\Animator</Filter>
-    </ClCompile>
     <ClCompile Include="GameFramework.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -405,6 +398,11 @@
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="MinionScript.cpp">
       <Filter>Script\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="SensorMgr.cpp" />
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>Header</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -214,7 +214,7 @@ void CSceneMgr::Init()
 
 
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\SecondTower.fbx");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedSecondTower;
 	pRedSecondTower = pMeshData->Instantiate();

@@ -17,7 +17,7 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <Windows.h>
 #include "global.h"
-#include <windows.h>
+#include "d3dUtil.h";
 #include <WS2tcpip.h>
 #include <thread>
 #include <mutex>
@@ -25,9 +25,29 @@
 #include <unordered_map>
 #include <chrono>
 
+#include <dxgi1_4.h>
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
+#include <DirectXCollision.h>
 
-#pragma comment (lib, "WS2_32.lib")
-#pragma comment (lib, "mswsock.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+
+// D2D (for Render Text)
+#include <d2d1_3.h>
+#include <dwrite.h>
+#include <d3d11on12.h>
+
+
+
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
+#pragma comment(lib, "d3d11.lib")
+
+
 
 // 콘솔창 띄우기
 

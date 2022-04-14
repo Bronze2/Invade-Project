@@ -49,7 +49,7 @@ private:
 	size_t m_iRTVHeapSize;
 
 	vector<CConstantBuffer*> m_vecCB;
-
+	Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
 
 	ComPtr<ID3D12Fence> m_pFenceCompute;
 	ComPtr<ID3D12DescriptorHeap> m_pDummyDescriptorCompute;

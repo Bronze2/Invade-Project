@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Device.h"
-
 #include "StructuredBuffer.h"
 #include "ConstantBuffer.h"
 #include "Texture.h"
@@ -40,17 +39,73 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	m_tResolution = _res;
 	m_bWindowed = _bWindow;
 
+	UINT dxgiFactoryFlags = 0;
+	UINT d3d11DeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+	D2D1_FACTORY_OPTIONS d2dFactoryOptions = {};
+
 	UINT iFlag = 0;
 
-#ifdef _DEBUG
-	D3D12GetDebugInterface(IID_PPV_ARGS(&m_pDbgCtrl));
-	m_pDbgCtrl->EnableDebugLayer();
-#endif	
+//#ifdef _DEBUG
+//	D3D12GetDebugInterface(IID_PPV_ARGS(&m_pDbgCtrl));
+//	m_pDbgCtrl->EnableDebugLayer();
+//#endif	
+//
+//	CreateDXGIFactory(IID_PPV_ARGS(&m_pFactory));
+//
+//	// CreateDevice
+//	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
 
-	CreateDXGIFactory(IID_PPV_ARGS(&m_pFactory));
 
-	// CreateDevice
-	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
+#if _DEBUG
+// Enable the D3D12 debug layer.
+	{
+		ComPtr<ID3D12Debug> debugController;
+		D3D12GetDebugInterface(IID_PPV_ARGS(&m_pDbgCtrl));
+		m_pDbgCtrl->EnableDebugLayer();
+		// Enable additional debug layers.
+		dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+		d3d11DeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+		d2dFactoryOptions.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
+	}
+#endif
+
+	CreateDXGIFactory1(IID_PPV_ARGS(&m_pFactory));
+
+	std::size_t ui64VideoMemory;
+	Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
+	DXGI_ADAPTER_DESC adapterDesc;
+
+	// 그래픽 카드 어뎁터 체크 
+	// 요청한 그래픽 카드 인터페이스에 대한 어뎁터가 없습니다.
+	m_pFactory->EnumAdapters(0, (IDXGIAdapter**)&pAdapter);
+	pAdapter->GetDesc(&adapterDesc);
+	ui64VideoMemory = (std::size_t)(adapterDesc.DedicatedVideoMemory + adapterDesc.SharedSystemMemory);
+
+	// Compare Video Memory and Find better Gpu
+	int gpu_idx = 0;
+	int select = 0;
+	std::size_t comparison_videoMemory;
+
+	while (m_pFactory->EnumAdapters(gpu_idx, &pAdapter) != DXGI_ERROR_NOT_FOUND)
+	{
+		pAdapter->GetDesc(&adapterDesc);
+		comparison_videoMemory = adapterDesc.DedicatedVideoMemory + adapterDesc.SharedSystemMemory;
+		cout << "GPU SEARCH" << endl;
+		cout << "Comparison_VedeoM: "<<comparison_videoMemory << "	ui64VideoM:" << ui64VideoMemory <<endl;
+		if (comparison_videoMemory > ui64VideoMemory)
+		{
+			ui64VideoMemory = comparison_videoMemory;
+			select = gpu_idx;
+			cout << gpu_idx << endl;
+		}
+		++gpu_idx;
+	}
+
+	m_pFactory->EnumAdapters(select, &pAdapter);
+
+	// Try to create hardware device.
+	HRESULT hardwareResult = D3D12CreateDevice(pAdapter.Get(),D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
+	//D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
 
 	// CreateFence
 	m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_pFence));

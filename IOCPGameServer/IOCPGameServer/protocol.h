@@ -144,6 +144,45 @@ struct sc_packet_spawn_minion {
 };
 
 
+////////////////// Lobby ///////////////////////////////////
+
+struct sc_packet_lobby_enter {
+	char size;
+	char type;
+	char camp;
+	int id;
+	bool isHost;
+};
+
+struct cs_packet_lobby_enter {
+	char size;
+	char type;
+};
+
+struct sc_packet_lobby_ready_info {
+	char size;
+	char type;
+	int id;
+	bool isReady;
+};
+
+struct cs_packet_lobby_ready_info {
+	char size;
+	char type;
+	int id;
+	bool isReady;
+};
+
+struct sc_packet_lobby_gamestart {
+	char size;
+	char type;
+};
+
+struct cs_packet_lobby_gamestart {
+	char size;
+	char type;
+	int id;
+};
 
 
 

@@ -181,7 +181,7 @@ void CMinionScript::CheckRange()
 	}
 }
 
-void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
+void CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {
 	if (m_arrEnemy.size() == 0) {
 		m_pTarget = m_pNexus;
