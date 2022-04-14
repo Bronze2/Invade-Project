@@ -47,6 +47,7 @@ CInstancingBuffer* CInstancingMgr::AllocBuffer(long long _lbufferid)
         pInstBuffer->Init();
         m_vecInstancingBuffer.push_back(pInstBuffer);
     }
+    m_vecInstancingBuffer[m_iInstIdx]->Clear();
     m_vecInstancingBuffer[m_iInstIdx]->SetBufferID(_lbufferid);
     return m_vecInstancingBuffer[m_iInstIdx];
 }

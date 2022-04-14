@@ -275,7 +275,16 @@ bool lengthCompare(Vec3 _vbeforeObject,  Vec3 _vAfterPos, CGameObject* _pAfterOb
 	else
 		return true;
 }
+#include "EventMgr.h"
 
+void ChangeScene(SCENE_TYPE _eNextScene)
+{
+
+	tEvent evn = {};
+	evn.wParam = (DWORD_PTR)_eNextScene;
+	evn.eType = EVENT_TYPE::CHANGE_SCENE;
+	CEventMgr::GetInst()->AddEvent(evn);
+}
 
 Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _fzvalue)
 {

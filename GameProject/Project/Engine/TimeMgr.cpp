@@ -27,14 +27,19 @@ void CTimeMgr::Update()
 		m_bFreeze = false;
 		m_fDeltaTime = 1.f / 60.f;
 	}
+	static int iCallCount = 0;
+	++iCallCount;
 	if (m_fAccTime > 1.f) {
 		QueryPerformanceFrequency(&m_llFrequency);
 		m_fAccTime = 0.f;
 		m_fFPS = 1 / m_fDeltaTime;
+		wchar_t szFPS[50] = L"";
+		
+		wsprintf(szFPS, L"FPS: %d", (int)iCallCount);
+		iCallCount = 0;
+		SetWindowText(CGameFramework::GetInst()->m_hMainhWnd, szFPS);
 	}
 	g_global.fDT = m_fDeltaTime;
 	g_global.fAccTime += m_fDeltaTime;
-	wchar_t szFPS[50] = L"";
-	wsprintf(szFPS, L"FPS: %d", (int)m_fFPS);
-	SetWindowText(CGameFramework::GetInst()->m_hMainhWnd, szFPS);
+
 }

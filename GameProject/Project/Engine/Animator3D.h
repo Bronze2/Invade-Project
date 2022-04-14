@@ -47,7 +47,7 @@ public:
 
 
 	void UpdateData();
-	
+	void UpdateData_Inst(CStructuredBuffer* _pBoneBuffer, UINT _iRow);
 
 	//void SetStartFrame(const UINT& _uStartFrame){m_uStartFrame=_uStartFrame};
 	void SetClipTime(int _iClipIdx, float _fTime) { m_vecClipUpdateTime[_iClipIdx] = _fTime; }

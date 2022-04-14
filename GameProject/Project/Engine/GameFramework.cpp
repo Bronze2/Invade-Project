@@ -46,6 +46,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 
 	CDevice::GetInst()->SetGlobalConstBufferToRegister(CDevice::GetInst()->GetCB(CONST_REGISTER::b5), 0);
 
+	CInstancingMgr::GetInst()->Init();
 	CPathMgr::Init();
 	CKeyMgr::GetInst()->Init();
 	CTimeMgr::GetInst()->Init();
@@ -70,6 +71,7 @@ void CGameFramework::Progress()
 	CSceneMgr::GetInst()->Update();
 	CRenderMgr::GetInst()->Render();
 	CEventMgr::GetInst()->Update();
+	CInstancingMgr::GetInst()->Clear();
 
 
 }

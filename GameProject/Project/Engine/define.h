@@ -245,6 +245,7 @@ enum class EVENT_TYPE
 	ACTIVATE_COMPONENT,		// wParam : Component Adress
 	DEACTIVATE_COMPONENT,	// wParam : Component Adress
 
+	CHANGE_SCENE,
 	END,
 };
 

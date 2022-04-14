@@ -12,7 +12,7 @@ class CShader :
 {
 private:
     ComPtr<ID3DBlob> m_pVSBlob;
-
+    ComPtr<ID3DBlob> m_pVSInstBlob;
     ComPtr<ID3DBlob> m_pHSBlob;
     ComPtr<ID3DBlob> m_pDSBlob;
     ComPtr<ID3DBlob> m_pGSBlob;
@@ -20,7 +20,7 @@ private:
     ComPtr<ID3DBlob> m_pErrBlob;
     ComPtr<ID3DBlob> m_pCSBlob;
     ComPtr<ID3D12PipelineState> m_pPipeLineState;
-
+    ComPtr<ID3D12PipelineState> m_pPipeLineStateInst;
     D3D12_GRAPHICS_PIPELINE_STATE_DESC m_tPipeLine;
 
     ComPtr<ID3D12PipelineState> m_pPipeLineState_CS;
@@ -40,7 +40,7 @@ private:
 public:
     void Create(SHADER_POV _ePov,D3D_PRIMITIVE_TOPOLOGY _eTopology=D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     void CreateVertexShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
- 
+    void CreateVertexInstShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreatePixelShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateGeometryShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
@@ -53,10 +53,10 @@ public:
     void SetRasterizerType(RS_TYPE _eType) { m_eRSType = _eType; }
 
     void AddShaderParam(const tShaderParam& _param) { m_vecShaderPamam.push_back(_param); }
-    void UpdateData();
+    void UpdateData(bool _bInstancing);
     void UpdateData_CS();
 
-    bool IsPossibleInstancing() { return m_pPipeLineState == nullptr ? false : true; }
+    bool IsPossibleInstancing() { return m_pPipeLineStateInst == nullptr ? false : true; }
     SHADER_POV GetShaderPov() { return m_ePov; }
 
 

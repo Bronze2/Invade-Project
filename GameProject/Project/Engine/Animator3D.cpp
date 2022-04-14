@@ -39,6 +39,31 @@ void CAnimator3D::UpdateData()
 	m_pBoneFinalMat->UpdateData(TEXTURE_REGISTER::t7);
 }
 
+void CAnimator3D::UpdateData_Inst(CStructuredBuffer* _pBoneBuffer, UINT _iRow)
+{
+	if (!m_bFinalMatUpdate)
+	{
+		// Bone Data Update	
+		Ptr<CMesh> pMesh = MeshRender()->GetMesh();
+		pMesh->GetBoneFrameDataBuffer()->UpdateData_CS(TEXTURE_REGISTER::t10);
+		pMesh->GetBoneOffsetBuffer()->UpdateData_CS(TEXTURE_REGISTER::t11);
+
+		Check_Mesh(pMesh);
+		_pBoneBuffer->UpdateRWData(UAV_REGISTER::u0);
+
+		UINT iBoneCount = (UINT)m_pVecBones->size();
+		m_pBoneMtrl->SetData(SHADER_PARAM::INT_0, &iBoneCount);
+		m_pBoneMtrl->SetData(SHADER_PARAM::INT_1, &m_iFrameIdx);
+		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &_iRow);
+		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
+
+		UINT iGrounX = (iBoneCount / 256) + 1;
+		m_pBoneMtrl->Dispatch(iGrounX, 1, 1);
+
+		m_bFinalMatUpdate = true;
+	}
+}
+
 
 void CAnimator3D::Check_Mesh(Ptr<CMesh> _pMesh)
 {

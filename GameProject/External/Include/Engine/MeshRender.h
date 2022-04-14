@@ -28,7 +28,7 @@ public:
     ULONG64 GetInstID(UINT _iMtrlIdx);
 
     void Render();
- 
+    void Render(UINT _iMtrlIdx);
     void Render_ShadowMap();
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);
