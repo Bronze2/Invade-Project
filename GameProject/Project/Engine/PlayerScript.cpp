@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include"CameraScript.h"
 #include "Animator3D.h"
+#include "BowScript.h"
 
 void CPlayerScript::m_FAnimation()
 {
@@ -86,7 +87,6 @@ void CPlayerScript::Init()
 		m_eState = PLAYER_STATE::IDLE;
 		m_ePrevState = PLAYER_STATE::IDLE;
 	}
-
 }
 
 void CPlayerScript::Awake()
@@ -122,13 +122,13 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
 	Vec3 vRot = Transform()->GetLocalRot();
 	int rotydegree = XMConvertToDegrees(vRot.y);
 	int reminder = rotydegree % 360 + 90;
+
 	if (0 <= reminder && reminder <= 180) {
 		m_bCheckDegree = true;
 	}
@@ -183,8 +183,6 @@ void CPlayerScript::Update()
 
 		m_eState = PLAYER_STATE::IDLE;
 	}
-
-
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		//CGameObject* pObj=GetObj()->GetChild()[0];

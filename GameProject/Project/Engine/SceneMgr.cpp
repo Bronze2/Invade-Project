@@ -43,6 +43,7 @@
 #include "SpawnScript.h"
 #include "Sensor.h"
 #include "TowerScript.h"
+#include "BowScript.h"
 
 
 CScene* CSceneMgr::GetCurScene()
@@ -173,38 +174,38 @@ void CSceneMgr::Init()
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
 	CAnimation* pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
-	pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
+	pNewAnimation->InsertAnimation(L"IDLE", 0, 34, true, false); // 0, 32
+	pNewAnimation->InsertAnimation(L"WALK", 49, 75, false, false);
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->GetScript<CPlayerScript>()->Init();
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject, false);
 
 
-	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow.mdat", L"MeshData\\bow.mdat");
-	//CGameObject* pBow;
-	//pBow = pMeshData->Instantiate();
-	//pBow->SetName(L"Bow");
-	//pBow->AddComponent(new CTransform);
-	//pBow->AddComponent(new CCollider3D);
-	//pBow->AddComponent(new CSensor);
-	//pBow->AddComponent(new CPlayerScript);
-	//pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//pBow->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-	//pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	//pBow->FrustumCheck(false);
-	//pBow->Transform()->SetLocalPos(Vec3(100.f, 0.f, 100.f));
-	//pBow->Transform()->SetLocalScale(Vec3(5.0, 0.5f, 10.0f));
-	//pBow->MeshRender()->SetDynamicShadow(true);
-	//pBow->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
+	CGameObject* pBow;
+	pBow = pMeshData->Instantiate();
+	pBow->SetName(L"Bow");
+	pBow->AddComponent(new CTransform);
+	pBow->AddComponent(new CCollider3D);
+	pBow->AddComponent(new CSensor);
+	pBow->AddComponent(new CBowScript);
+	pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pBow->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pBow->FrustumCheck(false);
+	pBow->Transform()->SetLocalPos(Vec3(0.0f, 100.f, 100.f));
+	pBow->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+	pBow->Transform()->SetLocalRot(Vec3(0.0f, 90.0f, 0.0f));
+	pBow->MeshRender()->SetDynamicShadow(true);
 
-	//m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
+	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
 
-	////CAnimation* pNewAnimation = new CAnimation;
-	////pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
-	////pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
-	////pObject->Animator3D()->SetAnimation(pNewAnimation);
-	////pBow->GetScript<CPlayerScript>()->Init();
+	pNewAnimation = new CAnimation;
+	pNewAnimation->InsertAnimation(L"IDLE", 0, 1, true, false);
+	pNewAnimation->InsertAnimation(L"ATTACK", 1, 100, false, false);
+	pBow->Animator3D()->SetAnimation(pNewAnimation);
+	pBow->GetScript<CBowScript>()->Init();
 	//pObject->AddChild(pBow);
 
 

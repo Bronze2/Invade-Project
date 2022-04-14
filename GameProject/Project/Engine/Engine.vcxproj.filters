@@ -118,6 +118,9 @@
     <Filter Include="Manager\Sensor">
       <UniqueIdentifier>{cdb18eab-7434-441a-bd85-aeebf64c116b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Bow">
+      <UniqueIdentifier>{2758a0a7-ec9b-4e3a-b6ce-d909e3a02d54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -297,6 +300,9 @@
     <ClInclude Include="SensorMgr.h">
       <Filter>Manager\Sensor</Filter>
     </ClInclude>
+    <ClInclude Include="BowScript.h">
+      <Filter>Script\Bow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -463,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="SensorMgr.cpp">
       <Filter>Manager\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="BowScript.cpp">
+      <Filter>Script\Bow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
