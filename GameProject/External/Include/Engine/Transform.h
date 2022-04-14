@@ -37,6 +37,7 @@ public:
     void SetLocalScale(const Vec3& _vScale) { if (m_vLocalScale != _vScale) { m_vLocalScale = _vScale; Changed(); } }
     void SetLocalRot(const Vec3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
     void LookAt(const Vec3& _vLook);
+    void LookAt(const Vec3& _vLook, const Vec3& _vRot);
 
    // const Vec3 GetLocalDir() { return m_vLocalDir; }
    

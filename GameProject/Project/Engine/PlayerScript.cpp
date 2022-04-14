@@ -140,7 +140,7 @@ void CPlayerScript::Update()
 	}
 
 
-	if (KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) {
+	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vFront * 200.f * DT;
@@ -187,14 +187,14 @@ void CPlayerScript::Update()
 
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		CGameObject* pObj=GetObj()->GetChild()[0];
-		Vec3 vPos4=pObj->Transform()->GetLocalPos();
-		Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		Vec3 vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vRestorePos = vPos4;
-		vPos4 += vRight * 10.f;
-		vPos4 += vFront * 10.f;
-		pObj->Transform()->SetLocalPos(vPos4);
+		//CGameObject* pObj=GetObj()->GetChild()[0];
+		//Vec3 vPos4 = pObj->Transform()->GetLocalPos();
+		//Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		//Vec3 vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		//m_vRestorePos = vPos4;
+		//vPos4 += vRight * 10.f;
+		//vPos4 += vFront * 10.f;
+		//pObj->Transform()->SetLocalPos(vPos4);
 		m_fArrowSpeed = 200.f;
 		
 	}
@@ -206,17 +206,20 @@ void CPlayerScript::Update()
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		CGameObject* pObj = GetObj()->GetChild()[0];
-		Vec3 vPos4 = pObj->Transform()->GetLocalPos();
-		Vec3 vRight =-pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		Vec3 vFront = -pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
+
+		//CGameObject* pObj = GetObj()->GetChild()[0];
+		Vec3 vPos4 = Transform()->GetLocalPos();
+		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 		m_vRestorePos = vPos4;
-		vPos4 += vRight * 10.f;
-		vPos4 += vFront * 10.f;
-		pObj->Transform()->SetLocalPos(vPos4);
+		//vPos4 += vRight * 10.f;
+		//vPos4 += vFront * 10.f;
+		//pObj->Transform()->SetLocalPos(vPos4);
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
-		vRight = pObj->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vRight = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
@@ -224,9 +227,8 @@ void CPlayerScript::Update()
 
 
 		Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
-	
 
-		CCameraScript* p=dynamic_cast<CCameraScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
+		CCameraScript* p=dynamic_cast<CCameraScript*>(pCamera->GetScripts()[0]);
 		float fDegree= p->GetDegree();
 		float fDegree2 = fDegree;
 

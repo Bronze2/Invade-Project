@@ -349,3 +349,11 @@ enum class CAMP_STATE {
 	RED,
 	BLUE,
 };
+
+enum class CAMERA_EFFECT_TYPE {
+	NONE,
+	ZOOMIN,
+	SHAKING,
+	DEMAGED,
+	LIGHTNING,
+};
