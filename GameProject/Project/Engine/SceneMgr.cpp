@@ -52,8 +52,17 @@ CScene* CSceneMgr::GetCurScene()
 
 void CSceneMgr::ChangeScene(CScene* _pNextScene)
 {
+	if (m_pCurScene == _pNextScene)
+		return;
 	SAFE_DELETE(m_pCurScene);
+
 	m_pCurScene = _pNextScene;
+	m_pCurScene->Awake();
+	m_pCurScene->Start();
+}
+
+void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
+{
 }
 
 CSceneMgr::CSceneMgr()
@@ -91,15 +100,27 @@ void CSceneMgr::Init()
 
 	Ptr<CMaterial> pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_3, pSky01.GetPointer());
-//
+	//
 	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
-//
-	Ptr<CTexture> pTreeTex1= CResMgr::GetInst()->Load<CTexture>(L"TreeTex1", L"Texture\\Tree01.png");
-	Ptr<CTexture> pTreeTex2 =CResMgr::GetInst()->Load<CTexture>(L"TreeTex2", L"Texture\\Tree02.png");
+	//
+	Ptr<CTexture> pTreeTex1 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex1", L"Texture\\Tree01.png");
+	Ptr<CTexture> pTreeTex2 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex2", L"Texture\\Tree02.png");
 	Ptr<CTexture> pTransparency = CResMgr::GetInst()->Load<CTexture>(L"Transparency", L"Texture\\Transparency.png");
+
+	Ptr<CMaterial> pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
+	m_arrScene[(UINT)SCENE_TYPE::LOBBY];
+
+
+
+
 	m_pCurScene = new CScene;
 	m_pCurScene->SetName(L"Play Scene");
+	
+
 	ShowCursor(false);
 
 
@@ -164,17 +185,17 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CSensor);
 	pObject->AddComponent(new CPlayerScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,40.f,10.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(50.f, 0.f, 100.f));
 	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-	
-	pMainCam->Transform()->SetLocalPos(Vec3(-60,40,-10));
-//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, PI/2, -PI/18));
+
+	pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+	//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
@@ -182,8 +203,8 @@ void CSceneMgr::Init()
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->GetScript<CPlayerScript>()->Init();
 	pObject->AddChild(pMainCam);
-//
-//
+	//
+	//
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject, false);
 
 
@@ -214,7 +235,7 @@ void CSceneMgr::Init()
 
 
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\SecondTower.fbx");
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\SecondTower.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedSecondTower;
 	pRedSecondTower = pMeshData->Instantiate();
@@ -238,9 +259,9 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Red")->AddGameObject(pRedSecondTower);
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\FirstTower01.fbx");
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\FirstTower01.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower01.mdat", L"MeshData\\SecondTower01.mdat");
-//	pMeshData->Save(pMeshData->GetPath());
+	//	pMeshData->Save(pMeshData->GetPath());
 	CGameObject* pBlueFirstTower;
 	pBlueFirstTower = pMeshData->Instantiate();
 	pBlueFirstTower->AddComponent(new CTransform);
@@ -284,7 +305,7 @@ void CSceneMgr::Init()
 	pBlueSecondTower->MeshRender()->SetDynamicShadow(true);
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
-	
+
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
@@ -293,7 +314,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
-	pObject->Transform()->SetLocalRot(Vec3(-PI/2, PI/2, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
 
@@ -301,10 +322,10 @@ void CSceneMgr::Init()
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
 
-	CGameObject* pNexus=nullptr;
+	CGameObject* pNexus = nullptr;
 
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
@@ -313,10 +334,10 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
-	
+
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-50.f, 35.f, 150.f));
-	pObject->Transform()->SetLocalRot(Vec3(-3.14f/6, 0.F, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 6, 0.F, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
@@ -339,7 +360,7 @@ void CSceneMgr::Init()
 
 
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus.fbx");
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
@@ -416,6 +437,11 @@ void CSceneMgr::Init()
 
 	}*/
 
+	Ptr<CMaterial> pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
+	{
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Cover");
@@ -429,11 +455,7 @@ void CSceneMgr::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(25.f, 300.f, 25.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 150.f, 0.f));
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pMtrl = new CMaterial;
-	pMtrl->DisableFileSave();
-//	Ptr<CMaterial> pMtrl = new CMaterial;
-	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
+
 	pObject->MeshRender()->SetMaterial(pMtrl);
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
@@ -445,7 +467,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(287.f, 100.f, 578.f+193.f));
+	pObject->Transform()->SetLocalPos(Vec3(287.f, 100.f, 578.f + 193.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(25.f, 300.f, 25.f));
@@ -474,12 +496,12 @@ void CSceneMgr::Init()
 			pObject->Transform()->SetLocalPos(Vec3(287.f, 0.f, 964.f + (i * 190)));
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 150.f, 0.f));
 		}
-		
+
 		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		pObject->Collider3D()->SetOffsetScale(Vec3(25.f, 300.f, 25.f));
-		
+
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -544,11 +566,11 @@ void CSceneMgr::Init()
 			pObject->Transform()->SetLocalPos(Vec3(-293.f, 0.f, 3986.f - (i * 192.5)));
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 150.f, 0.f));
 		}
-			
+
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		pObject->Collider3D()->SetOffsetScale(Vec3(22.5f, 300.f, 22.5f));
-		
+
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
 		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
@@ -565,7 +587,7 @@ void CSceneMgr::Init()
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CMeshRender);
 		pObject->FrustumCheck(false);
-		pObject->Transform()->SetLocalPos(Vec3(-480.f, 0.f, 900.f*(i+1)));
+		pObject->Transform()->SetLocalPos(Vec3(-480.f, 0.f, 900.f * (i + 1)));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		pObject->Collider3D()->SetOffsetScale(Vec3(70.f, 100.f, 1000.f));
@@ -601,6 +623,41 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
 	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(-225.f, 0.f, -570.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 1150.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(pMtrl);
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+
+	pObject = new CGameObject;
+	pObject->SetName(L"Cover");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CMeshRender);
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(225.f, 0.f, -570.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 1150.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(pMtrl);
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+	pObject = new CGameObject;
+	pObject->SetName(L"Cover");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CMeshRender);
+	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 200.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
@@ -619,7 +676,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f,200.f));
+	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, -1350.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
@@ -630,13 +687,55 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
 
+
+
 	pObject = new CGameObject;
 	pObject->SetName(L"Cover");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMeshRender);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 200.f));
+	pObject->Transform()->SetLocalPos(Vec3(0, 0.f, -1650.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(600.f, 100.f, 400.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(pMtrl);
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+
+
+
+	pObject = new CGameObject;
+	pObject->SetName(L"Cover");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CMeshRender);
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(-105.f, 50.f, -1330.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(50.f, 200.f, 50.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(pMtrl);
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+
+
+
+	pObject = new CGameObject;
+	pObject->SetName(L"Cover");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CMeshRender);
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, -1350.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
@@ -664,46 +763,107 @@ void CSceneMgr::Init()
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
 	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+	}
 
 
-	pObject = new CGameObject;
-	pObject->SetName(L"Cover");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->AddComponent(new CMeshRender);
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 4350.f));
-	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(pMtrl);
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
-	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+	{
+		pObject = new CGameObject;
+		pObject->SetName(L"Cover");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CMeshRender);
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 4350.f));
+		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(pMtrl);
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+		m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+		pObject = new CGameObject;
+		pObject->SetName(L"Cover");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CMeshRender);
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 4350.f));
+		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(pMtrl);
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+		m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+		pObject = new CGameObject;
+		pObject->SetName(L"Cover");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CMeshRender);
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 5850.f));
+		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(pMtrl);
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+		m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+		pObject = new CGameObject;
+		pObject->SetName(L"Cover");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CMeshRender);
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 5850.f));
+		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(pMtrl);
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+		m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
 
 
-	pObject = new CGameObject;
-	pObject->SetName(L"Cover");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->AddComponent(new CMeshRender);
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 4350.f));
-	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(pMtrl);
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 
-	m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+		pObject = new CGameObject;
+		pObject->SetName(L"Cover");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CMeshRender);
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(Vec3(105.f, 50.f, 5830.f));
+		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(50.f, 200.f, 50.f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(pMtrl);
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+
+		m_pCurScene->FindLayer(L"Cover")->AddGameObject(pObject);
+
+
+	}
+
 
 
 
 	
+
+
+
 	pObject = new CGameObject;
 	pObject->SetName(L"SkyBox");
 	pObject->FrustumCheck(false);
@@ -758,6 +918,12 @@ void CSceneMgr::Update_Tool()
 	CRenderMgr::GetInst()->ClearCamera();
 	m_pCurScene->FinalUpdate();
 }
+
+void CSceneMgr::Init(SCENE_TYPE _eType)
+{
+}
+
+
 
 void CSceneMgr::FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj)
 {
