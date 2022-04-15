@@ -30,6 +30,8 @@ class CMinionScript :
     bool m_bAllienceCol;
 
 
+    CGameObject* m_pProjectile;
+
     bool m_bRotate;
 
     UINT m_iAllienceCol;

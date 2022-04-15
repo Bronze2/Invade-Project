@@ -27,6 +27,7 @@ private:
 	double m_dStartFrameTime;
 
 	CAnimation* m_pAnimation;
+	float m_fAnimationSpeed; //크면 클수록 느려짐
 
 
 public:
@@ -36,13 +37,14 @@ public:
 
 	bool m_bTestCheck = false;
 	void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
+	const vector<tMTBone>* GetBones() { return m_pVecBones; }
 	void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
 	void SetClipIndex(const int& _iCurClip) { m_iCurClip = _iCurClip; }
 	int GetFrameIdx() { return m_iFrameIdx; }
 	void SetFrmaeIdx(const int& _idx) { m_iFrameIdx = _idx; }
 	void SetCurTime(const double& _CurTime) { m_vecClipUpdateTime[m_iCurClip] = _CurTime; }
 	int GetFrameCount() { return m_iFrameCount; }
-
+	void SetAnimationSpeed(const  float& _fSpeed) { m_fAnimationSpeed = _fSpeed; }
 	void SetStartFrameTime(const double& _uStarFrameTime) { m_dStartFrameTime = _uStarFrameTime; }
 
 

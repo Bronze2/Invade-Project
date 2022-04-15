@@ -11,10 +11,17 @@ void CTowerScript::Init()
 	switch (m_eType)
 	{
 	case TOWER_TYPE::FIRST:
+		m_iMaxHp = 1500;
+		m_uiCurHp = m_iMaxHp;
 		break;
 	case TOWER_TYPE::SECOND:
+		m_iMaxHp = 2000;
+		m_uiCurHp = m_iMaxHp;
 		break;
 	case TOWER_TYPE::NEXUS:
+
+		m_iMaxHp = 5000;
+		m_uiCurHp = m_iMaxHp;
 		break;
 	default:
 		break;
@@ -82,9 +89,7 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
-	if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
-		ChangeScene(SCENE_TYPE::INGAME);
-	}
+
 	FindNearObject(m_arrEnemy);
 	m_FRotate();
 	m_FAttack();

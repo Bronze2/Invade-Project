@@ -142,7 +142,6 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
 	m_arrScene[(UINT)SCENE_TYPE::LOBBY]= new CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 
 
 

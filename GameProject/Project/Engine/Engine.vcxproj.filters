@@ -124,6 +124,9 @@
     <Filter Include="Manager\Scene\InGame">
       <UniqueIdentifier>{8c79b0b2-9591-460f-8529-ab1cde4b5e60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Projectile">
+      <UniqueIdentifier>{90994765-9fda-4b87-bcb6-240f06865aba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -309,6 +312,9 @@
     <ClInclude Include="LobbyScene.h">
       <Filter>Manager\Scene\Lobby</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectileScript.h">
+      <Filter>Script\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -481,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="LobbyScene.cpp">
       <Filter>Manager\Scene\Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileScript.cpp">
+      <Filter>Script\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

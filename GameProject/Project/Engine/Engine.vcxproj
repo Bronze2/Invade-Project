@@ -215,6 +215,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerScript.h" />
+    <ClInclude Include="ProjectileScript.h" />
     <ClInclude Include="Ptr.h" />
     <ClInclude Include="RenderMgr.h" />
     <ClInclude Include="ResMgr.h" />
@@ -278,6 +279,7 @@ call EngineCopy.bat</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp" />
+    <ClCompile Include="ProjectileScript.cpp" />
     <ClCompile Include="RenderMgr.cpp" />
     <ClCompile Include="RenderMgrInit.cpp" />
     <ClCompile Include="ResMgr.cpp" />

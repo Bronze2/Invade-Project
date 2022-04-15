@@ -122,9 +122,7 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-	if (KEY_TAB(KEY_TYPE::KEY_ESC)) {
-		ChangeScene(SCENE_TYPE::LOBBY);
-	}
+
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();

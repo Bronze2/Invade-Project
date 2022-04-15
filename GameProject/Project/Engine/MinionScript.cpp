@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "MinionScript.h"
 #include "Animator3D.h"
-
+#include"ProjectileScript.h"
+#include "Transform.h"
 #include "Sensor.h"
+#include "MeshRender.h"
 void CMinionScript::Init()
 {
 	m_eState = MINION_STATE::WALK;
@@ -26,6 +28,14 @@ void CMinionScript::Init()
 	case MINION_ATTACK_TYPE::RANGE: {
 		SetAttackRange(150);
 		m_uiMaxHp = 300; m_uiAttackDamage = 20;
+	//	if (CAMP_STATE::BLUE == m_eCamp) {
+	//		m_pProjectile = new CGameObject;
+	//		m_pProjectile->AddComponent(new CTransform);
+	//		m_pProjectile->AddComponent(new CMeshRender);
+	//		m_pProjectile->AddComponent(new CProjectileScript);
+	//		m_pProjectile->GetScript<CProjectileScript>()->SetObject(GetObj());
+	//		CreateObject(m_pProjectile, L"Blue");
+	//	}
 	}
 	 break;
 
@@ -44,8 +54,11 @@ void CMinionScript::Init()
 
 void CMinionScript::Update()
 {
+
 	CheckHp();
 	m_FAnimation();
+	if (m_pNexus == nullptr)
+		return;
 	if (m_eState == MINION_STATE::DIE) {
 		return;
 	}
@@ -286,7 +299,10 @@ void CMinionScript::m_FAnimation()
 					GetObj()->Animator3D()->SetStartFrameTime(time);
 					m_bFindNear = true;
 					m_bFinishAnimation = true;
+					if (m_pTarget == nullptr) {
 
+					}
+					else
 					if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
 						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
 					}

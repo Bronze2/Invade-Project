@@ -322,6 +322,7 @@ void CSpawnScript::Update()
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 25.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, pNewAnimation, m_eCampState);
 								CreateObject(pObject, L"Blue");
+
 								m_uiCount += 1;
 								m_uiSpawnStart = m_uiSpawnEnd;
 							}
