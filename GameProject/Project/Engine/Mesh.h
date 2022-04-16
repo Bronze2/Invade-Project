@@ -43,6 +43,7 @@ public:
 
 	UINT GetSubsetCount() { return (UINT)m_vecIdxInfo.size(); }
 	const vector<tMTBone>* GetBones() { return &m_vecBones; }
+	const tMTBone* GetBone(int _idx) { return &m_vecBones[_idx]; }
 	const vector<tMTAnimClip>* GetAnimClip() { return &m_vecAnimClip; }
 
 	bool IsAnimMesh() { return !m_vecAnimClip.empty(); }

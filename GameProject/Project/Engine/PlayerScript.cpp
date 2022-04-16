@@ -15,24 +15,35 @@ void CPlayerScript::m_FAnimation()
 		case PLAYER_STATE::IDLE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
-				GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
-				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
-				GetObj()->Animator3D()->SetCurTime(0.f);
-				GetObj()->Animator3D()->SetStartFrameTime(time);
-				m_ePrevState = PLAYER_STATE::IDLE;
+				m_FStartAnimation(L"IDLE", PLAYER_STATE::IDLE);
 			}
 		}
-			break;
+		break;
 		case PLAYER_STATE::WALK:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK");
-				GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
-				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
-				GetObj()->Animator3D()->SetCurTime(0.f);
-				GetObj()->Animator3D()->SetStartFrameTime(time);
-				m_ePrevState = PLAYER_STATE::WALK;
+				m_FStartAnimation(L"WALK", PLAYER_STATE::WALK);
+			}
+		}
+		break;
+		case PLAYER_STATE::JUMP:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"JUMP")) {
+				m_FStartAnimation(L"JUMP", PLAYER_STATE::JUMP);
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
+				m_FStartAnimation(L"ATTACK", PLAYER_STATE::ATTACK);
+			}
+		}
+		break;
+		case PLAYER_STATE::DIE:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
+				m_FStartAnimation(L"DIE", PLAYER_STATE::DIE);
 			}
 		}
 		break;
@@ -47,24 +58,35 @@ void CPlayerScript::m_FAnimation()
 		case PLAYER_STATE::IDLE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
-					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
-					GetObj()->Animator3D()->SetCurTime(0.f);
-					GetObj()->Animator3D()->SetStartFrameTime(time);
-				}
+				m_FChangeAnimation();
 			}
 		}
 		break;
 		case PLAYER_STATE::WALK:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
-					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
-					GetObj()->Animator3D()->SetCurTime(0.f);
-					GetObj()->Animator3D()->SetStartFrameTime(time);
-				}
+				m_FChangeAnimation();
+			}
+		}
+		break;
+		case PLAYER_STATE::JUMP:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"JUMP")) {
+				m_FChangeAnimation();
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
+				m_FChangeAnimation();
+			}
+		}
+		break;
+		case PLAYER_STATE::DIE:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
+				m_FChangeAnimation();
 			}
 		}
 		break;
@@ -72,6 +94,26 @@ void CPlayerScript::m_FAnimation()
 		default:
 			break;
 		}
+	}
+}
+
+void CPlayerScript::m_FStartAnimation(const wstring& _strName, PLAYER_STATE _state)
+{
+	m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(_strName);
+	GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+	double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+	GetObj()->Animator3D()->SetCurTime(0.f);
+	GetObj()->Animator3D()->SetStartFrameTime(time);
+	m_ePrevState = _state;
+}
+
+void CPlayerScript::m_FChangeAnimation()
+{
+	if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
+		GetObj()->Animator3D()->SetFrmaeIdx(m_pCurAnimation->StartFrame);
+		double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+		GetObj()->Animator3D()->SetCurTime(0.f);
+		GetObj()->Animator3D()->SetStartFrameTime(time);
 	}
 }
 
@@ -185,14 +227,6 @@ void CPlayerScript::Update()
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		//CGameObject* pObj=GetObj()->GetChild()[0];
-		//Vec3 vPos4 = pObj->Transform()->GetLocalPos();
-		//Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		//Vec3 vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		//m_vRestorePos = vPos4;
-		//vPos4 += vRight * 10.f;
-		//vPos4 += vFront * 10.f;
-		//pObj->Transform()->SetLocalPos(vPos4);
 		m_fArrowSpeed = 200.f;
 		
 	}
@@ -207,15 +241,11 @@ void CPlayerScript::Update()
 		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
 
-		//CGameObject* pObj = GetObj()->GetChild()[0];
 		Vec3 vPos4 = Transform()->GetLocalPos();
 		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 		m_vRestorePos = vPos4;
-		//vPos4 += vRight * 10.f;
-		//vPos4 += vFront * 10.f;
-		//pObj->Transform()->SetLocalPos(vPos4);
-		m_pArrow[m_iCurArrow]->SetActive(true);
+			m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		vRight = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
@@ -322,7 +352,32 @@ void CPlayerScript::Update()
 		m_bMoveCheck = false;
 	}
 
+	if (KEY_HOLD(KEY_TYPE::KEY_NUM4))
+	{
+		m_eState = PLAYER_STATE::JUMP;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_NUM4))
+	{
+		m_eState = PLAYER_STATE::IDLE;
+	}
 
+	if (KEY_HOLD(KEY_TYPE::KEY_NUM5))
+	{
+		m_eState = PLAYER_STATE::ATTACK;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_NUM5))
+	{
+		m_eState = PLAYER_STATE::IDLE;
+	}
+
+	if (KEY_HOLD(KEY_TYPE::KEY_NUM6))
+	{
+		m_eState = PLAYER_STATE::DIE;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_NUM6))
+	{
+		m_eState = PLAYER_STATE::IDLE;
+	}
 
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);

@@ -183,7 +183,7 @@ struct tFrameTrans
 StructuredBuffer<tFrameTrans> g_arrFrameTrans:register(t10);
 StructuredBuffer<matrix> g_arrOffset:register(t11);
 RWStructuredBuffer<matrix> g_arrFinalMat : register(u0);
-RWStructuredBuffer<matrix> g_arrTargetMat : register(u2);
+// RWStructuredBuffer<matrix> g_arrTargetMat : register(u2);
 
 
 
@@ -205,7 +205,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     MatrixAffineTransformation(vScale, vQZero, qRot, vTranslate, matBone);
     
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
-    g_arrTargetMat[g_int_0 * g_int_3 + _iThreadIdx.x] = matOffset;
+    // g_arrTargetMat[g_int_0 * g_int_3 + _iThreadIdx.x] = matOffset;
     g_arrFinalMat[g_int_0*g_int_3+_iThreadIdx.x] = mul(matOffset, matBone);
 }
 

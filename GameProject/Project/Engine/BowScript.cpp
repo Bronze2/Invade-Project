@@ -3,6 +3,25 @@
 #include "MeshRender.h"
 #include "Animator3D.h"
 
+void CBowScript::Update()
+{
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
+	{
+		m_eState = BOW_STATE::ATTACK;
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_LBTN))
+	{
+		m_eState = BOW_STATE::IDLE;
+	}
+
+	m_pTargetBone = const_cast<tMTBone*>(m_pTargetObject->MeshRender()->GetMesh()->GetBone(m_iTargetBoneIdx));
+	
+	Transform()->SetLocalPos(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].vTranslate);
+	Transform()->SetLocalRot(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].qRot);
+
+	m_FAnimation();
+
+}
 
 void CBowScript::m_FAnimation()
 {
@@ -74,6 +93,8 @@ void CBowScript::m_FAnimation()
 
 void CBowScript::Init()
 {
+	// 이것도 state 말고 그냥 ATTACK시 애니메이션 틀어주는걸로 바꾸자
+
 	m_eState = BOW_STATE::IDLE;
 	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
 		m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
@@ -90,20 +111,6 @@ void CBowScript::Awake()
 {
 }
 
-void CBowScript::Update()
-{
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN))
-	{
-		m_eState = BOW_STATE::ATTACK;
-	}
-	if (KEY_AWAY(KEY_TYPE::KEY_LBTN))
-	{
-		m_eState = BOW_STATE::IDLE;
-	}
-
-	m_FAnimation();
-
-}
 
 CBowScript::CBowScript() : CScript((UINT)SCRIPT_TYPE::BOWSCRIPT)
 {

@@ -7,7 +7,7 @@
 
 
 CMeshRender::CMeshRender()
-	: CComponent(COMPONENT_TYPE::MESHRENDER),m_bDynamicShadow(false),m_bAttachItem(false),m_bAttachTarget(false)
+	: CComponent(COMPONENT_TYPE::MESHRENDER),m_bDynamicShadow(false)
 {
 	m_vecMtrl.resize(1);
 }
@@ -41,8 +41,7 @@ void CMeshRender::Render()
 		{
 			Animator3D()->UpdateData();
 			
-			if (m_bAttachItem) a = 2;
-			else a = 1;
+			a = 1;
 			m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh ¾Ë¸®±â
 		}
 		m_vecMtrl[i]->UpdateData();

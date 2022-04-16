@@ -154,8 +154,7 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1000.f));
 	m_pCurScene->FindLayer(L"Default")->AddGameObject(pObject);
 
-
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow.mdat", L"MeshData\\player_without_bow.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
 	pObject = new CGameObject;
 
 	pObject = pMeshData->Instantiate();
@@ -171,14 +170,18 @@ void CSceneMgr::Init()
 	pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, 100.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-	pObject->MeshRender()->SetAttachTarget(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
-	pMeshData->GetMesh();
+	//pMeshData->GetMesh();
 
 	CAnimation* pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 0, 34, true, false); // 0, 32
-	pNewAnimation->InsertAnimation(L"WALK", 49, 75, false, false);
+	pNewAnimation->InsertAnimation(L"IDLE", 0, 37, true, false);
+	pNewAnimation->InsertAnimation(L"WALK", 45, 69, false, false);
+	pNewAnimation->InsertAnimation(L"JUMP", 81, 109, false, false); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
+	pNewAnimation->InsertAnimation(L"ATTACK", 145, 175, false, false); // È° ²¨³»¼­ ½î±â 125, 175
+	pNewAnimation->InsertAnimation(L"DIE", 240, 261, false, false);
+	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
+	
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->GetScript<CPlayerScript>()->Init();
 
@@ -199,16 +202,19 @@ void CSceneMgr::Init()
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
-	pBow->Transform()->SetLocalRot(Vec3(0.0f, 90.0f, 0.0f));
+	pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->MeshRender()->SetDynamicShadow(true);
-	pBow->MeshRender()->SetAttachItem(true);
+	pBow->GetScript<CBowScript>()->SetTarget(pObject);
+	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
+
+	//pMeshData->GetMesh();
 
 	pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 1, true, false);
 	pNewAnimation->InsertAnimation(L"ATTACK", 1, 100, false, false);
 	pBow->Animator3D()->SetAnimation(pNewAnimation);
 	pBow->GetScript<CBowScript>()->Init();
-	//pObject->AddChild(pBow);
+	pObject->AddChild(pBow);
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
 
