@@ -27,8 +27,8 @@ void CCameraScript::Update()
 	//float fRdist = 10.0f;
 
 	// Pivot 문제 테스트용 dist
-	float fHdist = 300.0f;
-	float fVdist = 100.0f;
+	float fHdist = 400.0f;
+	float fVdist = 150.0f;
 	float fRdist = 10.0f;
 	float fTargetDist = 300.0f;
 	Vec3 vTargetPos = vPlayerPos + vPlayerWorldFront * fTargetDist;

@@ -8,7 +8,7 @@ void CMinionScript::Init()
 	m_eState = MINION_STATE::WALK;
 	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
 		m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK");
-		GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+		GetObj()->Animator3D()->SetFrameIdx(m_CurAnimation->StartFrame);
 		double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 		GetObj()->Animator3D()->SetCurTime(0.f);
 		GetObj()->Animator3D()->SetStartFrameTime(time);
@@ -220,7 +220,7 @@ void CMinionScript::m_FAnimation()
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
 				m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK");
-				GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+				GetObj()->Animator3D()->SetFrameIdx(m_CurAnimation->StartFrame);
 				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 				GetObj()->Animator3D()->SetCurTime(0.f);
 				GetObj()->Animator3D()->SetStartFrameTime(time);
@@ -233,7 +233,7 @@ void CMinionScript::m_FAnimation()
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
 				m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK");
-				GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+				GetObj()->Animator3D()->SetFrameIdx(m_CurAnimation->StartFrame);
 				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 				GetObj()->Animator3D()->SetCurTime(0.f);
 				GetObj()->Animator3D()->SetStartFrameTime(time);
@@ -246,7 +246,7 @@ void CMinionScript::m_FAnimation()
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
 				m_CurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE");
-				GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+				GetObj()->Animator3D()->SetFrameIdx(m_CurAnimation->StartFrame);
 				double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 				GetObj()->Animator3D()->SetCurTime(0.f);
 				GetObj()->Animator3D()->SetStartFrameTime(time);
@@ -266,7 +266,7 @@ void CMinionScript::m_FAnimation()
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
 				if (GetObj()->Animator3D()->GetFrameIdx() >= m_CurAnimation->EndFrame) {
-					GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+					GetObj()->Animator3D()->SetFrameIdx(m_CurAnimation->StartFrame);
 					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 					GetObj()->Animator3D()->SetCurTime(0.f);
 					GetObj()->Animator3D()->SetStartFrameTime(time);
@@ -280,7 +280,7 @@ void CMinionScript::m_FAnimation()
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
 				if (GetObj()->Animator3D()->GetFrameIdx() >= m_CurAnimation->EndFrame) {
-					GetObj()->Animator3D()->SetFrmaeIdx(m_CurAnimation->StartFrame);
+					GetObj()->Animator3D()->SetFrameIdx(m_CurAnimation->StartFrame);
 					double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
 					GetObj()->Animator3D()->SetCurTime(0.f);
 					GetObj()->Animator3D()->SetStartFrameTime(time);

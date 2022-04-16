@@ -63,10 +63,10 @@ void CAnimator3D::LateUpdate()
 void CAnimator3D::FinalUpdate()
 {
 	m_vecClipUpdateTime[m_iCurClip] += DT;
-	if (nullptr==m_pAnimation) {
+	if (nullptr == m_pAnimation) {
 		m_dCurTime = 0.f;
 		// 현재 재생중인 Clip 의 시간을 진행한다.
-		
+
 		if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
 		{
 			m_vecClipUpdateTime[m_iCurClip] = 0.f;
@@ -101,7 +101,7 @@ void CAnimator3D::LoadFromScene(FILE* _pFile)
 {
 }
 
-CAnimator3D::CAnimator3D():CComponent(COMPONENT_TYPE::ANIMATOR3D),m_iCurClip(0),m_dCurTime(0.f),m_iFrameCount(30),m_pBoneFinalMat(nullptr),m_bFinalMatUpdate(false)
+CAnimator3D::CAnimator3D() :CComponent(COMPONENT_TYPE::ANIMATOR3D), m_iCurClip(0), m_dCurTime(0.f), m_iFrameCount(30), m_pBoneFinalMat(nullptr), m_bFinalMatUpdate(false)
 {
 	m_pBoneMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"Animation3DUpdateMtrl");
 	m_pBoneFinalMat = new CStructuredBuffer;

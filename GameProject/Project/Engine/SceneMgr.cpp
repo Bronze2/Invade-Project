@@ -210,8 +210,8 @@ void CSceneMgr::Init()
 	//pMeshData->GetMesh();
 
 	pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 0, 1, true, false);
-	pNewAnimation->InsertAnimation(L"ATTACK", 1, 100, false, false);
+	pNewAnimation->InsertAnimation(L"IDLE", 0, 0, false, false);
+	pNewAnimation->InsertAnimation(L"ATTACK", 0, 100, false, false);
 	pBow->Animator3D()->SetAnimation(pNewAnimation);
 	pBow->GetScript<CBowScript>()->Init();
 	pObject->AddChild(pBow);

@@ -9,7 +9,7 @@ void CAnimation::InsertAnimation(const wstring& _Name, const UINT& _StartFrame, 
 		tNewAnimation->StartFrame =_StartFrame;
 		tNewAnimation->EndFrame = _EndFrame;
 		tNewAnimation->Repeat = _bRepeat;
-		tNewAnimation->Stop =bStop;
+		tNewAnimation->Stop = bStop;
 		m_tAnimation.push_back(tNewAnimation);
 	}
 

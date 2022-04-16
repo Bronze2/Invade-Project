@@ -45,8 +45,7 @@ private:
     vector<CGameObject*>m_arrColObject;
 public:
     void m_FAnimation();
-    void m_FStartAnimation(const wstring& _strName, PLAYER_STATE _state);
-    void m_FChangeAnimation();
+    void m_FSetAnimation();
 
     void Init();
     virtual void Awake();
