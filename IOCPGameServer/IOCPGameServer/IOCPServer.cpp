@@ -1,5 +1,4 @@
 #define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <WS2tcpip.h>
 #include <MSWSock.h>
@@ -166,7 +165,7 @@ void send_packet(int user_id, void *p)
 
 	WSASend(user.m_socket, &exover->wsabuf, 1, NULL, 0, &exover->over, NULL);
 }
-void send_login_ok_packet(int user_id)
+void send_my_client_enter_packet(int user_id)
 {
 	sc_packet_login_ok p;
 	p.exp = 0;
@@ -341,45 +340,24 @@ void do_move(int user_id, int direction)
 
 }
 
-void enter_game(int user_id, char name[])
-{
-	g_clients[user_id].m_cLock.lock();
+void enter_game(int user_id)
+{	
+	//g_clients[user_id].m_cLock.lock();
+	send_enter_packet(user_id, user_id);
+	//g_clients[user_id].m_cLock.unlock();
 
-	strcpy_s(g_clients[user_id].m_name, name);
-	g_clients[user_id].m_name[MAX_ID_LEN] = NULL;
 
-	//send_login_ok_packet(user_id);
-	send_lobby_login_ok_packet(user_id);
-	g_clients[user_id].m_status = ST_ACTIVE;
-
-	g_clients[user_id].m_cLock.unlock();
-
-	for (int i = 0; i < user_id +1; i++)
-	{
-		if (user_id == i) continue;
-
-		else if (i != user_id)		//나에게는 보내지 않는다.
-		{
-			cout << "Enter Other Client" << endl;
-
-			send_enter_packet(user_id, i);
-			send_enter_packet(i, user_id); //니가 나를 보면 나도 너를 본다
-		}
+	for (int i = 0; i < current_user; ++i) {
+		if (i != user_id)
+			send_enter_packet(i, user_id);
 	}
-	cout << "Enter" << endl;
 }
 
 void enter_lobby(int user_id, char name[])
 {
 	g_clients[user_id].m_cLock.lock();
-
-	strcpy_s(g_clients[user_id].m_name, name);
-	g_clients[user_id].m_name[MAX_ID_LEN] = NULL;
-
-	//send_login_ok_packet(user_id);
 	send_lobby_login_ok_packet(user_id);
 	g_clients[user_id].m_status = ST_ACTIVE;
-
 	g_clients[user_id].m_cLock.unlock();
 
 	for (int i = 0; i < user_id + 1; i++)
@@ -417,8 +395,8 @@ void process_packet(int user_id, char* buf)
 		cs_packet_login *packet = reinterpret_cast<cs_packet_login*>(buf);
 		cout << "Recv Login Packet Client " << endl;
 		enter_lobby(user_id, packet->name);
-		break;
 	}
+		break;
 	case C2S_MOVE:
 	{	cs_packet_move *packet = reinterpret_cast<cs_packet_move*>(buf);
 		g_clients[user_id].m_move_time = packet->move_time;
@@ -428,23 +406,42 @@ void process_packet(int user_id, char* buf)
 		g_clients[user_id].animState = packet->state;
 		//add_timer(user_id, OP_MOVE, 1000);
 		do_move(user_id, packet->direction);
-		break;
 	}
+		break;
 	case C2S_MOUSE:
 	{
-		cs_packet_mouse * packet = reinterpret_cast<cs_packet_mouse*>(buf);
+		cs_packet_mouse *packet = reinterpret_cast<cs_packet_mouse*>(buf);
 		g_clients[user_id].m_move_time = packet->move_time;
 		g_clients[user_id].Rot.x = packet->Rot.x;
 		g_clients[user_id].Rot.y = packet->Rot.y;
 		g_clients[user_id].Rot.z = packet->Rot.z;
 
 		do_Rotation(user_id);
-		break;
 	}
+		break;
+	case C2S_GAMESTART:
+	{
+		cout << "C2S_GAMESTRAT" << endl;
+		cs_packet_lobby_gamestart *packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
+		if (packet->id == user_id) {
+			if (g_clients[user_id].m_isHost){
+				for (int i = 0; i < current_user; ++i) {
+					enter_game(i);
+				}
+
+				//플레이어 진입 후 미니언 생성 시작
+				add_timer(user_id, OP_SPAWN, 3000);
+			}
+		}
+
+	}
+		break;
 	default:
 		cout << "unknown packet type error \n";
-		DebugBreak(); 
-		exit(-1);
+		
+		
+		//DebugBreak(); 
+		//exit(-1);
 	}
 }
 
@@ -607,7 +604,6 @@ void worker_Thread()
 				cout << user_id << endl;
 				current_user++;
 
-				//add_timer(user_id, OP_SPAWN, 1000);
 
 			}
 
@@ -630,12 +626,9 @@ void worker_Thread()
 			g_minion[g_minionindex].Pos.y = 0.f;
 			g_minion[g_minionindex].Pos.z = 4150.f;
 			
-			send_spawn_minion_packet(g_minionindex);
-			
-			
-			
+			send_spawn_minion_packet(g_minionindex);			
 			g_minionindex++;
-
+			//주기적인 스폰
 			add_timer(user_id, OP_SPAWN, 1000);
 		}
 		break;
@@ -686,7 +679,7 @@ void main()
 	
 	//스레드 만들기
 	vector <thread> worker_threads;
-	for (int i = 0; i < 12; ++i)
+	for (int i = 0; i < 10; ++i)
 		worker_threads.emplace_back(worker_Thread);
 	//메인 종료 전 모든 스레드 종료 기다리기
 	thread timer_thread{ do_timer };

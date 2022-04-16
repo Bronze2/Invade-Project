@@ -16,6 +16,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_LOGIN	1
 #define C2S_MOVE	2
 #define C2S_MOUSE	3
+#define C2S_GAMESTART 4
 
 #define S2C_LOGIN_OK		1
 #define S2C_MOVE			2

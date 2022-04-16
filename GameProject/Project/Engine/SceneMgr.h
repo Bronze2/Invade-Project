@@ -38,6 +38,7 @@ public:
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
 	void ChangeScene(SCENE_TYPE _Type);
+	void EnterGame();
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 
 	void net_lobby_enterClient(int id, CAMP_STATE, bool isHost);

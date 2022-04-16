@@ -30,12 +30,18 @@ struct CLIENT {
 	int id = 0;
 	bool isHost;
 	char camp;
+	p_Vec3 pos;
+	p_Vec3 rot;
+	p_Vec3 dir;
 };
 
 struct OTHER_CLINET {
 	int id = 0;
 	bool isHost;
 	char camp;
+	p_Vec3 pos;
+	p_Vec3 rot;
+	p_Vec3 dir;
 };
 
 
@@ -54,12 +60,16 @@ public:
 	void send_move_packet(unsigned char dir, float x, float y , float z, int state);
 	void send_rotation_packet(Vec3 Rot);
 	void send_animation_packet(int state);
+	void send_game_start_packet();
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 
 	int getOtherClientCount() {	return m_OtherClientCount; };
 	bool getHost() { return m_Client.isHost; };
+	int getHostId() { return m_Client.id; };
 	int getOtherClientSize() { return m_otherClients.size(); };
+
+	void debug_checkclient();
 private:
 	CLIENT m_Client;
 	unordered_map<int, OTHER_CLINET> m_otherClients;

@@ -144,12 +144,8 @@ void CSceneMgr::Init()
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
 	m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
-
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
-
-
-
 	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOBBY];
 	m_pCurScene->Init();
 
@@ -175,15 +171,24 @@ void CSceneMgr::Update()
 
 
 	Network::GetInst()->RecvData();
-	if (KEY_TAB(KEY_TYPE::KEY_W) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
+
+	if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
 		if (Network::GetInst()->getHost()) {
-			cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1 << endl;
+			cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1  << endl;
 			if (Network::GetInst()->getOtherClientSize() % 2 == 1) {
-				ChangeScene(SCENE_TYPE::INGAME);
+				Network::GetInst()->send_game_start_packet();			
+				//ChangeScene(SCENE_TYPE::INGAME);
+
 			}
 		}
 	}
 }
+
+void CSceneMgr::EnterGame()
+{
+	ChangeScene(SCENE_TYPE::INGAME);
+}
+
 
 void CSceneMgr::Update_Tool()
 {

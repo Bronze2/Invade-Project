@@ -100,6 +100,7 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_lobby_enter* my_packet = reinterpret_cast<sc_packet_lobby_enter*>(ptr);
 		int id = my_packet->id;
+		cout << my_packet->id << endl;
 		if (id == m_Client.id) {
 		}
 		else {
@@ -111,15 +112,24 @@ void Network::ProcessPacket(char* ptr)
 				"	Camp :" << (int)m_otherClients[id].camp <<
 				"	isHost:" << boolalpha << m_otherClients[id].isHost << endl;
 		}
+		debug_checkclient();
 	}
-
+	break;
 	case S2C_ENTER:
 	{
 		sc_packet_enter* my_packet = reinterpret_cast<sc_packet_enter*>(ptr);
 		int id = my_packet->id;
 		if (id == m_Client.id) {
+			cout << " MAIN ENTER" << endl;
+			m_Client.pos.x = my_packet->pos.x;
+			m_Client.pos.y = my_packet->pos.y;
+			m_Client.pos.z = my_packet->pos.z;
+			CSceneMgr::GetInst()->EnterGame();
 		}
 		else {
+			m_otherClients[my_packet->id].pos.x = my_packet->pos.x;
+			m_otherClients[my_packet->id].pos.y = my_packet->pos.y;
+			m_otherClients[my_packet->id].pos.z = my_packet->pos.z;
 			//CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 	}
@@ -202,7 +212,6 @@ void Network::send_packet(void* buffer)
 	{
 		cout << "오류오류" << endl;
 	}
-
 }
 
 void Network::send_login_packet()
@@ -252,6 +261,24 @@ void Network::send_rotation_packet(Vec3 Rot)
 	send_packet(&m_packet);
 }
 
+void Network::send_game_start_packet()
+{
+	cs_packet_lobby_gamestart m_packet;
+	m_packet.type = C2S_GAMESTART;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = m_Client.id;
+	send_packet(&m_packet);
+	cout << "Send Enter Packet" << endl;
+
+}
+
+void Network::debug_checkclient()
+{
+	for (auto iter = m_otherClients.begin(); iter != m_otherClients.end(); ++iter) {
+		cout << "[" << iter->first << ","
+			<< iter->second.id << "]\n";
+	}
+}
 
 //void Network::CreateSocket()
 //{

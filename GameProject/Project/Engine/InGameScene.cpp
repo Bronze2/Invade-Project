@@ -40,6 +40,8 @@
 #include "SpawnScript.h"
 #include "Sensor.h"
 #include "TowerScript.h"
+
+#include "Network.h"
 void CInGameScene::Init()
 {
 	ShowCursor(false);
@@ -53,6 +55,10 @@ void CInGameScene::Init()
 	GetLayer(5)->SetName(L"Cover");
 	GetLayer(6)->SetName(L"Arrow");
 	GetLayer(7)->SetName(L"Terrain");
+
+	GetLayer(8)->SetName(L"BlueSpawnPlace");
+	GetLayer(9)->SetName(L"RedSpawnPlace");
+	
 	GetLayer(31)->SetName(L"Tool");
 
 
@@ -95,38 +101,39 @@ void CInGameScene::Init()
 
 
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+	for (int i = 0; i < Network::GetInst()->getOtherClientSize() + 1; ++i) {
+		cout << "InGameClinet :" << i << endl;
+		pObject = new CGameObject;
+		pObject = pMeshData->Instantiate();
+		pObject->SetName(L"Monster");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CSensor);
+		pObject->AddComponent(new CPlayerScript);
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->FrustumCheck(false);
+		pObject->Transform()->SetLocalPos(Vec3(50.f, 0.f, 100.f));
+		pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
+		pObject->MeshRender()->SetDynamicShadow(true);
+		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
-	pObject = new CGameObject;
+		pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+		//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+		pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
-	pObject = pMeshData->Instantiate();
-	pObject->SetName(L"Monster");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->AddComponent(new CSensor);
-	pObject->AddComponent(new CPlayerScript);
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(50.f, 0.f, 100.f));
-	pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
-	pObject->MeshRender()->SetDynamicShadow(true);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-
-	pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
-	//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
-
-	CAnimation* pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
-	pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
-	pObject->Animator3D()->SetAnimation(pNewAnimation);
-	pObject->GetScript<CPlayerScript>()->Init();
-	pObject->AddChild(pMainCam);
-	//
-	//
-	FindLayer(L"Blue")->AddGameObject(pObject, false);
-
+		CAnimation* pNewAnimation = new CAnimation;
+		pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
+		pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
+		pObject->Animator3D()->SetAnimation(pNewAnimation);
+		pObject->GetScript<CPlayerScript>()->Init();
+		if (i == Network::GetInst()->getHostId()) {
+			pObject->GetScript<CPlayerScript>()->SetMain();
+			pObject->AddChild(pMainCam);
+		}
+		FindLayer(L"Blue")->AddGameObject(pObject, false);
+	}
 
 
 
@@ -274,7 +281,7 @@ void CInGameScene::Init()
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 
-	FindLayer(L"Blue")->AddGameObject(pObject);
+	FindLayer(L"RedSpawnPlace")->AddGameObject(pObject);
 
 
 
@@ -311,7 +318,7 @@ void CInGameScene::Init()
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 
-	FindLayer(L"Default")->AddGameObject(pObject);
+	FindLayer(L"BlueSpawnPlace")->AddGameObject(pObject);
 
 
 	/* {
