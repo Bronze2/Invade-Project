@@ -24,13 +24,6 @@ static type* GetInst()\
 #define KEY_AWAY(Key) KEY(Key, KEY_STATE::STATE_AWAY)
 #define KEY_NONE(Key) KEY(Key, KEY_STATE::STATE_NONE)
 
-#define STATE_IDLE				L"IDLE"
-#define STATE_WALK				L"WALK"
-#define STATE_ATTACK_READY		L"ATTACK_READY"
-#define STATE_ATTACK			L"ATTACK"
-#define STATE_JUMP				L"JUMP"
-#define STATE_DIE				L"DIE"
-
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
 
