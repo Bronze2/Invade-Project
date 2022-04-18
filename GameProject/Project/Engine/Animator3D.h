@@ -19,10 +19,8 @@ private:
 	int							m_iFrameCount; // 30
 	double						m_dCurTime;
 	int							m_iCurClip; // Å¬¸³ ÀÎµ¦½º
-#ifdef _ANIMATION_TEST
 	int							m_iNextClip;
 	double						m_dNextTime;
-#endif
 
 	int m_iFrameIdx;
 	int m_iNextFrameIdx;
@@ -34,11 +32,9 @@ private:
 	double m_dStartFrameTime;
 	double m_dStartNextFrameTime;
 
-#ifdef _ANIMATION_TEST
 	bool m_bBlendAnimation;
 	float m_fBlendFrame;
 	float m_fBlendMaxFrame;
-#endif
 
 	CAnimation* m_pAnimation;
 
@@ -79,6 +75,9 @@ public:
 	CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMat; }
 
 	UINT GetBoneCount() { return(UINT)m_pVecBones->size(); }
+
+	float GetRatio() { return m_fRatio; }
+
 private:
 	void Check_Mesh(Ptr<CMesh>_pMesh);
 public:

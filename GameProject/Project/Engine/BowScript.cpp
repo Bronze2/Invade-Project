@@ -5,18 +5,23 @@
 
 void CBowScript::Update()
 {
+	m_FAnimation();
+
 	m_pTargetBone = const_cast<tMTBone*>(m_pTargetObject->MeshRender()->GetMesh()->GetBone(m_iTargetBoneIdx));
 
-#ifdef _ANIMATION_TEST
-	Transform()->SetLocalPos(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetNextFrameIdx()].vTranslate);
-	Transform()->SetLocalRot(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetNextFrameIdx()].qRot);
+	Vec3 vTrans1 = m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].vTranslate;
+	Vec3 vTrans2 = m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetNextFrameIdx()].vTranslate;
+	Vec4 qRot1 = m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].qRot;
+	Vec4 qRot2 = m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetNextFrameIdx()].qRot;
+	
+	float factor = m_pTargetObject->Animator3D()->GetRatio();
 
-#else
-	Transform()->SetLocalPos(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].vTranslate);
-	Transform()->SetLocalRot(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].qRot);
-#endif
+	Vec3 vTrans = vTrans1 * (1.f - factor) + vTrans2 * factor;
+	Vec4 qRot = qRot1 * (1.f - factor) + qRot2 * factor;
+	
+	Transform()->SetLocalPos(vTrans);
+	Transform()->SetQuaternion(qRot);
 
-	m_FAnimation();
 }
 
 void CBowScript::m_FAnimation()

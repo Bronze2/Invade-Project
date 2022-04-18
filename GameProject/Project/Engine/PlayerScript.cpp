@@ -107,7 +107,7 @@ void CPlayerScript::m_FAnimation()
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"IDLE");
 
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {		// 해당 애니메이션 끝남 -> 반복할건지?
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
 						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::IDLE);
 						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 						GetObj()->Animator3D()->SetCurTime(0.f);
@@ -125,8 +125,6 @@ void CPlayerScript::m_FAnimation()
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK");
 
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-						// 끝과 시작도 이어주면 좋을듯하옵니다
-						/*GetObj()->Animator3D()->SetBlendState(true);*/
 						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::WALK);
 						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 						GetObj()->Animator3D()->SetCurTime(0.f);
@@ -135,6 +133,18 @@ void CPlayerScript::m_FAnimation()
 				}
 				
 			}
+
+//#ifdef _ANIMATION_TEST
+//			if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+//				GetObj()->Animator3D()->SetBlendState(true);
+//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::WALK);
+//				GetObj()->Animator3D()->SetNextFrameIdx(m_pCurAnimClip->iStartFrame);
+//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::WALK, 0.f);
+//				GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+//			}
+//#else
+		
+//#endif
 		}
 		break;
 		case PLAYER_STATE::JUMP:
@@ -239,7 +249,6 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
@@ -426,12 +435,6 @@ void CPlayerScript::Update()
 	{
 		m_eState = PLAYER_STATE::DIE;
 	}
-
-	//if (KEY_AWAY(KEY_TYPE::KEY_NUM4) || KEY_AWAY(KEY_TYPE::KEY_NUM5))
-	//{
-	//	m_eState = PLAYER_STATE::IDLE;
-	//}
-
 	
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);

@@ -74,7 +74,7 @@ void CSpawnScript::Update()
 						case 2:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 30, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
@@ -96,7 +96,7 @@ void CSpawnScript::Update()
 						case 5:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 31, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
@@ -143,7 +143,7 @@ void CSpawnScript::Update()
 						case 2:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 30, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 7);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
@@ -162,7 +162,7 @@ void CSpawnScript::Update()
 						case 5:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 31, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
@@ -206,7 +206,7 @@ void CSpawnScript::Update()
 						case 2:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 30, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
@@ -222,7 +222,7 @@ void CSpawnScript::Update()
 						break;
 						case 3: {
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 39);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 39);
 								pNewAnimation->InsertAnimClip(L"WALK", 41, 74);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 75, 99);
 								pNewAnimation->InsertAnimClip(L"DIE", 125, 174);
@@ -242,7 +242,7 @@ void CSpawnScript::Update()
 						case 6:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 31, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
@@ -298,7 +298,7 @@ void CSpawnScript::Update()
 						case 2:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
 								pNewAnimation->InsertAnimClip(L"WALK", 35, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 124);
@@ -316,7 +316,7 @@ void CSpawnScript::Update()
 						case 5:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
 								pNewAnimation->InsertAnimClip(L"WALK", 36, 59);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 60, 84);
 								pNewAnimation->InsertAnimClip(L"DIE", 110, 159);
@@ -361,7 +361,7 @@ void CSpawnScript::Update()
 						case 2:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
 								pNewAnimation->InsertAnimClip(L"WALK", 35, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 124);
@@ -379,7 +379,7 @@ void CSpawnScript::Update()
 						case 5:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
 								pNewAnimation->InsertAnimClip(L"WALK", 36, 59);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 60, 84);
 								pNewAnimation->InsertAnimClip(L"DIE", 110, 159);
@@ -422,7 +422,7 @@ void CSpawnScript::Update()
 						case 2:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
 								pNewAnimation->InsertAnimClip(L"WALK", 35, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 124);
@@ -437,7 +437,7 @@ void CSpawnScript::Update()
 						break;
 						case 3: {
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 30);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 30);
 								pNewAnimation->InsertAnimClip(L"WALK", 31, 54);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 80, 104);
 								pNewAnimation->InsertAnimClip(L"DIE", 105, 154);
@@ -456,7 +456,7 @@ void CSpawnScript::Update()
 						case 6:
 						{
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
-								pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
+								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 34);
 								pNewAnimation->InsertAnimClip(L"WALK", 36, 59);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 60, 84);
 								pNewAnimation->InsertAnimClip(L"DIE", 110, 159);

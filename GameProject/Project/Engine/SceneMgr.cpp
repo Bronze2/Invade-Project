@@ -164,7 +164,7 @@ void CSceneMgr::Init()
 	pObject->AddComponent(new CSensor);
 	pObject->AddComponent(new CPlayerScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f,40.f,10.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));		// 80.f, 200.f, 80.f ?????
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, 100.f));
@@ -174,7 +174,7 @@ void CSceneMgr::Init()
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
-	pNewAnimation->InsertAnimClip(L"WALK", 45, 69);
+	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);			// 45, 69
 	pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // È° ²¨³»¼­ ½î±â 125, 175
@@ -197,8 +197,8 @@ void CSceneMgr::Init()
 	pBow->AddComponent(new CSensor);
 	pBow->AddComponent(new CBowScript);
 	pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pBow->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
-	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pBow->Collider3D()->SetOffsetScale(Vec3(20.f, 130.f, 10.f));
+	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));

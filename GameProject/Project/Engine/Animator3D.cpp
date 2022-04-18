@@ -8,21 +8,11 @@
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
 {
-#ifdef _ANIMATION_TEST
 	m_pVecClip = _vecAnimClip;
 	m_vecClipUpdateTime.resize((UINT)PLAYER_STATE::END);
 	for (int i = 0; i < m_vecClipUpdateTime.size(); i++) {
 		m_vecClipUpdateTime[i] = 0.f;
 	}
-	//m_vecClipUpdateTime[(UINT)PLAYER_STATE::IDLE] += 1.f;
-#else
-	m_pVecClip = _vecAnimClip;
-	m_vecClipUpdateTime.resize(m_pVecClip->size());
-
-	static float fTime = 0.f;
-	fTime += 1.f;
-	m_vecClipUpdateTime[0] = fTime;
-#endif
 }
 
 void CAnimator3D::UpdateData()
@@ -73,7 +63,7 @@ void CAnimator3D::FinalUpdate()
 {
 	if (m_bBlendAnimation) 
 	{
-		m_fBlendFrame += 0.1f;
+		m_fBlendFrame += 0.05f;
 		m_vecClipUpdateTime[m_iCurClip] += DT;
 		m_vecClipUpdateTime[m_iNextClip] += DT;
 		if (nullptr == m_pAnimation) {

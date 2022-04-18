@@ -327,8 +327,8 @@ enum class SHADER_POV
 enum class MINION_STATE {
 	WALK,
 	ATTACK,
-	FIND,
 	DIE,
+	END,
 };
 
 enum class MINION_CAMP {
