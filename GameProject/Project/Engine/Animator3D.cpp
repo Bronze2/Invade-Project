@@ -8,12 +8,21 @@
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
 {
+#ifdef _ANIMATION_TEST
+	m_pVecClip = _vecAnimClip;
+	m_vecClipUpdateTime.resize((UINT)PLAYER_STATE::END);
+	for (int i = 0; i < m_vecClipUpdateTime.size(); i++) {
+		m_vecClipUpdateTime[i] = 0.f;
+	}
+	//m_vecClipUpdateTime[(UINT)PLAYER_STATE::IDLE] += 1.f;
+#else
 	m_pVecClip = _vecAnimClip;
 	m_vecClipUpdateTime.resize(m_pVecClip->size());
 
 	static float fTime = 0.f;
 	fTime += 1.f;
 	m_vecClipUpdateTime[0] = fTime;
+#endif
 }
 
 void CAnimator3D::UpdateData()
@@ -62,35 +71,86 @@ void CAnimator3D::LateUpdate()
 
 void CAnimator3D::FinalUpdate()
 {
-	m_vecClipUpdateTime[m_iCurClip] += DT;
-	if (nullptr == m_pAnimation) {
-		m_dCurTime = 0.f;
-		// 현재 재생중인 Clip 의 시간을 진행한다.
+	if (m_bBlendAnimation) 
+	{
+		m_fBlendFrame += 0.1f;
+		m_vecClipUpdateTime[m_iCurClip] += DT;
+		m_vecClipUpdateTime[m_iNextClip] += DT;
+		if (nullptr == m_pAnimation) {
+			m_dCurTime = 0.f;
+			// 현재 재생중인 Clip 의 시간을 진행한다.
 
-		if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
-		{
-			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+			{
+				m_vecClipUpdateTime[m_iCurClip] = 0.f;
+			}
+
+			m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
 		}
+		else {
+			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+			{
+				m_vecClipUpdateTime[m_iCurClip] = m_pVecClip->at(m_iCurClip).dTimeLength; //0.f;
+			}
+			if (m_vecClipUpdateTime[m_iNextClip] >= m_pVecClip->at(m_iNextClip).dTimeLength)
+			{
+				m_vecClipUpdateTime[m_iNextClip] = m_pVecClip->at(m_iNextClip).dTimeLength;
+			}
 
-		m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
-	}
-	else {
-		if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
-		{
-			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+			m_dCurTime = m_dStartFrameTime + m_vecClipUpdateTime[m_iCurClip];
+			m_dNextTime = m_dStartNextFrameTime + m_vecClipUpdateTime[m_iNextClip];
 		}
+		double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
+		m_iFrameIdx = (int)(dFrameIdx);
 
-		m_dCurTime = m_dStartFrameTime + m_vecClipUpdateTime[m_iCurClip];
+		double dNextFrameIdx = m_dNextTime * (double)m_iFrameCount;
+		m_iNextFrameIdx = (int)(dNextFrameIdx);
+
+		m_fRatio = m_fBlendFrame / m_fBlendMaxFrame;
+		m_bFinalMatUpdate = false;
+		
+		if (m_fRatio >= m_fBlendMaxFrame) {
+			m_bBlendAnimation = false;
+			m_fBlendFrame = 0.f;
+			m_dStartFrameTime = m_dStartNextFrameTime;
+			m_vecClipUpdateTime[m_iCurClip] = m_vecClipUpdateTime[m_iNextClip];
+			m_iCurClip = m_iNextClip;
+			m_iFrameIdx = m_iNextFrameIdx;
+		}
 	}
-	double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
-	m_iFrameIdx = (int)(dFrameIdx);
-
-	if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
-		m_iNextFrameIdx = m_iFrameIdx;
 	else
-		m_iNextFrameIdx = m_iFrameIdx + 1;
-	m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);
-	m_bFinalMatUpdate = false;
+	{
+		m_vecClipUpdateTime[m_iCurClip] += DT;
+		if (nullptr == m_pAnimation) {
+			m_dCurTime = 0.f;
+			// 현재 재생중인 Clip 의 시간을 진행한다.
+
+			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+			{
+				m_vecClipUpdateTime[m_iCurClip] = 0.f;
+			}
+
+			m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
+		}
+		else {
+			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+			{
+				m_vecClipUpdateTime[m_iCurClip] = m_pVecClip->at(m_iCurClip).dTimeLength;
+			}
+
+			m_dCurTime = m_dStartFrameTime + m_vecClipUpdateTime[m_iCurClip];
+		}
+		double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
+		m_iFrameIdx = (int)(dFrameIdx);
+
+		if (m_iFrameIdx >= m_pVecClip->at(m_iCurClip).iEndFrame - 1)
+			m_iNextFrameIdx = m_iFrameIdx;
+		else
+			m_iNextFrameIdx = m_iFrameIdx + 1;
+
+		m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);
+		m_bFinalMatUpdate = false;
+	}
 }
 
 void CAnimator3D::SaveToScene(FILE* _pFile)
@@ -101,7 +161,7 @@ void CAnimator3D::LoadFromScene(FILE* _pFile)
 {
 }
 
-CAnimator3D::CAnimator3D() :CComponent(COMPONENT_TYPE::ANIMATOR3D), m_iCurClip(0), m_dCurTime(0.f), m_iFrameCount(30), m_pBoneFinalMat(nullptr), m_bFinalMatUpdate(false)
+CAnimator3D::CAnimator3D() :CComponent(COMPONENT_TYPE::ANIMATOR3D), m_iCurClip(0), m_dCurTime(0.f), m_iFrameCount(30), m_fRatio(0.f), m_pBoneFinalMat(nullptr), m_bFinalMatUpdate(false), m_bBlendAnimation(false), m_fBlendFrame(0.f), m_fBlendMaxFrame(1.f)
 {
 	m_pBoneMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"Animation3DUpdateMtrl");
 	m_pBoneFinalMat = new CStructuredBuffer;

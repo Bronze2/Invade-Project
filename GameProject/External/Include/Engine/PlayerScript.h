@@ -1,21 +1,6 @@
 #pragma once
 #include "Script.h"
 #include "Animation3D.h"
-enum class ELEMENT_TYPE {
-    FROZEN=0,
-    FIRE=1,
-    DARK=2,
-    THUNDER=3,
-    WIND=4
-};
-
-enum class PLAYER_STATE {
-    IDLE,
-    WALK,
-    ATTACK,
-    JUMP,
-    DIE,
-};
 
 class CTexture;
 class CPlayerScript :
@@ -34,10 +19,14 @@ private:
 
     float m_fArcherLocation;
 
-    tAnimation* m_pCurAnimation;
-    PLAYER_STATE m_eState;
-    PLAYER_STATE m_ePrevState;
+    tMTAnimClip* m_pCurAnimClip;
+    tMTAnimClip* m_pNextAnimClip;
 
+    PLAYER_STATE m_ePrevState;
+    PLAYER_STATE m_eState;
+
+    float m_fLerpTime;
+    float m_fMaxLerpTime;
 
     bool m_bCheckDegree;
     bool m_bColCheck;
@@ -45,7 +34,6 @@ private:
     vector<CGameObject*>m_arrColObject;
 public:
     void m_FAnimation();
-    void m_FSetAnimation();
 
     void Init();
     virtual void Awake();

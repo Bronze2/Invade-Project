@@ -24,6 +24,7 @@ using namespace Microsoft::WRL;
 #include <vector>
 #include <list>
 #include <map>
+#include <unordered_map>
 
 #include <fbxsdk.h>
 #ifdef _DEBUG
@@ -35,6 +36,7 @@ using namespace Microsoft::WRL;
 using std::vector;
 using std::list;
 using std::map;
+using std::unordered_map;
 using std::string;
 using std::wstring;
 using std::make_pair;

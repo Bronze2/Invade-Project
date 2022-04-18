@@ -6,9 +6,15 @@
 void CBowScript::Update()
 {
 	m_pTargetBone = const_cast<tMTBone*>(m_pTargetObject->MeshRender()->GetMesh()->GetBone(m_iTargetBoneIdx));
-	
+
+#ifdef _ANIMATION_TEST
+	Transform()->SetLocalPos(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetNextFrameIdx()].vTranslate);
+	Transform()->SetLocalRot(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetNextFrameIdx()].qRot);
+
+#else
 	Transform()->SetLocalPos(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].vTranslate);
 	Transform()->SetLocalRot(m_pTargetBone->vecKeyFrame[m_pTargetObject->Animator3D()->GetFrameIdx()].qRot);
+#endif
 
 	m_FAnimation();
 }
@@ -20,23 +26,40 @@ void CBowScript::m_FAnimation()
 		{
 		case BOW_STATE::IDLE:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE)) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE);
+				GetObj()->Animator3D()->SetCurClipIndex((UINT)BOW_STATE::IDLE);
+				GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)BOW_STATE::IDLE, 0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 				m_ePrevState = BOW_STATE::IDLE;
+			}
+		}
+		break;
+		case BOW_STATE::ATTACK_READY:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK_READY)) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK_READY);
+				GetObj()->Animator3D()->SetCurClipIndex((UINT)BOW_STATE::ATTACK_READY);
+				GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)BOW_STATE::ATTACK_READY, 0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+				m_ePrevState = BOW_STATE::ATTACK_READY;
 			}
 		}
 		break;
 		case BOW_STATE::ATTACK:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK)) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK);
+				GetObj()->Animator3D()->SetCurClipIndex((UINT)BOW_STATE::ATTACK);
+				GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)BOW_STATE::ATTACK, 0.f);
+				GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 				m_ePrevState = BOW_STATE::ATTACK;
 			}
 		}
 		break;
-
 		default:
 			break;
 		}
@@ -46,18 +69,26 @@ void CBowScript::m_FAnimation()
 		{
 		case BOW_STATE::IDLE:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE)) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iEndFrame) {
+					GetObj()->Animator3D()->SetCurClipIndex((UINT)BOW_STATE::IDLE);
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+					GetObj()->Animator3D()->SetCurTime((UINT)BOW_STATE::IDLE, 0.f);
+					GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 				}
 			}
 		}
 		break;
+		case BOW_STATE::ATTACK_READY:
+		{
+		}
+		break;
 		case BOW_STATE::ATTACK:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK)) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iEndFrame)
+				{
+					m_eState = BOW_STATE::IDLE;
 				}
 			}
 		}
@@ -67,21 +98,19 @@ void CBowScript::m_FAnimation()
 			break;
 		}
 	}
-}
 
-void CBowScript::m_FSetAnimation()
-{
-	GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimation->StartFrame);
-	double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
-	GetObj()->Animator3D()->SetCurTime(0.f);
-	GetObj()->Animator3D()->SetStartFrameTime(time);
 }
-
 
 void CBowScript::Init()
 {
-	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-		m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
+	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE)) {
+		m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE);
+		GetObj()->Animator3D()->SetCurClipIndex((UINT)BOW_STATE::IDLE);
+		GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+		GetObj()->Animator3D()->SetCurTime(0.f);
+		GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+		m_eState = BOW_STATE::IDLE;
+		m_ePrevState = BOW_STATE::IDLE;
 	}
 }
 

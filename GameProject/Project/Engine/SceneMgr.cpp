@@ -174,16 +174,33 @@ void CSceneMgr::Init()
 
 	//pMeshData->GetMesh();
 
+#ifdef _ANIMATION_TEST
 	CAnimation* pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 0, 37, true, false);
-	pNewAnimation->InsertAnimation(L"WALK", 45, 69, false, false);
-	pNewAnimation->InsertAnimation(L"JUMP", 81, 109, false, false); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
-	pNewAnimation->InsertAnimation(L"ATTACK", 145, 175, false, false); // È° ²¨³»¼­ ½î±â 125, 175
-	pNewAnimation->InsertAnimation(L"DIE", 240, 261, false, false);
+	pNewAnimation->InsertAnimClip(STATE_IDLE, 0, 37);
+	pNewAnimation->InsertAnimClip(STATE_WALK, 45, 69);
+	pNewAnimation->InsertAnimClip(STATE_JUMP, 81, 108); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
+	pNewAnimation->InsertAnimClip(STATE_ATTACK_READY, 145, 167);
+	pNewAnimation->InsertAnimClip(STATE_ATTACK, 168, 175); // È° ²¨³»¼­ ½î±â 125, 175
+	pNewAnimation->InsertAnimClip(STATE_DIE, 240, 269);		// ´©¿ö¼­ ³¡ 240, 261
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
-	
+
+	pObject->Animator3D()->SetAnimation(pNewAnimation);
+	pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+	pObject->GetScript<CPlayerScript>()->Init();
+
+#else
+	CAnimation* pNewAnimation = new CAnimation;
+	pNewAnimation->InsertAnimation(STATE_IDLE, 0, 37, true, false);
+	pNewAnimation->InsertAnimation(STATE_WALK, 45, 69, false, false);
+	pNewAnimation->InsertAnimation(STATE_JUMP, 81, 109, false, false); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
+	pNewAnimation->InsertAnimation(STATE_ATTACK, 145, 175, false, false); // È° ²¨³»¼­ ½î±â 125, 175
+	pNewAnimation->InsertAnimation(STATE_DIE, 240, 261, false, false);
+	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
+
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->GetScript<CPlayerScript>()->Init();
+
+#endif
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject, false);
 
@@ -210,9 +227,12 @@ void CSceneMgr::Init()
 	//pMeshData->GetMesh();
 
 	pNewAnimation = new CAnimation;
-	pNewAnimation->InsertAnimation(L"IDLE", 0, 0, false, false);
-	pNewAnimation->InsertAnimation(L"ATTACK", 0, 100, false, false);
+	pNewAnimation->InsertAnimClip(STATE_IDLE, 0, 1);			// 0, 13
+	pNewAnimation->InsertAnimClip(STATE_ATTACK_READY, 1, 12);
+	pNewAnimation->InsertAnimClip(STATE_ATTACK, 13, 18);
+
 	pBow->Animator3D()->SetAnimation(pNewAnimation);
+	pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 	pBow->GetScript<CBowScript>()->Init();
 	pObject->AddChild(pBow);
 

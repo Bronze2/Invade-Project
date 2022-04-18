@@ -4,6 +4,7 @@
 
 enum class BOW_STATE {
     IDLE,
+    ATTACK_READY,
     ATTACK,
 };
 
@@ -12,6 +13,9 @@ class CBowScript
 {
 private:
     tAnimation* m_pCurAnimation;
+    
+    tMTAnimClip* m_pCurAnimClip;
+    tMTAnimClip* m_pNextAnimClip;
 
     tMTBone* m_pTargetBone;
     CGameObject* m_pTargetObject;
@@ -22,7 +26,7 @@ private:
 
 public:
     void m_FAnimation();
-    void m_FSetAnimation();
+
     void Init();
     virtual void Awake();
     virtual void Update();

@@ -183,7 +183,6 @@ struct tFrameTrans
 StructuredBuffer<tFrameTrans> g_arrFrameTrans:register(t10);
 StructuredBuffer<matrix> g_arrOffset:register(t11);
 RWStructuredBuffer<matrix> g_arrFinalMat : register(u0);
-// RWStructuredBuffer<matrix> g_arrTargetMat : register(u2);
 
 
 
@@ -197,7 +196,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     matrix matBone = (matrix) 0.f;
     
     uint iFrameDataIndex = g_int_0 * g_int_1 + _iThreadIdx.x;
-    uint iFrameDataNextIndex = (g_int_0 * (g_int_1 + 1)) + _iThreadIdx.x;
+    uint iFrameDataNextIndex = (g_int_0 * (g_int_2)) + _iThreadIdx.x;
     float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iFrameDataNextIndex].vScale, g_float_0);
     float4 vTranslate = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iFrameDataNextIndex].vTranslate, g_float_0);
     float4 qRot= QuternionSlerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataNextIndex].qRot, g_float_0);
@@ -205,7 +204,6 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     MatrixAffineTransformation(vScale, vQZero, qRot, vTranslate, matBone);
     
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
-    // g_arrTargetMat[g_int_0 * g_int_3 + _iThreadIdx.x] = matOffset;
     g_arrFinalMat[g_int_0*g_int_3+_iThreadIdx.x] = mul(matOffset, matBone);
 }
 

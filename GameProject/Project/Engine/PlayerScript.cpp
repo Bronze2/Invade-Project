@@ -10,40 +10,71 @@
 void CPlayerScript::m_FAnimation()
 {
 	if (m_ePrevState != m_eState) {
+		// Blend 필요
 		switch (m_eState)
 		{
 		case PLAYER_STATE::IDLE:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE)) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE);
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::IDLE);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::IDLE, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::IDLE;
 			}
 		}
 		break;
 		case PLAYER_STATE::WALK:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_WALK)) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_WALK);
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::WALK);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::WALK, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::WALK;
 			}
 		}
 		break;
 		case PLAYER_STATE::JUMP:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"JUMP")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"JUMP");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_JUMP)) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_JUMP);
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::JUMP);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::JUMP, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::JUMP;
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK_READY)) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK_READY);
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_READY;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
 			}
 		}
 		break;
 		case PLAYER_STATE::ATTACK:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK)) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK);
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::ATTACK;
 				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK);
 			}
@@ -51,9 +82,13 @@ void CPlayerScript::m_FAnimation()
 		break;
 		case PLAYER_STATE::DIE:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
-				m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE");
-				m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_DIE)) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_DIE);
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DIE);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DIE, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::DIE;
 			}
 		}
@@ -68,47 +103,84 @@ void CPlayerScript::m_FAnimation()
 		{
 		case PLAYER_STATE::IDLE:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE)) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE);
+
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {		// 해당 애니메이션 끝남 -> 반복할건지?
+						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::IDLE);
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+						GetObj()->Animator3D()->SetCurTime(0.f);
+						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+					}
 				}
+				
 			}
 		}
 		break;
 		case PLAYER_STATE::WALK:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"WALK")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_FSetAnimation();
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_WALK)) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_WALK);
+
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						// 끝과 시작도 이어주면 좋을듯하옵니다
+						/*GetObj()->Animator3D()->SetBlendState(true);*/
+						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::WALK);
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+						GetObj()->Animator3D()->SetCurTime(0.f);
+						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+					}
 				}
+				
 			}
 		}
 		break;
 		case PLAYER_STATE::JUMP:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"JUMP")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_eState = PLAYER_STATE::IDLE;
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_JUMP)) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_JUMP);
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						m_eState = PLAYER_STATE::IDLE;
+					}
+				}
+				
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK_READY)) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK_READY);
 				}
 			}
 		}
 		break;
 		case PLAYER_STATE::ATTACK:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"ATTACK")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_eState = PLAYER_STATE::IDLE;
-					GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
-
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK)) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_ATTACK);
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						m_eState = PLAYER_STATE::IDLE;
+						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
+					}
 				}
 			}
 		}
 		break;
 		case PLAYER_STATE::DIE:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"DIE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimation->EndFrame) {
-					m_eState = PLAYER_STATE::IDLE;
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_DIE)) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_DIE);
+
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						m_eState = PLAYER_STATE::IDLE;
+					}
 				}
 			}
 		}
@@ -120,23 +192,15 @@ void CPlayerScript::m_FAnimation()
 	}
 }
 
-void CPlayerScript::m_FSetAnimation()
-{
-	GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimation->StartFrame);
-	double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
-	GetObj()->Animator3D()->SetCurTime(0.f);
-	GetObj()->Animator3D()->SetStartFrameTime(time);
-}
-
 void CPlayerScript::Init()
 {
 	m_eState = PLAYER_STATE::IDLE;
-	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE")) {
-		m_pCurAnimation = GetObj()->Animator3D()->GetAnimation()->FindAnimation(L"IDLE");
-		GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimation->StartFrame);
-		double time = (double)GetObj()->Animator3D()->GetFrameIdx() / (double)GetObj()->Animator3D()->GetFrameCount();
+	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE)) {
+		m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(STATE_IDLE);
+		GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::IDLE);
+		GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 		GetObj()->Animator3D()->SetCurTime(0.f);
-		GetObj()->Animator3D()->SetStartFrameTime(time);
+		GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 		m_eState = PLAYER_STATE::IDLE;
 		m_ePrevState = PLAYER_STATE::IDLE;
 	}
@@ -175,6 +239,7 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
+
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
@@ -227,7 +292,7 @@ void CPlayerScript::Update()
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed = 200.f;
-		m_eState = PLAYER_STATE::ATTACK;
+		m_eState = PLAYER_STATE::ATTACK_READY;
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed += 1000.f*DT;
@@ -237,7 +302,7 @@ void CPlayerScript::Update()
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		m_eState = PLAYER_STATE::IDLE;
+		m_eState = PLAYER_STATE::ATTACK;
 		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
 
@@ -424,7 +489,7 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 }
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
-,m_bColCheck(false),m_bMoveCheck(false), m_bCheckDegree(false)
+, m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f)
 {
 }
 

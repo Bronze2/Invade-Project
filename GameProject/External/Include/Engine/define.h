@@ -24,6 +24,13 @@ static type* GetInst()\
 #define KEY_AWAY(Key) KEY(Key, KEY_STATE::STATE_AWAY)
 #define KEY_NONE(Key) KEY(Key, KEY_STATE::STATE_NONE)
 
+#define STATE_IDLE				L"IDLE"
+#define STATE_WALK				L"WALK"
+#define STATE_ATTACK_READY		L"ATTACK_READY"
+#define STATE_ATTACK			L"ATTACK"
+#define STATE_JUMP				L"JUMP"
+#define STATE_DIE				L"DIE"
+
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
 
@@ -36,6 +43,9 @@ static type* GetInst()\
 #define DBG_MSG(pStr) CDebugMgr::GetInst()->AddDbgMsg(DBG_TYPE::DBG_MSG, pStr);
 
 #define MAX_LAYER 32
+
+
+#define _ANIMATION_TEST
 
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
@@ -356,4 +366,22 @@ enum class CAMERA_EFFECT_TYPE {
 	SHAKING,
 	DEMAGED,
 	LIGHTNING,
+};
+
+enum class ELEMENT_TYPE {
+	FROZEN = 0,
+	FIRE = 1,
+	DARK = 2,
+	THUNDER = 3,
+	WIND = 4
+};
+
+enum class PLAYER_STATE {
+	IDLE,
+	WALK,
+	JUMP,
+	ATTACK_READY,
+	ATTACK,
+	DIE,
+	END,
 };
