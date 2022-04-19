@@ -39,6 +39,7 @@ static type* GetInst()\
 
 
 #define _ANIMATION_TEST
+#define CAMERA_TEST
 
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;

@@ -246,6 +246,14 @@ void CPlayerScript::Awake()
 	m_iCurArrow = 0;
 	m_iPower = 1;
 
+#ifdef CAMERA_TEST
+	m_fTurnDegree = 0.f;
+	m_fTurnBackMaxDegree = 180.f;
+	m_fMoveTurnLeftMaxDegree = -90.f;
+	m_fMoveTurnRightMaxDegree = 90.f;
+	m_fTurnSpeed = 30.f;
+	m_bTurnBack = false;
+#endif
 
 }
 
@@ -262,6 +270,7 @@ void CPlayerScript::Update()
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
 	Vec3 vRot = Transform()->GetLocalRot();
+	Vec3 vRestoreRot;
 	int rotydegree = XMConvertToDegrees(vRot.y);
 	int reminder = rotydegree % 360 + 90;
 
@@ -275,20 +284,69 @@ void CPlayerScript::Update()
 		int a = 0;
 	}
 
+	if (KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D) || KEY_NONE(KEY_TYPE::KEY_LBTN))
+	{
+		vRestoreRot = Transform()->GetLocalRot();
+	}
+	if (KEY_TAB(KEY_TYPE::KEY_W))
+	{
+		vRot = vRestoreRot;
+	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+#ifdef CAMERA_TEST
+			if (m_bTurnBack) {
+				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+				m_fTurnDegree += m_fTurnSpeed;
+				if (m_fTurnDegree <= m_fTurnBackMaxDegree)
+				{
+					vRot.y += XMConvertToRadians(m_fTurnSpeed);
+				}
+				else {
+					m_bTurnBack = false;
+					vPos += vFront * 200.f * DT;
+					m_FColCheck(vPos3, vPos);
+				}
+				m_eState = PLAYER_STATE::WALK;
+			}
+			else
+			{
+				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+				vPos += vFront * 200.f * DT;
+				m_FColCheck(vPos3, vPos);
+
+				m_eState = PLAYER_STATE::WALK;
+			}
+#else		
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			vPos += vFront * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 
 			m_eState = PLAYER_STATE::WALK;
+#endif
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+#ifdef CAMERA_TEST
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			m_fTurnDegree += m_fTurnSpeed;
+			if (m_fTurnDegree <= m_fTurnBackMaxDegree)
+			{
+				vRot.y += XMConvertToRadians(m_fTurnSpeed);
+			}
+			else {
+				vPos += vFront * 200.f * DT;
+				m_FColCheck(vPos3, vPos);
+			}
+			m_eState = PLAYER_STATE::WALK;
+			m_bTurnBack = true;
+
+#else
 			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			vPos += vBack * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 			m_eState = PLAYER_STATE::WALK;
+#endif
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
 			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -306,6 +364,9 @@ void CPlayerScript::Update()
 
 	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) {
 		m_eState = PLAYER_STATE::IDLE;
+#ifdef CAMERA_TEST
+		m_fTurnDegree = 0.f;
+#endif
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
@@ -419,15 +480,17 @@ void CPlayerScript::Update()
 		m_bCheckStartMousePoint = true;
 	}
 	else {
-		vRot.y += vDrag.x * DT * 1.f;
-		float fDegree = XMConvertToDegrees(vRot.y);
-		if (fDegree < -360) {
-			 fDegree+= 360.f;
-			 vRot.y = XMConvertToRadians(fDegree);
-		}
-		else if (fDegree > 360) {
-			fDegree -= 360.f;
-			vRot.y = XMConvertToRadians(fDegree);
+		if (KEY_NONE(KEY_TYPE::KEY_D)) {
+			vRot.y += vDrag.x * DT * 1.f;
+			float fDegree = XMConvertToDegrees(vRot.y);
+			if (fDegree < -360) {
+				fDegree += 360.f;
+				vRot.y = XMConvertToRadians(fDegree);
+			}
+			else if (fDegree > 360) {
+				fDegree -= 360.f;
+				vRot.y = XMConvertToRadians(fDegree);
+			}
 		}
 	}
 	if (m_bMoveCheck) {
