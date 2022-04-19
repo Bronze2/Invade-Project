@@ -19,7 +19,7 @@ void CCameraScript::Update()
 	Vec3 vPlayerWorldFront = mPlayerWorldMat.Front();
 	Vec3 vPlayerWorldUp = mPlayerWorldMat.Up();
 	Vec3 vPlayerWorldRight = mPlayerWorldMat.Right();
-	Vec3 vPlayerFront = pPlayer->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vPlayerFront = pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	Vec3 vPlayerPos = pPlayer->Transform()->GetLocalPos();
 
 	// 정상적인 dist
@@ -62,9 +62,6 @@ void CCameraScript::Update()
 				//vPos = vPlayerPos - vPlayerWorldFront * fHdist + vPlayerWorldUp * fVdist + vPlayerWorldRight * fRdist;
 				vPos = vPlayerWorldPos + vOffset;
 
-				/*float angle = atan2(vPos.x - vPlayerWorldPos.x, vPos.z - vPlayerWorldPos.z) * (180 / PI);
-				vRot.y = XMConvertToRadians(-angle);*/
-
 				Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 				vRot.x -= vDrag.y * DT;
 				m_fDegree = XMConvertToDegrees(vRot.x);
@@ -94,7 +91,8 @@ void CCameraScript::Update()
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
 
-	Vec3 vLook = vTargetPos - vPos;
+	//Vec3 vLook = vTargetPos - vPos;
+	Vec3 vLook = vPlayerWorldPos - vPos;
 
 	Transform()->LookAt(vLook, vRot);
 }
