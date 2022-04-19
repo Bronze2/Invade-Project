@@ -6,6 +6,7 @@
 #include "Sensor.h"
 #include "MeshRender.h"
 #include "Collider3D.h"
+#include "TowerScript.h"
 void CMinionScript::Init()
 {
 	m_eState = MINION_STATE::WALK;
@@ -356,6 +357,9 @@ void CMinionScript::m_FAnimation()
 					}
 					else
 					if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+					}
+					else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
 						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
 					}
 				}
