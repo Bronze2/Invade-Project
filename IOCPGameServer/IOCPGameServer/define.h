@@ -27,7 +27,6 @@ static type* GetInst()\
 
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
-
 #define CLONE(type) public: type* Clone() { return new type(*this); }
 #define CLONE_DISABLE(type) type* Clone() { assert(nullptr); return nullptr;} \
                             type(const type& _class){assert(nullptr);}

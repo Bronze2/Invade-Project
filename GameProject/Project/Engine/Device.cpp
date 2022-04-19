@@ -16,7 +16,7 @@ CDevice::CDevice()
 	, m_hFenceEvent(nullptr)
 	, m_iFenceValue(0)
 	, m_iCurDummyIdx(0)
-	,m_bWindowed(false),m_hWnd(),m_iCBVIncreSize(),m_iRTVHeapSize(),m_tResolution{}
+	, m_bWindowed(false),m_hWnd(),m_iCBVIncreSize(),m_iRTVHeapSize(),m_tResolution{}
 	
 {
 	m_vecCB.resize((UINT)CONST_REGISTER::END);

@@ -15,6 +15,8 @@
 #include "Server.h"
 
 #include "protocol.h"
+#include "Timer.h"
+
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "mswsock.lib")
 
@@ -629,7 +631,7 @@ void worker_Thread()
 			send_spawn_minion_packet(g_minionindex);			
 			g_minionindex++;
 			//주기적인 스폰
-			add_timer(user_id, OP_SPAWN, 1000);
+			add_timer(user_id, OP_SPAWN, 10000);
 		}
 		break;
 		}
@@ -686,4 +688,8 @@ void main()
 	
 	for (auto &th : worker_threads) th.join();
 	timer_thread.join();
+
+	CTimeMgr Timer;
+	Timer.Init();
+	
 }
