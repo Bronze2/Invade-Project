@@ -262,7 +262,6 @@ void CPlayerScript::Update()
 	// Z-up To Y-up
 	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
 	Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
 	Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
 

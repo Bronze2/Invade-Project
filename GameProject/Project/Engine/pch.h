@@ -19,10 +19,10 @@
 
 // 콘솔창 띄우기
 
-#ifdef UNICODE
-#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
-#else
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
-#endif
+//#ifdef UNICODE
+//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+//#else
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
+//#endif
 
 #endif //PCH_H

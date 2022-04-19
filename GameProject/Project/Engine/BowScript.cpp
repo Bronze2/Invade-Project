@@ -19,8 +19,11 @@ void CBowScript::Update()
 	Vec3 vTrans = vTrans1 * (1.f - factor) + vTrans2 * factor;
 	Vec4 qRot = qRot1 * (1.f - factor) + qRot2 * factor;
 	
+	Vec3 vRot = Vec3(XMConvertToRadians(0.f), XMConvertToRadians(85.f), XMConvertToRadians(0.f));
+	
 	Transform()->SetLocalPos(vTrans);
 	Transform()->SetQuaternion(qRot);
+	Transform()->SetLocalRot(vRot);
 
 }
 

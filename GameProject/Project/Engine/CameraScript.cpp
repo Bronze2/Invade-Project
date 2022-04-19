@@ -118,7 +118,7 @@ Vec3 CCameraScript::CameraShake(Vec3 _vPos)
 
 Vec3 CCameraScript::CameraZoom(Vec3 _vPos)
 {
-	if (m_fZoomElapsedTime < 10.0f * DT)
+	if (m_fZoomElapsedTime < 20.0f * DT)
 	{
 		_vPos += m_vZoomRestoreFront * m_fZoomSpeed * DT;
 		m_fZoomElapsedTime += DT;
