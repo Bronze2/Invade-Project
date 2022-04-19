@@ -31,6 +31,7 @@ public:
     const Vec3& GetLocalRot() { return m_vLocalRot; }
     const Matrix& GetWorldMat() { return m_matWorld; }
     void SetWorldMat(const Matrix& _mMatrix) { m_matWorld = _mMatrix; }
+    void SetLocalDir(DIR_TYPE _eType, Vec3 _vDir) { m_vLocalDir[(UINT)_eType] = _vDir; }
     const Vec3& GetLocalDir(DIR_TYPE _eType) { return m_vLocalDir[(UINT)_eType]; }
     const Vec3& GetWorldDir(DIR_TYPE _eType) { return m_vWorldDir[(UINT)_eType]; }
     void SetLocalPos(const Vec3& _vPos) { if (m_vLocalPos != _vPos) { m_vLocalPos = _vPos; Changed(); } }

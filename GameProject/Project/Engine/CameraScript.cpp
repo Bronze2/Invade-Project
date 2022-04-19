@@ -6,7 +6,7 @@
 
 void CCameraScript::Update()
 {
-	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vPos = Transform()->GetWorldPos();
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
 	Vec3 vRot = Transform()->GetLocalRot();
@@ -14,11 +14,12 @@ void CCameraScript::Update()
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
 	Matrix mPlayerWorldMat = pPlayer->Transform()->GetWorldMat();
-	mPlayerWorldMat *= XMMatrixRotationY(XMConvertToRadians(90.0f));
-	Vec3 vPlayerWorldPos = mPlayerWorldMat.Translation();
+	// mPlayerWorldMat *= XMMatrixRotationY(XMConvertToRadians(90.0f));
+	Vec3 vPlayerWorldPos = pPlayer->Transform()->GetWorldPos();
 	Vec3 vPlayerWorldFront = mPlayerWorldMat.Front();
 	Vec3 vPlayerWorldUp = mPlayerWorldMat.Up();
 	Vec3 vPlayerWorldRight = mPlayerWorldMat.Right();
+	Vec3 vPlayerFront = pPlayer->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 	Vec3 vPlayerPos = pPlayer->Transform()->GetLocalPos();
 
 	// 정상적인 dist
@@ -31,7 +32,9 @@ void CCameraScript::Update()
 	float fVdist = 150.0f;
 	float fRdist = 10.0f;
 	float fTargetDist = 300.0f;
-	Vec3 vTargetPos = vPlayerPos + vPlayerWorldFront * fTargetDist;
+	Vec3 vOffset = Vec3(-300.f, 150.f, 10.f);
+
+	Vec3 vTargetPos = vPlayerPos + vPlayerFront * fTargetDist;
 
 	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 		Init();
@@ -56,7 +59,11 @@ void CCameraScript::Update()
 				m_bCheckStartMousePoint = true;
 			}
 			else {
-				vPos = vPlayerPos - vPlayerWorldFront * fHdist + vPlayerWorldUp * fVdist + vPlayerWorldRight * fRdist;
+				//vPos = vPlayerPos - vPlayerWorldFront * fHdist + vPlayerWorldUp * fVdist + vPlayerWorldRight * fRdist;
+				vPos = vPlayerWorldPos + vOffset;
+
+				/*float angle = atan2(vPos.x - vPlayerWorldPos.x, vPos.z - vPlayerWorldPos.z) * (180 / PI);
+				vRot.y = XMConvertToRadians(-angle);*/
 
 				Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 				vRot.x -= vDrag.y * DT;

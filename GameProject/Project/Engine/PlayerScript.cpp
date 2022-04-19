@@ -245,6 +245,13 @@ void CPlayerScript::Awake()
 
 	m_iCurArrow = 0;
 	m_iPower = 1;
+
+	// Z-up To Y-up
+	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
+	Transform()->SetLocalDir(DIR_TYPE::UP, vDirFront);
+	Transform()->SetLocalDir(DIR_TYPE::FRONT, vDirUp);
 }
 
 void CPlayerScript::Update()
@@ -269,26 +276,26 @@ void CPlayerScript::Update()
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::UP);
 			vPos += vFront * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 
 			m_eState = PLAYER_STATE::WALK;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::UP);
 			vPos += vBack * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 			m_eState = PLAYER_STATE::WALK;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vLeft * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 			m_eState = PLAYER_STATE::WALK;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vRight * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 			m_eState = PLAYER_STATE::WALK;

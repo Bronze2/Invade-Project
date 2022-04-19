@@ -169,8 +169,11 @@ void CSceneMgr::Init()
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, 100.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+
+	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
