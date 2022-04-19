@@ -15,6 +15,7 @@ CTransform::CTransform()
 	, m_vLocalRot(Vec3(0.f, 0.f, 0.f))
 	, m_vLocalScale(Vec3(1.f, 1.f, 1.f))
 	, m_vQuaternion(Vec4(0.f,0.f,0.f,1.f))
+	, m_bNotParent(false)
 {
 }
 
@@ -46,7 +47,8 @@ void CTransform::FinalUpdate()
 		// 로컬 x (크기 x 회전 x 이동)(월드행렬)
 		m_matWorld = matScale * matRot * matTranslation;
 
-
+		
+	
 		if (GetObj()->GetParent())
 		{
 			m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
@@ -89,6 +91,15 @@ void CTransform::FinalUpdate()
 
 	// 로컬 x (크기 x 회전 x 이동)(월드행렬)
 	m_matWorld = matScale * matRot*rotMat * matTranslation;
+	if (m_bNotParent) {
+		m_matWorld *= m_matObjectWorldMatrix;
+		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
+		{
+			m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
+			m_vWorldDir[i].Normalize();
+		}
+
+	}
 
 
 	if (GetObj()->GetParent())

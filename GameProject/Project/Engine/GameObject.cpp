@@ -224,7 +224,8 @@ void CGameObject::Update()
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
 		if (m_vecChild[i]->IsActive())
-			m_vecChild[i]->Update();
+			if(!m_vecChild[i]->IsDead())
+				m_vecChild[i]->Update();
 	}
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
@@ -245,6 +246,7 @@ void CGameObject::LateUpdate()
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
 		if (m_vecChild[i]->IsActive())
+			if (!m_vecChild[i]->IsDead())
 			m_vecChild[i]->LateUpdate();
 	}
 
@@ -265,7 +267,8 @@ void CGameObject::FinalUpdate()
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
 		if (m_vecChild[i]->IsActive())
-			m_vecChild[i]->FinalUpdate();
+			if (!m_vecChild[i]->IsDead())
+				m_vecChild[i]->FinalUpdate();
 	}
 }
 
@@ -279,6 +282,7 @@ void CGameObject::RegisterToLayer()
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
+		if (!m_vecChild[i]->IsDead())
 		m_vecChild[i]->RegisterToLayer();
 	}
 }

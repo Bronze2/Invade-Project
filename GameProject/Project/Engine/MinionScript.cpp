@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Sensor.h"
 #include "MeshRender.h"
+#include "Collider3D.h"
 void CMinionScript::Init()
 {
 	m_eState = MINION_STATE::WALK;
@@ -40,7 +41,7 @@ void CMinionScript::Init()
 	 break;
 
 	case MINION_ATTACK_TYPE::CANON: {
-		SetAttackRange(50);
+		SetAttackRange(350);
 		m_uiMaxHp = 550; m_uiAttackDamage = 60;
 	}
 	 break;
@@ -68,11 +69,13 @@ void CMinionScript::Update()
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
 	if (nullptr != m_pTarget&&!m_bAllienceCol) {
-		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-		float rotate = angle * 0.0174532925f;
-		vRot.y = rotate;
-
+		Vec3 vTargetPos;
+		if (!m_pTarget->IsDead()) {
+			vTargetPos = m_pTarget->Transform()->GetWorldPos();
+			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+		}
 	}
 	if (m_bAllienceCol&&!m_bSeparate) {
 		if (m_bRotate) {
@@ -126,6 +129,51 @@ void CMinionScript::Update()
 
 
 
+void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, const wstring& _Layer)
+{
+	if (nullptr == m_pTarget)
+		return;
+	if (m_pTarget->IsDead())
+		return;
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_Key, _Key);
+	CGameObject* pObject = pMeshData->Instantiate();
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CProjectileScript);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pObject->FrustumCheck(false);
+	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
+	pObject->GetScript<CProjectileScript>()->SetBone(_Bone);
+	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
+
+	pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+	tMTBone* p = const_cast<tMTBone*>(MeshRender()->GetMesh()->GetBone(_Bone));//6
+	pObject->Transform()->SetLocalPos(p->vecKeyFrame[Animator3D()->GetFrameIdx()].vTranslate);
+
+
+	Vec3 vPos = Transform()->GetLocalPos();
+	Matrix matTranslation = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
+	Vec3 vScale = Transform()->GetLocalScale();
+	Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+	Vec3 vRot = Transform()->GetLocalRot();
+	Matrix matRot = XMMatrixRotationX(vRot.x);
+	matRot *= XMMatrixRotationY(vRot.y);
+	matRot *= XMMatrixRotationZ(vRot.z);
+	Matrix Matrix = matScale * matRot * matTranslation;
+	pObject->Transform()->SetNotParent(true);
+	pObject->Transform()->SetObjectMatrix(Matrix);
+	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
+
+	//		GetObj()->AddChild(pObject);
+	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
+	pObject->GetScript<CProjectileScript>()->Init();
+	CreateObject(pObject, _Layer);
+}
+
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 {
 	m_arrEnemy.push_back(_pOther);
@@ -171,11 +219,12 @@ void CMinionScript::CheckHp()
 		GetObj()->SetFallDown();
 	}
 }
-
+#include "GameObject.h"
 void CMinionScript::CheckRange()
 {
 	
 	if (m_pTarget == nullptr)return;
+	if (m_pTarget->IsDead())return;
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
@@ -299,7 +348,10 @@ void CMinionScript::m_FAnimation()
 					GetObj()->Animator3D()->SetStartFrameTime(time);
 					m_bFindNear = true;
 					m_bFinishAnimation = true;
+					m_bProjectile = false;
 					if (m_pTarget == nullptr) {
+					
+
 
 					}
 					else
@@ -307,6 +359,60 @@ void CMinionScript::m_FAnimation()
 						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
 					}
 				}
+				if (m_eAttackType != MINION_ATTACK_TYPE::MELEE) {
+					switch (m_eCamp)
+					{
+					case CAMP_STATE::BLUE:
+					{
+						if (MINION_ATTACK_TYPE::RANGE == m_eAttackType) {
+							if (GetObj()->Animator3D()->GetFrameIdx() >= 68) {
+								if (!m_bProjectile)
+								{
+									CreateProjectile(L"MeshData\\blueball.mdat", 6, L"Blue");
+									m_bProjectile = true;
+								}
+							}	
+						}
+						else {
+							if (GetObj()->Animator3D()->GetFrameIdx() >= 64) {
+								if (!m_bProjectile)
+								{
+									CreateProjectile(L"MeshData\\blueball.mdat", 17, L"Blue");
+									m_bProjectile = true;
+								}
+							}
+						}
+					}
+					break;
+					case CAMP_STATE::RED:
+					{
+						if (MINION_ATTACK_TYPE::RANGE == m_eAttackType) {
+							if (GetObj()->Animator3D()->GetFrameIdx() >= 59) {
+								if (!m_bProjectile)
+								{
+									CreateProjectile(L"MeshData\\redball.mdat", 10, L"Red");
+									m_bProjectile = true;
+								}
+							}
+						}
+						else {
+							if (GetObj()->Animator3D()->GetFrameIdx() >= 84) {
+								if (!m_bProjectile)
+								{
+									CreateProjectile(L"MeshData\\redball.mdat", 12, L"Red");
+				
+									m_bProjectile = true;
+								}
+							}
+						}
+					}
+					break;
+
+					default:
+						break;
+					}
+				}
+				//
 			}
 		}
 
@@ -340,7 +446,7 @@ CMinionScript::CMinionScript():CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_eState
 
 CMinionScript::CMinionScript(float _fSpeed, float _fRange, MINION_STATE _eState, CAMP_STATE _eCamp)
 	: CScript((UINT)SCRIPT_TYPE::MINIONSCRIPT),m_fSpeed(_fSpeed),m_fRange(_fRange),m_eState(_eState),m_eCamp(_eCamp), m_bAllienceCol(false),m_bFinishAnimation(false)
-	,m_bRotate(false),m_bSeparate(false)
+	,m_bRotate(false),m_bSeparate(false), m_bProjectile(false)
 {
 }
 

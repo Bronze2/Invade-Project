@@ -29,6 +29,9 @@ void CMeshRender::Render()
 {
 	if (IsActive() == false || nullptr == m_pMesh)
 		return;
+	if (!m_bRender) {
+		return;
+	}
 	int a = 1;
 	for (size_t i = 0; i < m_vecMtrl.size(); ++i)
 	{
@@ -55,7 +58,9 @@ void CMeshRender::Render(UINT _iMtrlIdx)
 {
 	if (IsActive() == false || nullptr == m_pMesh)
 		return;
-
+	if (!m_bRender) {
+		return;
+	}
 	int a = 1;
 
 	if (nullptr == m_vecMtrl[_iMtrlIdx] || nullptr == m_vecMtrl[_iMtrlIdx]->GetShader())

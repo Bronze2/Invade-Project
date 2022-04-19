@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include"CameraScript.h"
 #include "Animator3D.h"
-
+#include "ProjectileScript.h"
 void CPlayerScript::m_FAnimation()
 {
 	if (m_ePrevState != m_eState) {
@@ -350,8 +350,13 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 	}
 	else {
-		m_arrColObject.push_back(_pOther->GetObj());
-		m_bColCheck = true;
+		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
+
+		}
+		else {
+			m_arrColObject.push_back(_pOther->GetObj());
+			m_bColCheck = true;
+		}
 	}
 }
 

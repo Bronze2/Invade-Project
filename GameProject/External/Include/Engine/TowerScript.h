@@ -18,6 +18,7 @@ private:
     UINT m_uiDef;
 
     TOWER_TYPE m_eType;
+    CAMP_STATE m_eCampState;
     CGameObject* m_pNexus;
     CGameObject* m_pFirstTower;
     CGameObject* m_pSecondTower;
@@ -29,13 +30,33 @@ private:
     vector<CGameObject*> m_arrEnemy;
     CGameObject* m_pTarget;
     bool m_bFindNear;
-public:
+    CGameObject* m_pObject;
+    
+    float m_fProjectileStart;
+    void CreateProjectile(const wstring& _Key, const wstring& _Layer);
+    UINT m_uiAttackDamage;
 
+    wstring m_CampName;
+
+public:
+    void SetCampState(CAMP_STATE _eCampState) { 
+        m_eCampState = _eCampState;
+        if (m_eCampState == CAMP_STATE::RED)
+            m_CampName = L"Red";
+
+        if (m_eCampState == CAMP_STATE::BLUE)
+            m_CampName = L"Blue";
+    }
+    wstring GetCampName() { return m_CampName; }
+
+    CAMP_STATE GetCamp() { return m_eCampState; }
+    bool m_bTest;
     void Init();
 
     void SetSecondTower(CGameObject* _pGameObject);
     void SetFirstTower(CGameObject* _pGameObject);
     void SetNexus(CGameObject* _pObject);
+    
 
     void m_FAttack();
     void m_FRotate();
@@ -44,6 +65,7 @@ public:
     virtual void Update();
     virtual void FinalUpdate();
 
+    void GetDamage(const UINT& _Dmg) { m_uiCurHp -= _Dmg; }
    
 
     virtual void OnDetectionEnter(CGameObject* _pOther);

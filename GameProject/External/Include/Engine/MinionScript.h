@@ -41,13 +41,23 @@ class CMinionScript :
 
     MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
+    bool m_bProjectile;
+    wstring m_CampName;
+
+
 public:
     void CheckHp();
     CLONE(CMinionScript)
     void Init();
 
-    void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
-    
+    void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp;
+    if (m_eCamp == CAMP_STATE::RED)
+        m_CampName = L"Red";
+
+    if (m_eCamp == CAMP_STATE::BLUE)
+        m_CampName = L"Blue";
+    }
+    wstring GetCampName() { return m_CampName; }
     void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
    
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
@@ -58,6 +68,7 @@ public:
 
     void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
 
+    void CreateProjectile(const wstring& _Key, const UINT& _Bone, const wstring& _Layer);
     
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);

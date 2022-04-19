@@ -18,11 +18,14 @@ private:
     Vec4 m_vQuaternion;
     CGameObject* m_pCamera;
     bool m_bBillBoard;
+    bool m_bNotParent;// 부모는 필요하지않지만 특정 오브젝트의 matworld가 필요할때
 
+    Matrix m_matObjectWorldMatrix;
 public:
     const Vec4 GetQuaternion()const { return m_vQuaternion; }
     void SetQuaternion(const Vec4& _vQuaternion) { m_vQuaternion = _vQuaternion; }
-  
+    void SetNotParent(bool _bNotParent) { m_bNotParent = _bNotParent; }
+    void SetObjectMatrix(const Matrix& _Matrix) { m_matObjectWorldMatrix = _Matrix; }
     const Vec3 GetLocalPos() { return m_vLocalPos; }
     void SetBillBoard(bool _bBillBoard) { m_bBillBoard = _bBillBoard; }
     Vec3 GetWorldPos() { return m_matWorld.Translation(); }

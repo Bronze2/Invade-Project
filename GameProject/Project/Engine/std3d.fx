@@ -108,7 +108,7 @@ PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
         float3x3 matTBN = { _in.vViewTangent, _in.vViewBinormal, _in.vViewNormal };
         vViewNormal = normalize(mul(vTSNormal, matTBN));
     }
-    
+
     output.vTarget1.xyz = vViewNormal;
     output.vTarget2.xyz = _in.vViewPos;
     
