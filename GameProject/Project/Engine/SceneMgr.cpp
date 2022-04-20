@@ -196,7 +196,7 @@ void CSceneMgr::Init()
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-120, 80, -20));
+	pMainCam->Transform()->SetLocalPos(Vec3(-140, 80, -20));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), -PI / 18));
 
 	pEmptyPlayer->AddChild(pMainCam);
