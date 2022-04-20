@@ -303,6 +303,9 @@
     <ClInclude Include="BowScript.h">
       <Filter>Script\Bow</Filter>
     </ClInclude>
+    <ClInclude Include="EmptyPlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -472,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="BowScript.cpp">
       <Filter>Script\Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyPlayerScript.cpp">
+      <Filter>Script\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

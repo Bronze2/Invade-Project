@@ -44,6 +44,7 @@
 #include "Sensor.h"
 #include "TowerScript.h"
 #include "BowScript.h"
+#include "EmptyPlayerScript.h"
 
 
 CScene* CSceneMgr::GetCurScene()
@@ -133,7 +134,7 @@ void CSceneMgr::Init()
 	pMainCam->Camera()->SetFar(10000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 
-	m_pCurScene->FindLayer(L"Camera")->AddGameObject(pMainCam);
+	//m_pCurScene->FindLayer(L"Camera")->AddGameObject(pMainCam);
 
 
 	CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
@@ -190,6 +191,16 @@ void CSceneMgr::Init()
 
 	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pObject, false);
 
+	CGameObject* pEmptyPlayer = new CGameObject;
+	pEmptyPlayer->AddComponent(new CTransform);
+	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
+	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
+
+	pMainCam->Transform()->SetLocalPos(Vec3(-120, 80, -20));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), -PI / 18));
+
+	pEmptyPlayer->AddChild(pMainCam);
+	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pEmptyPlayer, false);
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 	CGameObject* pBow;

@@ -20,6 +20,7 @@ enum class SCRIPT_TYPE {
     SPAWNSCRIPT,
     TOWERSCRIPT,
     BOWSCRIPT,
+    EMPTYPLAYERSCRIPT,
     END,
 };
 

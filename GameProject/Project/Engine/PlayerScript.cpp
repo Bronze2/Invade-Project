@@ -268,10 +268,9 @@ void CPlayerScript::Update()
 	Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
+	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[1])->GetChild()[0];
 	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
 	Vec3 vCameraPos = pCamera->Transform()->GetWorldPos();
-
 
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
@@ -291,15 +290,15 @@ void CPlayerScript::Update()
 		int a = 0;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D) || KEY_NONE(KEY_TYPE::KEY_LBTN))
-	{
-		vRestoreRot = Transform()->GetLocalRot();
-		pCameraScript->SetBackRestorePos(vCameraPos);
-	}
-	if (KEY_TAB(KEY_TYPE::KEY_W))
-	{
-		vRot = vRestoreRot;
-	}
+	//if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D) || KEY_NONE(KEY_TYPE::KEY_LBTN))
+	//{
+	//	vRestoreRot = Transform()->GetLocalRot();
+	//	pCameraScript->SetBackRestorePos(vCameraPos);
+	//}
+	//if (KEY_TAB(KEY_TYPE::KEY_W))
+	//{
+	//	vRot = vRestoreRot;
+	//}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
@@ -328,6 +327,13 @@ void CPlayerScript::Update()
 				m_eState = PLAYER_STATE::WALK;
 			}
 			pCameraScript->SetBackMode(false);
+#endif
+#ifdef EMPTY_CAMERA
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			vPos += vFront * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+
+			m_eState = PLAYER_STATE::WALK;
 #else		
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			vPos += vFront * 200.f * DT;
@@ -354,6 +360,13 @@ void CPlayerScript::Update()
 
 			m_eState = PLAYER_STATE::WALK;
 			pCameraScript->SetBackMode(true);
+#endif
+#ifdef EMPTY_CAMERA
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			vPos += vFront * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+
+			m_eState = PLAYER_STATE::WALK;
 #else
 			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			vPos += vBack * 200.f * DT;
@@ -377,7 +390,13 @@ void CPlayerScript::Update()
 
 			m_eState = PLAYER_STATE::WALK;
 			pCameraScript->SetBackMode(true);
+#endif
+#ifdef EMPTY_CAMERA
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			vPos += vFront * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
 
+			m_eState = PLAYER_STATE::WALK;
 #else
 			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vLeft * 200.f * DT;
@@ -403,6 +422,13 @@ void CPlayerScript::Update()
 
 			m_eState = PLAYER_STATE::WALK;
 			pCameraScript->SetBackMode(true);
+#endif
+#ifdef EMPTY_CAMERA
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			vPos += vFront * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+
+			m_eState = PLAYER_STATE::WALK;
 #else
 			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vRight * 200.f * DT;
