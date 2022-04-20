@@ -361,7 +361,7 @@ void enter_lobby(int user_id, char name[])
 			send_enter_lobby_packet(i, user_id); //니가 나를 보면 나도 너를 본다
 		}
 	}
-	cout << "Enter" << endl;
+	cout << "Enter	" << endl;
 }
 
 void do_Rotation(int user_id)
