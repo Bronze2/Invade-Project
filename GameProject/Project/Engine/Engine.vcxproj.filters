@@ -70,6 +70,9 @@
     <Filter Include="Script\Cam">
       <UniqueIdentifier>{b33d7921-deac-41d3-aabb-c646a3f7afd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Bow">
+      <UniqueIdentifier>{26c7ce66-021a-47ab-b5c9-397b3c6edc80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -249,6 +252,9 @@
     <ClInclude Include="LobbyScene.h">
       <Filter>Manager\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="BowScript.h">
+      <Filter>Script\Bow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -415,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="LobbyScene.cpp">
       <Filter>Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="BowScript.cpp">
+      <Filter>Script\Bow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

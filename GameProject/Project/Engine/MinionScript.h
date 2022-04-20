@@ -26,6 +26,9 @@ class CMinionScript :
     vector<CGameObject*> m_arrEnemy;
     vector<CGameObject*> m_pEnemyPlayers;
     
+    tMTAnimClip* m_pCurAnimClip;
+    tMTAnimClip* m_pNextAnimClip;
+
     bool m_bFinishAnimation;
     bool m_bAllienceCol;
 

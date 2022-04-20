@@ -99,8 +99,9 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 
-
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_without_bow01.fbx");
+	pMeshData->Save(pMeshData->GetPath());
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\monster.mdat", L"MeshData\\monster.mdat");
 	for (int i = 0; i < Network::GetInst()->getOtherClientSize() + 1; ++i) {
 		cout << "InGameClinet :" << i << endl;
 		pObject = new CGameObject;
@@ -111,22 +112,33 @@ void CInGameScene::Init()
 		pObject->AddComponent(new CSensor);
 		pObject->AddComponent(new CPlayerScript);
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));      // 80.f, 200.f, 80.f ?????
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->FrustumCheck(false);
-		pObject->Transform()->SetLocalPos(Vec3(50.f, 0.f, 100.f));
-		pObject->Transform()->SetLocalScale(Vec3(2.f, 2.0f, 2.0f));
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 		pObject->MeshRender()->SetDynamicShadow(true);
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+
+
 
 		pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
 		//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
 		pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
 		CAnimation* pNewAnimation = new CAnimation;
-		pNewAnimation->InsertAnimation(L"IDLE", 0, 32, true, false);
-		pNewAnimation->InsertAnimation(L"WALK", 885, 908, false, false);
+		pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
+		pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
+		pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
+		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // È° ²¨³»¼­ ½î±â 125, 175
+		pNewAnimation->InsertAnimClip(L"DIE", 240, 269);      // ´©¿ö¼­ ³¡ 240, 261
+		//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
+
 		pObject->Animator3D()->SetAnimation(pNewAnimation);
+		pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+
 		pObject->GetScript<CPlayerScript>()->Init();
 		if (i == Network::GetInst()->getHostId()) {
 			pObject->GetScript<CPlayerScript>()->SetMain();
@@ -134,6 +146,38 @@ void CInGameScene::Init()
 		}
 		FindLayer(L"Blue")->AddGameObject(pObject, false);
 	}
+
+
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
+	//CGameObject* pBow;
+	//pBow = pMeshData->Instantiate();
+	//pBow->SetName(L"Bow");
+	//pBow->AddComponent(new CTransform);
+	//pBow->AddComponent(new CCollider3D);
+	//pBow->AddComponent(new CSensor);
+	//pBow->AddComponent(new CBowScript);
+	//pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//pBow->Collider3D()->SetOffsetScale(Vec3(20.f, 130.f, 10.f));
+	//pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//pBow->FrustumCheck(false);
+	//pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
+	//pBow->Transform()->SetLocalScale(Vec3(2.5f, 2.5f, 2.5f));
+	//pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
+	//pBow->MeshRender()->SetDynamicShadow(true);
+	//pBow->GetScript<CBowScript>()->SetTarget(pObject);
+	//pBow->GetScript<CBowScript>()->SetBoneIdx(14);
+
+	//pNewAnimation = new CAnimation;
+	//pNewAnimation->InsertAnimClip(L"IDLE", 0, 1);         // 0, 13
+	//pNewAnimation->InsertAnimClip(L"ATTACK_READY", 1, 12);
+	//pNewAnimation->InsertAnimClip(L"ATTACK", 13, 18);
+
+	//pBow->Animator3D()->SetAnimation(pNewAnimation);
+	//pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+	//pBow->GetScript<CBowScript>()->Init();
+	//pObject->AddChild(pBow);
+
+	//m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
 
 
 

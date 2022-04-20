@@ -19,6 +19,7 @@ enum class SCRIPT_TYPE {
     CAMERASRIPT,
     SPAWNSCRIPT,
     TOWERSCRIPT,
+    BOWSCRIPT,
     END,
 };
 

@@ -9,14 +9,6 @@ enum class ELEMENT_TYPE {
     WIND=4
 };
 
-enum class PLAYER_STATE {
-    IDLE,
-    WALK,
-    ATTACK,
-    JUMP,
-    DIE,
-};
-
 class CTexture;
 class CPlayerScript :
     public CScript
@@ -37,6 +29,9 @@ private:
     tAnimation* m_pCurAnimation;
     PLAYER_STATE m_eState;
     PLAYER_STATE m_ePrevState;
+
+    tMTAnimClip* m_pCurAnimClip;
+    tMTAnimClip* m_pNextAnimClip;
 
     bool isMain;
 public:
