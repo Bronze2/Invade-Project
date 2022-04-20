@@ -17,10 +17,13 @@ private:
 
 	bool			m_bFreeze; // DT 가 과하게 넘어갈때 동결
 
+
+
 public:
 	void Init();
 	void Update();
-
+	CTimeMgr();
+	~CTimeMgr();
 public:
 	float GetDeltaTime() { return m_fDeltaTime; }
 	void DTFreeze() { m_bFreeze = true; }

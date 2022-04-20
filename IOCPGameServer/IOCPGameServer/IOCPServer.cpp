@@ -101,6 +101,7 @@ void add_timer(int obj_id, ENUMOP op_type, int duration)
 	timer_lock.unlock();
 }
 
+CTimeMgr Timer;
 
 void do_timer()
 {
@@ -316,7 +317,7 @@ bool is_near(int a, int b)
 void do_move(int user_id, int direction)
 {
 	Vec3 vPos;
-	g_clients[user_id].Pos += g_clients[user_id].dir * 10.f;
+	g_clients[user_id].Pos += g_clients[user_id].dir * 2000.f * Timer.GetDeltaTime();
 
 	//복사해두고 쓴다. 근데 그 이후에 어긋나더라도 그건 감수해야한다. 지금은 이정도로 만족하자
 	g_clients[user_id].m_cLock.lock();
@@ -643,6 +644,7 @@ void main()
 {
 
 	Server* m_Sever = Server::GetInstance();
+	Timer.Init();
 
 	//네트워크 초기화
 	WSADATA WSAData;
@@ -689,7 +691,7 @@ void main()
 	for (auto &th : worker_threads) th.join();
 	timer_thread.join();
 
-	CTimeMgr Timer;
-	Timer.Init();
-	
+	while(1) {
+		Timer.Update();
+	}
 }

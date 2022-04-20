@@ -1,9 +1,9 @@
 #include "Timer.h"
 
 
-CTimeMgr::CTimeMgr()
-	:m_llCurCount{}, m_llOldCount{}, m_llFrequency{}, m_fDeltaTime(0.f), m_fAccTime(0.f), m_bFreeze(false)
-{}
+CTimeMgr::CTimeMgr(){
+
+}
 CTimeMgr::~CTimeMgr() {
 
 }
