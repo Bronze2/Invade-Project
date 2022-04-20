@@ -27,9 +27,6 @@ private:
 
 #ifdef CAMERA_TEST
     float m_fTurnDegree;
-    float m_fTurnBackMaxDegree;;
-    float m_fMoveTurnLeftMaxDegree;
-    float m_fMoveTurnRightMaxDegree;
     float m_fTurnSpeed;
     bool m_bTurnBack;
 #endif

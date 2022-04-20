@@ -248,11 +248,13 @@ void CPlayerScript::Awake()
 
 #ifdef CAMERA_TEST
 	m_fTurnDegree = 0.f;
-	m_fTurnBackMaxDegree = 180.f;
-	m_fMoveTurnLeftMaxDegree = -90.f;
-	m_fMoveTurnRightMaxDegree = 90.f;
 	m_fTurnSpeed = 30.f;
 	m_bTurnBack = false;
+
+	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
+	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+
+	pCameraScript->SetBackRestorePos(Transform()->GetWorldPos());
 #endif
 
 }
@@ -264,6 +266,12 @@ void CPlayerScript::Update()
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 	Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
 	Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
+
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
+	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+	Vec3 vCameraPos = pCamera->Transform()->GetWorldPos();
+
 
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
@@ -283,9 +291,10 @@ void CPlayerScript::Update()
 		int a = 0;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D) || KEY_NONE(KEY_TYPE::KEY_LBTN))
+	if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D) || KEY_NONE(KEY_TYPE::KEY_LBTN))
 	{
 		vRestoreRot = Transform()->GetLocalRot();
+		pCameraScript->SetBackRestorePos(vCameraPos);
 	}
 	if (KEY_TAB(KEY_TYPE::KEY_W))
 	{
@@ -294,11 +303,12 @@ void CPlayerScript::Update()
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+
 #ifdef CAMERA_TEST
 			if (m_bTurnBack) {
 				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 				m_fTurnDegree += m_fTurnSpeed;
-				if (m_fTurnDegree <= m_fTurnBackMaxDegree)
+				if (m_fTurnDegree <= 180.f)
 				{
 					vRot.y += XMConvertToRadians(m_fTurnSpeed);
 				}
@@ -317,6 +327,7 @@ void CPlayerScript::Update()
 
 				m_eState = PLAYER_STATE::WALK;
 			}
+			pCameraScript->SetBackMode(false);
 #else		
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			vPos += vFront * 200.f * DT;
@@ -329,7 +340,7 @@ void CPlayerScript::Update()
 #ifdef CAMERA_TEST
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			m_fTurnDegree += m_fTurnSpeed;
-			if (m_fTurnDegree <= m_fTurnBackMaxDegree)
+			if (m_fTurnDegree <= 180.f)
 			{
 				vRot.y += XMConvertToRadians(m_fTurnSpeed);
 			}
@@ -337,9 +348,12 @@ void CPlayerScript::Update()
 				vPos += vFront * 200.f * DT;
 				m_FColCheck(vPos3, vPos);
 			}
-			m_eState = PLAYER_STATE::WALK;
-			m_bTurnBack = true;
 
+			vPos += vFront * 200.f * DT;
+			m_FColCheck(vPos3, vPos);
+
+			m_eState = PLAYER_STATE::WALK;
+			pCameraScript->SetBackMode(true);
 #else
 			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			vPos += vBack * 200.f * DT;
@@ -348,16 +362,53 @@ void CPlayerScript::Update()
 #endif
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+#ifdef CAMERA_TEST
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Vec3 vCameraFront = pCamera->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			if (vFront != vCameraFront)
+			{
+				vRot.y = acos(Dot(vFront, vCameraFront));
+				
+				vPos += vFront * 200.f * DT;
+				m_FColCheck(vPos3, vPos);
+			}
+			//vPos += vFront * 200.f * DT;
+			//m_FColCheck(vPos3, vPos);
+
+			m_eState = PLAYER_STATE::WALK;
+			pCameraScript->SetBackMode(true);
+
+#else
 			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vLeft * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 			m_eState = PLAYER_STATE::WALK;
+#endif
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+#ifdef CAMERA_TEST
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			m_fTurnDegree += m_fTurnSpeed;
+			if (m_fTurnDegree <= 90.f)
+			{
+				vRot.y += XMConvertToRadians(m_fTurnSpeed);
+			}
+			else {
+				vPos += vFront * 200.f * DT;
+				m_FColCheck(vPos3, vPos);
+			}
+
+			//vPos += vFront * 200.f * DT;
+			//m_FColCheck(vPos3, vPos);
+
+			m_eState = PLAYER_STATE::WALK;
+			pCameraScript->SetBackMode(true);
+#else
 			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			vPos += vRight * 200.f * DT;
 			m_FColCheck(vPos3, vPos);
 			m_eState = PLAYER_STATE::WALK;
+#endif
 		}
 	}
 
@@ -365,12 +416,15 @@ void CPlayerScript::Update()
 		m_eState = PLAYER_STATE::IDLE;
 #ifdef CAMERA_TEST
 		m_fTurnDegree = 0.f;
+		//pCameraScript->SetBackMode(false);
 #endif
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed = 200.f;
 		m_eState = PLAYER_STATE::ATTACK_READY;
+		Vec3 vCameraFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed += 1000.f*DT;
@@ -381,8 +435,6 @@ void CPlayerScript::Update()
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::ATTACK;
-		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
 
 		Vec3 vPos4 = Transform()->GetLocalPos();
 		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
@@ -479,7 +531,7 @@ void CPlayerScript::Update()
 		m_bCheckStartMousePoint = true;
 	}
 	else {
-		if (KEY_NONE(KEY_TYPE::KEY_D)) {
+		if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 			vRot.y += vDrag.x * DT * 1.f;
 			float fDegree = XMConvertToDegrees(vRot.y);
 			if (fDegree < -360) {

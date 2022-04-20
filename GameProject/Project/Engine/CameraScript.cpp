@@ -13,16 +13,15 @@ void CCameraScript::Update()
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
-	Matrix mPlayerWorldMat = pPlayer->Transform()->GetWorldMat();
-	// mPlayerWorldMat *= XMMatrixRotationY(XMConvertToRadians(90.0f));
-	Vec3 vPlayerWorldPos = pPlayer->Transform()->GetWorldPos();
-	Vec3 vPlayerWorldFront = mPlayerWorldMat.Front();
-	Vec3 vPlayerWorldUp = mPlayerWorldMat.Up();
-	Vec3 vPlayerWorldRight = mPlayerWorldMat.Right();
-	Vec3 vPlayerFront = pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	Vec3 vPlayerPos = pPlayer->Transform()->GetLocalPos();
 
-	// 정상적인 dist
+	Vec3 vPlayerWorldPos = pPlayer->Transform()->GetWorldPos();
+	Vec3 vPlayerWorldFront = pPlayer->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 vPlayerWorldUp = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
+	Vec3 vPlayerWorldRight = pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+	Vec3 vPlayerPos = pPlayer->Transform()->GetLocalPos();
+	Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
+
+	// Monster.fbx기준  dist
 	//float fHdist = 40.0f;
 	//float fVdist = 40.0f;
 	//float fRdist = 10.0f;
@@ -31,10 +30,9 @@ void CCameraScript::Update()
 	float fHdist = 400.0f;
 	float fVdist = 150.0f;
 	float fRdist = 10.0f;
-	float fTargetDist = 300.0f;
-	Vec3 vOffset = Vec3(-300.f, 150.f, 10.f);
-
-	Vec3 vTargetPos = vPlayerPos + vPlayerFront * fTargetDist;
+	float fTargetDist = 200.0f;
+	Vec3 vTargetPos = vPlayerWorldPos + vPlayerWorldFront * fTargetDist;
+	Vec3 vOffset = Vec3(-400.f, 150.f, 10.f);
 
 	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 		Init();
@@ -54,14 +52,11 @@ void CCameraScript::Update()
 	switch (m_tEffectType)
 	{
 	case CAMERA_EFFECT_TYPE::NONE:
-		if (!KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
+		if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 			if (!m_bCheckStartMousePoint) {
 				m_bCheckStartMousePoint = true;
 			}
-			else {
-				//vPos = vPlayerPos - vPlayerWorldFront * fHdist + vPlayerWorldUp * fVdist + vPlayerWorldRight * fRdist;
-				vPos = vPlayerWorldPos + vOffset;
-
+			else {				
 				Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 				vRot.x -= vDrag.y * DT;
 				m_fDegree = XMConvertToDegrees(vRot.x);
@@ -73,6 +68,31 @@ void CCameraScript::Update()
 					m_fDegree = 15.f;
 					vRot.x = XMConvertToRadians(m_fDegree);
 				}
+
+				//if (!m_bBackMode) // W
+				//{
+				//	vPos = vPlayerWorldPos - vPlayerWorldFront * fHdist + vPlayerWorldUp * fVdist + vPlayerWorldRight * fRdist;
+
+				//	float fRotDegree = atan2(vPlayerWorldPos.x - vPos.x, vPlayerWorldPos.z - vPos.z) * (180 / PI);
+				//	vRot.y = XMConvertToRadians(fRotDegree);
+				//}
+				//else // A S D
+				//{
+				//	vPos = vPlayerWorldPos + vPlayerWorldFront * 100.f * DT;
+				//	float fRotDegree = atan2(vPlayerWorldPos.x - vPos.x, vPlayerWorldPos.z - vPos.z) * (180 / PI);
+				//	vRot.y = XMConvertToRadians(fRotDegree);
+				//}
+				vPos = vPlayerWorldPos - vPlayerWorldFront * fHdist + vPlayerWorldUp * fVdist + vPlayerWorldRight * fRdist;
+
+				if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D))) {
+					vPos += vPlayerWorldFront * 100.f * DT;
+				}
+				else
+				{
+
+				}
+				float fRotDegree = atan2(vPlayerWorldPos.x - vPos.x, vPlayerWorldPos.z - vPos.z) * (180 / PI);
+				vRot.y = XMConvertToRadians(fRotDegree);
 			}
 		}
 		break;
@@ -80,9 +100,9 @@ void CCameraScript::Update()
 		vPos = CameraZoom(vPos);	
 		break;
 	case CAMERA_EFFECT_TYPE::SHAKING:
-		vPos = CameraShake(vPos);
+		vPos = CameraShake(vPos, 6.0f, 20.f);
 		break;
-	case CAMERA_EFFECT_TYPE::DEMAGED:
+	case CAMERA_EFFECT_TYPE::DAMAGED:
 		break;
 	case CAMERA_EFFECT_TYPE::LIGHTNING:
 		break;
@@ -90,21 +110,17 @@ void CCameraScript::Update()
 
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
-
-	//Vec3 vLook = vTargetPos - vPos;
-	Vec3 vLook = vPlayerWorldPos - vPos;
-
-	Transform()->LookAt(vLook, vRot);
 }
 
-Vec3 CCameraScript::CameraShake(Vec3 _vPos)
+Vec3 CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSize)
 {
-	if (m_fShakeNum < 2.0f * PI)
+	float fShakeFactor = 5.f;
+	if (m_fShakeNum < _DamageTime * PI * fShakeFactor)
 	{
-		_vPos.y = m_vRestorePos.y + 5.5f * sin(m_fShakeNum * 10.0f);
-		_vPos.z = m_vRestorePos.z + 5.5f * -sin(m_fShakeNum * 10.0f);
+		_vPos.y = m_vRestorePos.y + _fDamageSize * sin(m_fShakeNum);
+		_vPos.z = m_vRestorePos.z + _fDamageSize * -sin(m_fShakeNum);
 
-		m_fShakeNum += 1.0f;
+		m_fShakeNum += fShakeFactor;
 	}
 	else
 	{
@@ -118,9 +134,9 @@ Vec3 CCameraScript::CameraShake(Vec3 _vPos)
 
 Vec3 CCameraScript::CameraZoom(Vec3 _vPos)
 {
-	if (m_fZoomElapsedTime < 20.0f * DT)
+	if (m_fZoomElapsedTime < 18.0f * DT)
 	{
-		_vPos += m_vZoomRestoreFront * m_fZoomSpeed * DT;
+		_vPos += Transform()->GetWorldDir(DIR_TYPE::FRONT) * m_fZoomSpeed * DT;
 		m_fZoomElapsedTime += DT;
 	}
 	else
@@ -137,7 +153,7 @@ void CCameraScript::Init()
 	m_vZoomRestoreFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 	m_fShakeNum = 1.0f;
-	m_fZoomSpeed = 100.0f;
+	m_fZoomSpeed = 200.0f;
 	m_fZoomElapsedTime = 0.0f;
 }
 
