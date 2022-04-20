@@ -107,6 +107,7 @@ void do_timer()
 {
 	while (true)
 	{
+		Timer.Update();
 		this_thread::sleep_for(1ms); //Sleep(1);
 		while (true)
 		{
@@ -129,7 +130,7 @@ void do_timer()
 			{
 			case OP_MOVE:
 			{	
-				cout << "MoveTimerOn" << endl;
+				//cout << "MoveTimerOn" << endl;
 				EXOVER* over = new EXOVER();
 				over->op = ev.event_id;
 				//do_move(ev.obj_id, packet->direction);
@@ -691,7 +692,7 @@ void main()
 	for (auto &th : worker_threads) th.join();
 	timer_thread.join();
 
-	while(1) {
+	/*while(1) {
 		Timer.Update();
-	}
+	}*/
 }
