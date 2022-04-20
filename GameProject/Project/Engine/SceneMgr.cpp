@@ -244,24 +244,24 @@ void CSceneMgr::net_setRotationByID(int id, float x, float y, float z)
 void CSceneMgr::net_setLocalPosByID(int id, float x , float y, float z) 
 {
 	Vec3 pos(x, y, z);
-	pos*= DT;
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(pos);
+	//pos*= DT;
+	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
 }
 
 void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
 {
 
 
-    m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Transform()->SetLocalPos(Vec3(-60, 40, -10));
-    //   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-    m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
+    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+    ////   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
 
 
-    std::cout << "Add Camera" << std::endl;
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->AddChild(m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0));
-    m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Awake();
-    m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Start();
+    //std::cout << "Add Camera" << std::endl;
+    //m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->AddChild(m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0));
+    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Awake();
+    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Start();
 
 
 	std::cout << "Set Loacl Pos" << std::endl;

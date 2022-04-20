@@ -362,3 +362,18 @@ enum class PLAYER_STATE {
 	DIE,
 	END,
 };
+
+enum class CAMERA_EFFECT_TYPE {
+	NONE,
+	ZOOMIN,
+	SHAKING,
+	DAMAGED,
+	LIGHTNING,
+};
+enum class ELEMENT_TYPE {
+	FROZEN = 0,
+	FIRE = 1,
+	DARK = 2,
+	THUNDER = 3,
+	WIND = 4
+};

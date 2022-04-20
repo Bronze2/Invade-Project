@@ -264,28 +264,28 @@ void CPlayerScript::Update()
 		Vec3 vRot = Transform()->GetLocalRot();
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			Network::GetInst()->send_move_packet(0, vFront.x, vFront.y, vFront.z,0);
 			m_eState = PLAYER_STATE::WALK;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			Network::GetInst()->send_move_packet(0, vBack.x, vBack.y, vBack.z, 0);
 			m_eState = PLAYER_STATE::WALK;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			Network::GetInst()->send_move_packet(0, vLeft.x, vLeft.y, vLeft.z, 0);
 			m_eState = PLAYER_STATE::WALK;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			Network::GetInst()->send_move_packet(0, vRight.x, vRight.y, vRight.z, 0);
 			m_eState = PLAYER_STATE::WALK;
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_W)) {
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			Network::GetInst()->send_move_packet(0, vFront.x, vFront.y, vFront.z, 1);
 			m_eState = PLAYER_STATE::IDLE;
 		}
@@ -451,6 +451,7 @@ void CPlayerScript::Update()
 		Transform()->SetLocalRot(vRot);
 		Transform()->SetLocalPos(vPos);
 	}
+	Update_LerpPos();
 	m_FAnimation();
 
 }
@@ -468,6 +469,15 @@ void CPlayerScript::SetState(int state)
 	}
 }
 
+void CPlayerScript::Update_LerpPos()
+{
+	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_LerpPos, DT*5.f); 
+
+	Transform()->SetLocalPos(vPos);
+}
+
+
+
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
 {
 }
@@ -475,3 +485,4 @@ CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bChe
 CPlayerScript::~CPlayerScript()
 {
 }
+

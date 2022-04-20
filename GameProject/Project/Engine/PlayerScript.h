@@ -1,13 +1,7 @@
 #pragma once
 #include "Script.h"
 #include "Animation3D.h"
-enum class ELEMENT_TYPE {
-    FROZEN=0,
-    FIRE=1,
-    DARK=2,
-    THUNDER=3,
-    WIND=4
-};
+
 
 class CTexture;
 class CPlayerScript :
@@ -33,6 +27,8 @@ private:
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
 
+    Vec3 m_LerpPos;
+
     bool isMain;
 public:
     void m_FAnimation();
@@ -40,9 +36,11 @@ public:
     virtual void Awake();
     virtual void Update();
     void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
-    void SetMain() { isMain = true; };
+    void SetMain() { isMain = true; }
     void SetState(int state);
 
+    void Update_LerpPos();
+    void SetLerpPos(Vec3 Pos) { m_LerpPos  = Pos; }
     CPlayerScript();
     virtual ~CPlayerScript();
 

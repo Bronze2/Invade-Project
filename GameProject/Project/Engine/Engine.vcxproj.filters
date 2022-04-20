@@ -73,6 +73,9 @@
     <Filter Include="Script\Bow">
       <UniqueIdentifier>{26c7ce66-021a-47ab-b5c9-397b3c6edc80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\EmptyPlayer">
+      <UniqueIdentifier>{89ac5fdd-7034-4eea-8d6d-769684b151d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -255,6 +258,9 @@
     <ClInclude Include="BowScript.h">
       <Filter>Script\Bow</Filter>
     </ClInclude>
+    <ClInclude Include="EmptyPlayerScript.h">
+      <Filter>Script\EmptyPlayer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -424,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="BowScript.cpp">
       <Filter>Script\Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyPlayerScript.cpp">
+      <Filter>Script\EmptyPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

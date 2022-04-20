@@ -319,7 +319,7 @@ bool is_near(int a, int b)
 void do_move(int user_id, int direction)
 {
 	Vec3 vPos;
-	g_clients[user_id].Pos += g_clients[user_id].dir * 500;
+	g_clients[user_id].Pos += g_clients[user_id].dir * 5.f;
 	send_move_packet(user_id, user_id);
 	for (int i = 0; i < current_user; ++i) {
 		if (i == user_id) continue;
