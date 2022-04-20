@@ -108,6 +108,7 @@ void do_timer()
 	while (true)
 	{
 		Timer.Update();
+		//cout << Timer.GetDeltaTime() << endl;
 		this_thread::sleep_for(1ms); //Sleep(1);
 		while (true)
 		{
@@ -130,11 +131,11 @@ void do_timer()
 			{
 			case OP_MOVE:
 			{	
-				//cout << "MoveTimerOn" << endl;
-				EXOVER* over = new EXOVER();
-				over->op = ev.event_id;
-				//do_move(ev.obj_id, packet->direction);
-				PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
+				////cout << "MoveTimerOn" << endl;
+				//EXOVER* over = new EXOVER();
+				//over->op = ev.event_id;
+				////do_move(ev.obj_id, packet->direction);
+				//PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
 			case OP_SPAWN:
@@ -318,23 +319,7 @@ bool is_near(int a, int b)
 void do_move(int user_id, int direction)
 {
 	Vec3 vPos;
-	g_clients[user_id].Pos += g_clients[user_id].dir * 2000.f * Timer.GetDeltaTime();
-
-	//복사해두고 쓴다. 근데 그 이후에 어긋나더라도 그건 감수해야한다. 지금은 이정도로 만족하자
-	g_clients[user_id].m_cLock.lock();
-	unordered_set<int> old_vl = g_clients[user_id].view_list;
-	g_clients[user_id].m_cLock.unlock();
-	
-	unordered_set<int> new_vl;
-	for (auto &cl : g_clients)
-	{
-		if (ST_ACTIVE != cl.m_status) continue;
-		if (cl.m_id == user_id) continue;
-		if (true == is_near(cl.m_id, user_id))
-			new_vl.insert(cl.m_id);
-	}
-
-	//밑에서 view list로 알려주니까 나한테는 안 알려줌. 그래서 지금 먼저 나한테 이동을 알려줘야 함.
+	g_clients[user_id].Pos += g_clients[user_id].dir * 2000;
 	send_move_packet(user_id, user_id);
 	for (int i = 0; i < current_user; ++i) {
 		if (i == user_id) continue;
@@ -692,7 +677,7 @@ void main()
 	for (auto &th : worker_threads) th.join();
 	timer_thread.join();
 
-	/*while(1) {
-		Timer.Update();
-	}*/
+	//while(1) {
+	//	Timer.Update();
+	//}
 }

@@ -237,12 +237,15 @@ void CSceneMgr::net_enterClient(int id ,float x, float y, float z)
 
 void CSceneMgr::net_setRotationByID(int id, float x, float y, float z)
 {
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalRot(Vec3(x, y, z));
+
+    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalRot(Vec3(x,y,z));
 }
 
 void CSceneMgr::net_setLocalPosByID(int id, float x , float y, float z) 
 {
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x,y,z));
+	Vec3 pos(x, y, z);
+	pos*= DT;
+    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(pos);
 }
 
 void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
