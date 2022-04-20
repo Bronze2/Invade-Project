@@ -204,7 +204,7 @@ void CSceneMgr::Init()
 	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
-	pBow->Transform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+	pBow->Transform()->SetLocalScale(Vec3(2.5f, 2.5f, 2.5f));
 	pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->MeshRender()->SetDynamicShadow(true);
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
