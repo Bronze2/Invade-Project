@@ -395,8 +395,8 @@ void CPlayerScript::Update()
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		//m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		//vRot.y = XMConvertToRadians(m_fRotateDegree);
+		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+		vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
 		m_fArrowSpeed = 200.f;
 		m_eState = PLAYER_STATE::ATTACK_READY;
 		Vec3 vCameraFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
