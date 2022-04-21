@@ -109,7 +109,7 @@ void do_timer()
 	{
 		Timer.Update();
 		//cout << Timer.GetDeltaTime() << endl;
-		this_thread::sleep_for(1ms); //Sleep(1);
+		this_thread::sleep_for(5ms); //Sleep(1);
 		while (true)
 		{
 			timer_lock.lock();
