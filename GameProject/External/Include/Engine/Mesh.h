@@ -51,9 +51,9 @@ public:
 	CStructuredBuffer* GetBoneOffsetBuffer() { return m_pBoneOffset;}
 	UINT GetBoneCount() { return (UINT)m_vecBones.size(); }
 
+	const tMTBone* GetBone(int _idx) { return &m_vecBones[_idx]; }
 
 	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath);
-
 };
 

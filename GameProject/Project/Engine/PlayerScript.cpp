@@ -306,8 +306,8 @@ void CPlayerScript::Update()
 		}
 
 
-
-		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+		//Arrow 
+	/*	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 			CGameObject* pObj = GetObj()->GetChild()[0];
 			Vec3 vPos = pObj->Transform()->GetLocalPos();
 			Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
@@ -417,7 +417,7 @@ void CPlayerScript::Update()
 			}
 
 		}
-
+		*/
 		Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 		if (!m_bCheckStartMousePoint) {
 			m_bCheckStartMousePoint = true;

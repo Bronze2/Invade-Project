@@ -1,3 +1,4 @@
+
 #ifndef _VALUE
 #define _VALUE
 
@@ -42,7 +43,7 @@ cbuffer TRANSFORM_MATRIX : register(b0)
 
     row_major matrix g_matWV;
     row_major matrix g_matWVP;
-    
+
     row_major matrix g_matWorldInv;
     row_major matrix g_matViewInv;
     row_major matrix g_matProjInv;
@@ -124,7 +125,6 @@ Texture2D g_tex_5 : register(t5);
 Texture2D g_tex_6 : register(t6);
 
 StructuredBuffer<Matrix> g_arrFinalBoneMat : register(t7);
-
 
 
 Texture2D g_tex_anim2D : register(t12);

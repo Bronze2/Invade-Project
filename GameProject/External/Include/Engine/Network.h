@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.h"
+#include <unordered_map>
 #include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
-#include <WS2tcpip.h>
 
 constexpr auto BUF_SIZE = 200;
 //int NPC_ID_START = 10000;
@@ -28,6 +28,20 @@ struct ObjectInfo {
 struct CLIENT {
 	SocketInfo socket_info;
 	int id = 0;
+	bool isHost;
+	char camp;
+	p_Vec3 pos;
+	p_Vec3 rot;
+	p_Vec3 dir;
+};
+
+struct OTHER_CLINET {
+	int id = 0;
+	bool isHost;
+	char camp;
+	p_Vec3 pos;
+	p_Vec3 rot;
+	p_Vec3 dir;
 };
 
 
@@ -46,10 +60,19 @@ public:
 	void send_move_packet(unsigned char dir, float x, float y , float z, int state);
 	void send_rotation_packet(Vec3 Rot);
 	void send_animation_packet(int state);
+	void send_game_start_packet();
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
+
+	int getOtherClientCount() {	return m_OtherClientCount; };
+	bool getHost() { return m_Client.isHost; };
+	int getHostId() { return m_Client.id; };
+	int getOtherClientSize() { return m_otherClients.size(); };
+
+	void debug_checkclient();
 private:
 	CLIENT m_Client;
-	
+	unordered_map<int, OTHER_CLINET> m_otherClients;
+	int m_OtherClientCount = 0;
 };
 

@@ -19,6 +19,8 @@ enum class SCRIPT_TYPE {
     CAMERASRIPT,
     SPAWNSCRIPT,
     TOWERSCRIPT,
+    BOWSCRIPT,
+    EMPTYPLAYERSCRIPT,
     END,
 };
 
@@ -49,22 +51,22 @@ public:
     static void Disable(CGameObject* _pTarget);
 
 protected:
-    virtual void OnCollisionEnter(CCollider2D* _pOther){}
-    virtual void OnCollision(CCollider2D* _pOther){}
-    virtual void OnCollisionExit(CCollider2D* _pOther){}
-    
+    virtual void OnCollisionEnter(CCollider2D* _pOther) {}
+    virtual void OnCollision(CCollider2D* _pOther) {}
+    virtual void OnCollisionExit(CCollider2D* _pOther) {}
+
     virtual void OnCollision3DEnter(CCollider3D* _pOther) {}
     virtual void OnCollision3D(CCollider3D* _pOther) {}
     virtual void OnCollision3DExit(CCollider3D* _pOther) {}
 
 
-    virtual void OnDetectionEnter(CGameObject* _pOther)  {}
+    virtual void OnDetectionEnter(CGameObject* _pOther) {}
     virtual void OnDetection(CGameObject* _pOther) {}
     virtual void OnDetectionExit(CGameObject* _pOther) {}
 
 public:
-    virtual void SaveToScene(FILE* _pFile){}
-    virtual void LoadFromScene(FILE* _pFile){}
+    virtual void SaveToScene(FILE* _pFile) {}
+    virtual void LoadFromScene(FILE* _pFile) {}
 
     CScript(UINT _iScriptType);
     virtual ~CScript();
@@ -72,4 +74,3 @@ public:
     friend class CCollider3D;
     friend class CSensor;
 };
-

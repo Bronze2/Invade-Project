@@ -4,7 +4,7 @@ class CLayer;
 class CGameObject;
 class CCamera;
 
-class CScene:public CEntity
+class CScene :public CEntity
 {
 private:
 	CLayer* m_arrLayer[MAX_LAYER];
@@ -29,4 +29,3 @@ public:
 	CScene();
 	virtual ~CScene();
 };
-

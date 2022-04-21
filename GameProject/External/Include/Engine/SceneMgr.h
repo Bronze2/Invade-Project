@@ -11,6 +11,7 @@ enum class SCENE_TYPE {
 	RESULT,
 	END,
 };
+
 class CSceneMgr
 {
 	SINGLE(CSceneMgr)
@@ -25,6 +26,7 @@ public:
 	void Update_Tool();
 	void Init(SCENE_TYPE _eType);
 	
+	
 	void net_enterClient(int id, float x, float y, float z);
 	void net_setMainClient(int id, float x, float y, float z);
 	void net_setEnableClient(int id);	//지울가능성 높음
@@ -36,6 +38,9 @@ public:
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
 	void ChangeScene(SCENE_TYPE _Type);
+	void EnterGame();
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
+
+	void net_lobby_enterClient(int id, CAMP_STATE, bool isHost);
 };
 

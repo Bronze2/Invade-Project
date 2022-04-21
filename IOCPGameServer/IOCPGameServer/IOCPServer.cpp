@@ -78,6 +78,7 @@ struct CLIENT
 
 	char m_camp;
 	bool m_isHost;
+	bool isMove = false;
 	unordered_set<int> view_list; //순서가 상관없을 땐 unordered 쓰는게 더 속도가 빠르다 
 };
 
@@ -131,6 +132,7 @@ void do_timer()
 			{
 			case OP_MOVE:
 			{	
+				g_clients[ev.obj_id].isMove = false;
 				////cout << "MoveTimerOn" << endl;
 				//EXOVER* over = new EXOVER();
 				//over->op = ev.event_id;
@@ -319,7 +321,7 @@ bool is_near(int a, int b)
 void do_move(int user_id, int direction)
 {
 	Vec3 vPos;
-	g_clients[user_id].Pos += g_clients[user_id].dir * 5.f;
+	g_clients[user_id].Pos += g_clients[user_id].dir * 15.f;
 	send_move_packet(user_id, user_id);
 	for (int i = 0; i < current_user; ++i) {
 		if (i == user_id) continue;
@@ -393,8 +395,13 @@ void process_packet(int user_id, char* buf)
 		g_clients[user_id].dir.y = packet->dir.y;
 		g_clients[user_id].dir.z = packet->dir.z;
 		g_clients[user_id].animState = packet->state;
-		//add_timer(user_id, OP_MOVE, 1000);
-		do_move(user_id, packet->direction);
+		if (!g_clients[user_id].isMove) {
+			add_timer(user_id, OP_MOVE, 50);
+			do_move(user_id, packet->direction);
+			g_clients[user_id].isMove = true;
+			//cout << " User_id [" << user_id << "]. MovePacket" << endl;
+		}
+		
 	}
 		break;
 	case C2S_MOUSE:
@@ -605,7 +612,7 @@ void worker_Thread()
 			break;
 		case OP_MOVE:
 		{
-
+			
 		}
 			break;
 
