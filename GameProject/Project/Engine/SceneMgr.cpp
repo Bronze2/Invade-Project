@@ -196,11 +196,11 @@ void CSceneMgr::Init()
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-140, 80, -20));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), -PI / 18));
+	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -30));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-10.f)));
 
 	pEmptyPlayer->AddChild(pMainCam);
-	m_pCurScene->FindLayer(L"Blue")->AddGameObject(pEmptyPlayer, false);
+	m_pCurScene->FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 	CGameObject* pBow;

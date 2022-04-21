@@ -19,6 +19,9 @@ private:
 
     float m_fArcherLocation;
 
+    float m_fRotateDegree;
+    float m_fMoveSpeed;
+
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
 

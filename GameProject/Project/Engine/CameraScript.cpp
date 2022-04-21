@@ -11,6 +11,9 @@ void CCameraScript::Update()
 	float fSpeed = m_fSpeed;
 	Vec3 vRot = Transform()->GetLocalRot();
 
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
+
 	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 		Init();
 		m_tEffectType = CAMERA_EFFECT_TYPE::SHAKING;
@@ -49,6 +52,7 @@ void CCameraScript::Update()
 		}
 		break;
 	case CAMERA_EFFECT_TYPE::ZOOMIN:
+		vRot.x = 0.f;
 		vPos = CameraZoom(vPos);	
 		break;
 	case CAMERA_EFFECT_TYPE::SHAKING:
@@ -86,9 +90,12 @@ Vec3 CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSiz
 
 Vec3 CCameraScript::CameraZoom(Vec3 _vPos)
 {
-	if (m_fZoomElapsedTime < 15.0f * DT)
+	if (m_fZoomElapsedTime < 20.0f * DT)
 	{
-		_vPos += Transform()->GetLocalDir(DIR_TYPE::FRONT) * m_fZoomSpeed * DT;
+		Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		//Vec3 vDir = Vec3::Right;
+
+		_vPos += vDir * m_fZoomSpeed * DT;
 		m_fZoomElapsedTime += DT;
 	}
 	else
