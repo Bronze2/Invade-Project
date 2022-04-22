@@ -16,6 +16,8 @@ class CMinionScript :
     float m_fRange;
     CAMP_STATE m_eCamp;
     tAnimation* m_CurAnimation;
+    tMTAnimClip* m_pCurAnimClip;
+    tMTAnimClip* m_pNextAnimClip;
     CGameObject* m_pTarget;
     CGameObject* m_pNexus;
     float m_fFindRange;

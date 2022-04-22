@@ -126,6 +126,8 @@
     </Filter>
     <Filter Include="Script\Projectile">
       <UniqueIdentifier>{90994765-9fda-4b87-bcb6-240f06865aba}</UniqueIdentifier>
+    <Filter Include="Script\Bow">
+      <UniqueIdentifier>{2758a0a7-ec9b-4e3a-b6ce-d909e3a02d54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -314,6 +316,11 @@
     </ClInclude>
     <ClInclude Include="ProjectileScript.h">
       <Filter>Script\Projectile</Filter>
+    <ClInclude Include="BowScript.h">
+      <Filter>Script\Bow</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyPlayerScript.h">
+      <Filter>Script\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +497,11 @@
     </ClCompile>
     <ClCompile Include="ProjectileScript.cpp">
       <Filter>Script\Projectile</Filter>
+    <ClCompile Include="BowScript.cpp">
+      <Filter>Script\Bow</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyPlayerScript.cpp">
+      <Filter>Script\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

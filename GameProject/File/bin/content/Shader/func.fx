@@ -111,6 +111,7 @@ matrix GetBoneMat(int _iBoneIdx, int _iRowIdx)
     return g_arrFinalBoneMat[(g_int_1 * _iRowIdx) + _iBoneIdx];
 
 }
+
 void Skinning(inout float3 _vPos, inout float3 _vTangent, inout float3 _vBinormal, inout float3 _vNormal, inout float4 _vWeight, inout float4 _vIndices, int _iRowIdx)
 {
     tSkinningInfo info = (tSkinningInfo) 0.f;
@@ -122,14 +123,12 @@ void Skinning(inout float3 _vPos, inout float3 _vTangent, inout float3 _vBinorma
         info.vPos += (mul(float4(_vPos, 1.f), matBone) * _vWeight[i]).xyz;
         info.vTangent += (mul(float4(_vTangent, 0.f), matBone) * _vWeight[i]).xyz;
         info.vBinormal += (mul(float4(_vBinormal, 0.f), matBone) * _vWeight[i]).xyz;
-        info.vNormal += (mul(float4(_vNormal, 0.f), matBone) * _vWeight[i]).xyz;
-        
+        info.vNormal += (mul(float4(_vNormal, 0.f), matBone) * _vWeight[i]).xyz;   
     }
     _vPos = info.vPos;
     _vTangent = normalize(info.vTangent);
     _vBinormal = normalize(info.vBinormal);
     _vNormal = normalize(info.vNormal);
-    
 }
 
 void Skinning(inout float3 _vPos,  inout float4 _vWeight, inout float4 _vIndices, int _iRowIdx)
@@ -144,8 +143,8 @@ void Skinning(inout float3 _vPos,  inout float4 _vWeight, inout float4 _vIndices
         
     }
     _vPos = info.vPos;
-    
 }
+
 float CalTessLevel(in float3 _vWorldCamPos, float3 _vPatchPos, float _fMin, float _fMax, float _fMaxLv)
 {
     float fLen = length(_vPatchPos - _vWorldCamPos);

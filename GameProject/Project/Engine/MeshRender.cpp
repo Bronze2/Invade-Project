@@ -43,7 +43,7 @@ void CMeshRender::Render()
 		if (Animator3D())
 		{
 			Animator3D()->UpdateData();
-	
+			
 			a = 1;
 			m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh ¾Ë¸®±â
 		}

@@ -33,10 +33,12 @@ void CTimeMgr::Update()
 		QueryPerformanceFrequency(&m_llFrequency);
 		m_fAccTime = 0.f;
 		m_fFPS = 1 / m_fDeltaTime;
+
 		wchar_t szFPS[50] = L"";
 		
 		wsprintf(szFPS, L"FPS: %d", (int)iCallCount);
 		iCallCount = 0;
+
 		SetWindowText(CGameFramework::GetInst()->m_hMainhWnd, szFPS);
 	}
 	g_global.fDT = m_fDeltaTime;

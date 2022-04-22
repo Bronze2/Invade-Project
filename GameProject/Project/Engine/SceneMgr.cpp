@@ -43,8 +43,11 @@
 #include "SpawnScript.h"
 #include "Sensor.h"
 #include "TowerScript.h"
+
 #include "LobbyScene.h"
 #include "InGameScene.h"
+#include "BowScript.h"
+#include "EmptyPlayerScript.h"
 
 
 CScene* CSceneMgr::GetCurScene()
@@ -104,8 +107,8 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init()
 {
-	// ÇÊ¿äÇÑ ¸®¼Ò½º ·Îµù
-	// Texture ·Îµå
+	// ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½Îµï¿½
+	// Texture ï¿½Îµï¿½
 
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
@@ -132,14 +135,14 @@ void CSceneMgr::Init()
 	//
 	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
-	//
+
 	Ptr<CTexture> pTreeTex1 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex1", L"Texture\\Tree01.png");
 	Ptr<CTexture> pTreeTex2 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex2", L"Texture\\Tree02.png");
 	Ptr<CTexture> pLobbyTex = CResMgr::GetInst()->Load<CTexture>(L"LobbyTex", L"Texture\\Lobby.png");
 	Ptr<CTexture> pTransparency = CResMgr::GetInst()->Load<CTexture>(L"Transparency", L"Texture\\Transparency.png");
-
 	Ptr<CMaterial> pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
+//	Ptr<CMaterial> pMtrl = new CMaterial;
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
 	m_arrScene[(UINT)SCENE_TYPE::LOBBY]= new CLobbyScene;
@@ -149,9 +152,10 @@ void CSceneMgr::Init()
 
 	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::INGAME];
 	m_pCurScene->Init();
+
+	m_pCurScene->Awake();
+	m_pCurScene->Start();
 	
-
-
 }
 
 void CSceneMgr::Update()
@@ -159,7 +163,7 @@ void CSceneMgr::Update()
 	m_pCurScene->Update();
 	m_pCurScene->LateUpdate();
 
-	// rendermgr Ä«¸Þ¶ó ÃÊ±âÈ­
+	// rendermgr Ä«ï¿½Þ¶ï¿½ ï¿½Ê±ï¿½È­
 	CRenderMgr::GetInst()->ClearCamera();
 	//CRenderMgr::GetInst()->RegisterCamera(CRenderMgr::GetInst()->GetCamera());
 
@@ -167,14 +171,14 @@ void CSceneMgr::Update()
 
 
 	CSensorMgr::GetInst()->Update();
-	// Ãæµ¹ Ã³¸®
+	// ï¿½æµ¹ Ã³ï¿½ï¿½
 	CCollisionMgr::GetInst()->Update();
 
 }
 
 void CSceneMgr::Update_Tool()
 {
-	// rendermgr Ä«¸Þ¶ó ÃÊ±âÈ­
+	// rendermgr Ä«ï¿½Þ¶ï¿½ ï¿½Ê±ï¿½È­
 	CRenderMgr::GetInst()->ClearCamera();
 	m_pCurScene->FinalUpdate();
 }

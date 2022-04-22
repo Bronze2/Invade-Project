@@ -37,6 +37,11 @@ static type* GetInst()\
 
 #define MAX_LAYER 32
 
+
+#define _ANIMATION_TEST
+//#define CAMERA_TEST
+//#define EMPTY_CAMERA
+
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
 typedef DirectX::SimpleMath::Vector4 Vec4;
@@ -325,8 +330,8 @@ enum class SHADER_POV
 enum class MINION_STATE {
 	WALK,
 	ATTACK,
-	FIND,
 	DIE,
+	END,
 };
 
 enum class MINION_CAMP {
@@ -349,4 +354,30 @@ enum class SPAWN_COUNT {
 enum class CAMP_STATE {
 	RED,
 	BLUE,
+};
+
+enum class CAMERA_EFFECT_TYPE {
+	NONE,
+	ZOOMIN,
+	SHAKING,
+	DAMAGED,
+	LIGHTNING,
+};
+
+enum class ELEMENT_TYPE {
+	FROZEN = 0,
+	FIRE = 1,
+	DARK = 2,
+	THUNDER = 3,
+	WIND = 4
+};
+
+enum class PLAYER_STATE {
+	IDLE,
+	WALK,
+	JUMP,
+	ATTACK_READY,
+	ATTACK,
+	DIE,
+	END,
 };
