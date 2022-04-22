@@ -360,7 +360,7 @@ void CMinionScript::m_FAnimation()
 						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
 					}
 					else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
-						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+						m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
 					}
 				}
 				if (m_eAttackType != MINION_ATTACK_TYPE::MELEE) {

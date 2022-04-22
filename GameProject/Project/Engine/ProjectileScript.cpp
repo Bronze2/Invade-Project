@@ -52,11 +52,14 @@ void CProjectileScript::Update()
 
 	Vec3 vPos = Transform()->GetWorldPos();
 	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+
 	if (!m_bRotate) {
 		Vec3 vRot = Transform()->GetLocalRot();
 		float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
 		float rotate = angle * 0.0174532925f;
 		vRot.y = rotate;
+
 		Transform()->SetLocalRot(vRot);
 		m_bRotate = true;
 	}
@@ -76,12 +79,6 @@ void CProjectileScript::Update()
 
 	Transform()->SetLocalPos(vLocalPos);
 
-
-
-
-
-//	Transform()->SetLocalScale(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].vScale);
-//	Transform()->SetLocalRot(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].qRot);
 }
 
 
