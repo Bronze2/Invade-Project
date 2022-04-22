@@ -14,8 +14,8 @@ private:
 
     bool m_bDynamicShadow;
 
-    bool m_bRender = true;
 
+    bool m_bRender = true;
 public:
     void SetRender(bool _bRender) { m_bRender = _bRender; }
     void SetMesh(Ptr<CMesh> _pMesh) { m_pMesh = _pMesh; }
