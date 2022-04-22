@@ -1,547 +1,281 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Device">
-      <UniqueIdentifier>{bf809976-7853-4cb0-92aa-b60be16c313e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header">
-      <UniqueIdentifier>{dec040a5-3102-43a7-91f1-c908fb4b12ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ShaderCode">
-      <UniqueIdentifier>{45867d64-9470-4e6e-8863-30818d0ce7cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{f6923fd3-e440-45be-853f-7922a6a25de0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{61162d44-c51b-4411-be13-f130bc7c81c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Scene">
-      <UniqueIdentifier>{28c98dd9-903c-4b13-9a97-29d460239598}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{35ae05de-edc1-4f80-987a-fa68660c0e97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject">
-      <UniqueIdentifier>{0efa0d4b-6bfc-46b1-b6d2-3d0b19a27463}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component">
-      <UniqueIdentifier>{5d402490-e40f-42d7-83b9-d8274c895a33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Animator">
-      <UniqueIdentifier>{54ce98a6-101a-41d9-b851-d7e868bb0dea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Camera">
-      <UniqueIdentifier>{20d7de10-ee24-43f1-9be5-fce87b9f06c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework">
-      <UniqueIdentifier>{3bee2439-bfcc-4a2f-aa21-97462ed2a451}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script">
-      <UniqueIdentifier>{50a670fa-2863-4635-be27-b7206f3a726b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Module">
-      <UniqueIdentifier>{4487a743-0350-4dce-81bb-7061327f4215}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\MRT">
-      <UniqueIdentifier>{ae0769df-3bcb-48f0-9c34-4a75e4f27ed5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\RES">
-      <UniqueIdentifier>{c97aec6a-3b20-45d7-ab1b-d01e6c373dbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Instancing">
-      <UniqueIdentifier>{bc079f43-8b96-44f0-be44-27a29624abd9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Default">
-      <UniqueIdentifier>{0bc2544b-47c9-4f64-8507-80922ee2f94d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Arrow">
-      <UniqueIdentifier>{e23e784b-bbc3-4157-af68-dc0db9c90e88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Minion">
-      <UniqueIdentifier>{06d43ace-832a-40b1-a124-cd7556d85abd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Player">
-      <UniqueIdentifier>{c17ff28d-7747-47ce-8fd2-5c294fc04b71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Cam">
-      <UniqueIdentifier>{b33d7921-deac-41d3-aabb-c646a3f7afd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Terrain">
-      <UniqueIdentifier>{84247d70-f99f-4f79-852d-78d0fbb6f0e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Animator\3D">
-      <UniqueIdentifier>{7c94d6d0-4ef2-414f-be91-114c27a8c22b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Spawn">
-      <UniqueIdentifier>{90ced85d-f274-470f-96ae-fc2aaa6dcd24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Tower">
-      <UniqueIdentifier>{0701d9c0-6639-42ef-8583-f95aefac6691}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Sensor">
-      <UniqueIdentifier>{d6a916a4-a938-493a-9a8b-3be43fe16ee0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Light">
-      <UniqueIdentifier>{6b0ebcf0-a6bb-472c-9669-d33e6ded7c0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Collider">
-      <UniqueIdentifier>{1c98d53d-3a61-456b-be8c-a495984ea60f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\MeshRender">
-      <UniqueIdentifier>{68a22e15-472a-4d34-9b1b-3aacf9e29af8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Particle">
-      <UniqueIdentifier>{c9006da7-4642-42a8-8120-cdc15a47cb29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Transform">
-      <UniqueIdentifier>{08e9816f-0cbe-47a4-8532-eb9d11093c42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject\Component\Script">
-      <UniqueIdentifier>{86aab668-6639-456c-969f-2543199c42d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Collision">
-      <UniqueIdentifier>{b34ddbce-8745-42e6-88f8-bae65878e756}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Event">
-      <UniqueIdentifier>{e9cc7da9-7d0c-42ad-9385-b2e97fdfe362}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Keyboard">
-      <UniqueIdentifier>{e5072ec1-319b-4441-a577-b083715739b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Path">
-      <UniqueIdentifier>{5fc22fc5-9e72-4632-9042-1bd0e8536552}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Time">
-      <UniqueIdentifier>{1ac94e75-0c2c-49a8-bc08-f74df12ca08c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Sensor">
-      <UniqueIdentifier>{cdb18eab-7434-441a-bd85-aeebf64c116b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Scene\Lobby">
-      <UniqueIdentifier>{40b9caba-7789-4c7f-a489-078fb5415d00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Scene\InGame">
-      <UniqueIdentifier>{8c79b0b2-9591-460f-8529-ab1cde4b5e60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\Projectile">
-      <UniqueIdentifier>{90994765-9fda-4b87-bcb6-240f06865aba}</UniqueIdentifier>
-    <Filter Include="Script\Bow">
-      <UniqueIdentifier>{2758a0a7-ec9b-4e3a-b6ce-d909e3a02d54}</UniqueIdentifier>
-    </Filter>
+    <FxCompile Include="particle.fx" />
+    <FxCompile Include="std.fx" />
+    <FxCompile Include="std3d.fx" />
+    <FxCompile Include="terrain.fx" />
+    <FxCompile Include="tool.fx" />
+    <FxCompile Include="value.fx" />
+    <FxCompile Include="animation.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="BillBoard.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="compute.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>default</Filter>
+    </FxCompile>
+    <FxCompile Include="light.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="Device.h">
-      <Filter>Device</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>Device</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Default</Filter>
-    </ClInclude>
-    <ClInclude Include="global.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="struct.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="func.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Ptr.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneMgr.h">
-      <Filter>Manager\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Manager\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Manager\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderMgr.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Frustum.h">
-      <Filter>GameObject\Component\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>GameObject\Component\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="GameFramework.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="MonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="extern.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Module</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshData.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="MRT.h">
-      <Filter>Rendering\MRT</Filter>
-    </ClInclude>
-    <ClInclude Include="ResMgr.h">
-      <Filter>Manager\RES</Filter>
-    </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>Device</Filter>
-    </ClInclude>
-    <ClInclude Include="InstancingMgr.h">
-      <Filter>Manager\Instancing</Filter>
-    </ClInclude>
-    <ClInclude Include="InstancingBuffer.h">
-      <Filter>Manager\Instancing</Filter>
-    </ClInclude>
-    <ClInclude Include="ArrowScript.h">
-      <Filter>Script\Arrow</Filter>
-    </ClInclude>
-    <ClInclude Include="MinionScript.h">
-      <Filter>Script\Minion</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScript.h">
-      <Filter>Script\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraScript.h">
-      <Filter>Script\Cam</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>GameObject\Component\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator3D.h">
-      <Filter>GameObject\Component\Animator\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation3D.h">
-      <Filter>GameObject\Component\Animator\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="SpawnScript.h">
-      <Filter>Script\Spawn</Filter>
-    </ClInclude>
-    <ClInclude Include="TowerScript.h">
-      <Filter>Script\Tower</Filter>
-    </ClInclude>
-    <ClInclude Include="Sensor.h">
-      <Filter>GameObject\Component\Sensor</Filter>
-    </ClInclude>
-    <ClInclude Include="Light3D.h">
-      <Filter>GameObject\Component\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Light2D.h">
-      <Filter>GameObject\Component\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider2D.h">
-      <Filter>GameObject\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider3D.h">
-      <Filter>GameObject\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshRender.h">
-      <Filter>GameObject\Component\MeshRender</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>GameObject\Component\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>GameObject\Component\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Script.h">
-      <Filter>GameObject\Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionMgr.h">
-      <Filter>Manager\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="EventMgr.h">
-      <Filter>Manager\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyMgr.h">
-      <Filter>Manager\Keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="PathMgr.h">
-      <Filter>Manager\Path</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeMgr.h">
-      <Filter>Manager\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="SensorMgr.h">
-      <Filter>Manager\Sensor</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameScene.h">
-      <Filter>Manager\Scene\InGame</Filter>
-    </ClInclude>
-    <ClInclude Include="LobbyScene.h">
-      <Filter>Manager\Scene\Lobby</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectileScript.h">
-      <Filter>Script\Projectile</Filter>
-    <ClInclude Include="BowScript.h">
+    <ClCompile Include="InGameScene.cpp" />
+    <ClCompile Include="LobbyScene.cpp" />
+    <ClCompile Include="MinionScript.cpp" />
+    <ClCompile Include="InstancingBuffer.cpp" />
+    <ClCompile Include="GameFramework.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InstancingMgr.cpp" />
+    <ClCompile Include="KeyMgr.cpp" />
+    <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="Light2D.cpp" />
+    <ClCompile Include="Light3D.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshData.cpp" />
+    <ClCompile Include="MeshRender.cpp" />
+    <ClCompile Include="MonsterScript.cpp" />
+    <ClCompile Include="MRT.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PathMgr.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="PlayerScript.cpp" />
+    <ClCompile Include="ProjectileScript.cpp" />
+    <ClCompile Include="RenderMgr.cpp" />
+    <ClCompile Include="RenderMgrInit.cpp" />
+    <ClCompile Include="ResMgr.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneMgr.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="SensorMgr.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpawnScript.cpp" />
+    <ClCompile Include="StructuredBuffer.cpp" />
+    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TimeMgr.cpp" />
+    <ClCompile Include="TowerScript.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="BowScript.cpp">
       <Filter>Script\Bow</Filter>
-    </ClInclude>
-    <ClInclude Include="EmptyPlayerScript.h">
-      <Filter>Script\Player</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Device.cpp">
-      <Filter>Device</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleMath.cpp">
-      <Filter>Default</Filter>
-    </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>Device</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Default</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Default</Filter>
-    </ClCompile>
-    <ClCompile Include="desc.cpp">
-      <Filter>Default</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneMgr.cpp">
-      <Filter>Manager\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Manager\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Manager\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderMgr.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderMgrInit.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>GameObject\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Frustum.cpp">
-      <Filter>GameObject\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="GameFramework.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="func.cpp">
-      <Filter>Default</Filter>
-    </ClCompile>
-    <ClCompile Include="MonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="FBXLoader.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshData.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="MRT.cpp">
-      <Filter>Rendering\MRT</Filter>
-    </ClCompile>
-    <ClCompile Include="ResMgr.cpp">
-      <Filter>Manager\RES</Filter>
-    </ClCompile>
-    <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>Device</Filter>
-    </ClCompile>
-    <ClCompile Include="InstancingBuffer.cpp">
-      <Filter>Manager\Instancing</Filter>
-    </ClCompile>
-    <ClCompile Include="InstancingMgr.cpp">
-      <Filter>Manager\Instancing</Filter>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Script\Camera</Filter>
     </ClCompile>
     <ClCompile Include="ArrowScript.cpp">
       <Filter>Script\Arrow</Filter>
     </ClCompile>
-    <ClCompile Include="MinionScript.cpp">
-      <Filter>Script\Minion</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScript.cpp">
-      <Filter>Script\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraScript.cpp">
-      <Filter>Script\Cam</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>GameObject\Component\Terrain</Filter>
+    <ClCompile Include="Animation3D.cpp">
+      <Filter>Object\Component\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Animator3D.cpp">
-      <Filter>GameObject\Component\Animator\3D</Filter>
+      <Filter>Object\Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Animation3D.cpp">
-      <Filter>GameObject\Component\Animator\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="SpawnScript.cpp">
-      <Filter>Script\Spawn</Filter>
-    </ClCompile>
-    <ClCompile Include="TowerScript.cpp">
-      <Filter>Script\Tower</Filter>
-    </ClCompile>
-    <ClCompile Include="Sensor.cpp">
-      <Filter>GameObject\Component\Sensor</Filter>
-    </ClCompile>
-    <ClCompile Include="Light2D.cpp">
-      <Filter>GameObject\Component\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Light3D.cpp">
-      <Filter>GameObject\Component\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider2D.cpp">
-      <Filter>GameObject\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider3D.cpp">
-      <Filter>GameObject\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshRender.cpp">
-      <Filter>GameObject\Component\MeshRender</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>GameObject\Component\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>GameObject\Component\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>GameObject\Component\Script</Filter>
+    <ClCompile Include="Component.cpp">
+      <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="CollisionMgr.cpp">
-      <Filter>Manager\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="EventMgr.cpp">
-      <Filter>Manager\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyMgr.cpp">
-      <Filter>Manager\Keyboard</Filter>
-    </ClCompile>
-    <ClCompile Include="PathMgr.cpp">
-      <Filter>Manager\Path</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeMgr.cpp">
-      <Filter>Manager\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="SensorMgr.cpp">
-      <Filter>Manager\Sensor</Filter>
-    </ClCompile>
-    <ClCompile Include="InGameScene.cpp">
-      <Filter>Manager\Scene\InGame</Filter>
-    </ClCompile>
-    <ClCompile Include="LobbyScene.cpp">
-      <Filter>Manager\Scene\Lobby</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectileScript.cpp">
-      <Filter>Script\Projectile</Filter>
-    <ClCompile Include="BowScript.cpp">
-      <Filter>Script\Bow</Filter>
+      <Filter>Mgr</Filter>
     </ClCompile>
     <ClCompile Include="EmptyPlayerScript.cpp">
-      <Filter>Script\Player</Filter>
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="desc.cpp">
+      <Filter>default</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>default</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMgr.cpp">
+      <Filter>Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Load</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Object\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Object\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2D.cpp">
+      <Filter>Object\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3D.cpp">
+      <Filter>Object\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>default</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SimpleMath.inl">
-      <Filter>Default</Filter>
-    </None>
+    <ClInclude Include="InGameScene.h" />
+    <ClInclude Include="LobbyScene.h" />
+    <ClInclude Include="MinionScript.h" />
+    <ClInclude Include="InstancingBuffer.h" />
+    <ClInclude Include="GameFramework.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="InstancingMgr.h" />
+    <ClInclude Include="KeyMgr.h" />
+    <ClInclude Include="Layer.h" />
+    <ClInclude Include="Light2D.h" />
+    <ClInclude Include="Light3D.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshData.h" />
+    <ClInclude Include="MeshRender.h" />
+    <ClInclude Include="MonsterScript.h" />
+    <ClInclude Include="MRT.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PathMgr.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerScript.h" />
+    <ClInclude Include="ProjectileScript.h" />
+    <ClInclude Include="Ptr.h" />
+    <ClInclude Include="RenderMgr.h" />
+    <ClInclude Include="ResMgr.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneMgr.h" />
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="Sensor.h" />
+    <ClInclude Include="SensorMgr.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="SpawnScript.h" />
+    <ClInclude Include="struct.h" />
+    <ClInclude Include="StructuredBuffer.h" />
+    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TimeMgr.h" />
+    <ClInclude Include="TowerScript.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="BowScript.h">
+      <Filter>Script\Bow</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Script\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowScript.h">
+      <Filter>Script\Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator3D.h">
+      <Filter>Object\Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation3D.h">
+      <Filter>Object\Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMgr.h">
+      <Filter>Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyPlayerScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMgr.h">
+      <Filter>Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Load</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Object\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Object\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider3D.h">
+      <Filter>Object\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider2D.h">
+      <Filter>Object\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
+      <Filter>default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="func.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="std3d.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="value.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="tool.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="light.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="std.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="compute.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="particle.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="animation.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="BillBoard.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="terrain.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
+    <None Include="SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FX">
+      <UniqueIdentifier>{1458513a-c00d-4226-beb2-eb99ee79e57a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{9c5b4dcc-c3db-42aa-a529-19c95f021a5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{be8df1bd-53ce-43e1-af05-ff4d304b5ce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component">
+      <UniqueIdentifier>{5b6177b4-c188-4c3d-a2c4-2bf1afb92162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Bow">
+      <UniqueIdentifier>{e70d95bc-6abe-4511-acf9-6973395a2daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Camera">
+      <UniqueIdentifier>{8543576b-3cf3-401e-b405-32421fb6d0af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Arrow">
+      <UniqueIdentifier>{b7a1d4df-0311-479c-8193-51c61d76f728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component\Animation">
+      <UniqueIdentifier>{676d1a98-780b-4660-b2fa-08fcbc71b648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mgr">
+      <UniqueIdentifier>{fbb07d7c-3e44-4942-acba-ec75ea315925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{d94c67ff-7187-4d1b-9c5d-14ac7b9e5566}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="default">
+      <UniqueIdentifier>{35277b6c-d868-4da3-88a8-4b9f9c6f4add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Load">
+      <UniqueIdentifier>{ec4340cc-8697-48c3-a9f9-2509a66819f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component\Camera">
+      <UniqueIdentifier>{5cf43b3a-0bbe-4231-b190-f86fa0731c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component\Collider">
+      <UniqueIdentifier>{3c2caf51-fe8a-42d8-a486-96ee23d6b5e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
