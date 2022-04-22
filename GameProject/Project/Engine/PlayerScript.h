@@ -30,6 +30,7 @@ private:
     Vec3 m_LerpPos;
 
     bool isMain;
+
 public:
     void m_FAnimation();
     void Init();

@@ -108,7 +108,7 @@ void do_timer()
 {
 	while (true)
 	{
-		Timer.Update();
+		//Timer.Update();
 		//cout << Timer.GetDeltaTime() << endl;
 		this_thread::sleep_for(5ms); //Sleep(1);
 		while (true)
@@ -395,12 +395,14 @@ void process_packet(int user_id, char* buf)
 		g_clients[user_id].dir.y = packet->dir.y;
 		g_clients[user_id].dir.z = packet->dir.z;
 		g_clients[user_id].animState = packet->state;
-		if (!g_clients[user_id].isMove) {
-			add_timer(user_id, OP_MOVE, 50);
-			do_move(user_id, packet->direction);
-			g_clients[user_id].isMove = true;
-			//cout << " User_id [" << user_id << "]. MovePacket" << endl;
-		}
+		//if (!g_clients[user_id].isMove) {
+		//	add_timer(user_id, OP_MOVE, 50);
+		//	do_move(user_id, packet->direction);
+		//	g_clients[user_id].isMove = true;
+		//	//cout << " User_id [" << user_id << "]. MovePacket" << endl;
+		//}
+		do_move(user_id, packet->direction);
+
 		
 	}
 		break;

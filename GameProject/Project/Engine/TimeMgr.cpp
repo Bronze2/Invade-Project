@@ -14,6 +14,26 @@ void CTimeMgr::Init()
 {
 	QueryPerformanceFrequency(&m_llFrequency);
 	QueryPerformanceCounter(&m_llOldCount);
+	QueryPerformanceCounter(&m_playerOldMoveCount);
+}
+
+bool CTimeMgr::GetPlayerMoveFPS()
+{
+	//SetPlayerCurMoveCount();
+	//float elapsed = m_playerCurMoveCount.QuadPart - m_playerOldMoveCount.QuadPart;
+	//float duringtime = (double)elapsed / (double)m_llFrequency.QuadPart;
+	//duringtime *= 1000;	//ms·Î º¯È¯
+	////cout << duringtime << endl;
+	//if (duringtime > 100) {
+	//	SetPlayerOldMoveCount();
+	//	return true;
+	//}
+	//else return false;
+	if (m_fMoveDuringTime > 100) {
+		SetPlayerOldMoveCount();
+		return true;
+	}
+	else return false;
 }
 
 void CTimeMgr::Update()
@@ -21,6 +41,11 @@ void CTimeMgr::Update()
 	QueryPerformanceCounter(&m_llCurCount);
 
 	m_fDeltaTime = (float)(m_llCurCount.QuadPart - m_llOldCount.QuadPart) / (float)m_llFrequency.QuadPart;
+	float elapsed = (float)(m_llCurCount.QuadPart - m_playerOldMoveCount.QuadPart) / (float)m_llFrequency.QuadPart;
+
+	m_fMoveDuringTime = elapsed * 1000;
+
+
 	m_llOldCount = m_llCurCount;
 	m_fAccTime += m_fDeltaTime;
 	if (m_bFreeze) {
