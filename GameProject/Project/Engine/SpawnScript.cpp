@@ -145,7 +145,7 @@ void CSpawnScript::Update()
 							if (m_uiSpawnInterval == SPAWNINTEVAL) {
 								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 30, 49);
-								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 7);
+								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 						

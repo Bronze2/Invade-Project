@@ -136,18 +136,6 @@ void CPlayerScript::m_FAnimation()
 				}
 				
 			}
-
-//#ifdef _ANIMATION_TEST
-//			if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::WALK);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pCurAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::WALK, 0.f);
-//				GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-//			}
-//#else
-		
-//#endif
 		}
 		break;
 		case PLAYER_STATE::JUMP:
@@ -168,6 +156,9 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+					}
 				}
 			}
 		}
@@ -177,7 +168,7 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
 						m_eState = PLAYER_STATE::IDLE;
 						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
 					}
@@ -190,7 +181,6 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
-
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
 						m_eState = PLAYER_STATE::IDLE;
 					}
@@ -251,17 +241,6 @@ void CPlayerScript::Awake()
 
 	m_fMoveSpeed = 300.f;
 
-#ifdef CAMERA_TEST
-	m_fTurnDegree = 0.f;
-	m_fTurnSpeed = 30.f;
-	m_bTurnBack = false;
-
-	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Camera")->GetParentObj()[0]);
-	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
-
-	pCameraScript->SetBackRestorePos(Transform()->GetWorldPos());
-#endif
-
 }
 
 void CPlayerScript::Update()
@@ -295,94 +274,26 @@ void CPlayerScript::Update()
 		int a = 0;
 	}
 
-#ifdef EMPTY_CAMERA
-	Vec3 vCameraFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	Vec3 vBack = -Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	Vec3 vLeft = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-	Vec3 vRight = -Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-
-	if (KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D) || KEY_NONE(KEY_TYPE::KEY_LBTN))
-	{
-		float fRotate = 0.f;
-
-		if (KEY_TAB(KEY_TYPE::KEY_W)) {
-			fRotate = acos(Dot(vCameraFront, vFront));
-		}
-		if (KEY_TAB(KEY_TYPE::KEY_S)) {
-			fRotate = acos(Dot(vCameraFront, vBack));
-		}
-
-		if (KEY_TAB(KEY_TYPE::KEY_A)) {
-			fRotate = acos(Dot(vCameraFront, vLeft));
-		}
-
-		if (KEY_TAB(KEY_TYPE::KEY_D)) {
-			fRotate = acos(Dot(vCameraFront, vRight));
-		}
-
-		vRot.y += fRotate;
-	}
-#endif
-
-	Vec3 vCameraFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	Vec3 vCameraRight = pCamera->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-	Vec3 vCameraUp = pCamera->Transform()->GetLocalDir(DIR_TYPE::UP);
-	Vec3 vCameraRot = pCamera->Transform()->GetLocalRot();
-	//Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	Vec3 vCameraDir = vCameraFront * vCameraRot;
-	//if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-	//	//Transform()->SetLocalDir(DIR_TYPE::FRONT, vCameraFront);
-
-
-	//	//float fDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-	//	//vRot.y = XMConvertToRadians(fDegree);
-
-	//	if (KEY_TAB(KEY_TYPE::KEY_W)) {
-	//		vRot.y = 0.f;
-	//	}
-	//	if (KEY_TAB(KEY_TYPE::KEY_S)) {
-	//		vRot.y = XMConvertToRadians(180.f);
-	//	}
-	//	if (KEY_TAB(KEY_TYPE::KEY_A)) {
-	//		vRot.y = XMConvertToRadians(-90.f);
-	//	}
-	//	if (KEY_TAB(KEY_TYPE::KEY_D)) {
-	//		vRot.y = XMConvertToRadians(90.f);
-	//	}
-
-	//	//float fRotate = acos(Dot(vCameraFront, vFront));
-	//	//float fDegree = XMConvertToDegrees(fRotate);
-	//	//vRot.y += fRotate;
-	//}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		//vFront *= XMConvertToRadians(fDegree);
 
-		//Vec3 vFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
-		if (KEY_HOLD(KEY_TYPE::KEY_W)) {		
-			vPos += vFront * m_fMoveSpeed * DT;
+		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 			vRot.y = 0.f;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			//Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-			vPos += vFront * m_fMoveSpeed * DT;
 			vRot.y = XMConvertToRadians(180.f);
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			//Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-			vPos += vFront * m_fMoveSpeed * DT;
 			vRot.y = XMConvertToRadians(-90.f);
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			//Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-			vPos += vFront * m_fMoveSpeed * DT;
 			vRot.y = XMConvertToRadians(90.f);
 		}
+
+		vPos += vFront * m_fMoveSpeed * DT;
 		vPos.y = 0.f;
 		vRot.y += XMConvertToRadians(m_fRotateDegree);
 		m_FColCheck(vPos3, vPos);
@@ -391,19 +302,13 @@ void CPlayerScript::Update()
 
 	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) {
 		m_eState = PLAYER_STATE::IDLE;
-#ifdef CAMERA_TEST
-		m_fTurnDegree = 0.f;
-		//pCameraScript->SetBackMode(false);
-#endif
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
+		//vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
 		m_fArrowSpeed = 200.f;
 		m_eState = PLAYER_STATE::ATTACK_READY;
-		Vec3 vCameraFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
 	}
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed += 1000.f*DT;

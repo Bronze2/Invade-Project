@@ -57,6 +57,7 @@ void CAnimator3D::UpdateData_Inst(CStructuredBuffer* _pBoneBuffer, UINT _iRow)
 		UINT iBoneCount = (UINT)m_pVecBones->size();
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_0, &iBoneCount);
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_1, &m_iFrameIdx);
+		m_pBoneMtrl->SetData(SHADER_PARAM::INT_2, &m_iNextFrameIdx);
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &_iRow);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
 
@@ -106,7 +107,7 @@ void CAnimator3D::FinalUpdate()
 		else {
 			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
 			{
-				m_vecClipUpdateTime[m_iCurClip] = m_pVecClip->at(m_iCurClip).dTimeLength; //0.f;
+				m_vecClipUpdateTime[m_iCurClip] = m_pVecClip->at(m_iCurClip).dTimeLength;
 			}
 			if (m_vecClipUpdateTime[m_iNextClip] >= m_pVecClip->at(m_iNextClip).dTimeLength)
 			{
@@ -137,14 +138,14 @@ void CAnimator3D::FinalUpdate()
 	}
 	else
 	{
-		m_vecClipUpdateTime[m_iCurClip] += (DT/m_fAnimationSpeed);
+		m_vecClipUpdateTime[m_iCurClip] += (DT * m_fAnimationSpeed);
 		if (nullptr == m_pAnimation) {
 			m_dCurTime = 0.f;
 			// ���� ������� Clip �� �ð��� �����Ѵ�.
 
 			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
 			{
-				m_vecClipUpdateTime[m_iCurClip] = 0.f;
+				m_vecClipUpdateTime[m_iCurClip] = m_pVecClip->at(m_iCurClip).dTimeLength;
 			}
 
 			m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];

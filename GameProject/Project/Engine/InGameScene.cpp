@@ -121,7 +121,7 @@ void CInGameScene::Init()
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
 	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
 	pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // 점프 후 팔벌리기 81, 125
-	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 160);      ///145 167
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
 	pNewAnimation->InsertAnimClip(L"DIE", 240, 269);      // 누워서 끝 240, 261
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);

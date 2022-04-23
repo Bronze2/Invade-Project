@@ -89,6 +89,12 @@ void CBowScript::m_FAnimation()
 		break;
 		case BOW_STATE::ATTACK_READY:
 		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iEndFrame) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+				}
+			}
 		}
 		break;
 		case BOW_STATE::ATTACK:
