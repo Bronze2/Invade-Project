@@ -211,17 +211,24 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
+#ifndef ARROW_TEST
 	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
 	CScene* pCurScene=CSceneMgr::GetInst()->GetCurScene();
+	CGameObject* pBow = GetObj()->GetChild()[0];
 	for (int i = 0; i < 20; ++i) {
 		m_pArrow[i] = new CGameObject;
 		m_pArrow[i]->SetName(L"Arrow");
 	
 	
 		m_pArrow[i]->AddComponent(new CTransform());
-		Vec3 vPos = m_pArrow[i]->Transform()->GetLocalPos();
-		m_pArrow[i]->Transform()->SetLocalPos(vPos);
-		m_pArrow[i]->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
+		//Vec3 vPos = m_pArrow[i]->Transform()->GetLocalPos();
+		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 40.f, 0.f));
+		m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));			// 자식 아닐 땐 (80.f, 0.f, 1.f)
+		m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
+
+		//m_pArrow[i]->Transform()->SetLocalPos(Vec3(-10.f, 75.f, -140.f));
+		//m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));
+		//m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
 
 		m_pArrow[i]->AddComponent(new CMeshRender);
 		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
@@ -232,15 +239,18 @@ void CPlayerScript::Awake()
 		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
 
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
-		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
+		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj()->GetChild()[0]);
+		pCurScene->FindLayer(L"Blue")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 	}
 
 	m_iCurArrow = 0;
 	m_iPower = 1;
+	m_bMaxCharged = false;
+#endif
 
 	m_fMoveSpeed = 300.f;
-
 }
 
 void CPlayerScript::Update()
@@ -255,6 +265,7 @@ void CPlayerScript::Update()
 	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+	CGameObject* pBow = GetObj()->GetChild()[0];
 
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
@@ -300,134 +311,226 @@ void CPlayerScript::Update()
 		m_eState = PLAYER_STATE::WALK;
 	}
 
-	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) {
+	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::IDLE;
 	}
+	
+#ifndef ARROW_TEST
+	Vec3 vCurArrowPos = vPos + m_pArrow[m_iCurArrow]->Transform()->GetLocalPos();
+	Vec3 vCameraLocalFront = pCamera->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	Vec3 vEmptyObjLocalFront = pEmptyObject->Transform()->GetLocalDir(DIR_TYPE::UP);
+
+#endif
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		//vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
+		// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
+		vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
+
+#ifndef ARROW_TEST
 		m_fArrowSpeed = 200.f;
+		m_fArrowCharge = 0.f;
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
+		m_pArrow[m_iCurArrow]->SetActive(true);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetRestorePos(m_pArrow[m_iCurArrow]->Transform()->GetLocalPos());
+#endif
 		m_eState = PLAYER_STATE::ATTACK_READY;
 	}
+#ifndef ARROW_TEST
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 1000.f*DT;
+		m_fArrowSpeed += 3000.f * DT;
 		if (m_fArrowSpeed > 2000.f) {
 			m_fArrowSpeed = 2000.f;
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetBowWorldMat(pBow->Transform()->GetWorldMat());
 	}
+#endif
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::ATTACK;
 
-		Vec3 vPos4 = Transform()->GetLocalPos();
-		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vRestorePos = vPos4;
-			m_pArrow[m_iCurArrow]->SetActive(true);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
-		vRight = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
+#ifndef ARROW_TEST
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
+		//Vec3 vPos4 = Transform()->GetLocalPos();
+		//Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		//Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
+
+		Vec3 vDestPos = vPos + Transform()->GetWorldDir(DIR_TYPE::FRONT) * 300.f;
+		//vDestPos.y = 0.f;
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDestPos(vDestPos);
+
+		//Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
+
+		//float fDegree = pCameraScript->GetDegree();
+		//float fDegree2 = fDegree;
+
+		//fDegree *= -1.f;
 
 
-		Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
+		//float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
 
-		CCameraScript* p=dynamic_cast<CCameraScript*>(pCamera->GetScripts()[0]);
-		float fDegree= p->GetDegree();
-		float fDegree2 = fDegree;
-
-		fDegree *= -1.f;
-	
-	
-		float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
-
-		Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x+xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70+yValue, GetObj()->Transform()->GetLocalPos().z+xzValue.y);
-
-		
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
-		fDegree *= -1.f;
-		
+		//Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x + xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70 + yValue, GetObj()->Transform()->GetLocalPos().z + xzValue.y);
 
 
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
-		if (m_iCurArrow == 0) {
-			int a = 0;
-		}
-		
-		Vec3 vFront2 = vArrowPos;
-		Vec3 vRight2 = Vec3(1, 0, 0);
-		auto k = XMLoadFloat3(&vRight2);
-		auto m = XMLoadFloat4x4(&m_pArrow[m_iCurArrow]->Transform()->GetWorldMat());
-		auto r = XMVector3TransformNormal(k, m);
-		XMFLOAT3 result;
-		XMStoreFloat3(&result, XMVector3Normalize(r));
-	
-		float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
-	
-	
-		vArrowPos.x += result.x;
-		vArrowPos.z += result.z;
-		float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
-		float xValue2 = xValue + flength;
-		float fyValue2 = yValue * xValue2 / xValue;
-	
-		float SubeyValue2Value = fyValue2 - yValue;
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeen(SubeyValue2Value);
+		//m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
+		//fDegree *= -1.f;
 
-		vArrowPos.y += SubeyValue2Value;
-		Vec3 vTarget = vArrowPos - vFront2;
-	
-		vTarget.Normalize();
-		float vDotValue = Dot(vTarget, result);
-		Vec3 vCrossValue;
-		if (vTarget.y > 0.f) {
-			vCrossValue = Cross(vTarget, result);
-		}
-		else {
-			vCrossValue = Cross(result, vTarget);
-		}
+		//float fArrowRotYDegree = XMConvertToDegrees(vRot.y) + 90.f;
 
-		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-			float value= XMConvertToRadians(fDegree2);
+		//m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(vRot.x, XMConvertToRadians(fArrowRotYDegree), vRot.z));
+		//if (m_iCurArrow == 0) {
+		//	int a = 0;
+		//}
 
-			if (!m_bCheckDegree) {
-				value *= -1.f;
-			}
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-			m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
-	
-		}
-		
+		//Vec3 vFront2 = vArrowPos;
+		//// Vec3 vRight2 = Vec3(1, 0, 0);
+		//Vec3 vRight2 = vArrowDir;
+		//auto k = XMLoadFloat3(&vRight2);
+		//auto m = XMLoadFloat4x4(&m_pArrow[m_iCurArrow]->Transform()->GetWorldMat());
+		//auto r = XMVector3TransformNormal(k, m);
+		//XMFLOAT3 result;
+		//XMStoreFloat3(&result, XMVector3Normalize(r));
+
+		//float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
+
+
+		//vArrowPos.x += result.x;
+		//vArrowPos.z += result.z;
+		//float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
+		//float xValue2 = xValue + flength;
+		//float fyValue2 = yValue * xValue2 / xValue;
+
+		//float SubeyValue2Value = fyValue2 - yValue;
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeed(SubeyValue2Value);
+
+		//vArrowPos.y += SubeyValue2Value;
+		//Vec3 vTarget = vArrowPos - vFront2;
+
+		//vTarget.Normalize();
+		//float vDotValue = Dot(vTarget, result);
+		//Vec3 vCrossValue;
+		//if (vTarget.y > 0.f) {
+		//	vCrossValue = Cross(vTarget, result);
+		//}
+		//else {
+		//	vCrossValue = Cross(result, vTarget);
+		//}
+
+		//if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
+		//	float value = XMConvertToRadians(fDegree2);
+
+		//	if (!m_bCheckDegree) {
+		//		value *= -1.f;
+		//	}
+		//	XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
+		//	m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
+
+		//}
+
 		m_iCurArrow++;
 		m_iPower = 1;
-		if (m_iCurArrow > 19) { 
+		if (m_iCurArrow > 19) {
 			m_iCurArrow = 0;
-		
-		}
 
+		}
+#else
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
+
+		//Vec3 vPos4 = Transform()->GetLocalPos();
+		//Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		//Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		//m_vRestorePos = vPos4;
+		////m_pArrow[m_iCurArrow]->SetActive(true);
+		////vRight = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		//Vec3 vArrowDir = pEmptyObject->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vArrowDir);
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
+
+
+		//Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
+
+		//float fDegree = pCameraScript->GetDegree();
+		//float fDegree2 = fDegree;
+
+		//fDegree *= -1.f;
+
+
+		//float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
+
+		//Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x + xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70 + yValue, GetObj()->Transform()->GetLocalPos().z + xzValue.y);
+
+
+		//m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
+		//fDegree *= -1.f;
+
+		//float fArrowRotYDegree = XMConvertToDegrees(vRot.y) + 90.f;
+
+		//m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(vRot.x, XMConvertToRadians(fArrowRotYDegree), vRot.z));
+		//if (m_iCurArrow == 0) {
+		//	int a = 0;
+		//}
+
+		//Vec3 vFront2 = vArrowPos;
+		//// Vec3 vRight2 = Vec3(1, 0, 0);
+		//Vec3 vRight2 = vArrowDir;
+		//auto k = XMLoadFloat3(&vRight2);
+		//auto m = XMLoadFloat4x4(&m_pArrow[m_iCurArrow]->Transform()->GetWorldMat());
+		//auto r = XMVector3TransformNormal(k, m);
+		//XMFLOAT3 result;
+		//XMStoreFloat3(&result, XMVector3Normalize(r));
+
+		//float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
+
+
+		//vArrowPos.x += result.x;
+		//vArrowPos.z += result.z;
+		//float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
+		//float xValue2 = xValue + flength;
+		//float fyValue2 = yValue * xValue2 / xValue;
+
+		//float SubeyValue2Value = fyValue2 - yValue;
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeed(SubeyValue2Value);
+
+		//vArrowPos.y += SubeyValue2Value;
+		//Vec3 vTarget = vArrowPos - vFront2;
+
+		//vTarget.Normalize();
+		//float vDotValue = Dot(vTarget, result);
+		//Vec3 vCrossValue;
+		//if (vTarget.y > 0.f) {
+		//	vCrossValue = Cross(vTarget, result);
+		//}
+		//else {
+		//	vCrossValue = Cross(result, vTarget);
+		//}
+
+		//if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
+		//	float value = XMConvertToRadians(fDegree2);
+
+		//	if (!m_bCheckDegree) {
+		//		value *= -1.f;
+		//	}
+		//	XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
+		//	m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
+
+		//}
+
+		//m_iCurArrow++;
+		//m_iPower = 1;
+		//if (m_iCurArrow > 19) {
+		//	m_iCurArrow = 0;
+
+		//}
+#endif
 	}
 
-	/*Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-	if (!m_bCheckStartMousePoint) {
-		m_bCheckStartMousePoint = true;
-	}
-	else {
-		if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-			vRot.y += vDrag.x * DT * 1.f;
-			float fDegree = XMConvertToDegrees(vRot.y);
-			if (fDegree < -360) {
-				fDegree += 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
-			else if (fDegree > 360) {
-				fDegree -= 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
-		}
-	}*/
 	if (m_bMoveCheck) {
 		vPos = vPos2;
 		m_bMoveCheck = false;
@@ -503,7 +606,7 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 
 }
 
-CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
+CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false)
 , m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f)
 {
 }

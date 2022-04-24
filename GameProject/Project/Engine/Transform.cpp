@@ -91,6 +91,7 @@ void CTransform::FinalUpdate()
 
 	// 로컬 x (크기 x 회전 x 이동)(월드행렬)
 	m_matWorld = matScale * matRot*rotMat * matTranslation;
+	
 	if (m_bNotParent) {
 		m_matWorld *= m_matObjectWorldMatrix;
 		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)

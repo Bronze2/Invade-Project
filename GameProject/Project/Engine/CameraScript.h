@@ -18,9 +18,8 @@ private:
     Vec2 m_vStartMousePoint;
     Vec3 m_vZoomRestoreFront;
     Vec3 m_vRestorePos;
-
-    bool m_bBackMode;
-    Vec3 m_vBackRestorePos;
+    
+    Vec3 m_vShootPos;
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
@@ -34,11 +33,10 @@ public:
 
     void SetStartMousePoint(const Vec2& _vStartMousePoint) { m_vStartMousePoint = _vStartMousePoint; }
 
-    Vec3 CameraShake(Vec3 _vPos, float _fDamageTime, float _fDamageSize);
-    Vec3 CameraZoom(Vec3 _vPos);
+    Vec3& CameraShake(Vec3 _vPos, float _fDamageTime, float _fDamageSize);
+    Vec3& CameraZoom(Vec3 _vPos);
 
-    void SetBackMode(bool _bTrue) { m_bBackMode = _bTrue; }
-    void SetBackRestorePos(Vec3 _vPos) { m_vBackRestorePos = _vPos; }
+    Vec3& GetShootPos() { return m_vShootPos; }
 
     void Init();
 

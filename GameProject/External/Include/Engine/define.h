@@ -2,6 +2,7 @@
 #define PI 3.14152
 #define GRAVITY 9.8
 #define INSTANCING_COUNT 2 // 인스턴싱 제한조건( n 개 이상 중복 시 인스턴싱으로 전환)
+
 #define SINGLE(type) private: type(); ~type();\
 public:\
 static type* GetInst()\
@@ -37,10 +38,7 @@ static type* GetInst()\
 
 #define MAX_LAYER 32
 
-
-#define _ANIMATION_TEST
-//#define CAMERA_TEST
-//#define EMPTY_CAMERA
+#define ARROW_TEST
 
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;

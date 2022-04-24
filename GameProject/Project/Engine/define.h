@@ -38,10 +38,7 @@ static type* GetInst()\
 
 #define MAX_LAYER 32
 
-
-#define _ANIMATION_TEST
-//#define CAMERA_TEST
-//#define EMPTY_CAMERA
+#define ARROW_TEST
 
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;

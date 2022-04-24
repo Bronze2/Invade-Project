@@ -133,11 +133,11 @@ void CInGameScene::Init()
 	FindLayer(L"Blue")->AddGameObject(pObject, false);
 
 	CGameObject* pEmptyPlayer = new CGameObject;
-	pEmptyPlayer->AddComponent(new CTransform);
+	pEmptyPlayer->AddComponent(new CTransform);		
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -30));
+	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
 
 	pEmptyPlayer->AddChild(pMainCam);
@@ -156,7 +156,7 @@ void CInGameScene::Init()
 	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
-	pBow->Transform()->SetLocalScale(Vec3(2.4, 1.2f, 2.4));
+	pBow->Transform()->SetLocalScale(Vec3(2.4f, 1.2f, 2.4f));
 	pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->MeshRender()->SetDynamicShadow(true);
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
@@ -921,11 +921,6 @@ void CInGameScene::Init()
 
 
 	}
-
-
-
-
-
 
 
 

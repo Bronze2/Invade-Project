@@ -24,6 +24,23 @@ private:
     BOW_STATE m_eState;
     BOW_STATE m_ePrevState;
 
+#ifdef ARROW_TEST
+    CGameObject* m_pArrow[20];
+    UINT m_iCurArrow;
+    Ptr<CTexture>pBlackTex;
+    int m_iPower;
+    ELEMENT_TYPE m_iType;
+    float m_fArrowSpeed;
+
+    float m_fArcherLocation;
+
+    Vec3 m_vArrowRestorePos;
+
+    bool m_bMaxCharged;
+    bool m_bCheckDegree;
+#endif
+
+
 public:
     void m_FAnimation();
 

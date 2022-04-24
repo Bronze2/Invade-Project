@@ -68,7 +68,7 @@ void CCameraScript::Update()
 	Transform()->SetLocalRot(vRot);
 }
 
-Vec3 CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSize)
+Vec3& CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSize)
 {
 	float fShakeFactor = 5.f;
 	if (m_fShakeNum < _DamageTime * PI * fShakeFactor)
@@ -88,7 +88,7 @@ Vec3 CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSiz
 	return _vPos;
 }
 
-Vec3 CCameraScript::CameraZoom(Vec3 _vPos)
+Vec3& CCameraScript::CameraZoom(Vec3 _vPos)
 {
 	if (m_fZoomElapsedTime < 20.0f * DT)
 	{
@@ -110,6 +110,7 @@ void CCameraScript::Init()
 {
 	m_vRestorePos = Transform()->GetLocalPos();
 	m_vZoomRestoreFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	m_vShootPos = m_vRestorePos + Transform()->GetLocalDir(DIR_TYPE::FRONT) * 500.f;
 
 	m_fShakeNum = 1.0f;
 	m_fZoomSpeed = 200.0f;

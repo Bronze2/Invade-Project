@@ -10,15 +10,26 @@ private:
     bool m_bCheckStartMousePoint;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
+
+    ELEMENT_TYPE m_iType;
+
+#ifndef ARROW_TEST
     CGameObject* m_pArrow[20];
     UINT m_iCurArrow;
     Ptr<CTexture>pBlackTex;
     int m_iPower;
-    ELEMENT_TYPE m_iType;
+
     float m_fArrowSpeed;
 
     float m_fArcherLocation;
 
+    Vec3 m_vArrowRestorePos;
+
+    bool m_bMaxCharged;
+    float m_fArrowCharge;
+    Vec3 m_vArrowRestoreRot;
+
+#endif
     float m_fRotateDegree;
     float m_fMoveSpeed;
 
@@ -27,12 +38,6 @@ private:
 
     PLAYER_STATE m_ePrevState;
     PLAYER_STATE m_eState;
-
-#ifdef CAMERA_TEST
-    float m_fTurnDegree;
-    float m_fTurnSpeed;
-    bool m_bTurnBack;
-#endif
 
     float m_fLerpTime;
     float m_fMaxLerpTime;
