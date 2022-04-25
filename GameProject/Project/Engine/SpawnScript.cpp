@@ -506,6 +506,7 @@ void CSpawnScript::Update()
 
 void CSpawnScript::SpawnObjectByPattern()
 {
+    
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimation(L"IDLE", 0, 34, true, false);
 	pNewAnimation->InsertAnimation(L"WALK", 35, 49, false, false);

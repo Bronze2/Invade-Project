@@ -1,20 +1,51 @@
 #include "Thread.h"
-////스레드 만들기
-//vector <thread> worker_threads;
-//for (int i = 0; i < 10; ++i)
-//	worker_threads.emplace_back(worker_Thread);
-////메인 종료 전 모든 스레드 종료 기다리기
-//thread timer_thread{ do_timer };
-//
-//for (auto& th : worker_threads) th.join();
-//timer_thread.join();
 
 void CThread::init()
 {
 	for (int i = 0; i < 10; ++i)
-		worker_threads.emplace_back(CThread::worker_Thread());
+		worker_threads.emplace_back([&]() {CThread::worker_Thread(); });
 	timer_thread = std::thread([&]() { CThread::do_timer(); });
 }
+void CThread::packet_construct(int user_id, int io_byte)
+{
+	CLIENT& curr_user = g_clients[user_id];
+	EXOVER& recv_over = curr_user.m_recv_over;
+
+	int rest_byte = io_byte;		//이만큼 남은걸 처리해줘야 한다
+	char* p = recv_over.io_buf;		//처리해야할 데이터의 포인터가 필요하다
+	int packet_size = 0;			//이게 0이라는 것은 이전에 처리하던 패킷이 없다는 것 
+
+	if (curr_user.m_prev_size != 0)
+		packet_size = curr_user.m_packet_buf[0]; //재조립을 기다기는 패킷 사이즈
+
+	while (rest_byte > 0)	//처리해야할 데이터가 남아있으면 처리해야한다.
+	{
+		if (0 == packet_size)	packet_size = p[0];
+
+		//나머지 데이터로 패킷을 만들 수 있나 없나 확인
+		if (packet_size <= rest_byte + curr_user.m_prev_size)
+		{
+			memcpy(curr_user.m_packet_buf + curr_user.m_prev_size, p, packet_size - curr_user.m_prev_size);		//만들어서 처리한 데이터 크기만큼 패킷 사이즈에서 빼주기
+
+			p += packet_size - curr_user.m_prev_size;
+			rest_byte -= packet_size - curr_user.m_prev_size;
+			packet_size = 0;														//이 패킷은 이미 처리를 했고 다음 패킷 사이즈는 모름.
+
+			process_packet(user_id, curr_user.m_packet_buf);
+
+			curr_user.m_prev_size = 0;
+
+		}
+		else	//패킷 하나를 만들 수 없다면 버퍼에 복사해두고 포인터와 사이즈 증가
+		{
+			memcpy(curr_user.m_packet_buf + curr_user.m_prev_size, p, rest_byte); //남은 데이터 몽땅 받는데, 지난번에 받은 데이터가 남아있을 경우가 있으니, 그 뒤에 받아야한다.
+			curr_user.m_prev_size += rest_byte;
+			rest_byte = 0;
+			p += rest_byte;
+		}
+	}
+}
+
 
 void CThread::do_timer()
 {
@@ -23,20 +54,20 @@ void CThread::do_timer()
 		this_thread::sleep_for(1ms); //Sleep(1);
 		while (true)
 		{
-			timer_lock.lock();
-			if (timer_queue.empty() == true)
+			SHARED_DATA::timer_lock.lock();
+			if (SHARED_DATA::timer_queue.empty() == true)
 			{
-				timer_lock.unlock();
+				SHARED_DATA::timer_lock.unlock();
 				break;
 			}
-			if (timer_queue.top().wakeup_time > high_resolution_clock::now())
+			if (SHARED_DATA::timer_queue.top().wakeup_time > std::chrono::high_resolution_clock::now())
 			{
-				timer_lock.unlock();
+				SHARED_DATA::timer_lock.unlock();
 				break;
 			}
-			event_type ev = timer_queue.top();
-			timer_queue.pop();
-			timer_lock.unlock();
+			event_type ev = SHARED_DATA::timer_queue.top();
+			SHARED_DATA::timer_queue.pop();
+			SHARED_DATA::timer_lock.unlock();
 
 			switch (ev.event_id)
 			{
@@ -48,7 +79,7 @@ void CThread::do_timer()
 			{
 				EXOVER* over = new EXOVER();
 				over->op = ev.event_id;
-				PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
+				PostQueuedCompletionStatus(SHARED_DATA::g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
 
@@ -57,18 +88,18 @@ void CThread::do_timer()
 	}
 }
 
-void worker_Thread()
+void CThread::worker_Thread()
 {
 	while (true) {
 		DWORD io_byte;
 		ULONG_PTR key;
 		WSAOVERLAPPED* over;
-		GetQueuedCompletionStatus(g_iocp, &io_byte, &key, &over, INFINITE);
+		GetQueuedCompletionStatus(SHARED_DATA::g_iocp, &io_byte, &key, &over, INFINITE);
 
 		EXOVER* exover = reinterpret_cast<EXOVER*>(over);
 		int user_id = static_cast<int>(key);
 
-		CLIENT& cl = g_clients[user_id]; //타이핑 줄이기 위해
+		CLIENT& cl = SHARED_DATA::g_clients[user_id]; //타이핑 줄이기 위해
 
 		switch (exover->op)
 		{
@@ -101,10 +132,10 @@ void worker_Thread()
 			int user_id = -1;
 			for (int i = 0; i < MAX_USER; ++i)
 			{
-				lock_guard<mutex> gl{ g_clients[i].m_cLock }; //이렇게 하면 unlock이 필요 없다. 이 블록에서 빠져나갈때 unlock을 자동으로 해준다.
-				if (ST_FREE == g_clients[i].m_status)
+				lock_guard<mutex> gl{ SHARED_DATA::g_clients[i].m_cLock }; //이렇게 하면 unlock이 필요 없다. 이 블록에서 빠져나갈때 unlock을 자동으로 해준다.
+				if (ST_FREE == SHARED_DATA::g_clients[i].m_status)
 				{
-					g_clients[i].m_status = ST_ALLOCATED;
+					SHARED_DATA::g_clients[i].m_status = ST_ALLOCATED;
 					user_id = i;
 					break;
 				}
@@ -117,31 +148,31 @@ void worker_Thread()
 				closesocket(clientSocket); // send_login_fail_packet();
 			else
 			{
-				CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket), g_iocp, user_id, 0);
+				CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket), SHARED_DATA::g_iocp, user_id, 0);
 
 				//g_clients[user_id].m_id = user_id; 멀쓰에서 하는게 아니고 초기화 할때 한번 해줘야 함 처음에 한번.
-				g_clients[user_id].m_prev_size = 0; //이전에 받아둔 조각이 없으니 0
-				g_clients[user_id].m_socket = clientSocket;
+				SHARED_DATA::g_clients[user_id].m_prev_size = 0; //이전에 받아둔 조각이 없으니 0
+				SHARED_DATA::g_clients[user_id].m_socket = clientSocket;
 
-				ZeroMemory(&g_clients[user_id].m_recv_over.over, 0, sizeof(g_clients[user_id].m_recv_over.over));
-				g_clients[user_id].m_recv_over.op = OP_RECV;
-				g_clients[user_id].m_recv_over.wsabuf.buf = g_clients[user_id].m_recv_over.io_buf;
-				g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
+				ZeroMemory(&SHARED_DATA::g_clients[user_id].m_recv_over.over, 0, sizeof(SHARED_DATA::g_clients[user_id].m_recv_over.over));
+				SHARED_DATA::g_clients[user_id].m_recv_over.op = OP_RECV;
+				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.buf = SHARED_DATA::g_clients[user_id].m_recv_over.io_buf;
+				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
 				if (user_id == 0)
-					g_clients[user_id].m_isHost = true;
+					SHARED_DATA::g_clients[user_id].m_isHost = true;
 
 				if (user_id % 2 == 0)
-					g_clients[user_id].m_camp = RED;
+					SHARED_DATA::g_clients[user_id].m_camp = RED;
 				else
-					g_clients[user_id].m_camp = BLUE;
+					SHARED_DATA::g_clients[user_id].m_camp = BLUE;
 
-				g_clients[user_id].view_list.clear();
+				SHARED_DATA::g_clients[user_id].view_list.clear();
 
 				DWORD flags = 0;
-				WSARecv(clientSocket, &g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &g_clients[user_id].m_recv_over.over, NULL);
+				WSARecv(clientSocket, &SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_DATA::g_clients[user_id].m_recv_over.over, NULL);
 				cout << user_id << endl;
-				current_user++;
+				SHARED_DATA::current_user++;
 
 
 			}
@@ -161,29 +192,101 @@ void worker_Thread()
 
 		case OP_SPAWN_WAVE:
 		{
-			g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
-			g_minion[g_minionindex].Pos.y = 0.f;
-			g_minion[g_minionindex].Pos.z = 4150.f;
+			//SHARED_DATA::g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
+			//SHARED_DATA::g_minion[g_minionindex].Pos.y = 0.f;
+			//SHARED_DATA::g_minion[g_minionindex].Pos.z = 4150.f;
 
-			send_spawn_minion_packet(g_minionindex - 1, g_minionindex, wave_count);
-			g_minionindex++;
-			//주기적인 스폰
-			add_timer(user_id, OP_SPAWN, 1000);
+			//send_spawn_minion_packet(g_minionindex - 1, g_minionindex, wave_count);
+			//g_minionindex++;
+			////주기적인 스폰
+			//add_timer(user_id, OP_SPAWN, 1000);
 		}
 		break;
 		case OP_SPAWN:
 		{
-			g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
-			g_minion[g_minionindex].Pos.y = 0.f;
-			g_minion[g_minionindex].Pos.z = 4150.f;
+			//g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
+			//g_minion[g_minionindex].Pos.y = 0.f;
+			//g_minion[g_minionindex].Pos.z = 4150.f;
 
-			//send_spawn_minion_packet(g_minionindex);			
-			g_minionindex++;
-			//주기적인 스폰
-			add_timer(user_id, OP_SPAWN, 10000);
+			////send_spawn_minion_packet(g_minionindex);			
+			//g_minionindex++;
+			////주기적인 스폰
+			//add_timer(user_id, OP_SPAWN, 10000);
 		}
 		break;
 		}
 	}
 
 }
+
+
+
+void CThread::process_packet(int user_id, char* buf)
+{
+	switch (buf[1]) //[0]은 size
+	{
+	case C2S_LOGIN:
+	{
+		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
+		cout << "Recv Login Packet Client " << endl;
+		enter_lobby(user_id, packet->name);
+	}
+	break;
+	case C2S_KEY_DOWN:
+	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
+		g_clients[user_id].m_move_time = packet->move_time;
+		g_clients[user_id].dir.x = packet->dir.x;
+		g_clients[user_id].dir.y = packet->dir.y;
+		g_clients[user_id].dir.z = packet->dir.z;
+		g_clients[user_id].animState = packet->state;
+		do_move(user_id, packet->direction);
+	}
+	break;
+	case C2S_KEY_UP:
+	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
+		g_clients[user_id].m_move_time = packet->move_time;
+		g_clients[user_id].dir.x = packet->dir.x;
+		g_clients[user_id].dir.y = packet->dir.y;
+		g_clients[user_id].dir.z = packet->dir.z;
+		g_clients[user_id].animState = packet->state;
+		do_move_stop(user_id, packet->direction);
+	}
+	break;
+	case C2S_MOUSE:
+	{
+		cs_packet_mouse* packet = reinterpret_cast<cs_packet_mouse*>(buf);
+		g_clients[user_id].m_move_time = packet->move_time;
+		g_clients[user_id].Rot.x = packet->Rot.x;
+		g_clients[user_id].Rot.y = packet->Rot.y;
+		g_clients[user_id].Rot.z = packet->Rot.z;
+
+		do_Rotation(user_id);
+	}
+	break;
+	case C2S_GAMESTART:
+	{
+		cout << "C2S_GAMESTRAT" << endl;
+		cs_packet_lobby_gamestart* packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
+		if (packet->id == user_id) {
+			if (g_clients[user_id].m_isHost) {
+				for (int i = 0; i < current_user; ++i) {
+					enter_game(i);
+				}
+
+				//플레이어 진입 후 미니언 생성 시작
+				add_timer(user_id, OP_SPAWN_WAVE, 5000);
+			}
+		}
+
+	}
+	break;
+	default:
+		cout << "unknown packet type error \n";
+
+
+		//DebugBreak(); 
+		//exit(-1);
+	}
+}
+
+

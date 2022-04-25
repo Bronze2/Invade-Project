@@ -45,6 +45,15 @@
     <ClInclude Include="Thread.h">
       <Filter>Server</Filter>
     </ClInclude>
+    <ClInclude Include="externData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IOCPServer.cpp">
@@ -63,6 +72,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Thread.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Service.cpp">
       <Filter>Server</Filter>
     </ClCompile>
   </ItemGroup>

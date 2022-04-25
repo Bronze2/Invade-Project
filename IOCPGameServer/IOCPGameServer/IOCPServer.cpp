@@ -23,6 +23,22 @@
 using namespace std;
 using namespace chrono;
 
+namespace SHARED_DATA {
+	HANDLE g_iocp;					//iocp 핸들
+	CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
+	unordered_map<int, MINION> g_minion;
+	priority_queue<event_type> timer_queue;
+	mutex timer_lock;
+	SOCKET listenSocket;
+	int g_minionindex;
+	int current_user;
+
+}
+
+namespace ATOMIC {
+
+}
+
 enum ENUMOP {OP_SPAWN_WAVE , OP_SPAWN, OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
 
 enum C_STATUS {ST_FREE, ST_ALLOCATED, ST_ACTIVE};
@@ -40,7 +56,6 @@ struct event_type
 		return (wakeup_time > left.wakeup_time);
 	}
 };
-priority_queue<event_type> timer_queue;
 mutex timer_lock;
 
 //확장 overlapped 구조체
@@ -83,12 +98,9 @@ struct CLIENT
 };
 
 
-unordered_map<int, MINION> g_minion;
 int g_minionindex;
 
-CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
 
-HANDLE g_iocp;					//iocp 핸들
 SOCKET listenSocket;			//서버 전체에 하나. 한번 정해지고 안바뀌니 데이터레이스 아님. 
 int current_user;
 
@@ -102,7 +114,6 @@ void add_timer(int obj_id, ENUMOP op_type, int duration)
 	timer_lock.unlock();
 }
 
-CTimeMgr Timer;
 
 void do_timer()
 {
@@ -149,169 +160,6 @@ void do_timer()
 
 
 
-//lock으로 보호받고있는 함수
-void send_packet(int user_id, void *p)
-{
-	char* buf = reinterpret_cast<char*>(p);
-
-	CLIENT &user = g_clients[user_id];
-
-	//WSASend의 두번째 인자의 over는 recv용이라 쓰면 안된다. 새로 만들어야 한다.
-	EXOVER *exover = new EXOVER;
-	exover->op = OP_SEND;
-	ZeroMemory(&exover->over, sizeof(exover->over));
-	exover->wsabuf.buf = exover->io_buf;
-	exover->wsabuf.len = buf[0];
-	memcpy(exover->io_buf, buf, buf[0]);
-
-	WSASend(user.m_socket, &exover->wsabuf, 1, NULL, 0, &exover->over, NULL);
-}
-void send_my_client_enter_packet(int user_id)
-{
-	sc_packet_login_ok p;
-	p.exp = 0;
-	p.hp = 0;
-	p.id = user_id;
-	p.level = 0;
-	p.size = sizeof(p);
-	p.type = S2C_LOGIN_OK;
-	p.pos.x = g_clients[user_id].Pos.x;
-	p.pos.y = g_clients[user_id].Pos.y;
-	p.pos.z = g_clients[user_id].Pos.z;
-
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_lobby_login_ok_packet(int user_id)
-{
-	sc_packet_lobby_enter p;
-	p.id = user_id;
-	p.size = sizeof(p);
-	p.type = S2C_LOGIN_OK;
-	p.camp = g_clients[user_id].m_camp;
-	p.isHost = g_clients[user_id].m_isHost;
-
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_login_fail_packet()
-{
-
-}
-//아이디에게, 누가 이동했는지 알려줘라
-void send_move_packet(int user_id, int mover)
-{
-	sc_packet_move p;
-	p.id = mover;
-	p.size = sizeof(p);
-	p.type = S2C_KEY_DOWN;
-	p.pos.x = g_clients[mover].Pos.x;
-	p.pos.y = g_clients[mover].Pos.y;
-	p.pos.z = g_clients[mover].Pos.z;
-	p.state = g_clients[mover].animState;
-	p.move_time = g_clients[mover].m_move_time;
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_move_stop_packet(int user_id, int mover)
-{
-	sc_packet_move p;
-	p.id = mover;
-	p.size = sizeof(p);
-	p.type = S2C_KEY_UP;
-	p.pos.x = g_clients[mover].Pos.x;
-	p.pos.y = g_clients[mover].Pos.y;
-	p.pos.z = g_clients[mover].Pos.z;
-	p.state = g_clients[mover].animState;
-	p.move_time = g_clients[mover].m_move_time;
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_mouse_packet(int user_id, int mover)
-{
-	sc_packet_move p;
-	p.id = mover;
-	p.size = sizeof(p);
-	p.type = S2C_MOUSE;
-	p.pos.x = g_clients[mover].Rot.x;
-	p.pos.y = g_clients[mover].Rot.y;
-	p.pos.z = g_clients[mover].Rot.z;
-
-	p.move_time = g_clients[mover].m_move_time;
-
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_enter_packet(int user_id, int o_id)
-{
-	sc_packet_enter p;
-	p.id = o_id;
-	p.size = sizeof(p);
-	p.type = S2C_ENTER;
-	p.pos.x = g_clients[o_id].Pos.x;
-	p.pos.y = g_clients[o_id].Pos.y;
-	p.pos.z = g_clients[o_id].Pos.z;
-	strcpy_s(p.name, g_clients[o_id].m_name);
-	p.o_type = O_PLAYER;
-
-	g_clients[user_id].m_cLock.lock();
-	g_clients[user_id].view_list.insert(o_id);
-	g_clients[user_id].m_cLock.unlock();
-
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_enter_lobby_packet(int user_id, int o_id)
-{
-	sc_packet_lobby_enter p;
-	p.id = o_id;
-	p.size = sizeof(p);
-	p.type = S2C_LOBBY_ENTER;
-	p.camp = g_clients[o_id].m_camp;
-	p.isHost = g_clients[o_id].m_isHost;
-	send_packet(user_id, &p);
-}
-void send_near_packet(int client, int new_id)
-{
-	// new_id가 들어왔고 이 new id의 정보를 client에게 보내는 것
-	sc_packet_near packet;
-	packet.id = new_id;
-	packet.size = sizeof(packet);
-	packet.type = S2C_NEAR_PLAYER;
-	packet.pos.x = g_clients[new_id].Pos.x;
-	packet.pos.y = g_clients[new_id].Pos.y;
-	packet.pos.z = g_clients[new_id].Pos.z;
-
-	send_packet(client, &packet);
-}
-void send_leave_packet(int user_id, int o_id)
-{
-	sc_packet_move p;
-	p.id = o_id;
-	p.size = sizeof(p);
-	p.type = S2C_LEAVE;
-
-	g_clients[user_id].m_cLock.lock();
-	g_clients[user_id].view_list.erase(o_id);
-	g_clients[user_id].m_cLock.unlock();
-
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
-}
-void send_spawn_minion_packet(int minion_red, int minion_blue,int wave_count)
-{
-
-	sc_packet_spawn_minion packet;
-	packet.size = sizeof(packet);
-	packet.type = S2C_SPAWN_MINION;
-	packet.blue_id = minion_blue;
-	packet.blue_pos = g_minion[minion_blue].Pos;
-	packet.blue_dir = g_minion[minion_blue].Dir;
-	packet.blue_rot = g_minion[minion_blue].Rot;
-
-	packet.red_id = minion_red;
-	packet.red_pos = g_minion[minion_red].Pos;
-	packet.red_dir = g_minion[minion_red].Dir;
-	packet.red_rot = g_minion[minion_red].Rot;
-	
-	for (int i = 0; i < current_user; ++i)
-		send_packet(i, &packet);
-
-	wave_count++;
-}
 
 bool is_near(int a, int b)
 {
@@ -386,74 +234,6 @@ void do_Rotation(int user_id)
 			send_mouse_packet(i, user_id);
 	}
 
-}
-
-void process_packet(int user_id, char* buf)
-{
-	switch (buf[1]) //[0]은 size
-	{
-	case C2S_LOGIN:
-	{	
-		cs_packet_login *packet = reinterpret_cast<cs_packet_login*>(buf);
-		cout << "Recv Login Packet Client " << endl;
-		enter_lobby(user_id, packet->name);
-	}
-		break;
-	case C2S_KEY_DOWN:
-	{	cs_packet_move *packet = reinterpret_cast<cs_packet_move*>(buf);
-		g_clients[user_id].m_move_time = packet->move_time;
-		g_clients[user_id].dir.x = packet->dir.x;
-		g_clients[user_id].dir.y = packet->dir.y;
-		g_clients[user_id].dir.z = packet->dir.z;
-		g_clients[user_id].animState = packet->state;
-		do_move(user_id, packet->direction);	
-	}
-		break;
-	case C2S_KEY_UP:
-	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
-		g_clients[user_id].m_move_time = packet->move_time;
-		g_clients[user_id].dir.x = packet->dir.x;
-		g_clients[user_id].dir.y = packet->dir.y;
-		g_clients[user_id].dir.z = packet->dir.z;
-		g_clients[user_id].animState = packet->state;
-		do_move_stop(user_id, packet->direction);
-	}
-		break;
-	case C2S_MOUSE:
-	{
-		cs_packet_mouse *packet = reinterpret_cast<cs_packet_mouse*>(buf);
-		g_clients[user_id].m_move_time = packet->move_time;
-		g_clients[user_id].Rot.x = packet->Rot.x;
-		g_clients[user_id].Rot.y = packet->Rot.y;
-		g_clients[user_id].Rot.z = packet->Rot.z;
-
-		do_Rotation(user_id);
-	}
-		break;
-	case C2S_GAMESTART:
-	{
-		cout << "C2S_GAMESTRAT" << endl;
-		cs_packet_lobby_gamestart *packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
-		if (packet->id == user_id) {
-			if (g_clients[user_id].m_isHost){
-				for (int i = 0; i < current_user; ++i) {
-					enter_game(i);
-				}
-
-				//플레이어 진입 후 미니언 생성 시작
-				add_timer(user_id, OP_SPAWN_WAVE, 5000);
-			}
-		}
-
-	}
-		break;
-	default:
-		cout << "unknown packet type error \n";
-		
-		
-		//DebugBreak(); 
-		//exit(-1);
-	}
 }
 
 void initialize_clients()

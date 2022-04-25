@@ -32,7 +32,7 @@ void CServer::Init()
 	g_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 
 	//initialize_clients();
-
+	
 
 	//listen소켓 등록
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(listenSocket), g_iocp, 999, 0);
@@ -44,8 +44,6 @@ void CServer::Init()
 	accept_over.op = OP_ACCEPT;
 	accept_over.c_socket = clientSocket;
 	AcceptEx(listenSocket, clientSocket, accept_over.io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
-
-
 }
 
 
