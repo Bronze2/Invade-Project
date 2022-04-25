@@ -116,19 +116,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Thread.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Timer.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="protocol.h" />
-    <ClInclude Include="Server.h" />
+    <ClInclude Include="Server.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Thread.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="IOCPServer.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Server.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="SimpleMath.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

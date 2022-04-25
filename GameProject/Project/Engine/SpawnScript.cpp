@@ -514,7 +514,6 @@ void CSpawnScript::SpawnObjectByPattern()
 	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 	CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 20.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE, pNewAnimation, m_eCampState);
 	CreateObject(pObject, L"Blue");
-	cout << " OH?" << endl;
 }
 
 CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN1)

@@ -241,11 +241,18 @@ void CSceneMgr::net_setRotationByID(int id, float x, float y, float z)
     m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalRot(Vec3(x,y,z));
 }
 
-void CSceneMgr::net_setLocalPosByID(int id, float x , float y, float z) 
+void CSceneMgr::net_setLerpMoveByID(int id, float x , float y, float z)
 {
 	Vec3 pos(x, y, z);
 	//pos*= DT;
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
+}
+
+void CSceneMgr::net_setLocalPosByID(int id, float x, float y, float z)
+{
+	Vec3 pos(x, y, z);
+	//pos*= DT;
+	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(pos);
 }
 
 void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
@@ -285,8 +292,12 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }
 
-void CSceneMgr::net_spawnMinion(int id)
+void CSceneMgr::net_spawnMinion_blue(int id)
 {
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObjectByPattern();
+}
+void CSceneMgr::net_spawnMinion_red(int id)
+{
+	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObjectByPattern();
 }
 

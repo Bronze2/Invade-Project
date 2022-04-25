@@ -30,10 +30,12 @@ public:
 	void net_enterClient(int id, float x, float y, float z);
 	void net_setMainClient(int id, float x, float y, float z);
 	void net_setEnableClient(int id);	//지울가능성 높음
-	void net_setLocalPosByID(int id, float x, float y , float z);
+	void net_setLerpMoveByID(int id, float x, float y , float z);
+	void net_setLocalPosByID(int id, float x, float y, float z);
 	void net_setRotationByID(int id, float x, float y, float z);
 	void net_setAnimationByID(int id , int state);
-	void net_spawnMinion(int id);
+	void net_spawnMinion_blue(int id);
+	void net_spawnMinion_red(int id);
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);

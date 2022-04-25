@@ -12,7 +12,7 @@
 #include <unordered_map>
 
 #include "define.h"
-#include "Server.h"
+//#include "Server.h"
 
 #include "protocol.h"
 #include "Timer.h"
@@ -23,7 +23,7 @@
 using namespace std;
 using namespace chrono;
 
-enum ENUMOP {OP_SPAWN, OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
+enum ENUMOP {OP_SPAWN_WAVE , OP_SPAWN, OP_MOVE ,OP_RECV , OP_SEND, OP_ACCEPT };
 
 enum C_STATUS {ST_FREE, ST_ALLOCATED, ST_ACTIVE};
 
@@ -92,7 +92,7 @@ HANDLE g_iocp;					//iocp 핸들
 SOCKET listenSocket;			//서버 전체에 하나. 한번 정해지고 안바뀌니 데이터레이스 아님. 
 int current_user;
 
-
+int wave_count; // 5 5 6
 
 void add_timer(int obj_id, ENUMOP op_type, int duration)
 {
@@ -110,7 +110,7 @@ void do_timer()
 	{
 		//Timer.Update();
 		//cout << Timer.GetDeltaTime() << endl;
-		this_thread::sleep_for(5ms); //Sleep(1);
+		this_thread::sleep_for(1ms); //Sleep(1);
 		while (true)
 		{
 			timer_lock.lock();
@@ -132,12 +132,6 @@ void do_timer()
 			{
 			case OP_MOVE:
 			{	
-				g_clients[ev.obj_id].isMove = false;
-				////cout << "MoveTimerOn" << endl;
-				//EXOVER* over = new EXOVER();
-				//over->op = ev.event_id;
-				////do_move(ev.obj_id, packet->direction);
-				//PostQueuedCompletionStatus(g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
 			case OP_SPAWN:
@@ -187,7 +181,6 @@ void send_my_client_enter_packet(int user_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-
 void send_lobby_login_ok_packet(int user_id)
 {
 	sc_packet_lobby_enter p;
@@ -199,29 +192,37 @@ void send_lobby_login_ok_packet(int user_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-
-
 void send_login_fail_packet()
 {
 
 }
-
 //아이디에게, 누가 이동했는지 알려줘라
 void send_move_packet(int user_id, int mover)
 {
 	sc_packet_move p;
 	p.id = mover;
 	p.size = sizeof(p);
-	p.type = S2C_MOVE;
+	p.type = S2C_KEY_DOWN;
 	p.pos.x = g_clients[mover].Pos.x;
 	p.pos.y = g_clients[mover].Pos.y;
 	p.pos.z = g_clients[mover].Pos.z;
 	p.state = g_clients[mover].animState;
 	p.move_time = g_clients[mover].m_move_time;
-
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-
+void send_move_stop_packet(int user_id, int mover)
+{
+	sc_packet_move p;
+	p.id = mover;
+	p.size = sizeof(p);
+	p.type = S2C_KEY_UP;
+	p.pos.x = g_clients[mover].Pos.x;
+	p.pos.y = g_clients[mover].Pos.y;
+	p.pos.z = g_clients[mover].Pos.z;
+	p.state = g_clients[mover].animState;
+	p.move_time = g_clients[mover].m_move_time;
+	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
+}
 void send_mouse_packet(int user_id, int mover)
 {
 	sc_packet_move p;
@@ -236,8 +237,6 @@ void send_mouse_packet(int user_id, int mover)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-
-
 void send_enter_packet(int user_id, int o_id)
 {
 	sc_packet_enter p;
@@ -256,7 +255,6 @@ void send_enter_packet(int user_id, int o_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-
 void send_enter_lobby_packet(int user_id, int o_id)
 {
 	sc_packet_lobby_enter p;
@@ -267,8 +265,6 @@ void send_enter_lobby_packet(int user_id, int o_id)
 	p.isHost = g_clients[o_id].m_isHost;
 	send_packet(user_id, &p);
 }
-
-
 void send_near_packet(int client, int new_id)
 {
 	// new_id가 들어왔고 이 new id의 정보를 client에게 보내는 것
@@ -295,21 +291,26 @@ void send_leave_packet(int user_id, int o_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-
-void send_spawn_minion_packet(int minion_id)
+void send_spawn_minion_packet(int minion_red, int minion_blue,int wave_count)
 {
+
 	sc_packet_spawn_minion packet;
 	packet.size = sizeof(packet);
 	packet.type = S2C_SPAWN_MINION;
-	packet.camp = BLUE;
-	packet.id = minion_id;
-	packet.pos = g_minion[minion_id].Pos;
-	packet.dir = g_minion[minion_id].Dir;
-	packet.rot = g_minion[minion_id].Rot;
+	packet.blue_id = minion_blue;
+	packet.blue_pos = g_minion[minion_blue].Pos;
+	packet.blue_dir = g_minion[minion_blue].Dir;
+	packet.blue_rot = g_minion[minion_blue].Rot;
 
+	packet.red_id = minion_red;
+	packet.red_pos = g_minion[minion_red].Pos;
+	packet.red_dir = g_minion[minion_red].Dir;
+	packet.red_rot = g_minion[minion_red].Rot;
+	
 	for (int i = 0; i < current_user; ++i)
 		send_packet(i, &packet);
 
+	wave_count++;
 }
 
 bool is_near(int a, int b)
@@ -328,7 +329,17 @@ void do_move(int user_id, int direction)
 		else
 			send_move_packet(i, user_id);
 	}
+}
 
+void do_move_stop(int user_id, int direction)
+{
+	Vec3 vPos;
+	send_move_stop_packet(user_id, user_id);
+	for (int i = 0; i < current_user; ++i) {
+		if (i == user_id) continue;
+		else
+			send_move_stop_packet(i, user_id);
+	}
 }
 
 void enter_game(int user_id)
@@ -388,22 +399,24 @@ void process_packet(int user_id, char* buf)
 		enter_lobby(user_id, packet->name);
 	}
 		break;
-	case C2S_MOVE:
+	case C2S_KEY_DOWN:
 	{	cs_packet_move *packet = reinterpret_cast<cs_packet_move*>(buf);
 		g_clients[user_id].m_move_time = packet->move_time;
 		g_clients[user_id].dir.x = packet->dir.x;
 		g_clients[user_id].dir.y = packet->dir.y;
 		g_clients[user_id].dir.z = packet->dir.z;
 		g_clients[user_id].animState = packet->state;
-		//if (!g_clients[user_id].isMove) {
-		//	add_timer(user_id, OP_MOVE, 50);
-		//	do_move(user_id, packet->direction);
-		//	g_clients[user_id].isMove = true;
-		//	//cout << " User_id [" << user_id << "]. MovePacket" << endl;
-		//}
-		do_move(user_id, packet->direction);
-
-		
+		do_move(user_id, packet->direction);	
+	}
+		break;
+	case C2S_KEY_UP:
+	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
+		g_clients[user_id].m_move_time = packet->move_time;
+		g_clients[user_id].dir.x = packet->dir.x;
+		g_clients[user_id].dir.y = packet->dir.y;
+		g_clients[user_id].dir.z = packet->dir.z;
+		g_clients[user_id].animState = packet->state;
+		do_move_stop(user_id, packet->direction);
 	}
 		break;
 	case C2S_MOUSE:
@@ -428,7 +441,7 @@ void process_packet(int user_id, char* buf)
 				}
 
 				//플레이어 진입 후 미니언 생성 시작
-				add_timer(user_id, OP_SPAWN, 3000);
+				add_timer(user_id, OP_SPAWN_WAVE, 5000);
 			}
 		}
 
@@ -618,13 +631,25 @@ void worker_Thread()
 		}
 			break;
 
+		case OP_SPAWN_WAVE:
+		{
+			g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
+			g_minion[g_minionindex].Pos.y = 0.f;
+			g_minion[g_minionindex].Pos.z = 4150.f;
+
+			//send_spawn_minion_packet(g_minionindex-1, g_minionindex, wave_count);
+			g_minionindex++;
+			//주기적인 스폰
+			add_timer(user_id, OP_SPAWN, 1000);
+		}
+		break;
 		case OP_SPAWN:
 		{
 			g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
 			g_minion[g_minionindex].Pos.y = 0.f;
 			g_minion[g_minionindex].Pos.z = 4150.f;
 			
-			send_spawn_minion_packet(g_minionindex);			
+			//send_spawn_minion_packet(g_minionindex);			
 			g_minionindex++;
 			//주기적인 스폰
 			add_timer(user_id, OP_SPAWN, 10000);
@@ -638,8 +663,8 @@ void worker_Thread()
 void main()
 {
 
-	Server* m_Sever = Server::GetInstance();
-	Timer.Init();
+//	Server* m_Sever = Server::GetInstance();
+//	Timer.Init();
 
 	//네트워크 초기화
 	WSADATA WSAData;
@@ -685,8 +710,4 @@ void main()
 	
 	for (auto &th : worker_threads) th.join();
 	timer_thread.join();
-
-	//while(1) {
-	//	Timer.Update();
-	//}
 }

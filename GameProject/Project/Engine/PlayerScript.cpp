@@ -267,46 +267,52 @@ void CPlayerScript::Update()
 		if (CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
 			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_move_packet(0, vFront.x, vFront.y, vFront.z, 0);
+				Network::GetInst()->send_key_down_packet(0, vFront.x, vFront.y, vFront.z, 0);
 				m_eState = PLAYER_STATE::WALK;
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
 				Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_move_packet(0, vBack.x, vBack.y, vBack.z, 0);
+				Network::GetInst()->send_key_down_packet(0, vBack.x, vBack.y, vBack.z, 0);
 				m_eState = PLAYER_STATE::WALK;
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
 				Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-				Network::GetInst()->send_move_packet(0, vLeft.x, vLeft.y, vLeft.z, 0);
+				Network::GetInst()->send_key_down_packet(0, vLeft.x, vLeft.y, vLeft.z, 0);
 				m_eState = PLAYER_STATE::WALK;
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
 				Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-				Network::GetInst()->send_move_packet(0, vRight.x, vRight.y, vRight.z, 0);
+				Network::GetInst()->send_key_down_packet(0, vRight.x, vRight.y, vRight.z, 0);
 				m_eState = PLAYER_STATE::WALK;
 			}
+		}
 
+
+		// Key Up 분류하기.
+		// 현재 Lerp 작업으로 인해 정확한 값이 들어가고 있지않다.
+		// Key Up 기준으로 서버 측에서 정확한 좌표값이라고 인식할 수 있도록 고정되게 설정
+		// 서버에서 확인한 값을 다시 클라로 보내 근처 범위 내라면 고정좌표로 Lerp작업 끝낼수 있도록 해보자.
 			if (KEY_AWAY(KEY_TYPE::KEY_W)) {
+
 				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_move_packet(0, vFront.x, vFront.y, vFront.z, 1);
+				Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
 				m_eState = PLAYER_STATE::IDLE;
-			}
+			} 
 			if (KEY_AWAY(KEY_TYPE::KEY_S)) {
 				Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-				Network::GetInst()->send_move_packet(0, vBack.x, vBack.y, vBack.z, 1);
+				Network::GetInst()->send_key_up_packet(0, vBack.x, vBack.y, vBack.z, 1);
 				m_eState = PLAYER_STATE::IDLE;
 			}
 			if (KEY_AWAY(KEY_TYPE::KEY_A)) {
 				Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_move_packet(0, vLeft.x, vLeft.y, vLeft.z, 1);
+				Network::GetInst()->send_key_up_packet(0, vLeft.x, vLeft.y, vLeft.z, 1);
 				m_eState = PLAYER_STATE::IDLE;
 			}
 			if (KEY_AWAY(KEY_TYPE::KEY_D)) {
 				Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_move_packet(0, vRight.x, vRight.y, vRight.z, 1);
+				Network::GetInst()->send_key_up_packet(0, vRight.x, vRight.y, vRight.z, 1);
 				m_eState = PLAYER_STATE::IDLE;
 			}
-		}
 
 		//Arrow 
 	/*	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
@@ -473,7 +479,7 @@ void CPlayerScript::SetState(int state)
 
 void CPlayerScript::Update_LerpPos()
 {
-	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_LerpPos, DT*5.f); 
+	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_LerpPos, DT*10.f); 
 
 	Transform()->SetLocalPos(vPos);
 }

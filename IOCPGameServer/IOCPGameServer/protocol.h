@@ -13,16 +13,18 @@ constexpr auto VIEW_RADIUS = 600;
 #define SERVER_PORT		9000
 
 //받는 입장에서는 패킷 type이 날아온다. 보내는 입장에서는 이걸 담아 보내야 알려줄 수 있다.
-#define C2S_LOGIN	1
-#define C2S_MOVE	2
-#define C2S_MOUSE	3
-#define C2S_GAMESTART 4
+#define C2S_LOGIN		1
+#define C2S_KEY_DOWN	2
+#define C2S_KEY_UP		3
+#define C2S_MOUSE		4
+#define C2S_GAMESTART	5
 
 #define S2C_LOGIN_OK		1
-#define S2C_MOVE			2
-#define S2C_ENTER			3
-#define S2C_LEAVE			4
-#define S2C_NEAR_PLAYER		5
+#define S2C_KEY_DOWN		2
+#define S2C_KEY_UP			3
+#define S2C_ENTER			4
+#define S2C_LEAVE			5
+#define S2C_NEAR_PLAYER		6
 
 #define S2C_MOUSE			6
 #define S2C_SPAWN_MINION	7
@@ -135,14 +137,24 @@ struct cs_packet_mouse {
 constexpr unsigned char RED = 0;
 constexpr unsigned char BLUE = 1;
 
+
+constexpr unsigned char warrior = 0;
+constexpr unsigned char ranger = 1;
+constexpr unsigned char bomb = 2;
+
 struct sc_packet_spawn_minion {
 	char	size;
 	char	type;
-	char	camp;
-	int id;
-	p_Vec3  pos;
-	p_Vec3  dir;
-	p_Vec3  rot;
+	int		blue_id;
+	int		red_id;
+
+
+	p_Vec3  blue_pos;
+	p_Vec3  blue_dir;
+	p_Vec3  blue_rot;
+	p_Vec3  red_pos;
+	p_Vec3  red_dir;
+	p_Vec3  red_rot;
 
 };
 

@@ -10,6 +10,10 @@ private:
 	LARGE_INTEGER	m_playerOldMoveCount;
 	LARGE_INTEGER	m_playerCurMoveCount;
 
+	LARGE_INTEGER	m_CheckNetworkTimeStart;
+	LARGE_INTEGER	m_CheckNetworkTimeEnd;
+
+
 	float			m_fDeltaTime;
 	float			m_fAccTime;
 	float			m_fFPS;
@@ -26,6 +30,12 @@ public:
 	void SetPlayerOldMoveCount() { QueryPerformanceCounter(&m_playerOldMoveCount); }
 	void SetPlayerCurMoveCount() { QueryPerformanceCounter(&m_playerCurMoveCount); }
 	bool GetPlayerMoveFPS();
+
+
+	//¼öÁ¤
+
+	void SetNetworkStart() { QueryPerformanceCounter(&m_CheckNetworkTimeStart); }
+	void SetNetworkEnd();
 
 };
 

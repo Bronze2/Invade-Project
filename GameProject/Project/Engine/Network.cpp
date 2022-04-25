@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Network.h"
 #include "SceneMgr.h"
-
+#include "TimeMgr.h"
 
 
 Network::Network() {}
@@ -25,7 +25,7 @@ void Network::Init()
 	setsockopt(m_Client.socket_info.m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 
 	ServerAddr.sin_port = htons(SERVER_PORT);
-	ServerAddr.sin_addr.s_addr = inet_addr("192.168.204.178");
+	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
@@ -134,19 +134,39 @@ void Network::ProcessPacket(char* ptr)
 		}
 	}
 	break;
-	case S2C_MOVE:
+	case S2C_KEY_DOWN:
 	{
 		sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
 		int other_id = my_packet->id;
 		if (other_id == m_Client.id) {
-			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			//핑체크
+			//CTimeMgr::GetInst()->SetNetworkEnd();
+			
+			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 		else {
-			CSceneMgr::GetInst()->net_setLocalPosByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
 		}
 	}
 	break;
+
+	case S2C_KEY_UP:
+	{
+		//std::cout << "KEY_UP STATE" << std::endl;
+
+		sc_packet_move* my_packet = reinterpret_cast<sc_packet_move*>(ptr);
+		int other_id = my_packet->id;
+		if (other_id == m_Client.id) {
+			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+		}
+		else {
+			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
+		}
+	}
+	break;
+
 	case S2C_MOUSE:
 	{
 		sc_packet_mouse* my_packet = reinterpret_cast<sc_packet_mouse*>(ptr);
@@ -163,7 +183,7 @@ void Network::ProcessPacket(char* ptr)
 	case S2C_SPAWN_MINION:
 	{
 		sc_packet_spawn_minion* my_packet = reinterpret_cast<sc_packet_spawn_minion*>(ptr);
-		CSceneMgr::GetInst()->net_spawnMinion(my_packet->id);
+		CSceneMgr::GetInst()->net_spawnMinion(my_packet->blue_id);
 	}
 	break;
 
@@ -212,6 +232,7 @@ void Network::send_packet(void* buffer)
 	{
 		cout << "오류오류" << endl;
 	}
+
 }
 
 void Network::send_login_packet()
@@ -223,11 +244,25 @@ void Network::send_login_packet()
 	cout << "Send Login Packet" << endl;
 }
 
-void Network::send_move_packet(unsigned char dir, float x, float y , float z,int state)
+void Network::send_key_down_packet(unsigned char dir, float x, float y , float z,int state)
 {
 	//cs 수정 필요 지금귀찮;
 	cs_packet_move m_packet;
-	m_packet.type = C2S_MOVE;
+	m_packet.type = C2S_KEY_DOWN;
+	m_packet.size = sizeof(m_packet);
+	m_packet.direction = dir;
+	m_packet.dir.x = x;
+	m_packet.dir.y = y;
+	m_packet.dir.z = z;
+	m_packet.state = state;
+	send_packet(&m_packet);
+//	CTimeMgr::GetInst()->SetNetworkStart();
+}
+
+void Network::send_key_up_packet(unsigned char dir, float x, float y, float z, int state)
+{
+	cs_packet_move m_packet;
+	m_packet.type = C2S_KEY_UP;
 	m_packet.size = sizeof(m_packet);
 	m_packet.direction = dir;
 	m_packet.dir.x = x;

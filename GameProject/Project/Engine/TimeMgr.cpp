@@ -36,6 +36,16 @@ bool CTimeMgr::GetPlayerMoveFPS()
 	else return false;
 }
 
+void CTimeMgr::SetNetworkEnd()
+{
+	QueryPerformanceCounter(&m_CheckNetworkTimeEnd);
+	float elapsed = (float)(m_llCurCount.QuadPart - m_playerOldMoveCount.QuadPart) / (float)m_llFrequency.QuadPart;
+
+	float NetWorkDuring = elapsed * 1000;
+
+//	std::cout<<"패킷 송수신 시간:" << NetWorkDuring << "ms"<<std::endl;
+}
+
 void CTimeMgr::Update()
 {
 	QueryPerformanceCounter(&m_llCurCount);
