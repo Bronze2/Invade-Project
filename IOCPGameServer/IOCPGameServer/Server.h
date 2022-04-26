@@ -1,29 +1,11 @@
 #pragma once
-#include "define.h"
-#include "externData.h"
-
-
-#pragma comment (lib, "WS2_32.lib")
-#pragma comment (lib, "mswsock.lib")
-
-using namespace std;
-using namespace chrono;
-using namespace SHARED_DATA;
-
 
 class CServer 
 {
 	SINGLE(CServer)
 public:
-	CServer();
-	~CServer();
-
 	void Init();
-	void AcceptMMServer();
-	void Run();
-
 public:
-	
 
 	//lock으로 보호받고있는 함수
 	void send_packet(int user_id, void* p);

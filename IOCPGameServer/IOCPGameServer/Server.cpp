@@ -1,4 +1,7 @@
+#pragma once
+#include "pch.h"
 #include "Server.h"
+#include "Thread.h"
 
 CServer::CServer()
 {
@@ -15,7 +18,7 @@ void CServer::Init()
 	WSAStartup(MAKEWORD(2, 2), &WSAData);
 
 	//맨 뒤에 flag를 overlapped로 꼭 줘야 제대로 동작
-	listenSocket = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	SHARED_DATA::listenSocket = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 
 	//bind에 사용할 server address
 	SOCKADDR_IN serverAddr;
@@ -23,19 +26,19 @@ void CServer::Init()
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(SERVER_PORT); //host to network 해서 넣어야 한다
 	serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY); //모든 클라로부터 접속을 받아야 한다
-	::bind(listenSocket, reinterpret_cast<SOCKADDR*>(&serverAddr), sizeof(serverAddr)); //그냥 bind를 쓰면 c++11에 있는 키워드로 연결된다. 따라서 앞에 ::를 붙인다.
+	::bind(SHARED_DATA::listenSocket, reinterpret_cast<SOCKADDR*>(&serverAddr), sizeof(serverAddr)); //그냥 bind를 쓰면 c++11에 있는 키워드로 연결된다. 따라서 앞에 ::를 붙인다.
 
 
-	listen(listenSocket, SOMAXCONN);
+	listen(SHARED_DATA::listenSocket, SOMAXCONN);
 
 	//IOCP 핸들 할당, IOCP객체 만들기
-	g_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
+	SHARED_DATA::g_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 
 	//initialize_clients();
 	
 
 	//listen소켓 등록
-	CreateIoCompletionPort(reinterpret_cast<HANDLE>(listenSocket), g_iocp, 999, 0);
+	CreateIoCompletionPort(reinterpret_cast<HANDLE>(SHARED_DATA::listenSocket), SHARED_DATA::g_iocp, 999, 0);
 	//원래 accept는 소켓을 리턴하는데, 이 함수는 미리 소켓을 만들어 두고 그 소켓을 클라와 연결시켜준다. 동작이 좀 다름.
 	//비동기로 acceptEx호출. 
 	SOCKET clientSocket = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
@@ -43,7 +46,11 @@ void CServer::Init()
 	ZeroMemory(&accept_over, sizeof(accept_over.over));
 	accept_over.op = OP_ACCEPT;
 	accept_over.c_socket = clientSocket;
-	AcceptEx(listenSocket, clientSocket, accept_over.io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
+	AcceptEx(SHARED_DATA::listenSocket, clientSocket, accept_over.io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
+	
+	
+	CThread::GetInst()->Init();
+
 }
 
 
@@ -51,7 +58,7 @@ void CServer::send_packet(int user_id, void* p)
 {
 	char* buf = reinterpret_cast<char*>(p);
 
-	CLIENT& user = g_clients[user_id];
+	CLIENT& user = SHARED_DATA::g_clients[user_id];
 
 	//WSASend의 두번째 인자의 over는 recv용이라 쓰면 안된다. 새로 만들어야 한다.
 	EXOVER* exover = new EXOVER;
@@ -72,9 +79,9 @@ void CServer::send_my_client_enter_packet(int user_id)
 	p.level = 0;
 	p.size = sizeof(p);
 	p.type = S2C_LOGIN_OK;
-	p.pos.x = g_clients[user_id].Pos.x;
-	p.pos.y = g_clients[user_id].Pos.y;
-	p.pos.z = g_clients[user_id].Pos.z;
+	p.pos.x =SHARED_DATA::g_clients[user_id].Pos.x;
+	p.pos.y =SHARED_DATA::g_clients[user_id].Pos.y;
+	p.pos.z =SHARED_DATA::g_clients[user_id].Pos.z;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -84,8 +91,8 @@ void CServer::send_lobby_login_ok_packet(int user_id)
 	p.id = user_id;
 	p.size = sizeof(p);
 	p.type = S2C_LOGIN_OK;
-	p.camp = g_clients[user_id].m_camp;
-	p.isHost = g_clients[user_id].m_isHost;
+	p.camp = SHARED_DATA::g_clients[user_id].m_camp;
+	p.isHost = SHARED_DATA::g_clients[user_id].m_isHost;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -100,11 +107,11 @@ void CServer::send_move_packet(int user_id, int mover)
 	p.id = mover;
 	p.size = sizeof(p);
 	p.type = S2C_KEY_DOWN;
-	p.pos.x = g_clients[mover].Pos.x;
-	p.pos.y = g_clients[mover].Pos.y;
-	p.pos.z = g_clients[mover].Pos.z;
-	p.state = g_clients[mover].animState;
-	p.move_time = g_clients[mover].m_move_time;
+	p.pos.x = SHARED_DATA::g_clients[mover].Pos.x;
+	p.pos.y = SHARED_DATA::g_clients[mover].Pos.y;
+	p.pos.z = SHARED_DATA::g_clients[mover].Pos.z;
+	p.state = SHARED_DATA::g_clients[mover].animState;
+	p.move_time = SHARED_DATA::g_clients[mover].m_move_time;
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
 void CServer::send_move_stop_packet(int user_id, int mover)
@@ -113,11 +120,11 @@ void CServer::send_move_stop_packet(int user_id, int mover)
 	p.id = mover;
 	p.size = sizeof(p);
 	p.type = S2C_KEY_UP;
-	p.pos.x = g_clients[mover].Pos.x;
-	p.pos.y = g_clients[mover].Pos.y;
-	p.pos.z = g_clients[mover].Pos.z;
-	p.state = g_clients[mover].animState;
-	p.move_time = g_clients[mover].m_move_time;
+	p.pos.x = SHARED_DATA::g_clients[mover].Pos.x;
+	p.pos.y = SHARED_DATA::g_clients[mover].Pos.y;
+	p.pos.z = SHARED_DATA::g_clients[mover].Pos.z;
+	p.state = SHARED_DATA::g_clients[mover].animState;
+	p.move_time = SHARED_DATA::g_clients[mover].m_move_time;
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
 void CServer::send_mouse_packet(int user_id, int mover)
@@ -126,11 +133,11 @@ void CServer::send_mouse_packet(int user_id, int mover)
 	p.id = mover;
 	p.size = sizeof(p);
 	p.type = S2C_MOUSE;
-	p.pos.x = g_clients[mover].Rot.x;
-	p.pos.y = g_clients[mover].Rot.y;
-	p.pos.z = g_clients[mover].Rot.z;
+	p.pos.x = SHARED_DATA::g_clients[mover].Rot.x;
+	p.pos.y = SHARED_DATA::g_clients[mover].Rot.y;
+	p.pos.z = SHARED_DATA::g_clients[mover].Rot.z;
 
-	p.move_time = g_clients[mover].m_move_time;
+	p.move_time = SHARED_DATA::g_clients[mover].m_move_time;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -140,15 +147,15 @@ void CServer::send_enter_packet(int user_id, int o_id)
 	p.id = o_id;
 	p.size = sizeof(p);
 	p.type = S2C_ENTER;
-	p.pos.x = g_clients[o_id].Pos.x;
-	p.pos.y = g_clients[o_id].Pos.y;
-	p.pos.z = g_clients[o_id].Pos.z;
-	strcpy_s(p.name, g_clients[o_id].m_name);
+	p.pos.x = SHARED_DATA::g_clients[o_id].Pos.x;
+	p.pos.y = SHARED_DATA::g_clients[o_id].Pos.y;
+	p.pos.z = SHARED_DATA::g_clients[o_id].Pos.z;
+	strcpy_s(p.name, SHARED_DATA::g_clients[o_id].m_name);
 	p.o_type = O_PLAYER;
 
-	g_clients[user_id].m_cLock.lock();
-	g_clients[user_id].view_list.insert(o_id);
-	g_clients[user_id].m_cLock.unlock();
+	SHARED_DATA::g_clients[user_id].m_cLock.lock();
+	SHARED_DATA::g_clients[user_id].view_list.insert(o_id);
+	SHARED_DATA::g_clients[user_id].m_cLock.unlock();
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -158,8 +165,8 @@ void CServer::send_enter_lobby_packet(int user_id, int o_id)
 	p.id = o_id;
 	p.size = sizeof(p);
 	p.type = S2C_LOBBY_ENTER;
-	p.camp = g_clients[o_id].m_camp;
-	p.isHost = g_clients[o_id].m_isHost;
+	p.camp = SHARED_DATA::g_clients[o_id].m_camp;
+	p.isHost = SHARED_DATA::g_clients[o_id].m_isHost;
 	send_packet(user_id, &p);
 }
 void CServer::send_near_packet(int client, int new_id)
@@ -169,9 +176,9 @@ void CServer::send_near_packet(int client, int new_id)
 	packet.id = new_id;
 	packet.size = sizeof(packet);
 	packet.type = S2C_NEAR_PLAYER;
-	packet.pos.x = g_clients[new_id].Pos.x;
-	packet.pos.y = g_clients[new_id].Pos.y;
-	packet.pos.z = g_clients[new_id].Pos.z;
+	packet.pos.x = SHARED_DATA::g_clients[new_id].Pos.x;
+	packet.pos.y = SHARED_DATA::g_clients[new_id].Pos.y;
+	packet.pos.z = SHARED_DATA::g_clients[new_id].Pos.z;
 
 	send_packet(client, &packet);
 }
@@ -182,9 +189,9 @@ void CServer::send_leave_packet(int user_id, int o_id)
 	p.size = sizeof(p);
 	p.type = S2C_LEAVE;
 
-	g_clients[user_id].m_cLock.lock();
-	g_clients[user_id].view_list.erase(o_id);
-	g_clients[user_id].m_cLock.unlock();
+	SHARED_DATA::g_clients[user_id].m_cLock.lock();
+	SHARED_DATA::g_clients[user_id].view_list.erase(o_id);
+	SHARED_DATA::g_clients[user_id].m_cLock.unlock();
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }

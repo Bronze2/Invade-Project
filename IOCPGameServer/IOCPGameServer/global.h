@@ -1,17 +1,4 @@
 #pragma once
-#include <chrono>
-#define _CRT_SECURE_NO_WARNINGS
-#include <iostream>
-#include <WS2tcpip.h>
-#include <MSWSock.h>
-#include <vector>
-#include <unordered_set>
-#include <thread>
-#include <mutex>
-#include <atomic>
-#include <queue>
-#include <unordered_map>
-#include "protocol.h"
 using namespace std;
 
 enum ENUMOP { OP_SPAWN_WAVE, OP_SPAWN, OP_MOVE, OP_RECV, OP_SEND, OP_ACCEPT };
@@ -69,3 +56,17 @@ struct CLIENT
 	bool isMove = false;
 	unordered_set<int> view_list; //순서가 상관없을 땐 unordered 쓰는게 더 속도가 빠르다 
 };
+
+namespace SHARED_DATA {
+	extern HANDLE g_iocp;					//iocp 핸들
+	extern CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
+	extern unordered_map<int, MINION> g_minion;
+	extern priority_queue<event_type> timer_queue;
+	extern mutex timer_lock;
+	extern SOCKET listenSocket;
+	extern int g_minionindex;
+	extern int current_user;
+
+};
+
+

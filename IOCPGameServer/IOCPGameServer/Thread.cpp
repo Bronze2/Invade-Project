@@ -1,14 +1,21 @@
+#pragma once
+#include "pch.h"
 #include "Thread.h"
+#include "Service.h"
 
-void CThread::init()
+
+void CThread::Init()
 {
 	for (int i = 0; i < 10; ++i)
-		worker_threads.emplace_back([&]() {CThread::worker_Thread(); });
-	timer_thread = std::thread([&]() { CThread::do_timer(); });
+		worker_threads.emplace_back(std::thread([&]() {CThread::worker_Thread(); }));
+	timer_thread = std::thread([&]() {CThread::worker_Thread(); });
+	for (auto& thread : worker_threads)
+		thread.join();
+	timer_thread.join();
 }
 void CThread::packet_construct(int user_id, int io_byte)
 {
-	CLIENT& curr_user = g_clients[user_id];
+	CLIENT& curr_user = SHARED_DATA::g_clients[user_id];
 	EXOVER& recv_over = curr_user.m_recv_over;
 
 	int rest_byte = io_byte;		//이만큼 남은걸 처리해줘야 한다
@@ -107,7 +114,7 @@ void CThread::worker_Thread()
 		{
 			if (0 == io_byte)
 			{
-				disconnect(user_id);
+				CService::GetInst()->disconnect(user_id);
 				if (OP_SEND == exover->op)
 					delete exover;
 			}
@@ -122,7 +129,7 @@ void CThread::worker_Thread()
 		}
 		case OP_SEND:			//구조체 delete
 			if (0 == io_byte)
-				disconnect(user_id);
+				CService::GetInst()->disconnect(user_id);
 
 			delete exover;
 			break;
@@ -181,7 +188,7 @@ void CThread::worker_Thread()
 			clientSocket = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 			exover->c_socket = clientSocket; //새로 받는 소켓을 넣어준다. 안그러면 클라들이 같은 소켓을 공유한다.
 			ZeroMemory(&exover->over, sizeof(exover->over)); //accept_over를 exover라는 이름으로 받았으니 exover를 재사용
-			AcceptEx(listenSocket, clientSocket, exover->io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
+			AcceptEx(SHARED_DATA::listenSocket, clientSocket, exover->io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
 		}
 		break;
 		case OP_MOVE:
@@ -229,38 +236,38 @@ void CThread::process_packet(int user_id, char* buf)
 	{
 		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
 		cout << "Recv Login Packet Client " << endl;
-		enter_lobby(user_id, packet->name);
+		CService::GetInst()->enter_lobby(user_id, packet->name);
 	}
 	break;
 	case C2S_KEY_DOWN:
 	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
-		g_clients[user_id].m_move_time = packet->move_time;
-		g_clients[user_id].dir.x = packet->dir.x;
-		g_clients[user_id].dir.y = packet->dir.y;
-		g_clients[user_id].dir.z = packet->dir.z;
-		g_clients[user_id].animState = packet->state;
-		do_move(user_id, packet->direction);
+		SHARED_DATA::g_clients[user_id].m_move_time = packet->move_time;
+		SHARED_DATA::g_clients[user_id].dir.x = packet->dir.x;
+		SHARED_DATA::g_clients[user_id].dir.y = packet->dir.y;
+		SHARED_DATA::g_clients[user_id].dir.z = packet->dir.z;
+		SHARED_DATA::g_clients[user_id].animState = packet->state;
+		CService::GetInst()->do_move(user_id, packet->direction);
 	}
 	break;
 	case C2S_KEY_UP:
 	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
-		g_clients[user_id].m_move_time = packet->move_time;
-		g_clients[user_id].dir.x = packet->dir.x;
-		g_clients[user_id].dir.y = packet->dir.y;
-		g_clients[user_id].dir.z = packet->dir.z;
-		g_clients[user_id].animState = packet->state;
-		do_move_stop(user_id, packet->direction);
+		SHARED_DATA::g_clients[user_id].m_move_time = packet->move_time;
+		SHARED_DATA::g_clients[user_id].dir.x = packet->dir.x;
+		SHARED_DATA::g_clients[user_id].dir.y = packet->dir.y;
+		SHARED_DATA::g_clients[user_id].dir.z = packet->dir.z;
+		SHARED_DATA::g_clients[user_id].animState = packet->state;
+		CService::GetInst()->do_move_stop(user_id, packet->direction);
 	}
 	break;
 	case C2S_MOUSE:
 	{
 		cs_packet_mouse* packet = reinterpret_cast<cs_packet_mouse*>(buf);
-		g_clients[user_id].m_move_time = packet->move_time;
-		g_clients[user_id].Rot.x = packet->Rot.x;
-		g_clients[user_id].Rot.y = packet->Rot.y;
-		g_clients[user_id].Rot.z = packet->Rot.z;
+		SHARED_DATA::g_clients[user_id].m_move_time = packet->move_time;
+		SHARED_DATA::g_clients[user_id].Rot.x = packet->Rot.x;
+		SHARED_DATA::g_clients[user_id].Rot.y = packet->Rot.y;
+		SHARED_DATA::g_clients[user_id].Rot.z = packet->Rot.z;
 
-		do_Rotation(user_id);
+		CService::GetInst()->do_Rotation(user_id);
 	}
 	break;
 	case C2S_GAMESTART:
@@ -268,13 +275,13 @@ void CThread::process_packet(int user_id, char* buf)
 		cout << "C2S_GAMESTRAT" << endl;
 		cs_packet_lobby_gamestart* packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
 		if (packet->id == user_id) {
-			if (g_clients[user_id].m_isHost) {
-				for (int i = 0; i < current_user; ++i) {
-					enter_game(i);
+			if (SHARED_DATA::g_clients[user_id].m_isHost) {
+				for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+					CService::GetInst()->enter_game(i);
 				}
 
 				//플레이어 진입 후 미니언 생성 시작
-				add_timer(user_id, OP_SPAWN_WAVE, 5000);
+				CService::GetInst()->add_timer(user_id, OP_SPAWN_WAVE, 5000);
 			}
 		}
 
@@ -290,3 +297,5 @@ void CThread::process_packet(int user_id, char* buf)
 }
 
 
+CThread::CThread() {};
+CThread::~CThread() {};

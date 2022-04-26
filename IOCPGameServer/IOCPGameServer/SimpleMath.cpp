@@ -7,6 +7,9 @@
 // http://go.microsoft.com/fwlink/?LinkId=248929
 // http://go.microsoft.com/fwlink/?LinkID=615561
 //-------------------------------------------------------------------------------------
+#pragma once
+
+#include "pch.h"
 #include "SimpleMath.h"
 
 /****************************************************************************
