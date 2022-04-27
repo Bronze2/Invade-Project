@@ -11,9 +11,12 @@
 #include <atomic>
 #include <queue>
 #include <unordered_map>
+#include <map>
+#include <array>
 #include "protocol.h"
 #include "define.h"
 #include "global.h"
+#include "func.h"
 
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "mswsock.lib")

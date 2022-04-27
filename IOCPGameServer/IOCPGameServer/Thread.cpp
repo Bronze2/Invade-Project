@@ -2,13 +2,13 @@
 #include "pch.h"
 #include "Thread.h"
 #include "Service.h"
-
+#include "SceneMgr.h"
 
 void CThread::Init()
 {
 	for (int i = 0; i < 10; ++i)
 		worker_threads.emplace_back(std::thread([&]() {CThread::worker_Thread(); }));
-	timer_thread = std::thread([&]() {CThread::worker_Thread(); });
+	timer_thread = std::thread([&]() {CThread::do_timer(); });
 	for (auto& thread : worker_threads)
 		thread.join();
 	timer_thread.join();
@@ -58,6 +58,7 @@ void CThread::do_timer()
 {
 	while (true)
 	{
+		CSceneMgr::GetInst()->Update();
 		this_thread::sleep_for(1ms); //Sleep(1);
 		while (true)
 		{
@@ -193,7 +194,6 @@ void CThread::worker_Thread()
 		break;
 		case OP_MOVE:
 		{
-
 		}
 		break;
 

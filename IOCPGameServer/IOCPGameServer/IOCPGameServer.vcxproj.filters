@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -16,48 +12,115 @@
     <Filter Include="소스 파일\Server">
       <UniqueIdentifier>{72a64448-1641-4a5d-b93e-fd7ffc1c95fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GameLogic">
+      <UniqueIdentifier>{d95df2a8-3426-4ffd-be55-fe5ef8bdbc19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameLogic\Scene">
+      <UniqueIdentifier>{2a1d587f-d7e2-433d-83c8-65bcfd84b1f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utill">
+      <UniqueIdentifier>{bb7dd842-db25-466d-84ee-2ff8f5e20fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\GameLogic\Script">
+      <UniqueIdentifier>{ad3ad3d8-9841-4d9a-adbe-d6e01892943d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameLogic\Collision">
+      <UniqueIdentifier>{46ed02f3-93b5-4edf-a4fd-c71a4962046d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="protocol.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Server.h">
       <Filter>소스 파일\Server</Filter>
     </ClInclude>
     <ClInclude Include="define.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="d3dx12.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Thread.h">
       <Filter>소스 파일\Server</Filter>
     </ClInclude>
     <ClInclude Include="externData.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Service.h">
       <Filter>소스 파일\Server</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMgr.h">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>소스 파일\GameLogic\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>소스 파일\GameLogic\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="func.h">
+      <Filter>소스 파일\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>소스 파일\Utill</Filter>
+    </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="MinionScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameScene.h">
+      <Filter>소스 파일\GameLogic\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider3D.h">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMgr.h">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider2D.h">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IOCPServer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>소스 파일\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="SimpleMath.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Thread.cpp">
       <Filter>소스 파일\Server</Filter>
@@ -65,8 +128,68 @@
     <ClCompile Include="Service.cpp">
       <Filter>소스 파일\Server</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMgr.cpp">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일\GameLogic\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>소스 파일\GameLogic\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="func.cpp">
+      <Filter>소스 파일\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMath.cpp">
+      <Filter>소스 파일\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="IOCPServer.cpp">
+      <Filter>소스 파일\Server</Filter>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>소스 파일\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="MinionScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="TowerScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameScene.cpp">
+      <Filter>소스 파일\GameLogic\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3D.cpp">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMgr.cpp">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2D.cpp">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

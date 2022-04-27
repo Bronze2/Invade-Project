@@ -148,6 +148,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,
 	LIGHT3D,
 	PARTICLESYSTEM,
+	SENSOR,
 	END,
 	SCRIPT,
 };
@@ -331,3 +332,18 @@ enum class MINION_CAMP {
 	BLUE,
 	RED,
 };
+
+// 상수버퍼 메모리
+struct tTransform
+{
+	Matrix matWorld;
+	Matrix matView;
+	Matrix matProj;
+	Matrix matWV;
+	Matrix matWVP;
+	Matrix matWorldInv;
+	Matrix matViewInv;
+	Matrix matProjInv;
+};
+
+extern tTransform g_transform;

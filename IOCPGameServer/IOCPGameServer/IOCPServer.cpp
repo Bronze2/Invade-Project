@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Server.h"
 #include "Service.h"
+#include "SceneMgr.h"
 //
 namespace SHARED_DATA {
 	HANDLE g_iocp;					//iocp วฺต้
@@ -20,6 +21,7 @@ namespace SHARED_DATA {
 void main()
 {
 	std::cout << "Run Server" << std::endl;
+	CSceneMgr::GetInst()->Init();
 	CServer::GetInst()->Init();
 	CService::GetInst()->Init();
 
