@@ -35,7 +35,7 @@ void CBowScript::Update()
 	//Vec3 vBowFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	Vec3 vBowFront = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 	Vec3 vArrowDir;
-	
+
 	Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetLocalPos();
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
@@ -48,18 +48,23 @@ void CBowScript::Update()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed += 2000.f * DT;
-		if (m_fArrowSpeed > 1000.f) {
-			m_fArrowSpeed = 1000.f;
+		if (m_fArrowSpeed > 2000.f) {
+			m_fArrowSpeed = 2000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+		//Vec3 vTargetPos = pCamera->GetScript<CCameraScript>()->GetShootPos();
+		Vec3 vTargetDir = pCamera->GetScript<CCameraScript>()->GetShootDir();
+
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
+		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(Transform()->GetWorldDir(DIR_TYPE::UP));
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
-		// m_pArrow[m_iCurArrow]->
+
 		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
 		Vec3 vArrowRot = GetObj()->GetParent()->Transform()->GetLocalRot() + Vec3(0.f, XMConvertToRadians(90.f), 0.f);
 		Vec3 vArrowRight = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -69,7 +74,7 @@ void CBowScript::Update()
 
 		m_pArrow[m_iCurArrow]->ClearParent();
 
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
+		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);	// vArrowPos
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 		m_pArrow[m_iCurArrow]->Transform()->SetWorldDir(DIR_TYPE::RIGHT, vArrowRight);
 		m_pArrow[m_iCurArrow]->Transform()->SetWorldDir(DIR_TYPE::UP, vArrowUp);
@@ -277,6 +282,7 @@ void CBowScript::Awake()
 #ifdef ARROW_TEST
 	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+
 	for (int i = 0; i < 20; ++i) {
 		m_pArrow[i] = new CGameObject;
 		m_pArrow[i]->SetName(L"Arrow");

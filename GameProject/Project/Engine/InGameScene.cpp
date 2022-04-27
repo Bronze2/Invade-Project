@@ -135,7 +135,7 @@ void CInGameScene::Init()
 	CGameObject* pEmptyPlayer = new CGameObject;
 	pEmptyPlayer->AddComponent(new CTransform);		
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
-	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
+	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
 	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));

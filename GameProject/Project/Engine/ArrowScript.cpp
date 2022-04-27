@@ -87,9 +87,8 @@ void CArrowScript::Update()
 #else
 		if (!m_bMaxCharged) {
 			Vec3 vRestorePos = vPos;
-			vPos.x += 15.f * DT;
+			vPos.x += 130.f * DT;			// 15.f
 		}
-		m_vRestorePos = vPos;
 		Transform()->SetLocalPos(vPos);
 #endif
 	}
@@ -244,22 +243,34 @@ void CArrowScript::Update()
 			m_eState = ARROW_STATE::IDLE;
 		}
 
-		m_vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		m_vRestorePos = vPos;
+
+		Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		vPos += m_vDir * m_fSpeed * DT;
 		m_fVelocityY -= (GRAVITY * DT) / 10;
 		m_fFallSpeed += m_fVelocityY;
 		vPos.y += m_fFallSpeed * DT;
 
+		m_vDeltaPos = vPos - m_vRestorePos;
+		float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
+		//vRot.y += fAngle;
+		
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
+		m_vTargetDir = vPos - m_vRestorePos;
+		m_vTargetDir.Normalize();
+
 		float value = XMConvertToRadians(90.f * DT * 10);
 
-		float vDotValue = Dot(m_vDir, Transform()->GetWorldDir(DIR_TYPE::FRONT));
-		Vec3 vCrossValue = Cross(Transform()->GetWorldDir(DIR_TYPE::FRONT), m_vDir);
+		float vDotValue = Dot(vDir, m_vTargetDir);
+		//Vec3 vCrossValue = Cross(m_vTargetDir, m_vDir);
 
-		XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP)), value);
+		Vec3 vCrossValue = Cross(m_vDir, vDir);
+
+		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
 		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
+		//Transform()->SetQuaternion(Vec4(fAngle, 0.f, 0.f, 1.f));
 
 #endif
 	}
@@ -277,7 +288,7 @@ void CArrowScript::Init()
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
 
-	m_pBow->AddChild(GetObj());
+	//m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
@@ -296,3 +307,4 @@ CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROW
 CArrowScript::~CArrowScript()
 {
 }
+ 

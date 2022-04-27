@@ -20,6 +20,7 @@ private:
     Vec3 m_vRestorePos;
     
     Vec3 m_vShootPos;
+    Vec3 m_vShootDir;
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
@@ -37,6 +38,7 @@ public:
     Vec3& CameraZoom(Vec3 _vPos);
 
     Vec3& GetShootPos() { return m_vShootPos; }
+    Vec3& GetShootDir() { return m_vShootDir; }
 
     void Init();
 

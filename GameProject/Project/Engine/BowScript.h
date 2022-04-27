@@ -26,6 +26,7 @@ private:
 
 #ifdef ARROW_TEST
     CGameObject* m_pArrow[20];
+    CGameObject* m_pEmptyArrow;         // 활에 붙어있는 가짜 활 (발사안됨)
     UINT m_iCurArrow;
     Ptr<CTexture>pBlackTex;
     int m_iPower;

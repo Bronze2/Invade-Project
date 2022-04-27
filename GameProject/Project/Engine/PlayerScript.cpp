@@ -325,7 +325,7 @@ void CPlayerScript::Update()
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 		// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
-		vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
+		vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f 더 회전시킬건지?
 
 #ifndef ARROW_TEST
 		m_fArrowSpeed = 200.f;
@@ -528,6 +528,9 @@ void CPlayerScript::Update()
 		//	m_iCurArrow = 0;
 
 		//}
+
+//test
+		//vPos = pCamera->GetScript<CCameraScript>()->GetShootPos();
 #endif
 	}
 

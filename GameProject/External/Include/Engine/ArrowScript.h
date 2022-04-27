@@ -37,6 +37,8 @@ private:
 
     ARROW_STATE m_eState;
     Vec3 m_vRestorePos;
+    Vec3 m_vTargetDir;
+    Vec3 m_vDeltaPos;
 
     CGameObject* m_pBow;
 
