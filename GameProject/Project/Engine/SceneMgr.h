@@ -34,8 +34,8 @@ public:
 	void net_setLocalPosByID(int id, float x, float y, float z);
 	void net_setRotationByID(int id, float x, float y, float z);
 	void net_setAnimationByID(int id , int state);
-	void net_spawnMinion_blue(int id);
-	void net_spawnMinion_red(int id);
+	void net_spawnMinion_blue(int id, float x, float y, float z);
+	void net_spawnMinion_red(int id, float x, float y, float z);
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);

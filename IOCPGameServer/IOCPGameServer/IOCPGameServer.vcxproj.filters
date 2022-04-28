@@ -31,6 +31,9 @@
     <Filter Include="소스 파일\GameLogic\Collision">
       <UniqueIdentifier>{46ed02f3-93b5-4edf-a4fd-c71a4962046d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GameLogic\Manager">
+      <UniqueIdentifier>{704db03b-f00f-446f-b913-0807d3f0de0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="protocol.h">
@@ -66,13 +69,7 @@
     <ClInclude Include="Component.h">
       <Filter>소스 파일\GameLogic</Filter>
     </ClInclude>
-    <ClInclude Include="EventMgr.h">
-      <Filter>소스 파일\GameLogic</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>소스 파일\GameLogic\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneMgr.h">
       <Filter>소스 파일\GameLogic\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
@@ -111,11 +108,26 @@
     <ClInclude Include="Collider3D.h">
       <Filter>소스 파일\GameLogic\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionMgr.h">
-      <Filter>소스 파일\GameLogic\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Collider2D.h">
       <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Sensor.h">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorMgr.h">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMgr.h">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMgr.h">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,13 +149,7 @@
     <ClCompile Include="Component.cpp">
       <Filter>소스 파일\GameLogic</Filter>
     </ClCompile>
-    <ClCompile Include="EventMgr.cpp">
-      <Filter>소스 파일\GameLogic</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>소스 파일\GameLogic\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneMgr.cpp">
       <Filter>소스 파일\GameLogic\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Layer.cpp">
@@ -185,11 +191,26 @@
     <ClCompile Include="Collider3D.cpp">
       <Filter>소스 파일\GameLogic\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionMgr.cpp">
-      <Filter>소스 파일\GameLogic\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Collider2D.cpp">
       <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Sensor.cpp">
+      <Filter>소스 파일\GameLogic\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorMgr.cpp">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMgr.cpp">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMgr.cpp">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>소스 파일\GameLogic\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

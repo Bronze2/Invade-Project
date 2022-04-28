@@ -9,7 +9,7 @@
 //#include "Collider3D.h"
 #include "CollisionMgr.h"
 //#include "EventMgr.h"
-//#include "SensorMgr.h"
+#include "SensorMgr.h"
 //
 //#include "GridScript.h"
 //#include "PlayerScript.h"
@@ -98,7 +98,7 @@ void CSceneMgr::Update()
 	m_pCurScene->LateUpdate();
 
 	m_pCurScene->FinalUpdate();
-	//CSensorMgr::GetInst()->Update();
+	CSensorMgr::GetInst()->Update();
 	// 충돌 처리
 	CCollisionMgr::GetInst()->Update();
 

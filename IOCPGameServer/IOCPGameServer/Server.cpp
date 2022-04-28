@@ -195,18 +195,21 @@ void CServer::send_leave_packet(int user_id, int o_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-void CServer::send_spawn_minion_packet(int minion_id)
+void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z, CAMP_STATE camp)
 {
-	//sc_packet_spawn_minion packet;
-	//packet.size = sizeof(packet);
-	//packet.type = S2C_SPAWN_MINION;
-	//packet.camp = BLUE;
-	//packet.id = minion_id;
-	//packet.pos = g_minion[minion_id].Pos;
-	//packet.dir = g_minion[minion_id].Dir;
-	//packet.rot = g_minion[minion_id].Rot;
+	sc_packet_spawn_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_SPAWN_MINION;
+	if(camp == CAMP_STATE::BLUE)
+		packet.camp = BLUE;
+	else if (camp == CAMP_STATE::RED)
+		packet.camp = RED;
+	packet.id = minion_id;
+	p_Vec3 pos = { x,y,z };
+	packet.pos = pos;
 
-	//for (int i = 0; i < current_user; ++i)
-	//	send_packet(i, &packet);
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
 
 }

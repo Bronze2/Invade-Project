@@ -325,7 +325,8 @@ enum class SHADER_POV
 enum class MINION_STATE {
 	WALK,
 	ATTACK,
-	FIND,
+	DIE,
+	END,
 };
 
 enum class MINION_CAMP {
@@ -333,6 +334,21 @@ enum class MINION_CAMP {
 	RED,
 };
 
+enum class CAMP_STATE {
+	RED,
+	BLUE,
+};
+enum class SPAWN_PATTERN {
+	PATTERN1 = 1,
+	PATTERN2,
+	PATTERN3,
+	END,
+};
+enum class SPAWN_COUNT {
+	SIX = 1,
+	SIX2,
+	SEVEN,
+};
 // 상수버퍼 메모리
 struct tTransform
 {

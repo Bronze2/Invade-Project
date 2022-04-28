@@ -292,12 +292,14 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }
 
-void CSceneMgr::net_spawnMinion_blue(int id)
+void CSceneMgr::net_spawnMinion_blue(int id, float x, float y ,float z)
 {
-	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObjectByPattern();
+	Vec3 Pos{ x,y,z };
+	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, MINION_ATTACK_TYPE::MELEE);
 }
-void CSceneMgr::net_spawnMinion_red(int id)
+void CSceneMgr::net_spawnMinion_red(int id, float x, float y, float z)
 {
-	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObjectByPattern();
+	Vec3 Pos{ x,y,z };
+	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos,MINION_ATTACK_TYPE::MELEE);
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 using namespace std;
 
-enum ENUMOP { OP_SPAWN_WAVE, OP_SPAWN, OP_MOVE, OP_RECV, OP_SEND, OP_ACCEPT };
+enum ENUMOP { OP_UPDATE ,OP_MOVE, OP_RECV, OP_SEND, OP_ACCEPT };
 
 enum C_STATUS { ST_FREE, ST_ALLOCATED, ST_ACTIVE };
 
@@ -68,5 +68,15 @@ namespace SHARED_DATA {
 	extern int current_user;
 
 };
+//struct tResolution
+//{
+//	float fWidth;
+//	float fHeight;
+//};
+//struct tGlobalValue {
+//	tResolution vResolution;
+//	float fDT;
+//	float fAccTime;
+//};
 
 

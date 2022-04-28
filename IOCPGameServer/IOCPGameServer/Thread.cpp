@@ -3,6 +3,8 @@
 #include "Thread.h"
 #include "Service.h"
 #include "SceneMgr.h"
+#include "EventMgr.h"
+#include "TimeMgr.h"
 
 void CThread::Init()
 {
@@ -58,8 +60,12 @@ void CThread::do_timer()
 {
 	while (true)
 	{
-		CSceneMgr::GetInst()->Update();
-		this_thread::sleep_for(1ms); //Sleep(1);
+		CTimeMgr::GetInst()->Update();
+		//CEventMgr::GetInst()->Clear();
+		//CSceneMgr::GetInst()->Update();
+		//CEventMgr::GetInst()->Update();
+
+		//this_thread::sleep_for(1ms); //Sleep(1);
 		while (true)
 		{
 			SHARED_DATA::timer_lock.lock();
@@ -83,11 +89,15 @@ void CThread::do_timer()
 			{
 			}
 			break;
-			case OP_SPAWN:
+			case OP_UPDATE:
 			{
 				EXOVER* over = new EXOVER();
 				over->op = ev.event_id;
-				PostQueuedCompletionStatus(SHARED_DATA::g_iocp, 1, ev.obj_id, &over->over);
+				CEventMgr::GetInst()->Clear();
+				CSceneMgr::GetInst()->Update();
+				CEventMgr::GetInst()->Update();
+				CService::GetInst()->add_timer(ev.event_id, OP_UPDATE, 33);	//30fps
+				//PostQueuedCompletionStatus(SHARED_DATA::g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
 
@@ -197,30 +207,12 @@ void CThread::worker_Thread()
 		}
 		break;
 
-		case OP_SPAWN_WAVE:
+		case OP_UPDATE:
 		{
-			//SHARED_DATA::g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
-			//SHARED_DATA::g_minion[g_minionindex].Pos.y = 0.f;
-			//SHARED_DATA::g_minion[g_minionindex].Pos.z = 4150.f;
 
-			//send_spawn_minion_packet(g_minionindex - 1, g_minionindex, wave_count);
-			//g_minionindex++;
-			////주기적인 스폰
-			//add_timer(user_id, OP_SPAWN, 1000);
 		}
 		break;
-		case OP_SPAWN:
-		{
-			//g_minion[g_minionindex].Pos.x = 50.f + g_minionindex * 100;
-			//g_minion[g_minionindex].Pos.y = 0.f;
-			//g_minion[g_minionindex].Pos.z = 4150.f;
 
-			////send_spawn_minion_packet(g_minionindex);			
-			//g_minionindex++;
-			////주기적인 스폰
-			//add_timer(user_id, OP_SPAWN, 10000);
-		}
-		break;
 		}
 	}
 
@@ -281,7 +273,7 @@ void CThread::process_packet(int user_id, char* buf)
 				}
 
 				//플레이어 진입 후 미니언 생성 시작
-				CService::GetInst()->add_timer(user_id, OP_SPAWN_WAVE, 5000);
+				CService::GetInst()->add_timer(user_id, OP_UPDATE, 10);
 			}
 		}
 

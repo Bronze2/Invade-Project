@@ -145,16 +145,12 @@ constexpr unsigned char bomb = 2;
 struct sc_packet_spawn_minion {
 	char	size;
 	char	type;
-	int		blue_id;
-	int		red_id;
+	int		id;
+	char    camp;
 
-
-	p_Vec3  blue_pos;
-	p_Vec3  blue_dir;
-	p_Vec3  blue_rot;
-	p_Vec3  red_pos;
-	p_Vec3  red_dir;
-	p_Vec3  red_rot;
+	p_Vec3  pos;
+	p_Vec3  dir;
+	p_Vec3  rot;
 
 };
 

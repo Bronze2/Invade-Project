@@ -15,6 +15,8 @@ void CService::add_timer(int obj_id, ENUMOP op_type, int duration)
 }
 
 
+
+
 bool CService::is_near(int a, int b)
 {
 

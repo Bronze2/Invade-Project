@@ -135,6 +135,8 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMgr.h" />
     <ClInclude Include="Script.h" />
+    <ClInclude Include="Sensor.h" />
+    <ClInclude Include="SensorMgr.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="Thread.h">
@@ -147,6 +149,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
@@ -169,6 +172,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="Thread.cpp">
@@ -179,6 +184,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
