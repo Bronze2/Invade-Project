@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Collider2D.h"
 #include "Collider3D.h"
+#include "Camera.h"
 
 CCollisionMgr::CCollisionMgr() :m_LayerCheck{} {}
 
@@ -20,19 +21,23 @@ void CCollisionMgr::Init()
 void CCollisionMgr::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-
+	m_pCameraObject->SetFront(Vec3(0, 0, 0));
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
+		RayCollision(pCurScene->GetLayer(i));
 		for (int j = 0; j < MAX_LAYER; ++j)
 		{
 			if (m_LayerCheck[i] & (1 << j))
 			{
-				// i <= j
-				CollisionLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
+				
 				Collision3DLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
+
+
 			}
 		}
+		
 	}
+
 }
 
 void CCollisionMgr::CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2)
@@ -481,5 +486,35 @@ bool CCollisionMgr::CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pColli
 		}
 	}
 	return true;
+}
+#include "Camera.h"
+void CCollisionMgr::RayCollision(const CLayer* _pLayer)
+{
+	const vector<CGameObject*>& vecObj1 = _pLayer->GetObjects();
+
+	map<DWORD_PTR, bool>::iterator iter;
+
+
+	for (size_t i = 0; i < vecObj1.size(); ++i)
+	{
+		CCollider3D* pCollider1 = vecObj1[i]->Collider3D();
+
+		if (nullptr == pCollider1)
+			continue;
+		if (!m_pCameraObject->GetPlay())
+			return;
+		if (pCollider1->GetObj() == m_pCameraObject->GetPlayer())
+			continue;
+
+	
+
+
+		m_pCameraObject->InterSectsObject(pCollider1);
+
+	
+
+	
+
+	}
 }
 

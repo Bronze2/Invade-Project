@@ -24,7 +24,10 @@ private:
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
+
+
 public:
+  
     CCameraScript();
     virtual ~CCameraScript();
 
@@ -43,4 +46,20 @@ public:
     void Init();
 
     CLONE(CCameraScript);
+
+    //여기서부터
+
+private:
+    float m_vCameraDistanceOffset;
+    CGameObject* m_pPlayer;
+    
+
+public:
+    void SetDistanceOffset(CGameObject* _pObject);
+  
+
+
+
+  
+
 };

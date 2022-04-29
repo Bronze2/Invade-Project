@@ -72,6 +72,7 @@ void CInGameScene::Init()
 	//pMainCam->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pMainCam->Camera()->SetFar(10000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
+	CCollisionMgr::GetInst()->SetCameraObject(pMainCam->Camera());
 
 	//m_pCurScene->FindLayer(L"Camera")->AddGameObject(pMainCam);
 
@@ -106,16 +107,19 @@ void CInGameScene::Init()
 	pObject->AddComponent(new CSensor);
 	pObject->AddComponent(new CPlayerScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));      // 80.f, 200.f, 80.f ?????
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, -100.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
-	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->MeshRender()->SetDynamicShadow(false);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+	pMainCam->GetScript<CCameraScript>()->SetDistanceOffset(pObject);
 
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
+	pMainCam->Camera()->SetPlayer(pObject);
+	pMainCam->Camera()->SetbPlay(true);
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
@@ -148,17 +152,12 @@ void CInGameScene::Init()
 	pBow = pMeshData->Instantiate();
 	pBow->SetName(L"Bow");
 	pBow->AddComponent(new CTransform);
-	pBow->AddComponent(new CCollider3D);
-	pBow->AddComponent(new CSensor);
 	pBow->AddComponent(new CBowScript);
-	pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pBow->Collider3D()->SetOffsetScale(Vec3(20.f, 115.f, 10.f));
-	pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->Transform()->SetLocalScale(Vec3(2.4, 1.2f, 2.4));
 	pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
-	pBow->MeshRender()->SetDynamicShadow(true);
+	pBow->MeshRender()->SetDynamicShadow(false);
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
 	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
 
@@ -195,7 +194,7 @@ void CInGameScene::Init()
 	pRedFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedFirstTower->FrustumCheck(false);
 	pRedFirstTower->GetScript<CTowerScript>()->Init();
-	pRedFirstTower->MeshRender()->SetDynamicShadow(true);
+	pRedFirstTower->MeshRender()->SetDynamicShadow(false);
 
 
 
@@ -226,7 +225,7 @@ void CInGameScene::Init()
 	pRedSecondTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedSecondTower->FrustumCheck(false);
 	pRedSecondTower->GetScript<CTowerScript>()->Init();
-	pRedSecondTower->MeshRender()->SetDynamicShadow(true);
+	pRedSecondTower->MeshRender()->SetDynamicShadow(false);
 
 
 	FindLayer(L"Red")->AddGameObject(pRedSecondTower);
@@ -249,7 +248,7 @@ void CInGameScene::Init()
 	pBlueFirstTower->Transform()->SetLocalPos(Vec3(-200.f, 0.f, 1850.f));
 	pBlueFirstTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pBlueFirstTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	pBlueFirstTower->MeshRender()->SetDynamicShadow(true);
+	pBlueFirstTower->MeshRender()->SetDynamicShadow(false);
 	pBlueFirstTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueFirstTower);
 
@@ -279,7 +278,7 @@ void CInGameScene::Init()
 	pBlueSecondTower->Transform()->SetLocalPos(Vec3(200.f, 0.f, 1000.f));
 	pBlueSecondTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pBlueSecondTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	pBlueSecondTower->MeshRender()->SetDynamicShadow(true);
+	pBlueSecondTower->MeshRender()->SetDynamicShadow(false);
 	pBlueSecondTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
@@ -317,7 +316,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 6, 0.F, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
-	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->MeshRender()->SetDynamicShadow(false);
 
 	FindLayer(L"Blue")->AddGameObject(pObject);
 	pNexus = pObject;
@@ -351,7 +350,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(-3.14f / 6, 3.14f, 0.f));
 
 	pObject->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
-	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->MeshRender()->SetDynamicShadow(false);
 	pNexus = pObject;
 	FindLayer(L"Red")->AddGameObject(pObject);
 
@@ -592,17 +591,17 @@ void CInGameScene::Init()
 
 
 
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 14; ++i) {
 			pObject = new CGameObject;
 			pObject->SetName(L"Cover");
 			pObject->AddComponent(new CTransform);
 			pObject->AddComponent(new CCollider3D);
 			pObject->AddComponent(new CMeshRender);
 			pObject->FrustumCheck(false);
-			pObject->Transform()->SetLocalPos(Vec3(-480.f, 0.f, 900.f * (i + 1)));
+			pObject->Transform()->SetLocalPos(Vec3(-560.f, 0.f, 300.f * (i + 1)));
 			pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-			pObject->Collider3D()->SetOffsetScale(Vec3(70.f, 100.f, 1000.f));
+			pObject->Collider3D()->SetOffsetScale(Vec3(200.f, 200.f, 300.f));
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 			pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 			pObject->MeshRender()->SetMaterial(pMtrl);
@@ -617,10 +616,10 @@ void CInGameScene::Init()
 			pObject->AddComponent(new CCollider3D);
 			pObject->AddComponent(new CMeshRender);
 			pObject->FrustumCheck(false);
-			pObject->Transform()->SetLocalPos(Vec3(480.f, 0.f, 900.f * (i + 1)));
+			pObject->Transform()->SetLocalPos(Vec3(560.f, 0.f, 300.f * (i + 1)));
 			pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-			pObject->Collider3D()->SetOffsetScale(Vec3(70.f, 100.f, 1000.f));
+			pObject->Collider3D()->SetOffsetScale(Vec3(200.f, 200.f, 300.f));
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 			pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 			pObject->MeshRender()->SetMaterial(pMtrl);
@@ -638,7 +637,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(-225.f, 0.f, -570.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 1150.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 1150.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -656,7 +655,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(225.f, 0.f, -570.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 1150.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 1150.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -673,7 +672,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 200.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -691,7 +690,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, -1350.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -710,7 +709,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(0, 0.f, -1650.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(600.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(600.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -750,7 +749,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, -1350.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -768,7 +767,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 200.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -789,7 +788,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 4350.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 350.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -807,7 +806,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(-225.f, 0.f, 5120.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 1150.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 1150.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -825,7 +824,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(225.f, 0.f, 5120.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 1150.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 1150.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -844,7 +843,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 4350.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 350.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 350.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -860,7 +859,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(0, 0.f, 6200.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(600.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(600.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -876,7 +875,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(-400.f, 0.f, 5850.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);
@@ -892,7 +891,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(400.f, 0.f, 5850.f));
 		pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 100.f, 400.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(300.f, 200.f, 400.f));
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pObject->MeshRender()->SetMaterial(pMtrl);

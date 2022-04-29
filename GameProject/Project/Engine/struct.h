@@ -271,3 +271,8 @@ struct tBillBoard {
 	Vec3 vWorldDir;
 	Vec2 vPadding;
 };
+
+struct tRay {
+	Vec3 vOrigin;
+	Vec3 vDir;
+};

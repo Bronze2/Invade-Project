@@ -41,8 +41,20 @@ private:
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F; // Foward
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D; // Deferred
     map<INT_PTR, vector<tInstObj>>		m_mapSingleObj; // Single Object
-public:
 
+
+    CGameObject* m_pPlayer;
+    SimpleMath::Ray* m_pRay;
+    Vec3 m_vLook;
+    bool m_bPlayer = false;
+    Vec3 m_vFront;
+
+public:
+    Vec3 GetLook() { return m_vLook; }
+    void SetFront(const Vec3& _vFront) {  m_vFront=_vFront; }
+    Vec3 GetFront() { return m_vFront; }
+    SimpleMath::Ray* GetRay() { return m_pRay; }
+    void InterSectsObject(CCollider3D* _pCollider);
     virtual void FinalUpdate();
     void SortGameObject();
     void SortShadowObject();
@@ -85,6 +97,15 @@ public:
     virtual ~CCamera();
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);
+
+    void SetPlayer(CGameObject* _pGameObject) { m_pPlayer = _pGameObject; }
+    CGameObject* GetPlayer() { return m_pPlayer; }
+    void SetbPlay(const bool& _Play) {
+        m_bPlayer = _Play;
+        if (m_bPlayer)
+            m_pRay = new SimpleMath::Ray;
+    }
+    bool GetPlay() { return m_bPlayer; }
 
     CLONE(CCamera);
 

@@ -21,6 +21,8 @@ private:
     bool m_bNotParent;// 부모는 필요하지않지만 특정 오브젝트의 matworld가 필요할때
 
     Matrix m_matObjectWorldMatrix;
+
+    
 public:
     const Vec4 GetQuaternion()const { return m_vQuaternion; }
     void SetQuaternion(const Vec4& _vQuaternion) { m_vQuaternion = _vQuaternion; }

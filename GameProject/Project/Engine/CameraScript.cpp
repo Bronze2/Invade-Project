@@ -7,12 +7,15 @@
 void CCameraScript::Update()
 {
 	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vWorldPos = Transform()->GetWorldPos();
+	m_vCameraDistanceOffset = sqrt(pow(GetObj()->Transform()->GetWorldPos().x - m_pPlayer->Transform()->GetWorldPos().x, 2) + pow(GetObj()->Transform()->GetWorldPos().y - m_pPlayer->Transform()->GetWorldPos().y, 2) + pow(GetObj()->Transform()->GetWorldPos().z - m_pPlayer->Transform()->GetWorldPos().z, 2));
+
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
 	Vec3 vRot = Transform()->GetLocalRot();
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
+	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);// 추후 수정
 
 	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 		Init();
@@ -115,6 +118,14 @@ void CCameraScript::Init()
 	m_fZoomSpeed = 200.0f;
 	m_fZoomElapsedTime = 0.0f;
 }
+
+void CCameraScript::SetDistanceOffset(CGameObject* _pObject)
+{
+	m_pPlayer = _pObject;
+	
+}
+
+
 
 CCameraScript::CCameraScript() :CScript(0), m_fSpeed(200.f), m_fScaleSpeed(1.f), m_fZoomElapsedTime(0.0f), m_bCheckStartMousePoint(false), m_tEffectType(CAMERA_EFFECT_TYPE::NONE)
 {

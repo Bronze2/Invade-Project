@@ -12,6 +12,7 @@ union tColID
 class CCollider2D;
 class CLayer;
 class CCollider3D;
+class CCamera;
 
 class CCollisionMgr
 {
@@ -20,6 +21,7 @@ private:
 	UINT					m_LayerCheck[MAX_LAYER];
 	map<DWORD_PTR, bool>	m_mapCol;
 
+	CCamera* m_pCameraObject;
 public:
 	void Init();
 	void Update();
@@ -27,7 +29,7 @@ public:
 public:
 	void CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2);
 	void CheckCollisionLayer(int _iLayerIdx1, int _iLyaerIdx2);
-
+	void SetCameraObject(CCamera* _pCamera) { m_pCameraObject = _pCamera; }
 private:
 	void CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2);
 	void Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLayer2);
@@ -37,5 +39,8 @@ private:
 	bool CollisionCircle(CCollider2D* _pCollider1, CCollider2D* _pCollider2);
 	bool CollisionRectCircle(CCollider2D* _pCollider1, CCollider2D* _pCollider2);
 	bool CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pCollider2);
+
+	void RayCollision(const CLayer* _pLayer);
+
 };
 

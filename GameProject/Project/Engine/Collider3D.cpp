@@ -24,6 +24,11 @@ void CCollider3D::FinalUpdate()
 	Matrix matScale = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
+	Matrix bWorld = XMLoadFloat4x4(&m_matColWorld);
+	m_bBound = {};
+	m_bBound.Transform(m_bBound, m_matColWorld);
+	XMFLOAT3 corners[8] = {};
+	m_bBound.GetCorners(corners);
 }
 
 void CCollider3D::Render()

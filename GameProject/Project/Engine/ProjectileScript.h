@@ -19,9 +19,14 @@ private:
     bool m_bRotate;
     Vec3 m_vDir;
     Matrix m_matObjectWorldMatrix;
+    Vec3 m_vStartPos;
 
     PROJECTILE_TYPE m_eProjectileType;
+
+    float m_fLength;
 public:
+    bool M_FLengthCheck(const Vec3& _Pos);
+    void SetStartPos(const Vec3& _Pos) { m_vStartPos = _Pos; }
     void SetProjectileType(PROJECTILE_TYPE _Type) { m_eProjectileType = _Type; }
     void SetMatrixObject(const Matrix& _Matrix) { m_matObjectWorldMatrix = _Matrix; }
 \

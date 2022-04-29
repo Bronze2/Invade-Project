@@ -57,9 +57,6 @@
     <ClCompile Include="CollisionMgr.cpp">
       <Filter>Mgr</Filter>
     </ClCompile>
-    <ClCompile Include="EmptyPlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>Device</Filter>
     </ClCompile>
@@ -116,18 +113,6 @@
     </ClCompile>
     <ClCompile Include="MeshData.cpp">
       <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="MinionScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="MonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectileScript.cpp">
-      <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="ResMgr.cpp">
       <Filter>Resource</Filter>
@@ -195,17 +180,11 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="SpawnScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="StructuredBuffer.cpp">
       <Filter>Device</Filter>
     </ClCompile>
     <ClCompile Include="TimeMgr.cpp">
       <Filter>Mgr</Filter>
-    </ClCompile>
-    <ClCompile Include="TowerScript.cpp">
-      <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Resource</Filter>
@@ -215,6 +194,27 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>Object\Component\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyPlayerScript.cpp">
+      <Filter>Script\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MinionScript.cpp">
+      <Filter>Script\Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterScript.cpp">
+      <Filter>Script\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileScript.cpp">
+      <Filter>Script\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnScript.cpp">
+      <Filter>Script\Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="TowerScript.cpp">
+      <Filter>Script\Tower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,9 +238,6 @@
     </ClInclude>
     <ClInclude Include="CollisionMgr.h">
       <Filter>Mgr</Filter>
-    </ClInclude>
-    <ClInclude Include="EmptyPlayerScript.h">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>Device</Filter>
@@ -304,18 +301,6 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="MonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="MinionScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectileScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerScript.h">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="ResMgr.h">
       <Filter>Resource</Filter>
@@ -386,17 +371,11 @@
     <ClInclude Include="Shader.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="SpawnScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="StructuredBuffer.h">
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="TimeMgr.h">
       <Filter>Mgr</Filter>
-    </ClInclude>
-    <ClInclude Include="TowerScript.h">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Resource</Filter>
@@ -409,6 +388,27 @@
     </ClInclude>
     <ClInclude Include="struct.h">
       <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyPlayerScript.h">
+      <Filter>Script\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MinionScript.h">
+      <Filter>Script\Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterScript.h">
+      <Filter>Script\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileScript.h">
+      <Filter>Script\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnScript.h">
+      <Filter>Script\Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerScript.h">
+      <Filter>Script\Tower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -489,6 +489,24 @@
     </Filter>
     <Filter Include="Object\Component\Terrain">
       <UniqueIdentifier>{1833074b-2d09-43ef-a4cf-37e9b65d14a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Player">
+      <UniqueIdentifier>{17ed80c2-9885-4d97-b75a-e485223fb8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Minion">
+      <UniqueIdentifier>{fd0af27b-d7d8-4618-886a-f4b9b0b4d284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Monster">
+      <UniqueIdentifier>{4b430998-26ce-4dbb-9f52-a8e42b455f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Projectile">
+      <UniqueIdentifier>{2438b489-50a7-4e5f-87a2-d0fb15352840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Spawn">
+      <UniqueIdentifier>{58979337-842d-491a-a2d0-770988af37f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Tower">
+      <UniqueIdentifier>{aa61d899-f866-45ec-987e-7d54f72d03f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

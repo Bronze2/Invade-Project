@@ -169,6 +169,7 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	pObject->Transform()->SetNotParent(true);
 	pObject->Transform()->SetObjectMatrix(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
+	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
 
 	//		GetObj()->AddChild(pObject);
 	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));

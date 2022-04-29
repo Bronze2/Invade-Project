@@ -8,6 +8,7 @@
 
 tTransform	g_transform;
 Vec3 vAsis[3] = { Vec3::Right,Vec3::Up,Vec3::Front };
+#include "Camera.h"
 
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
@@ -100,11 +101,19 @@ void CTransform::FinalUpdate()
 		}
 
 	}
+	
 
 
 	if (GetObj()->GetParent())
 	{
 		m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
+		if (GetObj()->Camera() && GetObj()->Camera()->GetPlay()) {
+			m_matWorld._41 += GetObj()->Camera()->GetFront().x;
+			m_matWorld._42 += GetObj()->Camera()->GetFront().y;
+
+			m_matWorld._43 += GetObj()->Camera()->GetFront().z;
+		}
+
 
 		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
 		{
@@ -116,6 +125,9 @@ void CTransform::FinalUpdate()
 	{
 		memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vec3) * 3);
 	}
+
+
+
 
 	// 역행렬 계산
 	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);

@@ -39,11 +39,13 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 	pObject->Transform()->SetNotParent(true);
 	pObject->Transform()->SetObjectMatrix(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
+	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
 
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->GetScript<CProjectileScript>()->Init();
+
 	CreateObject(pObject, _Layer);
 }
 

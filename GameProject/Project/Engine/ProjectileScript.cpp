@@ -7,6 +7,16 @@
 #include "Collider3D.h"
 #include "MinionScript.h"
 
+bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
+{
+	float value = sqrt(pow(m_vStartPos.x - _Pos.x, 2) + pow(m_vStartPos.z - _Pos.z, 2));
+	if (value > m_fLength) {
+		return true;
+	}
+
+	return false;
+}
+
 void CProjectileScript::Update()
 {
 	if (m_pObject->IsDead()) {
@@ -51,6 +61,12 @@ void CProjectileScript::Update()
 	}
 
 	Vec3 vPos = Transform()->GetWorldPos();
+	
+	if (M_FLengthCheck(vPos)) {
+		DeleteObject(GetObj());
+		return;
+	}
+
 	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 
@@ -72,8 +88,8 @@ void CProjectileScript::Update()
 	int a = 0;
 	float xvalue = m_vDir.x * 100.f * DT;
 
-	vLocalPos += vWorldDir * 1000.f * DT;
-	vLocalPos.y += m_vDir.y *1000.f* DT;
+	vLocalPos -= vWorldDir * 1000.f * DT;
+	vLocalPos.y += m_vDir.y *500.f* DT;
 
 
 
@@ -133,7 +149,7 @@ void CProjectileScript::Init()
 }
 
 CProjectileScript::CProjectileScript():CScript((UINT)SCRIPT_TYPE::PROJECTILESCRIPT),m_pObject(nullptr),m_fSpeed(),m_uiDamage(),m_fAlpha(0.f)
-,m_bRotate(false), m_eProjectileType(PROJECTILE_TYPE::MINION)
+,m_bRotate(false), m_eProjectileType(PROJECTILE_TYPE::MINION),m_fLength(300.f)
 {
 }
 

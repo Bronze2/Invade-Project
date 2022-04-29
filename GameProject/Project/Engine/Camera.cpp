@@ -29,12 +29,48 @@ CCamera::CCamera()
 	, m_fScale(1.f)
 	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_iLayerCheck(0)
-	,m_bModule(false)
+	, m_bModule(false)
 {
 }
 
 CCamera::~CCamera()
 {
+	if (nullptr != m_pRay)
+		delete m_pRay;
+}
+
+void CCamera::InterSectsObject(CCollider3D* _pCollider)
+{
+	if (!m_pPlayer)return;
+
+
+	Vec3 vPos = Transform()->GetWorldPos();
+	m_pRay->position = vPos;
+	m_pRay->direction = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	float min = INFINITE;
+	Vec3 Corners[8] = {};
+	_pCollider->GetBox().GetCorners(Corners);
+	
+
+	if (m_pRay->Intersects(_pCollider->GetBox(), min)){
+		Vec3 target = m_pPlayer->Transform()->GetWorldPos();
+		target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
+		float distance= Vec3::Distance(target, vPos);
+
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vPos);
+		if (distance2 > distance)
+			return;
+
+		if (min > 0 && min < distance) {
+			min *= 1.5f;
+			if (min >= distance - 100.f) {
+				min = distance - 100.f;
+			}
+			m_vFront=(m_pRay->direction * min);
+			
+			
+		}
+	}
 }
 
 void CCamera::FinalUpdate()
@@ -52,6 +88,7 @@ void CCamera::FinalUpdate()
 	matViewRot._21 = vRight.y; matViewRot._22 = vUp.y; matViewRot._23 = vFront.y;
 	matViewRot._31 = vRight.z; matViewRot._32 = vUp.z; matViewRot._33 = vFront.z;
 
+	m_vLook.x = vRight.z; m_vLook.y = vUp.z; m_vLook.z = vFront.z;
 	m_matView = matViewTrans * matViewRot;
 
 	// 투영행렬
@@ -169,12 +206,14 @@ void CCamera::SortShadowObject()
 			}
 		}
 	}
+	
 }
 
 void CCamera::Render_Deferred()
 {
 	g_transform.matView = GetViewMat();
 	g_transform.matProj = GetProjMat();
+	
 	g_transform.matViewInv = m_matViewInv;
 	g_transform.matProjInv = m_matProjInv;
 
