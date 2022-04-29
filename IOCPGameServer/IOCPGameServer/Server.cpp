@@ -207,7 +207,28 @@ void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z,
 	packet.id = minion_id;
 	p_Vec3 pos = { x,y,z };
 	packet.pos = pos;
+	std::cout << packet.id << endl;
 
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
+void CServer::send_move_minion_packet(int minion_id)
+{
+	sc_packet_move_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_MOVE_MINION;
+	packet.id = minion_id;
+	packet.pos.x = SHARED_DATA::g_minion[minion_id].Pos.x;
+	packet.pos.y = SHARED_DATA::g_minion[minion_id].Pos.y;
+	packet.pos.z = SHARED_DATA::g_minion[minion_id].Pos.z;
+
+	packet.rot.x = SHARED_DATA::g_minion[minion_id].Rot.x;
+	packet.rot.y = SHARED_DATA::g_minion[minion_id].Rot.y;
+	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
+
+	//cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);

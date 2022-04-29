@@ -14,7 +14,23 @@ void CService::add_timer(int obj_id, ENUMOP op_type, int duration)
 	SHARED_DATA::timer_lock.unlock();
 }
 
+void CService::update_minion()
+{
+	for (int i = 0; i < 10; ++i) {
 
+
+			SHARED_DATA::g_minion[i].m_cLock.lock();
+			CServer::GetInst()->send_move_minion_packet(i);
+			SHARED_DATA::g_minion[i].m_cLock.unlock();
+
+	}
+	//CServer::GetInst()->send_move_minion_packet(3);
+}
+void CService::update_minionindex(int minion_id)
+{
+	//	CServer::GetInst()->send_move_minion_packet(i);
+	//CServer::GetInst()->send_move_minion_packet(0);
+}
 
 
 bool CService::is_near(int a, int b)

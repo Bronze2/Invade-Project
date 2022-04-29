@@ -186,8 +186,6 @@ void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLay
 			// 충돌했다.
 			if (IsCollision3D(pCollider1, pCollider2))
 			{
-				std::cout << "!!" << endl;
-
 
 				// 충돌 중이다
 				if (m_mapCol.end() != iter && iter->second == true)

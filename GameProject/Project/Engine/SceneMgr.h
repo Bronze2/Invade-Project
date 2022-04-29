@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 //#include "Network.h"
 class CScene;
 class CCamera;
@@ -12,6 +13,11 @@ enum class SCENE_TYPE {
 	END,
 };
 
+struct minioninfo {
+	Vec3 pos;
+	Vec3 rot;
+};
+
 class CSceneMgr
 {
 	SINGLE(CSceneMgr)
@@ -19,6 +25,8 @@ private:
 	CScene* m_pCurScene;
 	CScene* m_arrScene[(UINT)SCENE_TYPE::END];
 	vector<CGameObject*> m_player;
+
+	map<int, minioninfo> m_minion;
 
 public:
 	void Init();
@@ -36,6 +44,9 @@ public:
 	void net_setAnimationByID(int id , int state);
 	void net_spawnMinion_blue(int id, float x, float y, float z);
 	void net_spawnMinion_red(int id, float x, float y, float z);
+	void net_moveMinion(int id, float x, float y, float z);
+
+	minioninfo get_minioninfo(int id) { return m_minion[id]; };
 
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
@@ -44,5 +55,6 @@ public:
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 
 	void net_lobby_enterClient(int id, CAMP_STATE, bool isHost);
+
 };
 

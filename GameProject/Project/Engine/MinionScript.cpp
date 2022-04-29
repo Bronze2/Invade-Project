@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MinionScript.h"
 #include "Animator3D.h"
+#include "SceneMgr.h"
 
 #include "Sensor.h"
 void CMinionScript::Init()
@@ -47,6 +48,11 @@ void CMinionScript::Update()
 {
 	//CheckHp();
 	m_FAnimation();
+	Vec3 vPos;
+	vPos = CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos;
+	Transform()->SetLocalPos(vPos);
+
+
 	//if (m_eState == MINION_STATE::DIE) {
 	//	return;
 	//}

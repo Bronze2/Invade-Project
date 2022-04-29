@@ -57,6 +57,15 @@ struct CLIENT
 	unordered_set<int> view_list; //순서가 상관없을 땐 unordered 쓰는게 더 속도가 빠르다 
 };
 
+struct MINION {
+	mutex	m_cLock;
+	int m_id;
+	p_Vec3 Pos;
+	p_Vec3 Dir;
+	p_Vec3 Rot;
+};
+
+
 namespace SHARED_DATA {
 	extern HANDLE g_iocp;					//iocp 핸들
 	extern CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요

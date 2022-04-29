@@ -303,3 +303,12 @@ void CSceneMgr::net_spawnMinion_red(int id, float x, float y, float z)
 	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos,MINION_ATTACK_TYPE::MELEE);
 }
 
+void CSceneMgr::net_moveMinion(int id, float x, float y, float z)
+{
+	m_minion[id].pos.x = x;
+	m_minion[id].pos.y = y;
+	m_minion[id].pos.z = z;
+	//std::cout << m_minion[id].pos.x << "," << m_minion[id].pos.y << ","<< m_minion[id].pos.z << endl;
+	//CMinionScript().
+//	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, MINION_ATTACK_TYPE::MELEE);
+}

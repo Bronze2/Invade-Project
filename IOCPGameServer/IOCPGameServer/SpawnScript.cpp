@@ -18,12 +18,19 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
 	pObject->Collider3D()->SetOffsetScale(_vOffsetScale);
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
 	pObject->Transform()->SetLocalPos(_vLocalPos);
+    if(CAMP_STATE::BLUE == _eCamp)
+        pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-180.f), 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(_vLocalScale);
 	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
 	pObject->GetScript<CMinionScript>()->SetAttackType(_eAttackRange);
 	pObject->GetScript<CMinionScript>()->SetCamp(_eCamp);
 	pObject->GetScript<CMinionScript>()->Init();
 
+    pObject->GetScript<CMinionScript>()->m_SetId(SHARED_DATA::g_minionindex);
+    CServer::GetInst()->send_spawn_minion_packet(SHARED_DATA::g_minionindex, pObject->Transform()->GetLocalPos().x,
+        pObject->Transform()->GetLocalPos().y, pObject->Transform()->GetLocalPos().z, _eCamp);
+
+    SHARED_DATA::g_minionindex++;
 	return pObject;
 }
 
@@ -71,6 +78,7 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject(vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE, m_eCampState);
                                 CreateObject(pObject, L"Red");
 
+
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                                 
@@ -88,9 +96,7 @@ void CSpawnScript::Update()
 
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, m_eCampState);
                                 CreateObject(pObject, L"Red");
-                                pObject->SetId(SHARED_DATA::g_minionindex++);
-                                CServer::GetInst()->send_spawn_minion_packet(pObject->GetId(), pObject->Transform()->GetLocalPos().x,
-                                    pObject->Transform()->GetLocalPos().y, pObject->Transform()->GetLocalPos().z, CAMP_STATE::RED);
+                                
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -135,6 +141,7 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE, m_eCampState);
 
                                 CreateObject(pObject, L"Red");
+
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -151,6 +158,8 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, m_eCampState);
 
                                 CreateObject(pObject, L"Red");
+
+      
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -192,6 +201,8 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject(vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE,m_eCampState);
 
                                 CreateObject(pObject, L"Red");
+
+         
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -205,6 +216,7 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::CANON,  m_eCampState);
 
                                 CreateObject(pObject, L"Red");
+
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -222,6 +234,8 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, m_eCampState);
 
                                 CreateObject(pObject, L"Red");
+
+       
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -274,6 +288,8 @@ void CSpawnScript::Update()
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 20.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE,m_eCampState);
                                 CreateObject(pObject, L"Blue");
 
+    
+
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -288,6 +304,8 @@ void CSpawnScript::Update()
                                 Vec3 vPos = GetObj()->Transform()->GetLocalPos();
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 25.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE,  m_eCampState);
                                 CreateObject(pObject, L"Blue");
+
+ 
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -331,6 +349,8 @@ void CSpawnScript::Update()
 
                                 CGameObject* pObject = SpawnObject(vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 20.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE, m_eCampState);
                                 CreateObject(pObject, L"Blue");
+
+       
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -346,6 +366,7 @@ void CSpawnScript::Update()
 
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 25.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE,  m_eCampState);
                                 CreateObject(pObject, L"Blue");
+
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -386,6 +407,7 @@ void CSpawnScript::Update()
 
                                 CGameObject* pObject = SpawnObject(vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 20.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::MELEE, m_eCampState);
                                 CreateObject(pObject, L"Blue");
+
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -398,6 +420,8 @@ void CSpawnScript::Update()
 
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 25.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::CANON,  m_eCampState);
                                 CreateObject(pObject, L"Blue");
+
+  
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }
@@ -414,6 +438,8 @@ void CSpawnScript::Update()
 
                                 CGameObject* pObject = SpawnObject( vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 25.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE,  m_eCampState);
                                 CreateObject(pObject, L"Blue");
+
+        
                                 m_uiCount += 1;
                                 m_uiSpawnStart = m_uiSpawnEnd;
                             }

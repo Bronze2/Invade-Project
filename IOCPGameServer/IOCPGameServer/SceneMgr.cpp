@@ -98,9 +98,9 @@ void CSceneMgr::Update()
 	m_pCurScene->LateUpdate();
 
 	m_pCurScene->FinalUpdate();
-	CSensorMgr::GetInst()->Update();
+	//CSensorMgr::GetInst()->Update();
 	// 충돌 처리
-	CCollisionMgr::GetInst()->Update();
+	//CCollisionMgr::GetInst()->Update();
 
 }
 

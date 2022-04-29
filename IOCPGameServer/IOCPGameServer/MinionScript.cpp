@@ -2,6 +2,8 @@
 #include "MinionScript.h"
 #include "TimeMgr.h"
 #include "Sensor.h"
+#include "Server.h"
+
 void CMinionScript::Init()
 {
 	m_eState = MINION_STATE::WALK;
@@ -35,69 +37,85 @@ void CMinionScript::Init()
 void CMinionScript::Update()
 {
 	CheckHp();
-	if (m_eState == MINION_STATE::DIE) {
-		return;
-	}
-	FindNearObject(m_arrEnemy);
-	CheckRange();
+	//if (m_eState == MINION_STATE::DIE) {
+	//	return;
+	//}
+	//FindNearObject(m_arrEnemy);
+	//CheckRange();
 	Vec3 vPos = Transform()->GetWorldPos(); 
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
-	if (nullptr != m_pTarget&&!m_bAllienceCol) {
-		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-		float rotate = angle * 0.0174532925f;
-		vRot.y = rotate;
+	//if (nullptr != m_pTarget&&!m_bAllienceCol) {
+	//	Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+	//	float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+	//	float rotate = angle * 0.0174532925f;
+	//	vRot.y = rotate;
 
-	}
-	if (m_bAllienceCol&&!m_bSeparate) {
-		if (m_bRotate) {
-			if (m_eCamp == CAMP_STATE::RED) {
-				vRot.y -= PI / 2;
-			}
-			else {
-				vRot.y += PI / 2;
-			}
-			m_bRotate = false;
-		}
-	}
+	//}
+	//if (m_bAllienceCol&&!m_bSeparate) {
+	//	if (m_bRotate) {
+	//		if (m_eCamp == CAMP_STATE::RED) {
+	//			vRot.y -= PI / 2;
+	//		}
+	//		else {
+	//			vRot.y += PI / 2;
+	//		}
+	//		m_bRotate = false;
+	//	}
+	//}
 
 
+	//Vec3 vLocalPos = Transform()->GetLocalPos();
+	//
+
+	//switch (m_eState)
+	//{
+	//case MINION_STATE::WALK: {
+	//	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	//	vLocalPos.x -= vWorldDir.x * 100.f * DT;
+	//	vLocalPos.z -= vWorldDir.z * 100.f * DT;
+	//	Transform()->SetLocalPos(vLocalPos);
+	//	Transform()->SetLocalRot(vRot);
+	//}
+	//	break;
+	//case MINION_STATE::ATTACK:
+	//{
+	//	if (m_ePrevState != m_eState) {
+	//		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+	//		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+	//		float rotate = angle * 0.0174532925f;
+	//		vRot.y = rotate;
+	//	}
+	//}
+	//	break;
+	//case MINION_STATE::DIE:
+	//	break;
+	//default:
+	//	break;
+	//}
 	Vec3 vLocalPos = Transform()->GetLocalPos();
-	
-
-	switch (m_eState)
-	{
-	case MINION_STATE::WALK: {
-		Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vLocalPos.x -= vWorldDir.x * 100.f * DT;
-		vLocalPos.z -= vWorldDir.z * 100.f * DT;
-		Transform()->SetLocalPos(vLocalPos);
-		Transform()->SetLocalRot(vRot);
-	}
-		break;
-	case MINION_STATE::ATTACK:
-	{
-		if (m_ePrevState != m_eState) {
-			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-			float rotate = angle * 0.0174532925f;
-			vRot.y = rotate;
-		}
-	}
-		break;
-	case MINION_STATE::DIE:
-		break;
-	default:
-		break;
-	}
-
+	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	vLocalPos.x -= vWorldDir.x * 10;
+	vLocalPos.z -= vWorldDir.z * 10;
 	Transform()->SetLocalPos(vLocalPos);
 	Transform()->SetLocalRot(vRot);
-//	if (m_id == 0 || m_id == 1)
-//		cout << "Minion ID:" << m_id << "Pos:" << Transform()->GetLocalPos().x << "," << Transform()->GetLocalPos().y << "," << Transform()->GetLocalPos().z << endl << endl;
+
+	/*if (m_id == 0 || m_id == 1)
+		cout << "Minion ID:" << m_id << "Pos:" << Transform()->GetLocalPos().x << "," << Transform()->GetLocalPos().y << "," << Transform()->GetLocalPos().z << endl << endl;*/
 
 
+	//미니언 정보 update
+	SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
+	SHARED_DATA::g_minion[m_GetId()].Pos.x = vLocalPos.x;
+	SHARED_DATA::g_minion[m_GetId()].Pos.y = vLocalPos.y;
+	SHARED_DATA::g_minion[m_GetId()].Pos.z = vLocalPos.z;
+	SHARED_DATA::g_minion[m_GetId()].Rot.x = vRot.x;
+	SHARED_DATA::g_minion[m_GetId()].Rot.y = vRot.y;
+	SHARED_DATA::g_minion[m_GetId()].Rot.z = vRot.z;
+	SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
+	//std::cout << GetObj()->GetId() << endl;
+	CServer::GetInst()->send_move_minion_packet(m_GetId());
+	//
 
 }
 

@@ -187,7 +187,13 @@ void Network::ProcessPacket(char* ptr)
 			CSceneMgr::GetInst()->net_spawnMinion_red(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		else if(my_packet->camp ==  BLUE)
 			CSceneMgr::GetInst()->net_spawnMinion_blue(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-
+		cout << "spawn id: " << my_packet->id <<endl;
+	}
+	break;
+	case S2C_MOVE_MINION:
+	{
+		sc_packet_move_minion* my_packet = reinterpret_cast<sc_packet_move_minion*>(ptr);
+		CSceneMgr::GetInst()->net_moveMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 	}
 	break;
 

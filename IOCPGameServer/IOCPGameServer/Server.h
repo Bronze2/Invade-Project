@@ -32,6 +32,7 @@ public:
 
 	void send_spawn_minion_packet(int minion_id , float x, float y , float z, CAMP_STATE camp);
 
+	void send_move_minion_packet(int minion_id);
 
 private:
 

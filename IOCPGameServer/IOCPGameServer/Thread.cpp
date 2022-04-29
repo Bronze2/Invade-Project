@@ -92,12 +92,8 @@ void CThread::do_timer()
 			case OP_UPDATE:
 			{
 				EXOVER* over = new EXOVER();
-				over->op = ev.event_id;
-				CEventMgr::GetInst()->Clear();
-				CSceneMgr::GetInst()->Update();
-				CEventMgr::GetInst()->Update();
-				CService::GetInst()->add_timer(ev.event_id, OP_UPDATE, 33);	//30fps
-				//PostQueuedCompletionStatus(SHARED_DATA::g_iocp, 1, ev.obj_id, &over->over);
+				over->op = ev.event_id;;
+				PostQueuedCompletionStatus(SHARED_DATA::g_iocp, 1, ev.obj_id, &over->over);
 			}
 			break;
 
@@ -204,12 +200,18 @@ void CThread::worker_Thread()
 		break;
 		case OP_MOVE:
 		{
+
 		}
 		break;
 
 		case OP_UPDATE:
 		{
+			CEventMgr::GetInst()->Clear();
+			CSceneMgr::GetInst()->Update();
+			CEventMgr::GetInst()->Update();
+			//CService::GetInst()->update_minion();
 
+			CService::GetInst()->add_timer(user_id, OP_UPDATE, 33);	//30fps
 		}
 		break;
 

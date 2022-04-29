@@ -13,6 +13,9 @@ public:
 	void do_Rotation(int user_id);
 	void initialize_clients();
 	void disconnect(int user_id);
+	void update_minion();
+	void update_minionindex(int minion_id);
+
 	//void spawn_minion(int id, Vec3 pos);
 	void Init();
 

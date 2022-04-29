@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
-constexpr auto BUF_SIZE = 200;
+constexpr auto BUF_SIZE = 8192;
 //int NPC_ID_START = 10000;
 #define MAX_BUF	8192
 #define MAX_PACKET_SIZE	8192
