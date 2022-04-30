@@ -47,71 +47,30 @@ void CMinionScript::Init()
 void CMinionScript::Update()
 {
 	//CheckHp();
+	if(m_eState != CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).state)
+		m_eState = CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).state;
+
 	m_FAnimation();
-	Vec3 vPos;
-	vPos = CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos;
-	Transform()->SetLocalPos(vPos);
+	if (m_eState == MINION_STATE::DIE) {
+		return;
+	}
+	switch (m_eState)
+	{
+	case MINION_STATE::WALK: {
+		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos, DT * 10.f);
+		Transform()->SetLocalPos(vPos);
 
-
-	//if (m_eState == MINION_STATE::DIE) {
-	//	return;
-	//}
-	//FindNearObject(m_arrEnemy);
-	//CheckRange();
-	//Vec3 vPos = Transform()->GetWorldPos(); 
-	//Vec3 vTargetPos;
-	//Vec3 vRot = Transform()->GetLocalRot();
-	//if (nullptr != m_pTarget&&!m_bAllienceCol) {
-	//	Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-	//	float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-	//	float rotate = angle * 0.0174532925f;
-	//	vRot.y = rotate;
-
-	//}
-	//if (m_bAllienceCol&&!m_bSeparate) {
-	//	if (m_bRotate) {
-	//		if (m_eCamp == CAMP_STATE::RED) {
-	//			vRot.y -= PI / 2;
-	//		}
-	//		else {
-	//			vRot.y += PI / 2;
-	//		}
-	//		m_bRotate = false;
-	//	}
-	//}
-
-
-	//Vec3 vLocalPos = Transform()->GetLocalPos();
-	//
-
-	//switch (m_eState)
-	//{
-	//case MINION_STATE::WALK: {
-	//	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	//	vLocalPos.x -= vWorldDir.x * 100.f * DT;
-	//	vLocalPos.z -= vWorldDir.z * 100.f * DT;
-	//	Transform()->SetLocalPos(vLocalPos);
-	//	Transform()->SetLocalRot(vRot);
-	//}
-	//	break;
-	//case MINION_STATE::ATTACK:
-	//{
-	//	if (m_ePrevState != m_eState) {
-	//		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-	//		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-	//		float rotate = angle * 0.0174532925f;
-	//		vRot.y = rotate;
-	//	}
-	//}
-	//	break;
-	//case MINION_STATE::DIE:
-	//	break;
-	//default:
-	//	break;
-	//}
-	//Transform()->SetLocalPos(vLocalPos);
-	//Transform()->SetLocalRot(vRot);
-
+	}
+	break;
+	case MINION_STATE::ATTACK:
+	{
+	}
+	break;
+	case MINION_STATE::DIE:
+		break;
+	default:
+		break;
+	}
 
 
 }
@@ -285,84 +244,15 @@ void CMinionScript::m_FAnimation()
 		break;
 		case MINION_STATE::ATTACK:
 		{
-			//if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
-			//	if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iEndFrame) {
-			//		GetObj()->Animator3D()->SetCurClipIndex((UINT)MINION_STATE::ATTACK);
-			//		GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
-			//		GetObj()->Animator3D()->SetCurTime(0.f);
-			//		GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iEndFrame) {
+					GetObj()->Animator3D()->SetCurClipIndex((UINT)MINION_STATE::ATTACK);
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+					GetObj()->Animator3D()->SetCurTime(0.f);
+					GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 
-			//		m_bFindNear = true;
-			//		//m_bFinishAnimation = true;
-			//		m_bProjectile = false;
-			//		if (m_pTarget == nullptr) {
-
-
-
-			//		}
-			//		else
-			//			if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-			//				m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
-			//			}
-			//			else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
-			//				m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
-			//			}
-			//	}
-			//	if (m_eAttackType != MINION_ATTACK_TYPE::MELEE) {
-			//		switch (m_eCamp)
-			//		{
-			//		case CAMP_STATE::BLUE:
-			//		{
-			//			if (MINION_ATTACK_TYPE::RANGE == m_eAttackType) {
-			//				if (GetObj()->Animator3D()->GetFrameIdx() >= 68) {
-			//					if (!m_bProjectile)
-			//					{
-			//						CreateProjectile(L"MeshData\\blueball.mdat", 6, L"Blue");
-			//						m_bProjectile = true;
-			//					}
-			//				}
-			//			}
-			//			else {
-			//				if (GetObj()->Animator3D()->GetFrameIdx() >= 64) {
-			//					if (!m_bProjectile)
-			//					{
-			//						CreateProjectile(L"MeshData\\blueball.mdat", 17, L"Blue");
-			//						m_bProjectile = true;
-			//					}
-			//				}
-			//			}
-			//		}
-			//		break;
-			//		case CAMP_STATE::RED:
-			//		{
-			//			if (MINION_ATTACK_TYPE::RANGE == m_eAttackType) {
-			//				if (GetObj()->Animator3D()->GetFrameIdx() >= 59) {
-			//					if (!m_bProjectile)
-			//					{
-			//						CreateProjectile(L"MeshData\\redball.mdat", 10, L"Red");
-			//						m_bProjectile = true;
-			//					}
-			//				}
-			//			}
-			//			else {
-			//				if (GetObj()->Animator3D()->GetFrameIdx() >= 84) {
-			//					if (!m_bProjectile)
-			//					{
-			//						CreateProjectile(L"MeshData\\redball.mdat", 12, L"Red");
-
-			//						m_bProjectile = true;
-			//					}
-			//				}
-			//			}
-			//		}
-			//		break;
-
-			//		default:
-			//			break;
-			//		}
-			//	}
-			//	//
-			//}
+				}
+			}
 		}
 
 		break;

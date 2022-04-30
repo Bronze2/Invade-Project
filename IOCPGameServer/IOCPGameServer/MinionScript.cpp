@@ -30,75 +30,71 @@ void CMinionScript::Init()
 	}
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
-
+	attack_delay = 0;
 }
 
 
 void CMinionScript::Update()
 {
 	CheckHp();
-	//if (m_eState == MINION_STATE::DIE) {
-	//	return;
-	//}
-	//FindNearObject(m_arrEnemy);
-	//CheckRange();
+	if (m_eState == MINION_STATE::DIE) {
+		return;
+	}
+	FindNearObject(m_arrEnemy);
+	CheckRange();
 	Vec3 vPos = Transform()->GetWorldPos(); 
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
-	//if (nullptr != m_pTarget&&!m_bAllienceCol) {
-	//	Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-	//	float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-	//	float rotate = angle * 0.0174532925f;
-	//	vRot.y = rotate;
+	if (nullptr != m_pTarget&&!m_bAllienceCol) {
+		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+		float rotate = angle * 0.0174532925f;
+		vRot.y = rotate;
 
-	//}
-	//if (m_bAllienceCol&&!m_bSeparate) {
-	//	if (m_bRotate) {
-	//		if (m_eCamp == CAMP_STATE::RED) {
-	//			vRot.y -= PI / 2;
-	//		}
-	//		else {
-	//			vRot.y += PI / 2;
-	//		}
-	//		m_bRotate = false;
-	//	}
-	//}
+	}
+	if (m_bAllienceCol&&!m_bSeparate) {
+		if (m_bRotate) {
+			if (m_eCamp == CAMP_STATE::RED) {
+				vRot.y -= PI / 2;
+			}
+			else {
+				vRot.y += PI / 2;
+			}
+			m_bRotate = false;
+		}
+	}
 
 
-	//Vec3 vLocalPos = Transform()->GetLocalPos();
+	Vec3 vLocalPos = Transform()->GetLocalPos();
 	//
 
-	//switch (m_eState)
-	//{
-	//case MINION_STATE::WALK: {
-	//	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	//	vLocalPos.x -= vWorldDir.x * 100.f * DT;
-	//	vLocalPos.z -= vWorldDir.z * 100.f * DT;
-	//	Transform()->SetLocalPos(vLocalPos);
-	//	Transform()->SetLocalRot(vRot);
-	//}
-	//	break;
-	//case MINION_STATE::ATTACK:
-	//{
-	//	if (m_ePrevState != m_eState) {
-	//		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-	//		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-	//		float rotate = angle * 0.0174532925f;
-	//		vRot.y = rotate;
-	//	}
-	//}
-	//	break;
-	//case MINION_STATE::DIE:
-	//	break;
-	//default:
-	//	break;
-	//}
-	Vec3 vLocalPos = Transform()->GetLocalPos();
-	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	vLocalPos.x -= vWorldDir.x * 10;
-	vLocalPos.z -= vWorldDir.z * 10;
-	Transform()->SetLocalPos(vLocalPos);
-	Transform()->SetLocalRot(vRot);
+	switch (m_eState)
+	{
+	case MINION_STATE::WALK: {
+		Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		vLocalPos.x -= vWorldDir.x * 5;
+		vLocalPos.z -= vWorldDir.z * 5;
+		Transform()->SetLocalPos(vLocalPos);
+		Transform()->SetLocalRot(vRot);
+	}
+		break;
+	case MINION_STATE::ATTACK:
+	{
+		if (m_ePrevState != m_eState) {
+			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+		}
+	}
+		break;
+	case MINION_STATE::DIE:
+		break;
+	default:
+		break;
+	}
+
+
 
 	/*if (m_id == 0 || m_id == 1)
 		cout << "Minion ID:" << m_id << "Pos:" << Transform()->GetLocalPos().x << "," << Transform()->GetLocalPos().y << "," << Transform()->GetLocalPos().z << endl << endl;*/
@@ -112,6 +108,8 @@ void CMinionScript::Update()
 	SHARED_DATA::g_minion[m_GetId()].Rot.x = vRot.x;
 	SHARED_DATA::g_minion[m_GetId()].Rot.y = vRot.y;
 	SHARED_DATA::g_minion[m_GetId()].Rot.z = vRot.z;
+	SHARED_DATA::g_minion[m_GetId()].State = MINION_STATE::DIE;
+
 	SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
 	//std::cout << GetObj()->GetId() << endl;
 	CServer::GetInst()->send_move_minion_packet(m_GetId());
@@ -164,29 +162,35 @@ void CMinionScript::CheckHp()
 	if (m_iCurHp <= 0.f&&!GetObj()->IsFallDown()) {
 		m_eState = MINION_STATE::DIE;
 		GetObj()->SetFallDown();
+		std::cout << m_GetId() << ": µÚÁ³À½ " << endl;
 	}
 }
 
 void CMinionScript::CheckRange()
 {
-	
+	attack_delay++;
 	if (m_pTarget == nullptr)return;
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
-		m_eState = MINION_STATE::ATTACK;
+		if (attack_delay > 100) {
+			//m_eState = MINION_STATE::ATTACK;
+			m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+			std::cout << this->m_GetId() << " : ATTACK!" << endl;
+			attack_delay = 0;
+		}
 	}
-	//else {
-	//	if (m_bFinishAnimation) {
-	//		
-	//		
-	//		m_eState = MINION_STATE::WALK;
-	//		
-	//		
-	//	}
-	//	
-	//}
+	else {
+		if (attack_delay > 100) {
+			
+			
+			m_eState = MINION_STATE::WALK;
+			
+			
+		}
+		
+	}
 }
 
 void CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)

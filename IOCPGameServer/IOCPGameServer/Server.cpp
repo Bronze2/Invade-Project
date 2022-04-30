@@ -227,7 +227,8 @@ void CServer::send_move_minion_packet(int minion_id)
 	packet.rot.x = SHARED_DATA::g_minion[minion_id].Rot.x;
 	packet.rot.y = SHARED_DATA::g_minion[minion_id].Rot.y;
 	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
-
+	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
+	//cout << "["<<packet.state<<"]" << endl;
 	//cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)

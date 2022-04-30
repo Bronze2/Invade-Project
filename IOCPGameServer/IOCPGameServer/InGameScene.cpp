@@ -8,7 +8,7 @@
 #include "Collider3D.h"
 #include "CollisionMgr.h"
 //#include "TimeMgr.h"
-//#include "SensorMgr.h"
+#include "SensorMgr.h"
 
 #include "PlayerScript.h"
 //#include "MonsterScript.h"
@@ -18,9 +18,10 @@
 //#include "GameFramework.h"
 //#include "Animation3D.h"
 #include "SpawnScript.h"
-//#include "Sensor.h"
+#include "Sensor.h"
 //#include "TowerScript.h"
 //#include "EmptyPlayerScript.h"
+
 
 void CInGameScene::Init()
 {
@@ -74,7 +75,7 @@ void CInGameScene::Init()
 	pObject->FrustumCheck(false);
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
-	FindLayer(L"RedSpawnPlace")->AddGameObject(pObject);
+	FindLayer(L"Red")->AddGameObject(pObject);
 
 	CGameObject* pObject1 = new CGameObject;
 	pObject1->AddComponent(new CTransform);
@@ -97,9 +98,9 @@ void CInGameScene::Init()
 	pObject1->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject1->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject1->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
-	FindLayer(L"BlueSpawnPlace")->AddGameObject(pObject1);
+	FindLayer(L"Blue")->AddGameObject(pObject1);
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
-
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 
 	Awake();
 	Start();

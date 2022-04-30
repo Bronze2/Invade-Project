@@ -193,7 +193,7 @@ void Network::ProcessPacket(char* ptr)
 	case S2C_MOVE_MINION:
 	{
 		sc_packet_move_minion* my_packet = reinterpret_cast<sc_packet_move_minion*>(ptr);
-		CSceneMgr::GetInst()->net_moveMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+		CSceneMgr::GetInst()->net_moveMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z, my_packet->state);
 	}
 	break;
 

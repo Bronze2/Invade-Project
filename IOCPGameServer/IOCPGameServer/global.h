@@ -63,6 +63,7 @@ struct MINION {
 	p_Vec3 Pos;
 	p_Vec3 Dir;
 	p_Vec3 Rot;
+	MINION_STATE State;
 };
 
 

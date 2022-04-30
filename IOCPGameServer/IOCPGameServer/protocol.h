@@ -148,12 +148,15 @@ struct sc_packet_spawn_minion {
 	p_Vec3  rot;
 };
 
+
+
 struct sc_packet_move_minion {
 	char size;
 	char type;
 	int  id;
 	p_Vec3 pos;
 	p_Vec3 rot;
+	int state;
 };
 
 

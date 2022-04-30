@@ -18,8 +18,8 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
 	pObject->Collider3D()->SetOffsetScale(_vOffsetScale);
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
 	pObject->Transform()->SetLocalPos(_vLocalPos);
-    if(CAMP_STATE::BLUE == _eCamp)
-        pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-180.f), 0.f, 0.f));
+    //if(CAMP_STATE::BLUE == _eCamp)
+   //     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-180.f), 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(_vLocalScale);
 	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
 	pObject->GetScript<CMinionScript>()->SetAttackType(_eAttackRange);

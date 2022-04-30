@@ -1,6 +1,7 @@
 #pragma once
 #include "Script.h"
 
+#include <iostream>
 enum class MINION_ATTACK_TYPE {
     MELEE,//50
     RANGE,//150
@@ -34,13 +35,17 @@ class CMinionScript :
     MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
     int m_id;
+
+    int attack_delay;
 public:
     void CheckHp();
     CLONE(CMinionScript)
     void Init();
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
     
-    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
+    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; 
+    std::cout << this->m_GetId() << " : 쳐맞았음!" << endl;
+    }
    
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();
