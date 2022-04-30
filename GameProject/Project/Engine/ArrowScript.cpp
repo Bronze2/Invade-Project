@@ -77,164 +77,16 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK_READY:
 	{
-#ifndef ARROW_TEST
 		if (!m_bMaxCharged) {
 			Vec3 vRestorePos = vPos;
-			vPos.x += 50.f * DT;
-			m_vDir = vRestorePos - vPos;
-		}
-		m_vRestorePos = vPos;
-#else
-		if (!m_bMaxCharged) {
-			Vec3 vRestorePos = vPos;
-			vPos.x += 130.f * DT;			// 15.f
+			vPos.x += 30.f * DT;			// 15.f
 		}
 		Transform()->SetLocalPos(vPos);
-#endif
 	}
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-#ifndef ARROW_TEST
-		//if (Transform()->GetWorldPos().y <= 0.f) {
-		//	GetObj()->SetActive(false);
-		//	Init();
-		//	m_eState = ARROW_STATE::IDLE;
-		//}
-
-		m_fElapsedTime += DT;
-		if (m_fElapsedTime >= DT * 70.f) {
-			vPos = m_vDestPos;
-		}
-
-		//Vec3 vDir = m_vDestPos - m_vRestorePos;
-
-		//m_fRatio += 0.1f;
-		//if (m_fRatio <= 1.f)
-		//	vPos = Vec3::Lerp(m_vRestorePos, m_vDestPos, 0.05f);
-		//else
-		//	vPos = m_vDestPos;
-
-
-
-		//vPos = Vec3::Lerp(m_vRestorePos, m_vDestPos, 0.05f);
-
-
-
-		//m_vDir.Normalize();
-
-		//vPos += m_vDir * m_fSpeed * DT * 0.1f;
-
-		//m_fVelocityY -= (GRAVITY * DT) / 10;
-		//m_fFallSpeed += m_fVelocityY;
-		//vPos.y = m_vRestorePos.y;
-		//vPos.y -= m_fFallSpeed * DT;
-
-		//float value = XMConvertToRadians(90.f * DT * 10);
-
-		//float vDotValue = Dot(m_vDir, Transform()->GetWorldDir(DIR_TYPE::FRONT));
-		//Vec3 vCrossValue = Cross(Transform()->GetWorldDir(DIR_TYPE::FRONT), m_vDir);
-
-		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&m_vDir), value);
-		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-
-
-
-
-
-
-		//Vec3 vTarget = vPos - vFront;
-		//vTarget.Normalize();
-		////	vValue.Normalize();
-		//float vDotValue = Dot(vTarget, result);
-		//Vec3 vCrossValue = Cross(result, vTarget);
-		//float a = vCrossValue.x;
-		//float  c = vCrossValue.z;
-
-		//if (!m_bSetDotValue) {
-		//	m_bSetDotValue = true;
-		//	m_fyPos = vCrossValue.z;
-		//	m_fxPos = vCrossValue.x;
-		//}
-		//else {
-		//	if (m_fyPos < vCrossValue.z) {
-		//		vCrossValue.z = m_fyPos;
-		//		vCrossValue.x = m_fxPos;
-		//	}
-		//	else {
-		//		m_fyPos = vCrossValue.z;
-		//		m_fxPos = vCrossValue.x;
-		//	}
-		//}
-
-		//if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-		//	float value = XMConvertToRadians(vDotValue * DT * 10);
-
-		//	XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-		//	Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-		//}
-
-		//Transform()->SetLocalPos(vPos);
-
-#endif
 #ifdef ARROW_TEST
-		/*Vec3 vPos = Transform()->GetLocalPos();
-		if (vPos.y < 0.f) {
-			GetObj()->SetActive(false);
-			Init();
-			m_eState = ARROW_STATE::IDLE;
-		}
-		Vec3 vRot = Transform()->GetLocalRot();
-
-		Vec3 vFront = vPos;
-		Vec3 vRight = m_vDir;
-		auto p = XMLoadFloat3(&vRight);
-		auto m = XMLoadFloat4x4(&Transform()->GetWorldMat());
-		auto r = XMVector3TransformNormal(p, m);
-		XMFLOAT3 result;
-		XMStoreFloat3(&result, XMVector3Normalize(r));
-
-		vPos.x += result.x * m_fSpeed * DT;
-		vPos.z += result.z * m_fSpeed * DT;
-		m_fVelocityY -= (GRAVITY * DT) / 10;
-		m_fFallSpeed += m_fVelocityY;
-		vPos.y += m_fFallSpeed * DT;
-
-
-
-		Vec3 vTarget = vPos - vFront;
-		vTarget.Normalize();
-		//	vValue.Normalize();
-		float vDotValue = Dot(vTarget, result);
-		Vec3 vCrossValue = Cross(result, vTarget);
-		float a = vCrossValue.x;
-		float  c = vCrossValue.z;
-
-		if (!m_bSetDotValue) {
-			m_bSetDotValue = true;
-			m_fyPos = vCrossValue.z;
-			m_fxPos = vCrossValue.x;
-		}
-		else {
-			if (m_fyPos < vCrossValue.z) {
-				vCrossValue.z = m_fyPos;
-				vCrossValue.x = m_fxPos;
-			}
-			else {
-				m_fyPos = vCrossValue.z;
-				m_fxPos = vCrossValue.x;
-			}
-		}
-
-
-		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-			float value = XMConvertToRadians(vDotValue * DT * 10);
-
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-			Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-
-		}
-		Transform()->SetLocalPos(vPos); */
 
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
@@ -261,7 +113,7 @@ void CArrowScript::Update()
 		m_vTargetDir = vPos - m_vRestorePos;
 		m_vTargetDir.Normalize();
 
-		float value = XMConvertToRadians(90.f * DT * 10);
+		//float value = XMConvertToRadians(90.f * DT * 10);
 
 		//float vDotValue = Dot(vDir, m_vTargetDir);
 		//Vec3 vCrossValue = Cross(m_vTargetDir, m_vDir);
