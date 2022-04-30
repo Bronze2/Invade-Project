@@ -122,6 +122,9 @@
     <ClCompile Include="func.cpp">
       <Filter>default</Filter>
     </ClCompile>
+    <ClCompile Include="EmptyCameraScript.cpp">
+      <Filter>Script\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InGameScene.h" />
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>default</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyCameraScript.h">
+      <Filter>Script\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

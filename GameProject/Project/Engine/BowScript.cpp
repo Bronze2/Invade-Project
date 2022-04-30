@@ -4,6 +4,7 @@
 #include "Animator3D.h"
 #include "ArrowScript.h"
 #include "CameraScript.h"
+#include "EmptyCameraScript.h"
 
 void CBowScript::Update()
 {
@@ -31,8 +32,8 @@ void CBowScript::Update()
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+	CGameObject* pEmptyCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
 
-	//Vec3 vBowFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	Vec3 vBowFront = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 	Vec3 vArrowDir;
 
@@ -43,20 +44,18 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
-		//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetRestorePos(m_pArrow[m_iCurArrow]->Transform()->GetLocalPos());
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed += 2000.f * DT;
-		if (m_fArrowSpeed > 2000.f) {
-			m_fArrowSpeed = 2000.f;
+		if (m_fArrowSpeed > 1000.f) {
+			m_fArrowSpeed = 1000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		//Vec3 vTargetPos = pCamera->GetScript<CCameraScript>()->GetShootPos();
-		Vec3 vTargetDir = pCamera->GetScript<CCameraScript>()->GetShootDir();
+		Vec3 vTargetDir = pEmptyCamera->GetScript<CEmptyCameraScript>()->GetShootDir();
 
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);

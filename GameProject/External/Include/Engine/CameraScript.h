@@ -18,9 +18,6 @@ private:
     Vec2 m_vStartMousePoint;
     Vec3 m_vZoomRestoreFront;
     Vec3 m_vRestorePos;
-    
-    Vec3 m_vShootPos;
-    Vec3 m_vShootDir;
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
@@ -36,9 +33,6 @@ public:
 
     Vec3& CameraShake(Vec3 _vPos, float _fDamageTime, float _fDamageSize);
     Vec3& CameraZoom(Vec3 _vPos);
-
-    Vec3& GetShootPos() { return m_vShootPos; }
-    Vec3& GetShootDir() { return m_vShootDir; }
 
     void Init();
 

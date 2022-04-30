@@ -245,7 +245,7 @@ void CArrowScript::Update()
 
 		m_vRestorePos = vPos;
 
-		Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		vPos += m_vDir * m_fSpeed * DT;
 		m_fVelocityY -= (GRAVITY * DT) / 10;
 		m_fFallSpeed += m_fVelocityY;
@@ -263,10 +263,10 @@ void CArrowScript::Update()
 
 		float value = XMConvertToRadians(90.f * DT * 10);
 
-		float vDotValue = Dot(vDir, m_vTargetDir);
+		//float vDotValue = Dot(vDir, m_vTargetDir);
 		//Vec3 vCrossValue = Cross(m_vTargetDir, m_vDir);
 
-		Vec3 vCrossValue = Cross(m_vDir, vDir);
+		//Vec3 vCrossValue = Cross(m_vDir, vDir);
 
 		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
 		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
@@ -288,7 +288,7 @@ void CArrowScript::Init()
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
 
-	//m_pBow->AddChild(GetObj());
+	m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)

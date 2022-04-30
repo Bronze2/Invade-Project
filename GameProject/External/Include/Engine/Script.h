@@ -24,6 +24,7 @@ enum class SCRIPT_TYPE {
 
     BOWSCRIPT,
     EMPTYPLAYERSCRIPT,
+    EMPTYCAMERASCRIPT,
 
     END,
 };

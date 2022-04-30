@@ -114,11 +114,6 @@ void CCameraScript::Init()
 	m_vRestorePos = Transform()->GetLocalPos();
 	m_vZoomRestoreFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
-	m_vShootPos = (pPlayer->Transform()->GetLocalPos() + Vec3(0.f, 0.f, 130.f)) + Transform()->GetWorldDir(DIR_TYPE::FRONT) * 500.f;
-	m_vShootDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	//m_vShootPos = m_vRestorePos + Vec3::Front * 50.f;
-	//m_vShootPos.x = Vec3(m_vRestorePos + Transform()->GetWorldDir(DIR_TYPE::FRONT) * 50.f).x;
-
 	m_fShakeNum = 1.0f;
 	m_fZoomSpeed = 200.0f;
 	m_fZoomElapsedTime = 0.0f;

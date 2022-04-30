@@ -43,6 +43,8 @@
 #include "TowerScript.h"
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
+#include "EmptyCameraScript.h"
+
 void CInGameScene::Init()
 {
 	ShowCursor(false);
@@ -73,10 +75,15 @@ void CInGameScene::Init()
 	pMainCam->Camera()->SetFar(10000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 
+	CGameObject* pEmptyCam = nullptr;
+	pEmptyCam = new CGameObject;
+	pEmptyCam->SetName(L"EmptyCam");
+	pEmptyCam->AddComponent(new CTransform);
+	pEmptyCam->AddComponent(new CCamera);
+	pEmptyCam->AddComponent(new CEmptyCameraScript);
+	pEmptyCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+
 	//m_pCurScene->FindLayer(L"Camera")->AddGameObject(pMainCam);
-
-
-	CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
 
 
 	CGameObject* pObject = nullptr;
@@ -115,7 +122,7 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
-	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
+	//pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
@@ -140,7 +147,11 @@ void CInGameScene::Init()
 	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
 
+	pEmptyCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
+	pEmptyCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
+
 	pEmptyPlayer->AddChild(pMainCam);
+	pEmptyPlayer->AddChild(pEmptyCam);
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
