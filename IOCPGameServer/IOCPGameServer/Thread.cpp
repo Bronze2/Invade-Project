@@ -61,6 +61,7 @@ void CThread::do_timer()
 	while (true)
 	{
 		CTimeMgr::GetInst()->Update();
+
 		//CEventMgr::GetInst()->Clear();
 		//CSceneMgr::GetInst()->Update();
 		//CEventMgr::GetInst()->Update();

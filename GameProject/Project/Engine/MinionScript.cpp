@@ -58,12 +58,20 @@ void CMinionScript::Update()
 	{
 	case MINION_STATE::WALK: {
 		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos, DT * 10.f);
+		//Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).rot, DT * 10.f);
+
 		Transform()->SetLocalPos(vPos);
+		Transform()->SetLocalRot(CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).rot);
 
 	}
 	break;
 	case MINION_STATE::ATTACK:
 	{
+		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos, DT * 10.f);
+		Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).rot, DT * 10.f);
+
+		Transform()->SetLocalPos(vPos);
+		Transform()->SetLocalRot(vRot);
 	}
 	break;
 	case MINION_STATE::DIE:
@@ -259,7 +267,8 @@ void CMinionScript::m_FAnimation()
 		case MINION_STATE::DIE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iFrameLength || m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) ||
+					m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
 					DeleteObject(GetObj());
 				}
 			}

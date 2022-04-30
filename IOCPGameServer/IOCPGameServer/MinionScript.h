@@ -36,16 +36,16 @@ class CMinionScript :
     bool m_bSeparate;
     int m_id;
 
-    int attack_delay;
+    float m_attack_max_time;
+    float m_attack_current_time;
+    bool m_during_attack;
 public:
     void CheckHp();
     CLONE(CMinionScript)
     void Init();
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
     
-    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; 
-    std::cout << this->m_GetId() << " : 쳐맞았음!" << endl;
-    }
+    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
    
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();
@@ -54,7 +54,7 @@ public:
     const CAMP_STATE& GetCamp()const { return m_eCamp; }
 
     void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
-
+    void SetAttackMaxTime(float time) { m_attack_max_time = time; }
     
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);

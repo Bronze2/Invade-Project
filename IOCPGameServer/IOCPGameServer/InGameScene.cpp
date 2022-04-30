@@ -99,7 +99,11 @@ void CInGameScene::Init()
 	pObject1->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject1->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 	FindLayer(L"Blue")->AddGameObject(pObject1);
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
+
+
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 
 	Awake();

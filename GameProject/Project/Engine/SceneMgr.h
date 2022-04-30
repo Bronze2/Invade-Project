@@ -45,7 +45,8 @@ public:
 	void net_setAnimationByID(int id , int state);
 	void net_spawnMinion_blue(int id, float x, float y, float z);
 	void net_spawnMinion_red(int id, float x, float y, float z);
-	void net_moveMinion(int id, float x, float y, float z, int state);
+	void net_moveMinion(int id, float x, float y, float z, 
+							float r_x, float r_y, float r_z, int state);
 
 	minioninfo get_minioninfo(int id) { return m_minion[id]; };
 
