@@ -28,7 +28,6 @@ void CBowScript::Update()
 	Transform()->SetQuaternion(qRot);
 	Transform()->SetLocalRot(vRot);
 
-#ifdef ARROW_TEST
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
@@ -79,8 +78,6 @@ void CBowScript::Update()
 		}
 		m_bMaxCharged = false;
 	}
-
-#endif
 }
 
 void CBowScript::m_FAnimation()
@@ -186,7 +183,6 @@ void CBowScript::Init()
 
 void CBowScript::Awake()
 {
-#ifdef ARROW_TEST
 	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
@@ -218,7 +214,6 @@ void CBowScript::Awake()
 	m_iCurArrow = 0;
 	m_iPower = 1;
 	m_bMaxCharged = false;
-#endif
 }
 
 

@@ -24,9 +24,7 @@ private:
     BOW_STATE m_eState;
     BOW_STATE m_ePrevState;
 
-#ifdef ARROW_TEST
     CGameObject* m_pArrow[20];
-    CGameObject* m_pEmptyArrow;         // 활에 붙어있는 가짜 활 (발사안됨)
     UINT m_iCurArrow;
     Ptr<CTexture>pBlackTex;
     int m_iPower;
@@ -39,7 +37,6 @@ private:
 
     bool m_bMaxCharged;
     bool m_bCheckDegree;
-#endif
 
 
 public:

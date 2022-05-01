@@ -10,28 +10,13 @@ private:
     bool m_bCheckStartMousePoint;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
+    Vec3 m_vRestoreRot;
 
     ELEMENT_TYPE m_iType;
 
-#ifndef ARROW_TEST
-    CGameObject* m_pArrow[20];
-    UINT m_iCurArrow;
-    Ptr<CTexture>pBlackTex;
-    int m_iPower;
-
-    float m_fArrowSpeed;
-
-    float m_fArcherLocation;
-
-    Vec3 m_vArrowRestorePos;
-
-    bool m_bMaxCharged;
-    float m_fArrowCharge;
-    Vec3 m_vArrowRestoreRot;
-
-#endif
     float m_fRotateDegree;
     float m_fMoveSpeed;
+    float m_fTurnDegree;
 
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
@@ -45,6 +30,9 @@ private:
     bool m_bCheckDegree;
     bool m_bColCheck;
     bool m_bMoveCheck;
+
+    bool m_bTurn;
+
     vector<CGameObject*>m_arrColObject;
 public:
     void m_FAnimation();

@@ -211,45 +211,6 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
-#ifndef ARROW_TEST
-	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
-	CScene* pCurScene=CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pBow = GetObj()->GetChild()[0];
-	for (int i = 0; i < 20; ++i) {
-		m_pArrow[i] = new CGameObject;
-		m_pArrow[i]->SetName(L"Arrow");
-	
-	
-		m_pArrow[i]->AddComponent(new CTransform());
-		//Vec3 vPos = m_pArrow[i]->Transform()->GetLocalPos();
-		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 40.f, 0.f));
-		m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));			// 자식 아닐 땐 (80.f, 0.f, 1.f)
-		m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
-
-		//m_pArrow[i]->Transform()->SetLocalPos(Vec3(-10.f, 75.f, -140.f));
-		//m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));
-		//m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
-
-		m_pArrow[i]->AddComponent(new CMeshRender);
-		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		m_pArrow[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-
-		m_pArrow[i]->AddComponent(new CCollider2D);
-		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
-
-		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
-		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj()->GetChild()[0]);
-		pCurScene->FindLayer(L"Blue")->AddGameObject(m_pArrow[i]);
-		m_pArrow[i]->SetActive(false);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
-	}
-
-	m_iCurArrow = 0;
-	m_iPower = 1;
-	m_bMaxCharged = false;
-#endif
-
 	m_fMoveSpeed = 300.f;
 }
 
@@ -286,33 +247,70 @@ void CPlayerScript::Update()
 	}
 
 
+	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+		m_fTurnDegree = 0.f;
+		m_bTurn = true;
+		m_vRestoreRot = vRot;
+	}
+
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
+		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+		
+		vRot.y = XMConvertToRadians(m_fRotateDegree);
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			vRot.y = 0.f;
+			m_fTurnDegree += 30.f;
+			if (m_fTurnDegree > 0.f) {
+				m_fTurnDegree = 0.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			//vRot.y += 0.f;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			vRot.y = XMConvertToRadians(180.f);
+			m_fTurnDegree += 30.f;
+			if (m_fTurnDegree > 180.f) {
+				m_fTurnDegree = 180.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			//vRot.y += XMConvertToRadians(180.f);
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			vRot.y = XMConvertToRadians(-90.f);
+			m_fTurnDegree -= 15.f;
+			if (m_fTurnDegree < -90.f) {
+				m_fTurnDegree = -90.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			//vRot.y += XMConvertToRadians(-90.f);
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			vRot.y = XMConvertToRadians(90.f);
+			m_fTurnDegree += 15.f;
+			if (m_fTurnDegree >  90.f) {
+				m_fTurnDegree =  90.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			//vRot.y += XMConvertToRadians(90.f);
 		}
 
-		vPos += vFront * m_fMoveSpeed * DT;
-		vPos.y = 0.f;
-		vRot.y += XMConvertToRadians(m_fRotateDegree);
+		if (!m_bTurn) {
+			vPos += vFront * m_fMoveSpeed * DT;
+			vPos.y = 0.f;
+		}
+		//vRot.y += XMConvertToRadians(m_fRotateDegree);
+
 		m_FColCheck(vPos3, vPos);
 		m_eState = PLAYER_STATE::WALK;
 	}
 
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::IDLE;
+		m_fTurnDegree = 0.f;
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {

@@ -86,8 +86,6 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-#ifdef ARROW_TEST
-
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
 			GetObj()->SetActive(false);
@@ -123,8 +121,6 @@ void CArrowScript::Update()
 		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
 		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
 		//Transform()->SetQuaternion(Vec4(fAngle, 0.f, 0.f, 1.f));
-
-#endif
 	}
 	break;
 	}
