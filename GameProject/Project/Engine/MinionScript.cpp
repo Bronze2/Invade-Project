@@ -131,7 +131,7 @@ void CMinionScript::Update()
 
 }
 
-
+#include "PlayerScript.h"
 
 void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, const wstring& _Layer)
 {
@@ -152,7 +152,13 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	pObject->GetScript<CProjectileScript>()->SetBone(_Bone);
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::MINION);
-	pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+	}
+	else {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+	}
+	
 	tMTBone* p = const_cast<tMTBone*>(MeshRender()->GetMesh()->GetBone(_Bone));
 	pObject->Transform()->SetLocalPos(p->vecKeyFrame[Animator3D()->GetFrameIdx()].vTranslate);
 
@@ -170,6 +176,7 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	Matrix Matrix = matScale * matRot * matTranslation;
 	pObject->Transform()->SetNotParent(true);
 	pObject->Transform()->SetObjectMatrix(Matrix);
+	pObject->GetScript<CProjectileScript>()->SetRotY(vRot.y);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
 	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
@@ -376,8 +383,8 @@ void CMinionScript::m_FAnimation()
 							}
 					}
 					else {
-						if(m_pProjectile!=nullptr)
-						m_pProjectile->GetScript<CProjectileScript>()->SetLaunch(1);
+						if(m_pProjectile!=nullptr&&!m_pProjectile->IsDead())
+							m_pProjectile->GetScript<CProjectileScript>()->SetLaunch(1);
 						m_pProjectile = nullptr;
 					}
 				}

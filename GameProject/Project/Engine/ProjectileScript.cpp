@@ -20,8 +20,16 @@ bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
 void CProjectileScript::Update()
 {
 
-
-
+	if (nullptr == m_pTarget)
+	{
+		DeleteObject(GetObj());
+		return;
+	}
+	
+	if (m_pTarget->IsDead()) {
+		DeleteObject(GetObj());
+		return;
+	}
 	if (m_pObject->IsDead()) {
 		DeleteObject(GetObj());
 		return;
@@ -55,28 +63,39 @@ void CProjectileScript::Update()
 			return;
 		}
 		Transform()->SetLocalPos(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].vTranslate);
-	//	Transform()->SetLocalRot(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].qRot);
 		if (0 == m_bLaunch)
 			return;
 		else if (1 == m_bLaunch) {
 			if (m_pTarget->IsDead())
+			{
+				DeleteObject(GetObj());
 				return;
-			Vec3 vObjPos=m_pObject->Transform()->GetLocalPos();
-			Vec3 vObjScale = m_pObject->Transform()->GetLocalScale();
-			Vec3 vObjrot = Vec3(0.f, 0.f, 0.f);
+			}
+			if (nullptr == m_pTarget) {
+				DeleteObject(GetObj());
+				return;
+			}
+
+			Vec3 vObjPos = m_pObject->Transform()->GetLocalPos();
+			Vec3 vObjRot = m_pObject->Transform()->GetLocalRot();
 			Matrix matTranslation = XMMatrixTranslation(vObjPos.x, vObjPos.y, vObjPos.z);
-			Vec3 vScale = Transform()->GetLocalScale();
-			Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
-			Matrix matRot = XMMatrixRotationX(vObjrot.x);
-			matRot *= XMMatrixRotationY(vObjrot.y);
-			matRot *= XMMatrixRotationZ(vObjrot.z);
+			Vec3 vObjScale = m_pObject->Transform()->GetLocalScale();
+			Matrix matScale = XMMatrixScaling(vObjScale.x, vObjScale.y, vObjScale.z);
+			vObjRot =m_pObject->Transform()->GetLocalRot();
+			vObjRot.y -= m_fRoty;
+			Matrix matRot = XMMatrixRotationX(vObjRot.x);
+			matRot *= XMMatrixRotationY(vObjRot.y);
+			matRot *= XMMatrixRotationZ(vObjRot.z);
+
 			m_matObjectWorldMatrix = matScale * matRot * matTranslation;
-			Vec3 vRot = Transform()->GetLocalRot();
-			float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+
+			Transform()->SetObjectMatrix(m_matObjectWorldMatrix);
+
+			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 			float rotate = angle * 0.0174532925f;
 			vRot.y = rotate;
 			Transform()->SetLocalRot(vRot);
-
 			++m_bLaunch;
 			return;
 		}
@@ -110,25 +129,38 @@ void CProjectileScript::Update()
 	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 
-//	if (!m_bRotate) {
-//		Vec3 vRot = Transform()->GetLocalRot();
-//		float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
-//		float rotate = angle * 0.0174532925f;
-//		vRot.y = rotate;
-//
-//		Transform()->SetLocalRot(vRot);
-//		m_bRotate = true;
-//	}	
-//	
-//	if ((vWorldDir.z < 0 && m_vDir.z>0)|| (vWorldDir.z > 0 && m_vDir.z < 0)) {
-//		m_vDir.z *= -1.f;
-//	}
-//	if ((vWorldDir.x < 0 && m_vDir.x>0 || vWorldDir.x > 0 && m_vDir.x < 0)) {
-//		m_vDir.x *= -1.f;
-//	}
+	
+	if (m_eProjectileType == PROJECTILE_TYPE::MINION) {
+		if (!m_bRotate) {
+			Vec3 vRot = Transform()->GetLocalRot();
+			float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
 
+			Transform()->SetLocalRot(vRot);
+			m_bRotate = true;
+		}
 
-	vLocalPos += m_vDir * m_fSpeed * DT;
+		vLocalPos.x -= vWorldDir.x * m_fSpeed * DT;
+		vLocalPos.y += m_vDir.y * m_fSpeed * DT;
+		vLocalPos.z -= vWorldDir.z * m_fSpeed * DT;
+	}
+	else {
+		if (!m_bRotate) {
+			Vec3 vRot = Transform()->GetLocalRot();
+			float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+
+			Transform()->SetLocalRot(vRot);
+			m_bRotate = true;
+		}
+	
+		vLocalPos.x += vWorldDir.x * m_fSpeed * DT;
+		vLocalPos.y +=  m_vDir.y*m_fSpeed * DT;
+		vLocalPos.z += m_vDir.z * m_fSpeed * DT;
+	}
+	
 
 
 	Transform()->SetLocalPos(vLocalPos);
@@ -143,6 +175,8 @@ void CProjectileScript::Update()
 #include "TowerScript.h"
 void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
+	if (m_pObject = _pOther->GetObj())
+		return;
 	if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
 		if (nullptr != _pOther->GetObj()) {
 			if (m_pObject->GetScript<CMinionScript>() != nullptr) {

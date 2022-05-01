@@ -15,8 +15,7 @@ void CCameraScript::Update()
 	Vec3 vRot = Transform()->GetLocalRot();
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);// 추후 수정
-
+	
 	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 		Init();
 		m_tEffectType = CAMERA_EFFECT_TYPE::SHAKING;

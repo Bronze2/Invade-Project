@@ -28,7 +28,11 @@ private:
 
     bool m_bUpdate;
     UINT m_bLaunch;//0 not 발사 //1 발사 회전// 2 알아서
+
+    float m_fRoty;
 public:
+
+    void SetRotY(float _fRotY) { m_fRoty = _fRotY; }
     void SetLaunch(UINT _bLaunch) { m_bLaunch=_bLaunch; }
     void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }
     bool M_FLengthCheck(const Vec3& _Pos);

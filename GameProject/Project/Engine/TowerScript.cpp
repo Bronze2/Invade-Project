@@ -21,8 +21,6 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 	pObject->FrustumCheck(false);
 	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
-	if (nullptr != m_pTarget)
-		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
 
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 185.f, -70.f));
 
@@ -38,14 +36,21 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 	Matrix Matrix = matScale * matRot * matTranslation;
 	pObject->Transform()->SetNotParent(true);
 	pObject->Transform()->SetObjectMatrix(Matrix);
+//	pObject->GetScript<CProjectileScript>()->SetRotY(vRot.y);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
-
+	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+	}
+	else {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+	}
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->GetScript<CProjectileScript>()->Init();
 	pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
+	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
 
 	CreateObject(pObject, _Layer);
 }
@@ -112,12 +117,11 @@ void CTowerScript::m_FAttack()
 			m_cAttackEnd = clock();
 			m_cAttackInterval = (m_cAttackEnd - m_cAttackStart) / CLOCKS_PER_SEC;
 			if (m_cAttackInterval >= ATTACK_INTERVAL) {
-				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-					if (CAMP_STATE::BLUE == m_eCampState)
-						CreateProjectile(L"MeshData\\blueball.mdat", L"Blue");
-					else if(CAMP_STATE::RED==m_eCampState)
-						CreateProjectile(L"MeshData\\redball.mdat", L"Red");
-				}
+				if (CAMP_STATE::BLUE == m_eCampState)
+					CreateProjectile(L"MeshData\\blueball.mdat", L"Blue");
+				else if(CAMP_STATE::RED==m_eCampState)
+					CreateProjectile(L"MeshData\\redball.mdat", L"Red");
+			
 				m_bAttackStart = false;
 			}
 		}

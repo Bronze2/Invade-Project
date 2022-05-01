@@ -15,6 +15,7 @@ class CCamera;
 class CParticleSystem;
 class CTerrain;
 class CSensor;
+
 class CGameObject :public CEntity
 {
 private:
