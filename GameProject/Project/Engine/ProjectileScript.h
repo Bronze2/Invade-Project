@@ -24,7 +24,13 @@ private:
     PROJECTILE_TYPE m_eProjectileType;
 
     float m_fLength;
+    CGameObject* m_pTarget;
+
+    bool m_bUpdate;
+    UINT m_bLaunch;//0 not 발사 //1 발사 회전// 2 알아서
 public:
+    void SetLaunch(UINT _bLaunch) { m_bLaunch=_bLaunch; }
+    void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }
     bool M_FLengthCheck(const Vec3& _Pos);
     void SetStartPos(const Vec3& _Pos) { m_vStartPos = _Pos; }
     void SetProjectileType(PROJECTILE_TYPE _Type) { m_eProjectileType = _Type; }

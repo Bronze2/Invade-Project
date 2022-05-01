@@ -45,6 +45,7 @@ class CMinionScript :
     bool m_bSeparate;
     bool m_bProjectile;
     wstring m_CampName;
+  //  CGameObject* m_pProjectile;
 
 
 public:

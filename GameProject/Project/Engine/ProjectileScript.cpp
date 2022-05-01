@@ -9,7 +9,7 @@
 
 bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
 {
-	float value = sqrt(pow(m_vStartPos.x - _Pos.x, 2) + pow(m_vStartPos.z - _Pos.z, 2));
+	float value = sqrt(pow(m_vStartPos.x - _Pos.x, 2)+ pow(m_vStartPos.y - _Pos.y, 2) + pow(m_vStartPos.z - _Pos.z, 2));
 	if (value > m_fLength) {
 		return true;
 	}
@@ -19,12 +19,17 @@ bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
 
 void CProjectileScript::Update()
 {
+
+
+
 	if (m_pObject->IsDead()) {
 		DeleteObject(GetObj());
 		return;
 	}
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
+	Vec3 vRot = Transform()->GetLocalRot();
+	Vec3 vPos = Transform()->GetWorldPos();
 	if (m_pObject != nullptr) {
 		if (m_pObject->GetScript<CMinionScript>() != nullptr) {
 			if (m_pObject->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
@@ -35,7 +40,7 @@ void CProjectileScript::Update()
 	else {
 		DeleteObject(GetObj());
 	}
-	
+
 	if (vLocalPos.y < 0) {
 		DeleteObject(GetObj());
 	}
@@ -43,57 +48,94 @@ void CProjectileScript::Update()
 	{
 	case PROJECTILE_TYPE::MINION:
 	{
+		vector<tMTBone>* c = const_cast<vector<tMTBone>*>(m_pObject->MeshRender()->GetMesh()->GetBones());
 		tMTBone* p = const_cast<tMTBone*>(m_pObject->MeshRender()->GetMesh()->GetBone(m_iBone));
 		int d = m_pObject->Animator3D()->GetFrameIdx();
 		if (p->vecKeyFrame.size() < d) {
 			return;
 		}
+		Transform()->SetLocalPos(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].vTranslate);
+	//	Transform()->SetLocalRot(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].qRot);
+		if (0 == m_bLaunch)
+			return;
+		else if (1 == m_bLaunch) {
+			if (m_pTarget->IsDead())
+				return;
+			Vec3 vObjPos=m_pObject->Transform()->GetLocalPos();
+			Vec3 vObjScale = m_pObject->Transform()->GetLocalScale();
+			Vec3 vObjrot = Vec3(0.f, 0.f, 0.f);
+			Matrix matTranslation = XMMatrixTranslation(vObjPos.x, vObjPos.y, vObjPos.z);
+			Vec3 vScale = Transform()->GetLocalScale();
+			Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+			Matrix matRot = XMMatrixRotationX(vObjrot.x);
+			matRot *= XMMatrixRotationY(vObjrot.y);
+			matRot *= XMMatrixRotationZ(vObjrot.z);
+			m_matObjectWorldMatrix = matScale * matRot * matTranslation;
+			Vec3 vRot = Transform()->GetLocalRot();
+			float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+			Transform()->SetLocalRot(vRot);
+
+			++m_bLaunch;
+			return;
+		}
+		else {
+
+		}
+
+	
 	}
-		
+
 	break;
 	case PROJECTILE_TYPE::TOWER:
 	{
 
 	}
-		break;
+	break;
 	default:
 		break;
 	}
 
-	Vec3 vPos = Transform()->GetWorldPos();
 	
-	if (M_FLengthCheck(vPos)) {
-		DeleteObject(GetObj());
-		return;
+
+	Vec3 vvalue;
+	if (m_bUpdate) {
+		if (M_FLengthCheck(vPos)) {
+			DeleteObject(GetObj());
+			return;
+		}
 	}
 
 	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 
-	if (!m_bRotate) {
-		Vec3 vRot = Transform()->GetLocalRot();
-		float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
-		float rotate = angle * 0.0174532925f;
-		vRot.y = rotate;
+//	if (!m_bRotate) {
+//		Vec3 vRot = Transform()->GetLocalRot();
+//		float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+//		float rotate = angle * 0.0174532925f;
+//		vRot.y = rotate;
+//
+//		Transform()->SetLocalRot(vRot);
+//		m_bRotate = true;
+//	}	
+//	
+//	if ((vWorldDir.z < 0 && m_vDir.z>0)|| (vWorldDir.z > 0 && m_vDir.z < 0)) {
+//		m_vDir.z *= -1.f;
+//	}
+//	if ((vWorldDir.x < 0 && m_vDir.x>0 || vWorldDir.x > 0 && m_vDir.x < 0)) {
+//		m_vDir.x *= -1.f;
+//	}
 
-		Transform()->SetLocalRot(vRot);
-		m_bRotate = true;
-	}
 
-	if (vPos.z != 0.f&& vPos.x != 0.f) {
-		Vec3 vvalue = vPos - m_vTargetPos;
-		vvalue.Normalize();
-		int b = 0;
-	}
-	int a = 0;
-	float xvalue = m_vDir.x * 100.f * DT;
-
-	vLocalPos -= vWorldDir * 1000.f * DT;
-	vLocalPos.y += m_vDir.y *500.f* DT;
-
+	vLocalPos += m_vDir * m_fSpeed * DT;
 
 
 	Transform()->SetLocalPos(vLocalPos);
+	if(!m_bUpdate)
+	{
+		m_bUpdate = true;
+	}
 
 }
 
@@ -111,7 +153,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 				}
 			}
 			else {
-				if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCampName() != m_pObject->GetScript<CTowerScript>()->GetCampName())
+				if ((UINT)(_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp()) != (UINT)(m_pObject->GetScript<CTowerScript>()->GetCamp()))
 				{
 					_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
 					DeleteObject(GetObj());
@@ -149,7 +191,7 @@ void CProjectileScript::Init()
 }
 
 CProjectileScript::CProjectileScript():CScript((UINT)SCRIPT_TYPE::PROJECTILESCRIPT),m_pObject(nullptr),m_fSpeed(),m_uiDamage(),m_fAlpha(0.f)
-,m_bRotate(false), m_eProjectileType(PROJECTILE_TYPE::MINION),m_fLength(300.f)
+,m_bRotate(false), m_eProjectileType(PROJECTILE_TYPE::MINION),m_fLength(300.f),m_bUpdate(false),m_bLaunch(0)
 {
 }
 

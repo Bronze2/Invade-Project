@@ -151,31 +151,35 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
 	pObject->GetScript<CProjectileScript>()->SetBone(_Bone);
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
-
+	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::MINION);
 	pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
-	tMTBone* p = const_cast<tMTBone*>(MeshRender()->GetMesh()->GetBone(_Bone));//6
+	tMTBone* p = const_cast<tMTBone*>(MeshRender()->GetMesh()->GetBone(_Bone));
 	pObject->Transform()->SetLocalPos(p->vecKeyFrame[Animator3D()->GetFrameIdx()].vTranslate);
 
 
 	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vRot = Transform()->GetLocalRot();
 	Matrix matTranslation = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
 	Vec3 vScale = Transform()->GetLocalScale();
 	Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
-	Vec3 vRot = Transform()->GetLocalRot();
 	Matrix matRot = XMMatrixRotationX(vRot.x);
 	matRot *= XMMatrixRotationY(vRot.y);
 	matRot *= XMMatrixRotationZ(vRot.z);
+
+
 	Matrix Matrix = matScale * matRot * matTranslation;
 	pObject->Transform()->SetNotParent(true);
 	pObject->Transform()->SetObjectMatrix(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
-
+	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
 	//		GetObj()->AddChild(pObject);
 	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->GetScript<CProjectileScript>()->Init();
+	pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
+	m_pProjectile = pObject;
 	CreateObject(pObject, _Layer);
 }
 
@@ -236,7 +240,7 @@ void CMinionScript::CheckRange()
 	if (m_fAttackRange >= length) {
 		m_eState = MINION_STATE::ATTACK;
 	}
-	/*else {
+	else {
 		if (m_bFinishAnimation) {
 			
 			
@@ -245,7 +249,7 @@ void CMinionScript::CheckRange()
 			
 		}
 		
-	}*/
+	}
 }
 
 void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
@@ -338,7 +342,7 @@ void CMinionScript::m_FAnimation()
 					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 					GetObj()->Animator3D()->SetCurTime(0.f);
 					GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-					//m_bFinishAnimation = true;
+					m_bFinishAnimation = true;
 				}
 			}
 		}
@@ -354,19 +358,27 @@ void CMinionScript::m_FAnimation()
 					GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 
 					m_bFindNear = true;
-					//m_bFinishAnimation = true;
+					m_bFinishAnimation = true;
 					m_bProjectile = false;
-					if (m_pTarget == nullptr) {
-					
+
+					if (m_eAttackType == MINION_ATTACK_TYPE::MELEE) {
+						if (m_pTarget == nullptr) {
 
 
+
+						}
+						else
+							if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+								m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+							}
+							else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
+								m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+							}
 					}
-					else
-					if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-						m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
-					}
-					else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
-						m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+					else {
+						if(m_pProjectile!=nullptr)
+						m_pProjectile->GetScript<CProjectileScript>()->SetLaunch(1);
+						m_pProjectile = nullptr;
 					}
 				}
 				if (m_eAttackType != MINION_ATTACK_TYPE::MELEE) {
@@ -430,13 +442,14 @@ void CMinionScript::m_FAnimation()
 		case MINION_STATE::DIE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
-				if (GetObj()->Animator3D()->GetFrameIdx() >= m_pCurAnimClip->iFrameLength || m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
-					DeleteObject(GetObj());
-				}
-			}
-		}
 
-		break;
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1 )|| m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
+					DeleteObject(GetObj());
+            }
+         }
+      }
+
+      break;
 		default:
 			break;
 		}

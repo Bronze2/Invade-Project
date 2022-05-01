@@ -43,6 +43,7 @@ void CCamera::InterSectsObject(CCollider3D* _pCollider)
 {
 	if (!m_pPlayer)return;
 
+	return;
 
 	Vec3 vPos = Transform()->GetWorldPos();
 	m_pRay->position = vPos;
@@ -50,6 +51,7 @@ void CCamera::InterSectsObject(CCollider3D* _pCollider)
 	float min = INFINITE;
 	Vec3 Corners[8] = {};
 	_pCollider->GetBox().GetCorners(Corners);
+
 	
 
 	if (m_pRay->Intersects(_pCollider->GetBox(), min)){

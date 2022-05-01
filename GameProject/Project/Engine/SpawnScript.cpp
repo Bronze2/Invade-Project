@@ -23,7 +23,7 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(_vLocalPos);
 	pObject->Transform()->SetLocalScale(_vLocalScale);
-	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->MeshRender()->SetDynamicShadow(false);
 	pObject->Animator3D()->SetAnimation(_pAnimation);
 	pObject->Animator3D()->SetAnimClip(_pAnimation->GetAnimClip());
 	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
