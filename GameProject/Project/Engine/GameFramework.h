@@ -17,6 +17,7 @@ public:
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND _hWnd, UINT _uMessageID, WPARAM _wParam, LPARAM _lParam);
 
 	const Vec2& GetMouseMove() { return m_vMouseMove; }
+	
 
 private:
 	void ChangeWindowSize(HWND _hWnd, const tResolution _resolution);

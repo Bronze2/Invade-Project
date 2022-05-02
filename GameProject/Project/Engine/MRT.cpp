@@ -45,6 +45,7 @@ void CMRT::Create(UINT _iCount, tRT* _arrRT, Ptr<CTexture> _pDSTex)
 	}
 	m_tVP = D3D12_VIEWPORT{ 0.f,0.f,m_arrRT[0].pTarget->Width(),m_arrRT[0].pTarget->Height(),0.f,1.f };
 	m_tScissorRect = D3D12_RECT{ 0,0,(LONG)m_arrRT[0].pTarget->Width(),(LONG)m_arrRT[0].pTarget->Height() };
+	
 }
 
 void CMRT::OMSet(UINT _iCount, UINT _iOffset)

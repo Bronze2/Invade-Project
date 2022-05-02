@@ -49,6 +49,11 @@ private:
     bool m_bPlayer = false;
     Vec3 m_vFront;
 
+    Vec3 m_vUnProjection;
+    tRay m_tRay;
+    vector<CGameObject*> m_arrInterSectObject;
+
+
 public:
     Vec3 GetLook() { return m_vLook; }
     void SetFront(const Vec3& _vFront) {  m_vFront=_vFront; }
@@ -62,6 +67,9 @@ public:
     void Render_Forward();
     void Render();
     void Render_ShadowMap();
+
+    void ClearInterSectObject() { m_arrInterSectObject.clear(); }
+    void UnProjection();
 
     void SetModule(bool _bModule) { m_bModule = _bModule; }
 

@@ -38,7 +38,7 @@ void CRenderMgr::Render()
 
 	// LightMRT 초기화
 	m_arrMRT[(UINT)MRT_TYPE::LIGHT]->Clear();
-
+	
 	m_vecCam[0]->SortGameObject();
 
 	m_arrMRT[(UINT)MRT_TYPE::DEFERRED]->OMSet();
@@ -56,6 +56,7 @@ void CRenderMgr::Render()
 
 	// 출력
 	CDevice::GetInst()->Render_Present();
+	m_vecCam[0]->ClearInterSectObject();
 }
 
 void CRenderMgr::Render_Tool()

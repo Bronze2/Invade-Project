@@ -43,11 +43,16 @@ void CCamera::InterSectsObject(CCollider3D* _pCollider)
 {
 	if (!m_pPlayer)return;
 
-	return;
+
 
 	Vec3 vPos = Transform()->GetWorldPos();
+	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 target = m_pPlayer->Transform()->GetWorldPos();
+	target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
+	Vec3 vDir2 = target - vPos;
+	vDir2.Normalize();
 	m_pRay->position = vPos;
-	m_pRay->direction = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	m_pRay->direction = vDir2;
 	float min = INFINITE;
 	Vec3 Corners[8] = {};
 	_pCollider->GetBox().GetCorners(Corners);
@@ -56,22 +61,26 @@ void CCamera::InterSectsObject(CCollider3D* _pCollider)
 
 	if (m_pRay->Intersects(_pCollider->GetBox(), min)){
 		Vec3 target = m_pPlayer->Transform()->GetWorldPos();
+		
 		target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
 		float distance= Vec3::Distance(target, vPos);
 
 		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vPos);
 		if (distance2 > distance)
 			return;
-
-		if (min > 0 && min < distance) {
-			min *= 1.5f;
-			if (min >= distance - 100.f) {
-				min = distance - 100.f;
+		if (_pCollider->GetObj()->GetName() == L"Cover") {
+			if (min > 0 && min < distance) {
+				min *= 1.5f;
+				if (min >= distance - 100.f) {
+					min = distance - 100.f;
+				}
+				m_vFront = (m_pRay->direction * min);
 			}
-			m_vFront=(m_pRay->direction * min);
-			
-			
 		}
+		else {
+			m_arrInterSectObject.push_back(_pCollider->GetObj());
+		}
+	
 	}
 }
 
@@ -145,6 +154,15 @@ void CCamera::SortGameObject()
 
 						for (UINT iMtrl = 0; iMtrl < iMtrlCount; ++iMtrl)
 						{
+							bool bIntersect = false;
+							for (int k = 0; k < m_arrInterSectObject.size(); ++k) {
+								if (m_arrInterSectObject[k] == vecObj[j]) {
+									bIntersect = true;
+									break;
+								}
+							}
+							if (bIntersect)
+								continue;
 							if (vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl) == nullptr
 								|| vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl)->GetShader() == nullptr)
 							{
@@ -155,6 +173,7 @@ void CCamera::SortGameObject()
 								continue;
 							}
 
+
 							Ptr<CMaterial> pMtrl = vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl);
 
 							// Material 을 참조하고 있지 않거나, Material 에 아직 Shader 를 연결하지 않은 상태라면 Continue
@@ -164,10 +183,12 @@ void CCamera::SortGameObject()
 							// Shader 가 Deferred 인지 Forward 인지에 따라서
 							// 인스턴싱 그룹을 분류한다.
 							map<ULONG64, vector<tInstObj>>* pMap = NULL;
-							if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::DEFERRED)
+							if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::DEFERRED) {
 								pMap = &m_mapInstGroup_D;
-							else if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::FORWARD)
+							}
+							else if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::FORWARD) {
 								pMap = &m_mapInstGroup_F;
+							}
 							else
 								continue;
 
@@ -523,6 +544,24 @@ void CCamera::Render_ShadowMap()
 	for (UINT i = 0; i < m_vecShadowObj.size(); ++i) {
 		m_vecShadowObj[i]->MeshRender()->Render_ShadowMap();
 	}
+}
+#include "MRT.h"
+void CCamera::UnProjection()
+{
+	RECT clientrect;
+	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &clientrect);
+	POINT point = POINT((clientrect.right-clientrect.left)/2, (clientrect.bottom - clientrect.top)/2);
+	D3D12_VIEWPORT vp=CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetVP();
+	m_vUnProjection.x = ((((point.x - vp.TopLeftX) * 2.f / vp.Width) - 1.0f) - m_matProj._31) / m_matProj._11;
+	m_vUnProjection.y = ((((point.y - vp.TopLeftY) * 2.f / vp.Height) - 1.0f) - m_matProj._32) / m_matProj._22;
+	m_vUnProjection.z =1.f;
+	m_tRay.vDir.x = m_vUnProjection.x * m_matViewInv._11 + m_vUnProjection.y * m_matViewInv._21 + m_vUnProjection.z * m_matViewInv._31;
+	m_tRay.vDir.y = m_vUnProjection.x * m_matViewInv._12 + m_vUnProjection.y * m_matViewInv._22 + m_vUnProjection.z * m_matViewInv._32;
+	m_tRay.vDir.z = m_vUnProjection.x * m_matViewInv._13 + m_vUnProjection.y * m_matViewInv._23 + m_vUnProjection.z * m_matViewInv._33;
+	m_tRay.vOrigin.x = m_matViewInv._41;
+	m_tRay.vOrigin.y = m_matViewInv._42;
+	m_tRay.vOrigin.z = m_matViewInv._43;
+
 }
 
 void CCamera::SaveToScene(FILE* _pFile)

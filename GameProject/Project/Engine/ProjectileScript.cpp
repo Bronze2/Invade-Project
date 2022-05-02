@@ -155,10 +155,27 @@ void CProjectileScript::Update()
 			Transform()->SetLocalRot(vRot);
 			m_bRotate = true;
 		}
-	
-		vLocalPos.x += vWorldDir.x * m_fSpeed * DT;
+		float beforey=m_pObject->Transform()->GetLocalRot().y;
+		float aftery=XMConvertToDegrees(m_pObject->Transform()->GetLocalRot().y);
+	//	vLocalPos.x += vWorldDir.x * m_fSpeed * DT;
 		vLocalPos.y +=  m_vDir.y*m_fSpeed * DT;
-		vLocalPos.z += m_vDir.z * m_fSpeed * DT;
+		if (m_vDir.x) {
+
+		}
+		if (m_vDir.z > 0) {
+			m_vDir.z *= -1.f;
+		}
+		if (m_vDir.x > 0) {
+			m_vDir.x *= -1.f;
+		}
+		float value = 0.f;
+		if (m_vDir.x < m_vDir.z) {
+			value = m_vDir.x;
+		}
+		else {
+			value = m_vDir.z;
+		}
+		vLocalPos.z += value * m_fSpeed * DT;
 	}
 	
 
