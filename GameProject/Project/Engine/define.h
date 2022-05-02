@@ -38,6 +38,8 @@ static type* GetInst()\
 
 #define MAX_LAYER 32
 
+#define MOVE_TEST
+
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
 typedef DirectX::SimpleMath::Vector4 Vec4;

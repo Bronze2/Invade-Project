@@ -212,6 +212,7 @@ void CPlayerScript::Init()
 void CPlayerScript::Awake()
 {
 	m_fMoveSpeed = 300.f;
+	m_bStraight = true;
 }
 
 void CPlayerScript::Update()
@@ -248,9 +249,14 @@ void CPlayerScript::Update()
 
 
 	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		m_fTurnDegree = 0.f;
+		m_fCurDegree = 0.f;
 		m_bTurn = true;
-		m_vRestoreRot = vRot;
+		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		Vec3 vCameraFront = pCamera->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+		// 여기서 현재 rot과 눌린 키에 따라 회전해야 하는 값 측정! !!!
+		// 근데 시발 그거 머냐 회전하는 도중에 카메라 바꾸는 병신같은짓하면어떡하지
+
 	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
@@ -258,43 +264,48 @@ void CPlayerScript::Update()
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
 		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		
-		vRot.y = XMConvertToRadians(m_fRotateDegree);
 
+#ifdef MOVE_TEST
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			m_fTurnDegree += 30.f;
-			if (m_fTurnDegree > 0.f) {
-				m_fTurnDegree = 0.f;
-				m_bTurn = false;
+			if (m_bStraight) {	// 계속 w키 누르고 있었을 때
+
 			}
-			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			else {
+				m_fCurDegree += 15.f;
+				if (m_fCurDegree > 360.f) {
+					m_fCurDegree = 360.f;
+					m_bTurn = false;
+				}
+			}
+			
+			vRot.y += XMConvertToRadians(m_fCurDegree);
 			//vRot.y += 0.f;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			m_fTurnDegree += 30.f;
-			if (m_fTurnDegree > 180.f) {
-				m_fTurnDegree = 180.f;
+			m_fCurDegree += 15.f;
+			if (m_fCurDegree > 180.f) {
+				m_fCurDegree = 180.f;
 				m_bTurn = false;
 			}
-			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			vRot.y += XMConvertToRadians(m_fCurDegree);
 			//vRot.y += XMConvertToRadians(180.f);
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			m_fTurnDegree -= 15.f;
-			if (m_fTurnDegree < -90.f) {
-				m_fTurnDegree = -90.f;
+			m_fCurDegree -= 15.f;
+			if (m_fCurDegree < -90.f) {
+				m_fCurDegree = -90.f;
 				m_bTurn = false;
 			}
-			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			vRot.y += XMConvertToRadians(m_fCurDegree);
 			//vRot.y += XMConvertToRadians(-90.f);
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			m_fTurnDegree += 15.f;
-			if (m_fTurnDegree >  90.f) {
-				m_fTurnDegree =  90.f;
+			m_fCurDegree += 15.f;
+			if (m_fCurDegree > 90.f) {
+				m_fCurDegree = 90.f;
 				m_bTurn = false;
 			}
-			vRot.y += XMConvertToRadians(m_fTurnDegree);
+			vRot.y += XMConvertToRadians(m_fCurDegree);
 			//vRot.y += XMConvertToRadians(90.f);
 		}
 
@@ -302,10 +313,70 @@ void CPlayerScript::Update()
 			vPos += vFront * m_fMoveSpeed * DT;
 			vPos.y = 0.f;
 		}
+
+		float fDegree = XMConvertToDegrees(vRot.y);
+		if (fDegree >= 345.f) {
+			fDegree -= 345.f;
+			vRot.y = XMConvertToRadians(fDegree);
+		}
+
+#endif
+#ifndef MOVE_TEST
+		vRot.y = XMConvertToRadians(m_fRotateDegree);
+
+		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+			m_fCurDegree += 15.f;
+			if (m_fCurDegree > 360.f) {
+				m_fCurDegree = 360.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fCurDegree);
+			//vRot.y += 0.f;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+			m_fCurDegree += 15.f;
+			if (m_fCurDegree > 180.f) {
+				m_fCurDegree = 180.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fCurDegree);
+			//vRot.y += XMConvertToRadians(180.f);
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+			m_fCurDegree -= 15.f;
+			if (m_fCurDegree < -90.f) {
+				m_fCurDegree = -90.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fCurDegree);
+			//vRot.y += XMConvertToRadians(-90.f);
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+			m_fCurDegree += 15.f;
+			if (m_fCurDegree >  90.f) {
+				m_fCurDegree =  90.f;
+				m_bTurn = false;
+			}
+			vRot.y += XMConvertToRadians(m_fCurDegree);
+			//vRot.y += XMConvertToRadians(90.f);
+		}
+
+		if (!m_bTurn) {
+			vPos += vFront * m_fMoveSpeed * DT;
+			vPos.y = 0.f;
+		}
+
+		float fDegree = XMConvertToDegrees(vRot.y);
+		if (fDegree >= 345.f) {
+			fDegree -= 345.f;
+			vRot.y = XMConvertToRadians(fDegree);
+		}
 		//vRot.y += XMConvertToRadians(m_fRotateDegree);
+#endif
 
 		m_FColCheck(vPos3, vPos);
 		m_eState = PLAYER_STATE::WALK;
+		m_vRestoreRot = vRot;
 	}
 
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {

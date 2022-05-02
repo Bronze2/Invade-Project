@@ -17,6 +17,7 @@ private:
     float m_fRotateDegree;
     float m_fMoveSpeed;
     float m_fTurnDegree;
+    float m_fCurDegree;
 
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
@@ -32,6 +33,10 @@ private:
     bool m_bMoveCheck;
 
     bool m_bTurn;
+    bool m_bStraight;
+#ifdef MOVE_TEST
+    float m_fToDegree;
+#endif
 
     vector<CGameObject*>m_arrColObject;
 public:
