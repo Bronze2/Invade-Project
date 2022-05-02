@@ -202,8 +202,6 @@ void CBowScript::Awake()
 
 		m_pArrow[i]->AddComponent(new CCollider2D);
 		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
-		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(40.f, 0.5f, 0.5f));
-		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(20.f, 0.f, 0.f));
 
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
 		pCurScene->FindLayer(L"Blue")->AddGameObject(m_pArrow[i]);

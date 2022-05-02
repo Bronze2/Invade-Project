@@ -161,11 +161,12 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	Matrix matTranslation = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
 	Vec3 vScale = Transform()->GetLocalScale();
 	Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
-	Vec3 vRot = Transform()->GetLocalRot();
-	Matrix matRot = XMMatrixRotationX(vRot.x);
-	matRot *= XMMatrixRotationY(vRot.y);
-	matRot *= XMMatrixRotationZ(vRot.z);
-	Matrix Matrix = matScale * matRot * matTranslation;
+	Matrix matRot = Matrix::Identity();
+	//Vec3 vRot = Transform()->GetLocalRot();
+	//Matrix matRot = XMMatrixRotationX(vRot.x);
+	//matRot *= XMMatrixRotationY(vRot.y);
+	//matRot *= XMMatrixRotationZ(vRot.z);
+	Matrix Matrix = matScale * matTranslation; //  *matRot* matTranslation;
 	pObject->Transform()->SetNotParent(true);
 	pObject->Transform()->SetObjectMatrix(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
