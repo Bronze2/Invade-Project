@@ -2,11 +2,7 @@
 #include "Script.h"
 
 #include <iostream>
-enum class MINION_ATTACK_TYPE {
-    MELEE,//50
-    RANGE,//150
-    CANON//200
-};
+
 
 class CMinionScript :
     public CScript
@@ -77,7 +73,7 @@ public:
     
     
     void m_FFind();
-
+    
     void m_SetId(int id) { m_id = id; };
     int m_GetId() { return m_id; };
    

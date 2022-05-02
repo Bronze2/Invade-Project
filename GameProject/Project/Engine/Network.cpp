@@ -184,9 +184,9 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_spawn_minion* my_packet = reinterpret_cast<sc_packet_spawn_minion*>(ptr);
 		if(my_packet->camp == RED)
-			CSceneMgr::GetInst()->net_spawnMinion_red(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_spawnMinion_red(my_packet->id, my_packet->mtype,my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		else if(my_packet->camp ==  BLUE)
-			CSceneMgr::GetInst()->net_spawnMinion_blue(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+			CSceneMgr::GetInst()->net_spawnMinion_blue(my_packet->id, my_packet->mtype,my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		cout << "spawn id: " << my_packet->id <<endl;
 	}
 	break;
@@ -197,7 +197,13 @@ void Network::ProcessPacket(char* ptr)
 			my_packet->rot.x, my_packet->rot.y, my_packet->rot.z,my_packet->state);
 	}
 	break;
-
+	case S2C_ANIM_MINION:
+	{
+		sc_packet_move_minion* my_packet = reinterpret_cast<sc_packet_move_minion*>(ptr);
+		CSceneMgr::GetInst()->net_animMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z,
+			my_packet->rot.x, my_packet->rot.y, my_packet->rot.z, my_packet->state);
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

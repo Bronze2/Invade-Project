@@ -72,6 +72,11 @@ void CMinionScript::Update()
 
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
+
+		if (m_bFinishAnimation) {
+			CSceneMgr::GetInst()->set_minioninfoState(GetObj()->GetId(), MINION_STATE::WALK);
+			m_eState = MINION_STATE::WALK;
+		}
 	}
 	break;
 	case MINION_STATE::DIE:
@@ -258,7 +263,7 @@ void CMinionScript::m_FAnimation()
 					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 					GetObj()->Animator3D()->SetCurTime(0.f);
 					GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-
+					m_bFinishAnimation = true;
 				}
 			}
 		}

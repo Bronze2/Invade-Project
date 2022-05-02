@@ -321,6 +321,11 @@ enum class SHADER_POV
 
 
 //MINION STATE
+enum class MINION_ATTACK_TYPE {
+	MELEE,//50
+	RANGE,//150
+	CANON//200
+};
 
 enum class MINION_STATE {
 	WALK,

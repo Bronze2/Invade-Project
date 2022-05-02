@@ -30,6 +30,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_SPAWN_MINION	7
 #define S2C_LOBBY_ENTER		8
 #define S2C_MOVE_MINION		9
+#define S2C_ANIM_MINION		10
+
 
 
 struct p_Vec3 {
@@ -142,7 +144,7 @@ struct sc_packet_spawn_minion {
 	char	type;
 	int		id;
 	char    camp;
-
+	int		mtype;
 	p_Vec3  pos;
 	p_Vec3  dir;
 	p_Vec3  rot;

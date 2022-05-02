@@ -83,7 +83,7 @@ void CMinionScript::Update()
 //		if (m_ePrevState != m_eState) {
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 
-			cout <<"["<<m_GetId()<<"]"  <<m_pTarget->GetScript<CMinionScript>()->m_GetId() << endl;
+			//cout <<"["<<m_GetId()<<"]"  <<m_pTarget->GetScript<CMinionScript>()->m_GetId() << endl;
 			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 			float rotate = angle * 0.0174532925f;
 			vRot.y = rotate;
@@ -179,7 +179,10 @@ void CMinionScript::CheckRange()
 		if (m_attack_current_time == 0 && !m_during_attack) {
 			if (m_GetId() == 0) cout << "공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
+			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 			m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+			CServer::GetInst()->send_anim_minion_packet(m_GetId());
+
 			m_during_attack = true;
 			m_attack_current_time += DT;
 		}

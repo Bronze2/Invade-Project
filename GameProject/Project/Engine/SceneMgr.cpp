@@ -292,18 +292,35 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }
 
-void CSceneMgr::net_spawnMinion_blue(int id, float x, float y ,float z)
+void CSceneMgr::net_spawnMinion_blue(int id, int mtype,float x, float y ,float z)
 {
 	Vec3 Pos{ x,y,z };
-	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, MINION_ATTACK_TYPE::MELEE);
+	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
-void CSceneMgr::net_spawnMinion_red(int id, float x, float y, float z)
+void CSceneMgr::net_spawnMinion_red(int id, int mtype,float x, float y, float z)
 {
 	Vec3 Pos{ x,y,z };
-	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos,MINION_ATTACK_TYPE::MELEE);
+	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
 
 void CSceneMgr::net_moveMinion(int id, float x, float y, float z, float r_x, float r_y, float r_z, int state)
+{
+	m_minion[id].pos.x = x;
+	m_minion[id].pos.y = y;
+	m_minion[id].pos.z = z;
+	m_minion[id].rot.x = r_x;
+	m_minion[id].rot.y = r_y;
+	m_minion[id].rot.z = r_z;
+	//if(state == 0)
+	//	m_minion[id].state = MINION_STATE::WALK;
+	//if (state == 1)
+	//	m_minion[id].state = MINION_STATE::ATTACK;
+	//if (state == 2)
+	//	m_minion[id].state = MINION_STATE::DIE;
+
+}
+
+void CSceneMgr::net_animMinion(int id, float x, float y, float z, float r_x, float r_y, float r_z, int state)
 {
 	m_minion[id].pos.x = x;
 	m_minion[id].pos.y = y;
@@ -319,3 +336,4 @@ void CSceneMgr::net_moveMinion(int id, float x, float y, float z, float r_x, flo
 		m_minion[id].state = MINION_STATE::DIE;
 
 }
+

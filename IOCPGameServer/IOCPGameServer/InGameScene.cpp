@@ -29,32 +29,8 @@ void CInGameScene::Init()
 	GetLayer(1)->SetName(L"Blue");
 	GetLayer(2)->SetName(L"RedSpawnPlace");
 	GetLayer(3)->SetName(L"BlueSpawnPlace");
-
-
-	//CGameObject* pEmptyPlayer = new CGameObject;
-	//pEmptyPlayer->AddComponent(new CTransform);
-	//pEmptyPlayer->AddComponent(new CPlayerScript);
-	//pEmptyPlayer->AddComponent(new CCollider3D);
-	//pEmptyPlayer->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//pEmptyPlayer->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));      
-	//pEmptyPlayer->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	//pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
-	//pEmptyPlayer->Transform()->SetLocalPos(Vec3(100, 100, 100));
-	//FindLayer(L"Red")->AddGameObject(pEmptyPlayer, false);
-
-	//CGameObject* pEmptyPlayer2 = new CGameObject;
-	//pEmptyPlayer2->AddComponent(new CTransform);
-	//pEmptyPlayer2->AddComponent(new CPlayerScript);
-	//pEmptyPlayer2->AddComponent(new CCollider3D);
-	//pEmptyPlayer2->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//pEmptyPlayer2->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));      
-	//pEmptyPlayer2->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
-	//pEmptyPlayer2->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
-	//pEmptyPlayer2->Transform()->SetLocalPos(Vec3(100, 100, 100));
-	//FindLayer(L"Blue")->AddGameObject(pEmptyPlayer2, false);
 	
 	CGameObject* pNexus = nullptr;
-
 	CGameObject* pObject = new CGameObject;
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
@@ -99,11 +75,40 @@ void CInGameScene::Init()
 	pObject1->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject1->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 	FindLayer(L"Blue")->AddGameObject(pObject1);
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+		CGameObject* pObject = new CGameObject;
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CPlayerScript);
+		pObject->AddComponent(new CSensor);
+		pObject->Sensor()->SetRadius(300.f);
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(1.0f, 1.0f, 1.0f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pObject->Transform()->SetLocalPos(Vec3(0.f,0.f,0.f));
+		pObject->GetScript<CPlayerScript>()->m_SetId(i);
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+		pObject->GetScript<CPlayerScript>()->Init();
+
+		if(i %2==0)
+			FindLayer(L"Blue")->AddGameObject(pObject, false);
+		else 
+			FindLayer(L"Red")->AddGameObject(pObject, false);
+
+		std::cout << "플레이어 [" << i << "] 생성" << endl;
+	}
+
+
+
+
+
+
+
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
-
-
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 
 	Awake();

@@ -276,8 +276,10 @@ void CThread::process_packet(int user_id, char* buf)
 				}
 
 				//플레이어 진입 후 미니언 생성 시작
+				CSceneMgr::GetInst()->Init();
 				CService::GetInst()->add_timer(user_id, OP_UPDATE, 10);
 			}
+
 		}
 
 	}

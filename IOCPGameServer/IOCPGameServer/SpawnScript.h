@@ -24,20 +24,18 @@ private:
 
     SPAWN_PATTERN m_eSpawnPattern;
     CGameObject* m_pNexus;
-
-
-
-
-    
     CAMP_STATE m_eCampState;
+
+
 private:
     CGameObject* SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange ,CAMP_STATE _eState);
+    CGameObject* SpawnPlayer(int p_id, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale, CAMP_STATE _eCamp);
 public:
-
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }
     virtual void Update();
 
     void SetEnemyNexus(CGameObject* _pNexus) { m_pNexus=_pNexus; }
+
 
     CSpawnScript();
     virtual ~CSpawnScript();

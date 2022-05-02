@@ -195,7 +195,7 @@ void CServer::send_leave_packet(int user_id, int o_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z, CAMP_STATE camp)
+void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z, MINION_ATTACK_TYPE type,CAMP_STATE camp)
 {
 	sc_packet_spawn_minion packet;
 	packet.size = sizeof(packet);
@@ -208,7 +208,7 @@ void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z,
 	p_Vec3 pos = { x,y,z };
 	packet.pos = pos;
 	std::cout << packet.id << endl;
-
+	packet.mtype = (int)type;
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 
@@ -230,6 +230,26 @@ void CServer::send_move_minion_packet(int minion_id)
 	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
 	//cout << "["<<packet.state<<"]" << endl;
 	//cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
+void CServer::send_anim_minion_packet(int minion_id)
+{
+	sc_packet_move_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ANIM_MINION;
+	packet.id = minion_id;
+	packet.pos.x = SHARED_DATA::g_minion[minion_id].Pos.x;
+	packet.pos.y = SHARED_DATA::g_minion[minion_id].Pos.y;
+	packet.pos.z = SHARED_DATA::g_minion[minion_id].Pos.z;
+
+	packet.rot.x = SHARED_DATA::g_minion[minion_id].Rot.x;
+	packet.rot.y = SHARED_DATA::g_minion[minion_id].Rot.y;
+	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
+	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);

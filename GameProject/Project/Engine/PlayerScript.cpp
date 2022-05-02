@@ -484,6 +484,60 @@ void CPlayerScript::Update_LerpPos()
 	Transform()->SetLocalPos(vPos);
 }
 
+#include "Collider3D.h"
+void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
+{
+	if (m_bColCheck) {
+		for (int i = 0; i < m_arrColObject.size(); ++i) {
+			Vec3 vTargetPos = m_arrColObject[i]->Transform()->GetWorldPos();
+			m_bMoveCheck = lengthCompare(_vBeforePos, _vAfterPos, GetObj(), vTargetPos);
+			if (m_bMoveCheck) {
+				return;
+			}
+		}
+	}
+}
+void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
+{
+	int a = 0;
+	//if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
+
+	//}
+	//else {
+	//	if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
+
+	//	}
+	//	else {
+	//		m_arrColObject.push_back(_pOther->GetObj());
+	//		m_bColCheck = true;
+	//	}
+	//}
+}
+
+void CPlayerScript::OnCollision3D(CCollider3D* _pOther)
+{
+}
+
+void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
+{
+
+	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
+
+	}
+	else {
+		vector<CGameObject*>::iterator iter = m_arrColObject.begin();
+		for (int i = 0; iter != m_arrColObject.end(); ++iter, ++i) {
+			if (m_arrColObject[i] == _pOther->GetObj()) {
+				m_arrColObject.erase(iter);
+				return;
+			}
+
+		}
+	}
+
+
+}
+
 
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)

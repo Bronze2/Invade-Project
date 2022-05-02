@@ -43,13 +43,15 @@ public:
 	void net_setLocalPosByID(int id, float x, float y, float z);
 	void net_setRotationByID(int id, float x, float y, float z);
 	void net_setAnimationByID(int id , int state);
-	void net_spawnMinion_blue(int id, float x, float y, float z);
-	void net_spawnMinion_red(int id, float x, float y, float z);
+	void net_spawnMinion_blue(int id, int mtype,float x, float y, float z);
+	void net_spawnMinion_red(int id, int mtype,float x, float y, float z);
 	void net_moveMinion(int id, float x, float y, float z, 
 							float r_x, float r_y, float r_z, int state);
+	void net_animMinion(int id, float x, float y, float z,
+		float r_x, float r_y, float r_z, int state);
 
 	minioninfo get_minioninfo(int id) { return m_minion[id]; };
-
+	void set_minioninfoState(int id, MINION_STATE state) { m_minion[id].state = state; }
 	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
 	void ChangeScene(SCENE_TYPE _Type);

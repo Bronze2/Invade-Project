@@ -11,18 +11,8 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-	Vec3 vPos = Transform()->GetWorldPos();
-	Vec3 vRot = Transform()->GetLocalRot();
-	Vec3 vLocalPos = Transform()->GetLocalPos();
-	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-	vLocalPos.x -= vWorldDir.x * 10.f;
-	vLocalPos.z -= vWorldDir.z * 10.f;
-
-	Transform()->SetLocalPos(vLocalPos);
-	Transform()->SetLocalRot(vRot);
-
-
-
+	Transform()->SetLocalPos(SHARED_DATA::g_clients[m_id].Pos);
+	Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
 }
 
 

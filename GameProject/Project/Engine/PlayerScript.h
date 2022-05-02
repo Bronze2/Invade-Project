@@ -30,7 +30,7 @@ private:
     Vec3 m_LerpPos;
 
     bool isMain;
-
+    vector<CGameObject*>m_arrColObject;
 public:
     void m_FAnimation();
     void Init();
@@ -45,6 +45,11 @@ public:
     CPlayerScript();
     virtual ~CPlayerScript();
 
+    void m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos);
+
+    virtual void OnCollision3DEnter(CCollider3D* _pOther);
+    virtual void OnCollision3D(CCollider3D* _pOther);
+    virtual void OnCollision3DExit(CCollider3D* _pOther);
 
 
     CLONE(CPlayerScript);

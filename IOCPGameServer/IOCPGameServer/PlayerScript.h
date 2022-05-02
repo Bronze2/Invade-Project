@@ -8,6 +8,7 @@ private:
     Vec3 m_LerpPos;
 
     bool isMain;
+    int m_id;
 
 public:
     void Init();
@@ -18,6 +19,9 @@ public:
     virtual ~CPlayerScript();
 
 
+
+    void m_SetId(int id) { m_id = id; };
+    int m_GetId() { return m_id; };
 
     CLONE(CPlayerScript);
 };

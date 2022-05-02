@@ -30,9 +30,12 @@ public:
 
 	void send_leave_packet(int user_id, int o_id);
 
-	void send_spawn_minion_packet(int minion_id , float x, float y , float z, CAMP_STATE camp);
+	void send_spawn_minion_packet(int minion_id , float x, float y , float z, MINION_ATTACK_TYPE type ,CAMP_STATE camp);
 
 	void send_move_minion_packet(int minion_id);
+
+	void send_anim_minion_packet(int minion_id);
+
 
 private:
 

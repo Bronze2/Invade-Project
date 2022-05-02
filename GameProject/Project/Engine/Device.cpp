@@ -96,7 +96,6 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 		{
 			ui64VideoMemory = comparison_videoMemory;
 			select = gpu_idx;
-			cout << gpu_idx << endl;
 		}
 		++gpu_idx;
 	}
