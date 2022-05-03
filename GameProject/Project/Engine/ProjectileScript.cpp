@@ -56,13 +56,14 @@ void CProjectileScript::Update()
 	{
 	case PROJECTILE_TYPE::MINION:
 	{
-		vector<tMTBone>* c = const_cast<vector<tMTBone>*>(m_pObject->MeshRender()->GetMesh()->GetBones());
+
 		tMTBone* p = const_cast<tMTBone*>(m_pObject->MeshRender()->GetMesh()->GetBone(m_iBone));
 		int d = m_pObject->Animator3D()->GetFrameIdx();
 		if (p->vecKeyFrame.size() < d) {
 			return;
 		}
 		Transform()->SetLocalPos(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].vTranslate);
+		// 손에들고있는코드
 		if (0 == m_bLaunch)
 			return;
 		else if (1 == m_bLaunch) {
@@ -159,9 +160,7 @@ void CProjectileScript::Update()
 		float aftery=XMConvertToDegrees(m_pObject->Transform()->GetLocalRot().y);
 	//	vLocalPos.x += vWorldDir.x * m_fSpeed * DT;
 		vLocalPos.y +=  m_vDir.y*m_fSpeed * DT;
-		if (m_vDir.x) {
-
-		}
+		
 		if (m_vDir.z > 0) {
 			m_vDir.z *= -1.f;
 		}
@@ -192,7 +191,7 @@ void CProjectileScript::Update()
 #include "TowerScript.h"
 void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
-	if (m_pObject = _pOther->GetObj())
+	if (m_pObject == _pOther->GetObj())
 		return;
 	if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
 		if (nullptr != _pOther->GetObj()) {
@@ -242,7 +241,7 @@ void CProjectileScript::Init()
 }
 
 CProjectileScript::CProjectileScript():CScript((UINT)SCRIPT_TYPE::PROJECTILESCRIPT),m_pObject(nullptr),m_fSpeed(),m_uiDamage(),m_fAlpha(0.f)
-,m_bRotate(false), m_eProjectileType(PROJECTILE_TYPE::MINION),m_fLength(300.f),m_bUpdate(false),m_bLaunch(0)
+,m_bRotate(false), m_eProjectileType(PROJECTILE_TYPE::MINION),m_fLength(350.f),m_bUpdate(false),m_bLaunch(0)
 {
 }
 

@@ -31,7 +31,7 @@ private:
 
     float m_fRoty;
 public:
-
+    void SetLength(float _fLength) { m_fLength = _fLength; }
     void SetRotY(float _fRotY) { m_fRoty = _fRotY; }
     void SetLaunch(UINT _bLaunch) { m_bLaunch=_bLaunch; }
     void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }

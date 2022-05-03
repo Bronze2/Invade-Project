@@ -30,6 +30,7 @@ CCamera::CCamera()
 	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_iLayerCheck(0)
 	, m_bModule(false)
+	,m_bMinTest(false)
 {
 }
 
@@ -42,39 +43,45 @@ CCamera::~CCamera()
 void CCamera::InterSectsObject(CCollider3D* _pCollider)
 {
 	if (!m_pPlayer)return;
+	Matrix matlocal = {};
+	if (GetObj()->GetParent()) {
+		
+		Matrix matParent=GetObj()->GetParent()->Transform()->GetWorldMat();
+		matlocal =Transform()->GetLocal();
+		matlocal*= matParent;
+	}
+	else {
+		return;
+	}
+	Vec3 vTestPos = Vec3(matlocal._41, matlocal._42, matlocal._43);
 
-
-
-	Vec3 vPos = Transform()->GetWorldPos();
 	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	Vec3 target = m_pPlayer->Transform()->GetWorldPos();
 	target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
-	Vec3 vDir2 = target - vPos;
-	vDir2.Normalize();
-	m_pRay->position = vPos;
-	m_pRay->direction = vDir2;
+	m_pRay->position = vTestPos;
+	m_pRay->direction = vDir;
 	float min = INFINITE;
-	Vec3 Corners[8] = {};
-	_pCollider->GetBox().GetCorners(Corners);
 
-	
 
 	if (m_pRay->Intersects(_pCollider->GetBox(), min)){
 		Vec3 target = m_pPlayer->Transform()->GetWorldPos();
-		
-		target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
-		float distance= Vec3::Distance(target, vPos);
 
-		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vPos);
+		target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
+		float distance= Vec3::Distance(target, vTestPos);
+
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vTestPos);
 		if (distance2 > distance)
 			return;
 		if (_pCollider->GetObj()->GetName() == L"Cover") {
+			
 			if (min > 0 && min < distance) {
 				min *= 1.5f;
+	
 				if (min >= distance - 100.f) {
 					min = distance - 100.f;
 				}
 				m_vFront = (m_pRay->direction * min);
+			
 			}
 		}
 		else {
@@ -82,6 +89,7 @@ void CCamera::InterSectsObject(CCollider3D* _pCollider)
 		}
 	
 	}
+	
 }
 
 void CCamera::FinalUpdate()

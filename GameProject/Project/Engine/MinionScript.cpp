@@ -383,8 +383,10 @@ void CMinionScript::m_FAnimation()
 							}
 					}
 					else {
-						if(m_pProjectile!=nullptr&&!m_pProjectile->IsDead())
+						if (m_pProjectile != nullptr && !m_pProjectile->IsDead()) {
 							m_pProjectile->GetScript<CProjectileScript>()->SetLaunch(1);
+							m_pProjectile->Transform()->SetLocalPos(Transform()->GetLocalPos());
+						}
 						m_pProjectile = nullptr;
 					}
 				}
@@ -406,7 +408,7 @@ void CMinionScript::m_FAnimation()
 							if (GetObj()->Animator3D()->GetFrameIdx() >= 64) {
 								if (!m_bProjectile)
 								{
-									CreateProjectile(L"MeshData\\blueball.mdat", 17, L"Blue");
+									CreateProjectile(L"MeshData\\blueball.mdat", 26, L"Blue");
 									m_bProjectile = true;
 								}
 							}

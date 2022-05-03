@@ -46,6 +46,8 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 	else {
 		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
 	}
+
+	pObject->GetScript<CProjectileScript>()->SetLength(500.f);
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->GetScript<CProjectileScript>()->Init();

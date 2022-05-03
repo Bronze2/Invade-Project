@@ -24,7 +24,7 @@ void CCollisionMgr::Update()
 	m_pCameraObject->SetFront(Vec3(0, 0, 0));
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
-		RayCollision(pCurScene->GetLayer(i));
+		
 		for (int j = 0; j < MAX_LAYER; ++j)
 		{
 			if (m_LayerCheck[i] & (1 << j))
@@ -37,7 +37,13 @@ void CCollisionMgr::Update()
 		}
 		
 	}
-
+	m_pCameraObject->StartTest2(false);
+	for (int i = 0; i < MAX_LAYER; ++i) {
+		RayCollision(pCurScene->GetLayer(i));
+	}
+	if (!m_pCameraObject->GetTest2()) {
+		m_pCameraObject->StartMinTest(false);
+	}
 }
 
 void CCollisionMgr::CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2)

@@ -115,7 +115,7 @@ void CSpawnScript::Update()
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::END;
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN2;
 							break;
 
 						default:
@@ -241,13 +241,17 @@ void CSpawnScript::Update()
 						case 5:
 						case 6:
 						{
-							if (m_uiSpawnInterval == SPAWNINTEVAL) {
+
+							
+							if (m_uiSpawnInterval >= SPAWNINTEVAL) {
 								//pNewAnimation->InsertAnimClip(L"IDLE", 0, 29);
 								pNewAnimation->InsertAnimClip(L"WALK", 31, 49);
 								pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
 								pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-							
+								if (m_uiCount == 6) {
+									int a = 0;
+								}
 								CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, pNewAnimation, m_eCampState);
 							
 								CreateObject(pObject, L"Red");
@@ -334,7 +338,7 @@ void CSpawnScript::Update()
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::END;
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN2;
 							break;
 
 						default:
@@ -505,7 +509,7 @@ void CSpawnScript::Update()
 
 }
 
-CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN1)
+CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN3)
 ,m_bSpawnStart(false),m_uiCount(0),m_bPatternOn(false)
 {
 }

@@ -33,6 +33,7 @@ void CCollider3D::FinalUpdate()
 
 void CCollider3D::Render()
 {
+	return;
 	if (!IsActive())
 		return;
 	static CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
