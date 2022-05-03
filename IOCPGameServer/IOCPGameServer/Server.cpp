@@ -255,3 +255,18 @@ void CServer::send_anim_minion_packet(int minion_id)
 		send_packet(i, &packet);
 
 }
+
+void CServer::send_rot_tower_packet(int tower_id)
+{
+	sc_packet_rot_tower packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ROT_TOWER;
+	packet.id = tower_id;
+	packet.rot.x = SHARED_DATA::g_tower[tower_id].x;
+	packet.rot.y = SHARED_DATA::g_tower[tower_id].y;
+	packet.rot.z = SHARED_DATA::g_tower[tower_id].z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}

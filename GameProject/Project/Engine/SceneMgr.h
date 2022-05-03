@@ -19,6 +19,8 @@ struct minioninfo {
 	MINION_STATE state;
 };
 
+
+
 class CSceneMgr
 {
 	SINGLE(CSceneMgr)
@@ -26,8 +28,8 @@ private:
 	CScene* m_pCurScene;
 	CScene* m_arrScene[(UINT)SCENE_TYPE::END];
 	vector<CGameObject*> m_player;
-
 	map<int, minioninfo> m_minion;
+	map<int, Vec3> m_tower;
 
 public:
 	void Init();
@@ -49,7 +51,10 @@ public:
 							float r_x, float r_y, float r_z, int state);
 	void net_animMinion(int id, float x, float y, float z,
 		float r_x, float r_y, float r_z, int state);
+	void net_setRotTower(int id, Vec3 rot);
 
+	Vec3 get_towerRot(int id) { return m_tower[id]; }
+	void set_towerRot(int id, Vec3 rot) { m_tower[id] = rot; };
 	minioninfo get_minioninfo(int id) { return m_minion[id]; };
 	void set_minioninfoState(int id, MINION_STATE state) { m_minion[id].state = state; }
 	CScene* GetCurScene();

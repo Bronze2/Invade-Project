@@ -28,7 +28,8 @@ private:
     tMTAnimClip* m_pNextAnimClip;
 
     Vec3 m_LerpPos;
-
+    bool m_bColCheck;
+    bool m_bMoveCheck;
     bool isMain;
     vector<CGameObject*>m_arrColObject;
 public:

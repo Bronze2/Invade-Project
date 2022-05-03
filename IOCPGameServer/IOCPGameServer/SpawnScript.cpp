@@ -72,7 +72,7 @@ void CSpawnScript::Update()
         if (m_bPatternOn) {
             switch (m_eCampState)
             {
-            case CAMP_STATE::RED:
+      /*      case CAMP_STATE::RED:
             {
                 switch (m_eSpawnPattern)
                 {
@@ -281,7 +281,7 @@ void CSpawnScript::Update()
                 break;
                 }
             }
-            break;
+            break;*/
 
             case CAMP_STATE::BLUE:
             {

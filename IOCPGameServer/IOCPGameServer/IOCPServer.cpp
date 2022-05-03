@@ -14,6 +14,7 @@ namespace SHARED_DATA {
 	SOCKET listenSocket;
 	int g_minionindex;
 	int current_user;
+	map <int, Vec3> g_tower;
 };
 
 

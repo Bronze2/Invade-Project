@@ -180,7 +180,12 @@ void CMinionScript::CheckRange()
 			if (m_GetId() == 0) cout << "공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
 			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
-			m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+			if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+				m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+			}
+			//else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
+			//	m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+			//}
 			CServer::GetInst()->send_anim_minion_packet(m_GetId());
 
 			m_during_attack = true;

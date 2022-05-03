@@ -46,7 +46,6 @@ void CSpawnScript::Update()
 void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
 {
     CAnimation* pNewAnimation = new CAnimation;
-
     switch (type)
     {
     case MINION_ATTACK_TYPE::MELEE:
@@ -54,8 +53,9 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"WALK", 30, 49);
         pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
         pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
+        Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat",
-            Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
+            vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::MELEE, pNewAnimation, CAMP_STATE::RED);
         pObject->SetId(id);
         CreateObject(pObject, L"Red");
@@ -68,7 +68,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", 
-            Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), 
+            vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
         pObject->SetId(id);
         CreateObject(pObject, L"Red");
@@ -81,7 +81,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 125, 174);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", 
-            Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
+            vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
         pObject->SetId(id);
         CreateObject(pObject, L"Red");

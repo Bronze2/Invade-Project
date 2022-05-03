@@ -76,7 +76,7 @@ namespace SHARED_DATA {
 	extern SOCKET listenSocket;
 	extern int g_minionindex;
 	extern int current_user;
-
+	extern map <int, Vec3> g_tower;
 };
 //struct tResolution
 //{

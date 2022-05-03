@@ -204,6 +204,13 @@ void Network::ProcessPacket(char* ptr)
 			my_packet->rot.x, my_packet->rot.y, my_packet->rot.z, my_packet->state);
 	}
 	break;
+
+	case S2C_ROT_TOWER:
+	{
+		sc_packet_rot_tower* my_packet = reinterpret_cast<sc_packet_rot_tower*>(ptr);
+		CSceneMgr::GetInst()->net_setRotTower(my_packet->id, Vec3(my_packet->rot.x, my_packet->rot.y, my_packet->rot.z));
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

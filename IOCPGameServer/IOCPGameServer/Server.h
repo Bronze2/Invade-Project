@@ -36,6 +36,9 @@ public:
 
 	void send_anim_minion_packet(int minion_id);
 
+	void send_rot_tower_packet(int tower_id);
+
+
 
 private:
 
