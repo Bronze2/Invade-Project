@@ -109,6 +109,7 @@ void CTransform::FinalUpdate()
 	{
 		m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
 		if (GetObj()->Camera() && GetObj()->Camera()->GetPlay()) {
+			GetObj()->Camera()->SetMatrixCamera(m_matWorld);
 			m_matWorld._41 += GetObj()->Camera()->GetFront().x;
 			m_matWorld._42 += GetObj()->Camera()->GetFront().y;
 

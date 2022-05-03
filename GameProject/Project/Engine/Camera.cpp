@@ -43,22 +43,12 @@ CCamera::~CCamera()
 void CCamera::InterSectsObject(CCollider3D* _pCollider)
 {
 	if (!m_pPlayer)return;
-	Matrix matlocal = {};
-	if (GetObj()->GetParent()) {
-		
-		Matrix matParent=GetObj()->GetParent()->Transform()->GetWorldMat();
-		matlocal =Transform()->GetLocal();
-		matlocal*= matParent;
-	}
-	else {
-		return;
-	}
-	Vec3 vTestPos = Vec3(matlocal._41, matlocal._42, matlocal._43);
+	Vec3 vWorldPos = Vec3(m_matCamera._41, m_matCamera._42, m_matCamera._43);
 
 	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	Vec3 target = m_pPlayer->Transform()->GetWorldPos();
 	target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
-	m_pRay->position = vTestPos;
+	m_pRay->position = vWorldPos;
 	m_pRay->direction = vDir;
 	float min = INFINITE;
 
@@ -67,9 +57,9 @@ void CCamera::InterSectsObject(CCollider3D* _pCollider)
 		Vec3 target = m_pPlayer->Transform()->GetWorldPos();
 
 		target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
-		float distance= Vec3::Distance(target, vTestPos);
+		float distance= Vec3::Distance(target, vWorldPos);
 
-		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vTestPos);
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
 		if (distance2 > distance)
 			return;
 		if (_pCollider->GetObj()->GetName() == L"Cover") {
