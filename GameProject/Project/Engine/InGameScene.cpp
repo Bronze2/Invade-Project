@@ -158,6 +158,7 @@ void CInGameScene::Init()
 	CGameObject* pBow;
 	pBow = pMeshData->Instantiate();
 	pBow->SetName(L"Bow");
+
 	pBow->AddComponent(new CTransform);
 	pBow->AddComponent(new CCollider3D);
 	pBow->AddComponent(new CSensor);

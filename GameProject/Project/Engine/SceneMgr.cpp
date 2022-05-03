@@ -107,9 +107,6 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init()
 {
-	// �ʿ��� ���ҽ� �ε�
-	// Texture �ε�
-
 	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
 
 
