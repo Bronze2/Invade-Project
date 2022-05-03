@@ -173,6 +173,9 @@ void CInGameScene::Init()
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
 	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
 
+	Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
+	pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
+
 	pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 1);         // 0, 13
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 1, 12);
