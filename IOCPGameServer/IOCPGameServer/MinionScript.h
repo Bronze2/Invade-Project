@@ -31,10 +31,9 @@ class CMinionScript :
     MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
     int m_id;
-
-    float m_attack_max_time;
-    float m_attack_current_time;
-    bool m_during_attack;
+    void CreateProjectile(const wstring& _Layer);
+    bool m_bProjectile;
+    CGameObject* m_pProjectile;
 public:
     void CheckHp();
     CLONE(CMinionScript)
@@ -50,7 +49,7 @@ public:
     const CAMP_STATE& GetCamp()const { return m_eCamp; }
 
     void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
-    void SetAttackMaxTime(float time) { m_attack_max_time = time; }
+    //void SetAttackMaxTime(float time) { m_attack_max_time = time; }
     
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);

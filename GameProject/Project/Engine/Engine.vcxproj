@@ -175,6 +175,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
     <ClInclude Include="d3dUtil.h" />
+    <ClInclude Include="EmptyCameraScript.h" />
     <ClInclude Include="EmptyPlayerScript.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="LobbyScene.h" />
@@ -213,6 +214,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerScript.h" />
+    <ClInclude Include="ProjectileScript.h" />
     <ClInclude Include="Ptr.h" />
     <ClInclude Include="RenderMgr.h" />
     <ClInclude Include="ResMgr.h" />
@@ -242,6 +244,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
+    <ClCompile Include="EmptyCameraScript.cpp" />
     <ClCompile Include="EmptyPlayerScript.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
@@ -280,6 +283,7 @@ call EngineCopy.bat</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PlayerScript.cpp" />
+    <ClCompile Include="ProjectileScript.cpp" />
     <ClCompile Include="RenderMgr.cpp" />
     <ClCompile Include="RenderMgrInit.cpp" />
     <ClCompile Include="ResMgr.cpp" />

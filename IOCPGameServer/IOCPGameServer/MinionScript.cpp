@@ -22,7 +22,7 @@ void CMinionScript::Init()
 	 break;
 
 	case MINION_ATTACK_TYPE::CANON: {
-		SetAttackRange(50);
+		SetAttackRange(150);
 		m_uiMaxHp = 550; m_uiAttackDamage = 60;
 	}
 	 break;
@@ -30,8 +30,7 @@ void CMinionScript::Init()
 	}
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
-	m_attack_max_time = 24;
-	m_attack_current_time = 0;
+
 }
 
 
@@ -170,35 +169,90 @@ void CMinionScript::CheckHp()
 
 void CMinionScript::CheckRange()
 {
-	if( m_during_attack) m_attack_current_time += DT;
+	if (SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
+		SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
+		SHARED_DATA::g_minion[m_GetId()].m_attack_current_time += 1;
+		SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
+
+	}
 	if (m_pTarget == nullptr)return;
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
-		if (m_attack_current_time == 0 && !m_during_attack) {
-			if (m_GetId() == 0) cout << "공격하라~" << endl;
+		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
+			SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
+
+			cout << "[" << m_GetId() << "] 공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
 			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
-			if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-				m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+
+			switch (m_eAttackType)
+			{
+			case MINION_ATTACK_TYPE::MELEE: {
+
+				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+					m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+				}
+				//else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
+				//	m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+				//}
 			}
-			//else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
-			//	m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
-			//}
+			break;
+
+			case MINION_ATTACK_TYPE::RANGE: {
+
+				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+					m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+				}
+				//if(m_eCamp == CAMP_STATE::BLUE)
+				//	CreateProjectile(L"Blue");					
+				//else
+				//	CreateProjectile(L"Red");
+			}
+			break;
+
+			case MINION_ATTACK_TYPE::CANON: {
+
+				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+					m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+				}
+				//if (m_eCamp == CAMP_STATE::BLUE)
+				//	CreateProjectile(L"Blue");
+				//else
+				//	CreateProjectile(L"Red");
+			}
+			break;
+
+			}
+			
 			CServer::GetInst()->send_anim_minion_packet(m_GetId());
 
-			m_during_attack = true;
-			m_attack_current_time += DT;
+			SHARED_DATA::g_minion[m_GetId()].m_during_attack = true;
+			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time ++;
+			SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
+
+
+		}
+		else if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
+
+			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
+			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
+			//m_eState = MINION_STATE::WALK;
+
 		}
 		//if (m_GetId() == 0) cout << "DT :" << m_attack_current_time << endl;
 
 	}
 	else {
-		if (m_attack_current_time >= m_attack_max_time) {
+		if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
 			
-			m_during_attack = false;
-			m_attack_current_time = 0;
+			SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
+
+			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
+			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
+			SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
+
 			m_eState = MINION_STATE::WALK;
 				
 		}
@@ -310,4 +364,52 @@ void CMinionScript::OnCollision3DExit(CCollider3D* _pOther)
 		}
 	}
 
+}
+
+#include "ProjectileScript.h"
+#include "PlayerScript.h"
+void CMinionScript::CreateProjectile(const wstring& _Layer)
+{
+	if (nullptr == m_pTarget)
+		return;
+	if (m_pTarget->IsDead())
+		return;
+	CGameObject* pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CProjectileScript);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
+	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
+	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::MINION);
+	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+	}
+	else {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+	}
+
+	
+	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vProjectilePos = vPos;
+	vProjectilePos.y += 10;
+	pObject->Transform()->SetLocalPos(vProjectilePos);
+
+	pObject->GetScript<CProjectileScript>()->SetStartPos(vProjectilePos);
+	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
+	//		GetObj()->AddChild(pObject);
+	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
+
+	pObject->GetScript<CProjectileScript>()->Init();
+	pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
+	m_pProjectile = pObject;
+	CreateObject(pObject, _Layer);
+
+	SHARED_DATA::g_bullet[pObject->GetScript<CProjectileScript>()->m_GetId()] = vProjectilePos;
+	CServer::GetInst()->send_projectile_packet(pObject->GetScript<CProjectileScript>()->m_GetId(), 0);
+	SHARED_DATA::g_bulletindex++;
 }

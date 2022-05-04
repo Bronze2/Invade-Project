@@ -25,9 +25,8 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
 	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
 	pObject->GetScript<CMinionScript>()->SetAttackType(_eAttackRange);
 	pObject->GetScript<CMinionScript>()->SetCamp(_eCamp);
-	pObject->GetScript<CMinionScript>()->Init();
-
     pObject->GetScript<CMinionScript>()->m_SetId(SHARED_DATA::g_minionindex);
+	pObject->GetScript<CMinionScript>()->Init();
     CServer::GetInst()->send_spawn_minion_packet(SHARED_DATA::g_minionindex, pObject->Transform()->GetLocalPos().x,
         pObject->Transform()->GetLocalPos().y, pObject->Transform()->GetLocalPos().z, _eAttackRange,_eCamp);
 
@@ -72,7 +71,7 @@ void CSpawnScript::Update()
         if (m_bPatternOn) {
             switch (m_eCampState)
             {
-      /*      case CAMP_STATE::RED:
+            case CAMP_STATE::RED:
             {
                 switch (m_eSpawnPattern)
                 {
@@ -281,7 +280,7 @@ void CSpawnScript::Update()
                 break;
                 }
             }
-            break;*/
+            break;
 
             case CAMP_STATE::BLUE:
             {
@@ -501,7 +500,7 @@ void CSpawnScript::Update()
 }
 
 
-CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN1)
+CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN3)
 ,m_bSpawnStart(false),m_uiCount(0),m_bPatternOn(false)
 {
 }

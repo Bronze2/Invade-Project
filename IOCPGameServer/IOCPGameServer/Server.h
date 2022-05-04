@@ -38,6 +38,7 @@ public:
 
 	void send_rot_tower_packet(int tower_id);
 
+	void send_projectile_packet(int bullet_id, int type);
 
 
 private:

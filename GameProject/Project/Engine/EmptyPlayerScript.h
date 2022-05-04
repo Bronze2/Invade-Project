@@ -4,10 +4,14 @@
 class CEmptyPlayerScript :
 	public CScript
 {
+private:
+	bool m_bCheckStartMousePoint;
+	float m_fDegree;
+
 public:
 	virtual void Update();
 
-public:
+
 	CEmptyPlayerScript();
 	virtual ~CEmptyPlayerScript();
 

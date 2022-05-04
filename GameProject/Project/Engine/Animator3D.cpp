@@ -115,7 +115,6 @@ void CAnimator3D::FinalUpdate()
 			}
 
 			m_dCurTime = m_dStartFrameTime + m_vecClipUpdateTime[m_iCurClip];
-			std::cout << m_dCurTime << endl;
 			m_dNextTime = m_dStartNextFrameTime + m_vecClipUpdateTime[m_iNextClip];
 		}
 		double dFrameIdx = m_dCurTime * (double)m_iFrameCount;

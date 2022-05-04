@@ -41,6 +41,8 @@
 #include "Sensor.h"
 #include "TowerScript.h"
 #include "EmptyPlayerScript.h"
+#include "BowScript.h"
+#include "EmptyCameraScript.h"
 
 #include "Network.h"
 void CInGameScene::Init()
@@ -78,14 +80,17 @@ void CInGameScene::Init()
 	pMainCam->Camera()->SetFar(10000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 
-	FindLayer(L"Default")->AddGameObject(pMainCam);
-
-
+	CGameObject* pEmptyCam = nullptr;
+	pEmptyCam = new CGameObject;
+	pEmptyCam->SetName(L"EmptyCam");
+	pEmptyCam->AddComponent(new CTransform);
+	pEmptyCam->AddComponent(new CCamera);
+	pEmptyCam->AddComponent(new CEmptyCameraScript);
+	pEmptyCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
 
 
 	CGameObject* pObject = nullptr;
-
 	pObject = new CGameObject;
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CLight3D);
@@ -103,6 +108,8 @@ void CInGameScene::Init()
 	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_without_bow01.fbx");
 	//pMeshData->Save(pMeshData->GetPath());
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
+	Ptr<CMeshData> pMeshbowData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
+
 	for (int i = 0; i < Network::GetInst()->getOtherClientSize() + 1; ++i) {
 		cout << "InGameClinet :" << i << endl;
 		pObject = new CGameObject;
@@ -117,7 +124,7 @@ void CInGameScene::Init()
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+		pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 		pObject->MeshRender()->SetDynamicShadow(true);
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
@@ -141,54 +148,64 @@ void CInGameScene::Init()
 		pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 
 		pObject->GetScript<CPlayerScript>()->Init();
-		if (i == Network::GetInst()->getHostId()) {
-			pObject->GetScript<CPlayerScript>()->SetMain();
-			pObject->AddChild(pMainCam);
-		}
+
 		FindLayer(L"Blue")->AddGameObject(pObject, false);
 
 		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
-		//CGameObject* pBow;
-		//pBow = pMeshData->Instantiate();
-		//pBow->SetName(L"Bow");
-		//pBow->AddComponent(new CTransform);
-		//pBow->AddComponent(new CCollider3D);
-		//pBow->AddComponent(new CSensor);
-		//pBow->AddComponent(new CBowScript);
-		//pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		//pBow->Collider3D()->SetOffsetScale(Vec3(20.f, 130.f, 10.f));
-		//pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		//pBow->FrustumCheck(false);
-		//pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
-		//pBow->Transform()->SetLocalScale(Vec3(2.5f, 2.5f, 2.5f));
-		//pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
-		//pBow->MeshRender()->SetDynamicShadow(true);
-		//pBow->GetScript<CBowScript>()->SetTarget(pObject);
-		//pBow->GetScript<CBowScript>()->SetBoneIdx(14);
+		CGameObject* pBow;
+		pBow = pMeshbowData->Instantiate();
+		pBow->SetName(L"Bow");
 
-		//pNewAnimation = new CAnimation;
-		//pNewAnimation->InsertAnimClip(L"IDLE", 0, 1);         // 0, 13
-		//pNewAnimation->InsertAnimClip(L"ATTACK_READY", 1, 12);
-		//pNewAnimation->InsertAnimClip(L"ATTACK", 13, 18);
+		pBow->AddComponent(new CTransform);
+		pBow->AddComponent(new CCollider3D);
+		pBow->AddComponent(new CSensor);
+		pBow->AddComponent(new CBowScript);
+		pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pBow->Collider3D()->SetOffsetScale(Vec3(20.f, 115.f, 10.f));
+		pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pBow->FrustumCheck(false);
+		pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
+		pBow->Transform()->SetLocalScale(Vec3(2.4f, 1.2f, 2.4f));
+		pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
+		pBow->MeshRender()->SetDynamicShadow(true);
+		pBow->GetScript<CBowScript>()->SetTarget(pObject);
+		pBow->GetScript<CBowScript>()->SetBoneIdx(14);
 
-		//pBow->Animator3D()->SetAnimation(pNewAnimation);
-		//pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
-		//pBow->GetScript<CBowScript>()->Init();
-		//pObject->AddChild(pBow);
+		Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
+		pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
 
-		//m_pCurScene->FindLayer(L"Blue")->AddGameObject(pBow);
+		pNewAnimation = new CAnimation;
+		pNewAnimation->InsertAnimClip(L"IDLE", 0, 1);         // 0, 13
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 1, 12);
+		pNewAnimation->InsertAnimClip(L"ATTACK", 13, 18);
+
+		pBow->Animator3D()->SetAnimation(pNewAnimation);
+		pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+		pBow->GetScript<CBowScript>()->Init();
+		pObject->AddChild(pBow);
+		FindLayer(L"Blue")->AddGameObject(pBow);
+		if (i == Network::GetInst()->getHostId()) {
+			pObject->GetScript<CPlayerScript>()->SetMain();
+			pBow->GetScript<CBowScript>()->SetMain();
+			//pObject->AddChild(pMainCam);
+		}
+
+
 	}
 	CGameObject* pEmptyPlayer = new CGameObject;
 	pEmptyPlayer->AddComponent(new CTransform);
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
-	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
+	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-140, 90, -50));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), -PI / 18));
+	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
+
+	pEmptyCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
+	pEmptyCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
 
 	pEmptyPlayer->AddChild(pMainCam);
-	FindLayer(L"Blue")->AddGameObject(pEmptyPlayer, false);
-
+	pEmptyPlayer->AddChild(pEmptyCam);
+	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
 
 
@@ -316,7 +333,7 @@ void CInGameScene::Init()
 	CGameObject* pNexus = nullptr;
 
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\blueball.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();

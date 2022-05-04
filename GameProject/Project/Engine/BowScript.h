@@ -13,7 +13,7 @@ class CBowScript
 {
 private:
     tAnimation* m_pCurAnimation;
-    
+
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
 
@@ -24,6 +24,22 @@ private:
     BOW_STATE m_eState;
     BOW_STATE m_ePrevState;
 
+    CGameObject* m_pArrow[20];
+    UINT m_iCurArrow;
+    Ptr<CTexture>pBlackTex;
+    int m_iPower;
+    ELEMENT_TYPE m_iType;
+    float m_fArrowSpeed;
+
+    float m_fArcherLocation;
+
+    Vec3 m_vArrowRestorePos;
+
+    bool m_bMaxCharged;
+    bool m_bCheckDegree;
+
+    bool isMain;
+
 public:
     void m_FAnimation();
 
@@ -33,12 +49,11 @@ public:
 
     void SetTarget(CGameObject* _target) { m_pTargetObject = _target; }
     void SetBoneIdx(int _boneIdx) { m_iTargetBoneIdx = _boneIdx; }
-
+    void SetMain() { isMain = true; }
     void SetState(BOW_STATE _eState) { m_eState = _eState; }
-    
+
     CBowScript();
     virtual ~CBowScript();
 
     CLONE(CBowScript);
 };
-

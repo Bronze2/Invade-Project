@@ -268,5 +268,22 @@ void CServer::send_rot_tower_packet(int tower_id)
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
+}
 
+void CServer::send_projectile_packet(int projectile_id, int type)
+{
+	sc_packet_projectile packet;
+	packet.size = sizeof(packet);
+	if(type == 0)
+		packet.type = S2C_CREATE_PROJECTILE;
+	else
+		packet.type = S2C_PROJECTILE;
+
+	packet.id = projectile_id;
+	packet.pos.x = SHARED_DATA::g_bullet[projectile_id].x;
+	packet.pos.y = SHARED_DATA::g_bullet[projectile_id].y;
+	packet.pos.z = SHARED_DATA::g_bullet[projectile_id].z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
 }

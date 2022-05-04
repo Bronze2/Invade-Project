@@ -132,6 +132,9 @@
     <ClInclude Include="protocol.h">
       <Filter>소스 파일\헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ArrowScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -216,6 +219,9 @@
       <Filter>소스 파일\GameLogic\Manager</Filter>
     </ClCompile>
     <ClCompile Include="ProjectileScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowScript.cpp">
       <Filter>소스 파일\GameLogic\Script</Filter>
     </ClCompile>
   </ItemGroup>

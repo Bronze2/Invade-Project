@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "PlayerScript.h"
 #include "ArrowScript.h"
 #include "MeshRender.h"
@@ -6,13 +6,15 @@
 #include"CameraScript.h"
 #include "Animator3D.h"
 #include "Network.h"
+
+#include "ProjectileScript.h"
+
 #include "BowScript.h"
-#include "TimeMgr.h"
 
 void CPlayerScript::m_FAnimation()
 {
 	if (m_ePrevState != m_eState) {
-		// Blend ÇÊ¿ä
+		// Blend ï¿½Ê¿ï¿½
 		switch (m_eState)
 		{
 		case PLAYER_STATE::IDLE:
@@ -135,18 +137,6 @@ void CPlayerScript::m_FAnimation()
 				}
 
 			}
-
-			//#ifdef _ANIMATION_TEST
-			//         if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-			//            GetObj()->Animator3D()->SetBlendState(true);
-			//            GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::WALK);
-			//            GetObj()->Animator3D()->SetNextFrameIdx(m_pCurAnimClip->iStartFrame);
-			//            GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::WALK, 0.f);
-			//            GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-			//         }
-			//#else
-
-			//#endif
 		}
 		break;
 		case PLAYER_STATE::JUMP:
@@ -167,6 +157,9 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+					}
 				}
 			}
 		}
@@ -176,7 +169,7 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
 						m_eState = PLAYER_STATE::IDLE;
 						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
 					}
@@ -189,7 +182,6 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
-
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
 						m_eState = PLAYER_STATE::IDLE;
 					}
@@ -203,7 +195,6 @@ void CPlayerScript::m_FAnimation()
 		}
 	}
 }
-
 
 void CPlayerScript::Init()
 {
@@ -221,230 +212,168 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
-	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
-	CScene* pCurScene=CSceneMgr::GetInst()->GetCurScene();
-	for (int i = 0; i < 20; ++i) {
-		m_pArrow[i] = new CGameObject;
-		m_pArrow[i]->SetName(L"Arrow");
-	
-	
-		m_pArrow[i]->AddComponent(new CTransform());
-		Vec3 vPos = m_pArrow[i]->Transform()->GetLocalPos();
-		m_pArrow[i]->Transform()->SetLocalPos(vPos);
-		m_pArrow[i]->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-
-		m_pArrow[i]->AddComponent(new CMeshRender);
-		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		m_pArrow[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-
-		m_pArrow[i]->AddComponent(new CCollider2D);
-		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
-
-		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
-		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
-		m_pArrow[i]->SetActive(false);
-	}
-
-	m_iCurArrow = 0;
-	m_iPower = 1;
+	m_fMoveSpeed = 300.f;
 }
+
 
 void CPlayerScript::Update()
 {
 
-	// Z-up To Y-up
+// Z-up To Y-up
 	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
 	Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
 	Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
 
-	if (isMain ) {
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
+	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+	CGameObject* pBow = GetObj()->GetChild()[0];
 
-		Vec3 vPos = Transform()->GetLocalPos();
-		Vec3 vRot = Transform()->GetLocalRot();
-		if (CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
+	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vPos2 = Transform()->GetLocalPos();
+	Vec3 vPos3 = Transform()->GetWorldPos();
+	Vec3 vRot = Transform()->GetLocalRot();
+	Vec3 vRestoreRot;
+	int rotydegree = XMConvertToDegrees(vRot.y);
+	int reminder = rotydegree % 360 + 90;
+	Update_LerpPos();
+
+	if (isMain) {
+		if (0 <= reminder && reminder <= 180) {
+			m_bCheckDegree = true;
+		}
+		else {
+			m_bCheckDegree = false;
+		}
+
+		if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
+			int a = 0;
+		}
+
+
+		if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			m_fTurnDegree = 0.f;
+			m_bTurn = true;
+			m_vRestoreRot = vRot;
+			m_fFactor = 0.f;
+		}
+
+		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			// m_fRotateDegree = í˜„ìž¬ ì •ìƒì ìœ¼ë¡œ í”Œë ˆì´ì–´ê°€ ìžˆì–´ì•¼ í•  íšŒì „ê°’ (Wê¸°ì¤€ ì—¬ê¸°ë¡œ ê°€ì•¼ í•¨)
+			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+
+			//vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * m_fFactor + m_fRotateDegree * (1.f - m_fFactor));
+			///vRot.y = XMConvertToRadians(m_fRotateDegree);
+
 			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_key_down_packet(0, vFront.x, vFront.y, vFront.z, 0);
-				m_eState = PLAYER_STATE::WALK;
+				//m_fTurnDegree += 30.f;
+				//if (m_fTurnDegree > 0.f) {
+				//	m_fTurnDegree = 0.f;
+				//	m_bTurn = false;
+				//}
+				//vRot.y += XMConvertToRadians(m_fTurnDegree);
+
+				m_fTurnDegree = m_fRotateDegree;
+				//if (m_fTurnDegree > 180.f) {
+				//	m_fTurnDegree -= 360.f;
+				//}
+
+				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-				Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_key_down_packet(0, vBack.x, vBack.y, vBack.z, 0);
-				m_eState = PLAYER_STATE::WALK;
+				//m_fTurnDegree += 30.f;
+				//if (m_fTurnDegree > 180.f) {
+				//	m_fTurnDegree = 180.f;
+				//	m_bTurn = false;
+				//}
+				//vRot.y += XMConvertToRadians(m_fTurnDegree);
+
+				m_fTurnDegree = m_fRotateDegree + 180.f;
+				if (m_fTurnDegree > 180.f) {
+					m_fTurnDegree -= 360.f;
+				}
+				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
+
+				//vRot.y += XMConvertToRadians(180.f);
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-				Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-				Network::GetInst()->send_key_down_packet(0, vLeft.x, vLeft.y, vLeft.z, 0);
-				m_eState = PLAYER_STATE::WALK;
+				//m_fTurnDegree -= 15.f;
+				//if (m_fTurnDegree < -90.f) {
+				//	m_fTurnDegree = -90.f;
+				//	m_bTurn = false;
+				//}
+				//vRot.y += XMConvertToRadians(m_fTurnDegree);
+				//vRot.y += XMConvertToRadians(-90.f);
+
+				m_fTurnDegree = m_fRotateDegree - 90.f;
+				if (m_fTurnDegree > 180.f) {
+					m_fTurnDegree -= 180.f;
+				}
+				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-				Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-				Network::GetInst()->send_key_down_packet(0, vRight.x, vRight.y, vRight.z, 0);
-				m_eState = PLAYER_STATE::WALK;
+				//m_fTurnDegree += 15.f;
+				//if (m_fTurnDegree >  90.f) {
+				//	m_fTurnDegree =  90.f;
+				//	m_bTurn = false;
+				//}
+				//vRot.y += XMConvertToRadians(m_fTurnDegree);
+				//vRot.y += XMConvertToRadians(90.f);
+
+				m_fTurnDegree = m_fRotateDegree + 90.f;
+				if (m_fTurnDegree > 180.f) {
+					m_fTurnDegree -= 180.f;
+				}
+				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
 			}
+
+			if (m_fFactor < 1.f) {
+				m_fFactor += 0.1f;
+			}
+			else {
+				m_bTurn = false;
+			}
+
+			if (!m_bTurn && CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
+				Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+				Network::GetInst()->send_rotation_packet(vRot);
+				Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+			}
+			//vRot.y += XMConvertToRadians(m_fRotateDegree);
+
+			m_eState = PLAYER_STATE::WALK;
 		}
 
+		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			m_eState = PLAYER_STATE::IDLE;
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
 
-		// Key Up ºÐ·ùÇÏ±â.
-		// ÇöÀç Lerp ÀÛ¾÷À¸·Î ÀÎÇØ Á¤È®ÇÑ °ªÀÌ µé¾î°¡°í ÀÖÁö¾Ê´Ù.
-		// Key Up ±âÁØÀ¸·Î ¼­¹ö Ãø¿¡¼­ Á¤È®ÇÑ ÁÂÇ¥°ªÀÌ¶ó°í ÀÎ½ÄÇÒ ¼ö ÀÖµµ·Ï °íÁ¤µÇ°Ô ¼³Á¤
-		// ¼­¹ö¿¡¼­ È®ÀÎÇÑ °ªÀ» ´Ù½Ã Å¬¶ó·Î º¸³» ±ÙÃ³ ¹üÀ§ ³»¶ó¸é °íÁ¤ÁÂÇ¥·Î LerpÀÛ¾÷ ³¡³¾¼ö ÀÖµµ·Ï ÇØº¸ÀÚ.
-			if (KEY_AWAY(KEY_TYPE::KEY_W)) {
-
-				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
-				m_eState = PLAYER_STATE::IDLE;
-			} 
-			if (KEY_AWAY(KEY_TYPE::KEY_S)) {
-				Vec3 vBack = -Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-				Network::GetInst()->send_key_up_packet(0, vBack.x, vBack.y, vBack.z, 1);
-				m_eState = PLAYER_STATE::IDLE;
-			}
-			if (KEY_AWAY(KEY_TYPE::KEY_A)) {
-				Vec3 vLeft = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_key_up_packet(0, vLeft.x, vLeft.y, vLeft.z, 1);
-				m_eState = PLAYER_STATE::IDLE;
-			}
-			if (KEY_AWAY(KEY_TYPE::KEY_D)) {
-				Vec3 vRight = -Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_key_up_packet(0, vRight.x, vRight.y, vRight.z, 1);
-				m_eState = PLAYER_STATE::IDLE;
-			}
-
-		//Arrow 
-	/*	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-			CGameObject* pObj = GetObj()->GetChild()[0];
-			Vec3 vPos = pObj->Transform()->GetLocalPos();
-			Vec3 vRight = pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-			Vec3 vFront = pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-			m_vRestorePos = vPos;
-			vPos += vRight * 10.f;
-			vPos += vFront * 10.f;
-			pObj->Transform()->SetLocalPos(vPos);
-			m_fArrowSpeed = 200.f;
-
+			m_fTurnDegree = 0.f;
 		}
-		if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed += 1000.f * DT;
-			if (m_fArrowSpeed > 2000.f) {
-				m_fArrowSpeed = 2000.f;
-			}
+
+		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+			// ê³µê²© ì‹œ ë¬´ì¡°ê±´ ì¹´ë©”ë¼ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ í”Œë ˆì´ì–´ íšŒì „ì‹œí‚¤ê¸° (í™”ì‚´ ê°œë°œ ì´í›„ ì£¼ì„ í’€ê¸°)
+			vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f ë” íšŒì „ì‹œí‚¬ê±´ì§€?
+
+			m_eState = PLAYER_STATE::ATTACK_READY;
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-			CGameObject* pObj = GetObj()->GetChild()[0];
-			Vec3 vPos = pObj->Transform()->GetLocalPos();
-			Vec3 vRight = -pObj->Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-			Vec3 vFront = -pObj->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-			m_vRestorePos = vPos;
-			vPos += vRight * 10.f;
-			vPos += vFront * 10.f;
-			pObj->Transform()->SetLocalPos(vPos);
-			m_pArrow[m_iCurArrow]->SetActive(true);
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
-			vRight = pObj->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
-
-
-			Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
-
-
-			CCameraScript* p = dynamic_cast<CCameraScript*>(GetObj()->GetChild()[0]->GetScripts()[0]);
-			float fDegree = p->GetDegree();
-			float fDegree2 = fDegree;
-			fDegree *= -1.f;
-
-
-			float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
-
-			Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x + xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70 + yValue, GetObj()->Transform()->GetLocalPos().z + xzValue.y);
-
-
-			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
-			fDegree *= -1.f;
-
-
-
-			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
-			if (m_iCurArrow == 0) {
-				int a = 0;
-			}
-
-			Vec3 vFront2 = vArrowPos;
-			Vec3 vRight2 = Vec3(1, 0, 0);
-			auto k = XMLoadFloat3(&vRight2);
-			auto m = XMLoadFloat4x4(&m_pArrow[m_iCurArrow]->Transform()->GetWorldMat());
-			auto r = XMVector3TransformNormal(k, m);
-			XMFLOAT3 result;
-			XMStoreFloat3(&result, XMVector3Normalize(r));
-
-			float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
-
-
-			vArrowPos.x += result.x;
-			vArrowPos.z += result.z;
-			float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
-			float xValue2 = xValue + flength;
-			float fyValue2 = yValue * xValue2 / xValue;
-
-			float SubeyValue2Value = fyValue2 - yValue;
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeen(SubeyValue2Value);
-
-			vArrowPos.y += SubeyValue2Value;
-			Vec3 vTarget = vArrowPos - vFront2;
-
-			vTarget.Normalize();
-			float vDotValue = Dot(vTarget, result);
-			Vec3 vCrossValue;
-			if (vTarget.y > 0.f) {
-				vCrossValue = Cross(vTarget, result);
-			}
-			else {
-				vCrossValue = Cross(result, vTarget);
-			}
-
-
-			if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-
-				XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), XMConvertToRadians(fDegree2));
-				m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
-
-			}
-
-			m_iCurArrow++;
-			m_iPower = 1;
-			if (m_iCurArrow > 19) {
-				m_iCurArrow = 0;
-
-			}
-
+			m_eState = PLAYER_STATE::ATTACK;
 		}
-		*/
-		Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-		if (!m_bCheckStartMousePoint) {
-			m_bCheckStartMousePoint = true;
+
+		if (m_bMoveCheck) {
+			vPos = vPos2;
+			m_bMoveCheck = false;
 		}
-		else {
-			vRot.y += vDrag.x * DT * 1.f;
-			float fDegree = XMConvertToDegrees(vRot.y);
-			if (fDegree < -360) {
-				fDegree += 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
-			else if (fDegree > 360) {
-				fDegree -= 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
-			Network::GetInst()->send_rotation_packet(vRot);
-		}
-		
-		
+
 		if (KEY_TAB(KEY_TYPE::KEY_NUM4))
 		{
 			m_eState = PLAYER_STATE::JUMP;
@@ -454,16 +383,20 @@ void CPlayerScript::Update()
 		{
 			m_eState = PLAYER_STATE::DIE;
 		}
-
-
 		Transform()->SetLocalRot(vRot);
-		Transform()->SetLocalPos(vPos);
+		Network::GetInst()->send_rotation_packet(vRot);
+
+		//Transform()->SetLocalPos(vPos);
 	}
-	Update_LerpPos();
+	//Update_LerpPos();
 	m_FAnimation();
+
+	//m_FAnimation();
 
 }
 
+//
+//
 void CPlayerScript::SetState(int state)
 {
 	if (state == 0)
@@ -479,7 +412,14 @@ void CPlayerScript::SetState(int state)
 
 void CPlayerScript::Update_LerpPos()
 {
-	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_LerpPos, DT*10.f); 
+	Vec3 vPos = Transform()->GetLocalPos();
+	//m_FColCheck(vPos, m_PrevLerpPos);
+	//if (m_bMoveCheck) {
+	//	m_bMoveCheck = false;
+	//	//vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_PrevLerpPos, DT * (10.f));
+	//}
+	//else
+		vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_LerpPos, DT*(10.f)); 
 
 	Transform()->SetLocalPos(vPos);
 }
@@ -500,18 +440,18 @@ void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	int a = 0;
-	//if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
+	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
 
-	//}
-	//else {
-	//	if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
+	}
+	else {
+		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
 
-	//	}
-	//	else {
-	//		m_arrColObject.push_back(_pOther->GetObj());
-	//		m_bColCheck = true;
-	//	}
-	//}
+		}
+		else {
+			m_arrColObject.push_back(_pOther->GetObj());
+			m_bColCheck = true;
+		}
+	}
 }
 
 void CPlayerScript::OnCollision3D(CCollider3D* _pOther)

@@ -15,6 +15,8 @@ namespace SHARED_DATA {
 	int g_minionindex;
 	int current_user;
 	map <int, Vec3> g_tower;
+	unordered_map<int, Vec3> g_bullet;
+	int g_bulletindex;
 };
 
 

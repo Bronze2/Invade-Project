@@ -9,6 +9,7 @@ private:
 
     bool isMain;
     int m_id;
+    CGameObject* m_pArrow[20];
 
 public:
     void Init();

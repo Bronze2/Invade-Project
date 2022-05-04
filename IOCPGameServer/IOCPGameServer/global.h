@@ -64,6 +64,11 @@ struct MINION {
 	p_Vec3 Dir;
 	p_Vec3 Rot;
 	MINION_STATE State;
+	MINION_ATTACK_TYPE Type;
+	CAMP_STATE Camp;
+	float m_attack_max_time = 100;
+	float m_attack_current_time = 0;
+	bool m_during_attack = false;
 };
 
 
@@ -77,6 +82,10 @@ namespace SHARED_DATA {
 	extern int g_minionindex;
 	extern int current_user;
 	extern map <int, Vec3> g_tower;
+	extern unordered_map<int, Vec3> g_bullet;
+	extern int g_bulletindex;
+
+
 };
 //struct tResolution
 //{

@@ -261,6 +261,8 @@
     <ClInclude Include="EmptyPlayerScript.h">
       <Filter>Script\EmptyPlayer</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectileScript.h" />
+    <ClInclude Include="EmptyCameraScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -434,6 +436,8 @@
     <ClCompile Include="EmptyPlayerScript.cpp">
       <Filter>Script\EmptyPlayer</Filter>
     </ClCompile>
+    <ClCompile Include="ProjectileScript.cpp" />
+    <ClCompile Include="EmptyCameraScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

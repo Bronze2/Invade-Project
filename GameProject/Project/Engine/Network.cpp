@@ -211,6 +211,18 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_setRotTower(my_packet->id, Vec3(my_packet->rot.x, my_packet->rot.y, my_packet->rot.z));
 	}
 	break;
+	case S2C_PROJECTILE:
+	{
+		sc_packet_projectile* my_packet = reinterpret_cast<sc_packet_projectile*>(ptr);
+		CSceneMgr::GetInst()->net_moveProjectile(my_packet->id, Vec3(my_packet->pos.x, my_packet->pos.y, my_packet->pos.z));
+	}
+	break;
+	case S2C_CREATE_PROJECTILE:
+	{
+		sc_packet_projectile* my_packet = reinterpret_cast<sc_packet_projectile*>(ptr);
+		CSceneMgr::GetInst()->net_spawnProjectile(my_packet->id, Vec3(my_packet->pos.x, my_packet->pos.y, my_packet->pos.z));
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

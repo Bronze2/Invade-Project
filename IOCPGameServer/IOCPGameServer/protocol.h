@@ -32,6 +32,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_MOVE_MINION		9
 #define S2C_ANIM_MINION		10
 #define S2C_ROT_TOWER		11
+#define S2C_CREATE_PROJECTILE		12
+#define S2C_PROJECTILE		13
 
 
 
@@ -168,6 +170,13 @@ struct sc_packet_rot_tower {
 	char type;
 	int  id;
 	p_Vec3 rot;
+};
+
+struct sc_packet_projectile {
+	char size;
+	char type;
+	int  id;
+	p_Vec3 pos;
 };
 
 

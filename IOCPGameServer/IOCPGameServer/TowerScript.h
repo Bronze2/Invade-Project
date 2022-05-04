@@ -13,6 +13,7 @@ private:
     UINT m_iMaxHp;
     int m_uiCurHp;
     float m_fAttackRange;
+    CAMP_STATE m_eCamp;
 
     UINT m_uiDef;
 
@@ -29,7 +30,11 @@ private:
     CGameObject* m_pTarget;
     bool m_bFindNear;
     int m_id;
+
+
 public:
+    void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
+    const CAMP_STATE& GetCamp()const { return m_eCamp; }
 
     void Init();
 
@@ -46,6 +51,7 @@ public:
 
     void m_SetId(int id) { m_id = id; }
     int  m_GetId() { return m_id; }
+    void GetDamage(const UINT& _uiDamage) { m_uiCurHp -= _uiDamage; }
 
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);
