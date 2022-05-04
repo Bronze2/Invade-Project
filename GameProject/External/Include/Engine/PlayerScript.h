@@ -35,6 +35,7 @@ private:
     bool m_bMoveCheck;
 
     bool m_bTurn;
+    int m_iKeyHoldCnt;
 
     vector<CGameObject*>m_arrColObject;
 public:

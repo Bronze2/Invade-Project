@@ -265,33 +265,47 @@ void CPlayerScript::Update()
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
+		
 		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 
 		m_fFrontDegree = 0.f;
 		m_fSideDegree = 0.f;
+		m_iKeyHoldCnt = 0;
 
-		if (m_fFrontDegree >= 360.f) {
-		}
-		if (m_fSideDegree >= 360.f) {
-		}
 		// m_fTurnDegree = m_fRotateDegree;
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			m_fFrontDegree += 360.0f;
+			m_fFrontDegree += 0.f;
+			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			m_fFrontDegree -=  180.f;
+			m_fFrontDegree += 180.f;
+			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			m_fSideDegree -= 90.f;
+			// 개야매코드죄송합니다
+			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+				m_fFrontDegree -= 90.f;
+			}
+			else {
+				m_fFrontDegree += 270.f;
+			}
+			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			m_fSideDegree += 90.f;
+			m_fFrontDegree += 90.f;
+			m_iKeyHoldCnt++;
 		}
+
+		//if (m_fFrontDegree >= 360.f) {
+		//	m_fFrontDegree -= 360.f;
+		//}
+
+		m_fFrontDegree /= (float)m_iKeyHoldCnt;
 		
 		// 만약에 frontDegree가 180이면 side degree 뺴주고 아니면 더해주고 이런거
-		m_fTurnDegree = m_fRotateDegree + m_fFrontDegree + m_fSideDegree;
+		m_fTurnDegree = m_fRotateDegree + m_fFrontDegree;
 
 		vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
 
@@ -304,7 +318,6 @@ void CPlayerScript::Update()
 
 		if (!m_bTurn) {
 			vPos += vFront * m_fMoveSpeed * DT;
-			//vPos.y = 0.f;
 		}
 
 		m_FColCheck(vPos3, vPos);
