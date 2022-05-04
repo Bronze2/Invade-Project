@@ -246,12 +246,20 @@ void CPlayerScript::Update()
 		int a = 0;
 	}
 
+	if ((KEY_NONE(KEY_TYPE::KEY_W) && KEY_NONE(KEY_TYPE::KEY_S) && KEY_NONE(KEY_TYPE::KEY_A) && KEY_NONE(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+		// 여기가 맞긴 한가..
+		m_fFactor = 0.f;
+		m_fTurnDegree = 0.f;	// 여기있음안됨
+		m_bTurn = true;
+
+	}
 
 	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		m_fTurnDegree = 0.f;
-		m_bTurn = true;
+		//m_fTurnDegree = 0.f;	// 여기있음안됨
+		//m_bTurn = true;
+		//m_fFactor = 0.f;
+
 		m_vRestoreRot = vRot;
-		m_fFactor = 0.f;
 	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
@@ -259,74 +267,36 @@ void CPlayerScript::Update()
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
 		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		
-		//vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * m_fFactor + m_fRotateDegree * (1.f - m_fFactor));
-		///vRot.y = XMConvertToRadians(m_fRotateDegree);
+
+		m_fFrontDegree = 0.f;
+		m_fSideDegree = 0.f;
+
+		if (m_fFrontDegree >= 360.f) {
+		}
+		if (m_fSideDegree >= 360.f) {
+		}
+		// m_fTurnDegree = m_fRotateDegree;
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			//m_fTurnDegree += 30.f;
-			//if (m_fTurnDegree > 0.f) {
-			//	m_fTurnDegree = 0.f;
-			//	m_bTurn = false;
-			//}
-			//vRot.y += XMConvertToRadians(m_fTurnDegree);
-			
-			m_fTurnDegree = m_fRotateDegree;
-			//if (m_fTurnDegree > 180.f) {
-			//	m_fTurnDegree -= 360.f;
-			//}
-			
-			vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
+			m_fFrontDegree += 360.0f;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			//m_fTurnDegree += 30.f;
-			//if (m_fTurnDegree > 180.f) {
-			//	m_fTurnDegree = 180.f;
-			//	m_bTurn = false;
-			//}
-			//vRot.y += XMConvertToRadians(m_fTurnDegree);
-
-			m_fTurnDegree = m_fRotateDegree + 180.f;
-			if (m_fTurnDegree > 180.f) {
-				m_fTurnDegree -= 360.f;
-			}
-			vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree) * m_fFactor);
-
-			//vRot.y += XMConvertToRadians(180.f);
+			m_fFrontDegree -=  180.f;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			//m_fTurnDegree -= 15.f;
-			//if (m_fTurnDegree < -90.f) {
-			//	m_fTurnDegree = -90.f;
-			//	m_bTurn = false;
-			//}
-			//vRot.y += XMConvertToRadians(m_fTurnDegree);
-			//vRot.y += XMConvertToRadians(-90.f);
-
-			m_fTurnDegree = m_fRotateDegree - 90.f;
-			if (m_fTurnDegree  > 180.f) {
-				m_fTurnDegree -= 180.f;
-			}
-			vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree) * m_fFactor);
+			m_fSideDegree -= 90.f;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			//m_fTurnDegree += 15.f;
-			//if (m_fTurnDegree >  90.f) {
-			//	m_fTurnDegree =  90.f;
-			//	m_bTurn = false;
-			//}
-			//vRot.y += XMConvertToRadians(m_fTurnDegree);
-			//vRot.y += XMConvertToRadians(90.f);
-
-			m_fTurnDegree = m_fRotateDegree + 90.f;
-			if (m_fTurnDegree > 180.f) {
-				m_fTurnDegree -= 180.f;
-			}
-			vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree) * m_fFactor);
+			m_fSideDegree += 90.f;
 		}
+		
+		// 만약에 frontDegree가 180이면 side degree 뺴주고 아니면 더해주고 이런거
+		m_fTurnDegree = m_fRotateDegree + m_fFrontDegree + m_fSideDegree;
+
+		vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
 
 		if (m_fFactor < 1.f) {
-			m_fFactor += 0.1f;
+			m_fFactor += 0.2f;
 		}
 		else {
 			m_bTurn = false;
@@ -334,9 +304,8 @@ void CPlayerScript::Update()
 
 		if (!m_bTurn) {
 			vPos += vFront * m_fMoveSpeed * DT;
-			vPos.y = 0.f;
+			//vPos.y = 0.f;
 		}
-		//vRot.y += XMConvertToRadians(m_fRotateDegree);
 
 		m_FColCheck(vPos3, vPos);
 		m_eState = PLAYER_STATE::WALK;
@@ -345,6 +314,7 @@ void CPlayerScript::Update()
 	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::IDLE;
 		m_fTurnDegree = 0.f;
+		m_fFactor = 0.f;
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {

@@ -12,7 +12,6 @@ void CCameraScript::Update()
 	Vec3 vRot = Transform()->GetLocalRot();
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
 
 	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 		Init();
@@ -56,7 +55,7 @@ void CCameraScript::Update()
 		vPos = CameraZoom(vPos);	
 		break;
 	case CAMERA_EFFECT_TYPE::SHAKING:
-		vPos = CameraShake(vPos, 6.0f, 20.f);
+		vPos = CameraShake(vPos, 6.0f, 3.f);
 		break;
 	case CAMERA_EFFECT_TYPE::DAMAGED:
 		break;

@@ -189,8 +189,6 @@ void CInGameScene::Init()
 
 	FindLayer(L"Blue")->AddGameObject(pBow);
 
-	CGameObject* pPlayer = pObject;
-
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
@@ -961,6 +959,7 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
 
 
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");

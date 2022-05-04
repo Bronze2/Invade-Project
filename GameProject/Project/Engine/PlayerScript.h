@@ -17,6 +17,8 @@ private:
     float m_fRotateDegree;
     float m_fMoveSpeed;
     float m_fTurnDegree;
+    float m_fFrontDegree;
+    float m_fSideDegree;
     float m_fFactor;
 
     tMTAnimClip* m_pCurAnimClip;

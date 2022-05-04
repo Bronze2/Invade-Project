@@ -151,6 +151,14 @@ LRESULT CGameFramework::OnProcessingWindowMessage(HWND _hWnd, UINT _uMessageID, 
 	case WM_MOUSEMOVE:
 		OnProcessingMouseMessage(_hWnd, _uMessageID, _wParam, _lParam);
 		break;
+	case VK_F9:
+	{
+		BOOL bFullScreenState = FALSE;
+		CDevice::GetInst()->GetSwapChain()->GetFullscreenState(&bFullScreenState, NULL);
+		CDevice::GetInst()->GetSwapChain()->SetFullscreenState(!bFullScreenState, NULL);
+		CRenderMgr::GetInst()->Init(_hWnd, tResolution{ 640, 480 }, true);
+		break;
+	}
 	default:
 		break;
 	}
