@@ -120,8 +120,8 @@ void CInGameScene::Init()
 		pObject->AddComponent(new CSensor);
 		pObject->AddComponent(new CPlayerScript);
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 40.f, 10.f));      // 80.f, 200.f, 80.f ?????
-		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));    // 80.f, 200.f, 80.f ?????
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 		pObject->FrustumCheck(false);
 		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
