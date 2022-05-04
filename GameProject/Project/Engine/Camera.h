@@ -49,20 +49,10 @@ private:
     bool m_bPlayer = false;
     Vec3 m_vFront;
     Vec3 m_vStoreFront;
-    Vec3 m_vUnProjection;
-    tRay m_tRay;
     vector<CGameObject*> m_arrInterSectObject;
-
-
-    Vec3 m_vPrevPos;
-    bool m_bMinTest;
-    bool m_bTest2;
     Matrix m_matCamera;
 public:
     void SetMatrixCamera(const Matrix& _mat) { m_matCamera = _mat; }
-    bool GetTest2() { return m_bTest2; }
-    void StartTest2(bool _bTest) { m_bTest2 = _bTest; }
-    void StartMinTest(bool _bTest) { m_bMinTest = _bTest; }
     Vec3 GetLook() { return m_vLook; }
     void SetFront(const Vec3& _vFront) {  m_vFront=_vFront; }
     Vec3 GetFront() { return m_vFront; }
@@ -77,8 +67,7 @@ public:
     void Render_ShadowMap();
 
     void ClearInterSectObject() { m_arrInterSectObject.clear(); }
-    void UnProjection();
-
+  
     void SetModule(bool _bModule) { m_bModule = _bModule; }
 
     void SetProjType(PROJ_TYPE _eType) { m_eProjType = _eType; Changed(); }

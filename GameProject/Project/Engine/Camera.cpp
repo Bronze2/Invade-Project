@@ -30,7 +30,6 @@ CCamera::CCamera()
 	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_iLayerCheck(0)
 	, m_bModule(false)
-	,m_bMinTest(false)
 {
 }
 
@@ -543,24 +542,7 @@ void CCamera::Render_ShadowMap()
 		m_vecShadowObj[i]->MeshRender()->Render_ShadowMap();
 	}
 }
-#include "MRT.h"
-void CCamera::UnProjection()
-{
-	RECT clientrect;
-	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &clientrect);
-	POINT point = POINT((clientrect.right-clientrect.left)/2, (clientrect.bottom - clientrect.top)/2);
-	D3D12_VIEWPORT vp=CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetVP();
-	m_vUnProjection.x = ((((point.x - vp.TopLeftX) * 2.f / vp.Width) - 1.0f) - m_matProj._31) / m_matProj._11;
-	m_vUnProjection.y = ((((point.y - vp.TopLeftY) * 2.f / vp.Height) - 1.0f) - m_matProj._32) / m_matProj._22;
-	m_vUnProjection.z =1.f;
-	m_tRay.vDir.x = m_vUnProjection.x * m_matViewInv._11 + m_vUnProjection.y * m_matViewInv._21 + m_vUnProjection.z * m_matViewInv._31;
-	m_tRay.vDir.y = m_vUnProjection.x * m_matViewInv._12 + m_vUnProjection.y * m_matViewInv._22 + m_vUnProjection.z * m_matViewInv._32;
-	m_tRay.vDir.z = m_vUnProjection.x * m_matViewInv._13 + m_vUnProjection.y * m_matViewInv._23 + m_vUnProjection.z * m_matViewInv._33;
-	m_tRay.vOrigin.x = m_matViewInv._41;
-	m_tRay.vOrigin.y = m_matViewInv._42;
-	m_tRay.vOrigin.z = m_matViewInv._43;
 
-}
 
 void CCamera::SaveToScene(FILE* _pFile)
 {

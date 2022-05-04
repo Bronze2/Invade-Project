@@ -51,7 +51,7 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->GetScript<CProjectileScript>()->Init();
-	pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
+	pObject->GetScript<CProjectileScript>()->SetSpeed(2000.f);
 	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
 
 	CreateObject(pObject, _Layer);

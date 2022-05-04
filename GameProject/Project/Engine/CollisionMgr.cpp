@@ -37,13 +37,11 @@ void CCollisionMgr::Update()
 		}
 		
 	}
-	m_pCameraObject->StartTest2(false);
+	
 	for (int i = 0; i < MAX_LAYER; ++i) {
 		RayCollision(pCurScene->GetLayer(i));
 	}
-	if (!m_pCameraObject->GetTest2()) {
-		m_pCameraObject->StartMinTest(false);
-	}
+	
 }
 
 void CCollisionMgr::CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2)
