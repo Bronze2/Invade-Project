@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "ArrowScript.h"
 #include "PlayerScript.h"
+#include "Server.h"
 #include <math.h>
 void CArrowScript::Awake()
 {
@@ -85,19 +86,21 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-		if (Transform()->GetWorldPos().y < 0.f)
+		if (Transform()->GetLocalPos().y < 0.f)
 		{
 			GetObj()->SetActive(false);
 			Init();
 			m_eState = ARROW_STATE::IDLE;
+			std::cout << "땅에 떨굼";
 		}
 
 		m_vRestorePos = vPos;
 
 		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
+	
 		vPos += m_vDir * m_fSpeed * DT;
 		m_fVelocityY -= (GRAVITY * DT) / 10;
-		m_fFallSpeed += m_fVelocityY;
+		m_fFallSpeed += m_fVelocityY ;
 		vPos.y += m_fFallSpeed * DT;
 
 		m_vDeltaPos = vPos - m_vRestorePos;
@@ -106,9 +109,11 @@ void CArrowScript::Update()
 
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
-
+		//cout << m_vDir.x << "," << m_vDir.y << "," << m_vDir.z << endl;
+		Transform()->SetLocalPos(vPos);
 		m_vTargetDir = vPos - m_vRestorePos;
 		m_vTargetDir.Normalize();
+		CServer::GetInst()->send_move_arrow_packet(m_ParentId,m_id,vPos,vRot);
 
 		//float value = XMConvertToRadians(90.f * DT * 10);
 
@@ -120,6 +125,8 @@ void CArrowScript::Update()
 		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
 		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
 		//Transform()->SetQuaternion(Vec4(fAngle, 0.f, 0.f, 1.f));
+	
+		// 화살 생성 -> 클라이언트 BOW스크립트 수정 ( INIT 함수 생성)
 	}
 	break;
 	}
@@ -135,7 +142,7 @@ void CArrowScript::Init()
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
 
-	m_pBow->AddChild(GetObj());
+	//m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)

@@ -40,6 +40,12 @@ public:
 
 	void send_projectile_packet(int bullet_id, int type);
 
+	void send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot);
+
+	void send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot);
+	
+	void send_update_animation(int client_id, int state);
+
 
 private:
 

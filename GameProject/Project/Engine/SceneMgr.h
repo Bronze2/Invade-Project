@@ -19,6 +19,15 @@ struct minioninfo {
 	MINION_STATE state;
 };
 
+struct arrowId {
+	int p_id;
+	int m_id;
+};
+
+struct arrowMove {
+	Vec3 Pos;
+	Vec3 Rot;
+};
 
 
 class CSceneMgr
@@ -31,7 +40,7 @@ private:
 	map<int, minioninfo> m_minion;
 	map<int, Vec3> m_tower;
 	map<int, Vec3> m_projectile;
-
+	map<int, map<int,arrowMove>> m_arrow;
 
 public:
 	void Init();
@@ -57,10 +66,18 @@ public:
 	void net_spawnProjectile(int id, Vec3 pos);
 	void net_moveProjectile(int id, Vec3 pos);
 
+	void net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot);
+	void net_moveArrow(int parentid,int id, Vec3 pos,Vec3 rot);
+	void net_animUpdate(int id, int state);
+
+
 	
 	
 	
 	
+	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
+	Vec3 get_arrowRot(int p_id, int m_id) { return m_arrow[p_id][m_id].Rot; }
+
 	Vec3 get_towerRot(int id) { return m_tower[id]; }
 	void set_towerRot(int id, Vec3 rot) { m_tower[id] = rot; };
 	Vec3 get_ProjectilePos(int id) { return m_projectile[id]; }

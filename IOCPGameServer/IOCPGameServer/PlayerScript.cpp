@@ -2,6 +2,7 @@
 #include "PlayerScript.h"
 #include "Collider2D.h"
 #include "ArrowScript.h"
+#include "Server.h"
 
 void CPlayerScript::Init()
 {
@@ -36,6 +37,24 @@ void CPlayerScript::Update()
 	Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
 }
 
+void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
+{
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSpeed(Power);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetDir(Dir);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParentId(m_GetId());
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
+
+	m_pArrow[ArrowId]->ClearParent();
+	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
+	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
+	m_pArrow[ArrowId]->SetActive(true);
+
+	cout << "플레이어 ID: " <<m_GetId() <<"화살 ID "<< ArrowId <<" 생성 "<<endl;
+	CServer::GetInst()->send_create_arrow_packet(m_GetId(), ArrowId, Pos, Rot);
+
+}
 
 
 

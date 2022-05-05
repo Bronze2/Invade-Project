@@ -39,9 +39,11 @@ private:
     Vec3 m_vRestorePos;
     Vec3 m_vTargetDir;
     Vec3 m_vDeltaPos;
-
+    
     CGameObject* m_pBow;
 
+    int m_ParentId;
+    int m_id;
 public:
     virtual void Awake();
     virtual void Update();
@@ -57,6 +59,11 @@ public:
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
     void SetType(UINT _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }
+    void SetParentId(int _pid) { m_ParentId = _pid; }
+    int GetParentId() { return m_ParentId; }
+
+    void m_SetId(int _pid) { m_id = _pid; }
+    int   m_GetId() { return m_id; }
     void Init();
 
     void SetState(ARROW_STATE _eState) { m_eState = _eState; }

@@ -12,7 +12,7 @@
 #include "SensorMgr.h"
 //
 //#include "GridScript.h"
-//#include "PlayerScript.h"
+#include "PlayerScript.h"
 //#include "MonsterScript.h"
 //#include "ArrowScript.h"
 //#include "MinionScript.h"
@@ -137,10 +137,11 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
     return (_pLeft->Transform()->GetWorldPos().z < _pRight->Transform()->GetWorldPos().z);
 }
 
-//void CSceneMgr::net_setAnimationByID(int id, int state)
-//{
-//	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
-//}
+void CSceneMgr::InitArrowByPlayerId(int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
+{
+	//CGameObject* player = dynamic_cast<CGameObject*>(m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]);
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+}
 
 
 

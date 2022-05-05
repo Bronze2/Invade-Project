@@ -25,7 +25,7 @@ void Network::Init()
 	setsockopt(m_Client.socket_info.m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 
 	ServerAddr.sin_port = htons(SERVER_PORT);
-	ServerAddr.sin_addr.s_addr = inet_addr("192.168.204.132");
+	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
@@ -211,16 +211,43 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_setRotTower(my_packet->id, Vec3(my_packet->rot.x, my_packet->rot.y, my_packet->rot.z));
 	}
 	break;
+
 	case S2C_PROJECTILE:
 	{
 		sc_packet_projectile* my_packet = reinterpret_cast<sc_packet_projectile*>(ptr);
 		CSceneMgr::GetInst()->net_moveProjectile(my_packet->id, Vec3(my_packet->pos.x, my_packet->pos.y, my_packet->pos.z));
 	}
 	break;
+
 	case S2C_CREATE_PROJECTILE:
 	{
 		sc_packet_projectile* my_packet = reinterpret_cast<sc_packet_projectile*>(ptr);
 		CSceneMgr::GetInst()->net_spawnProjectile(my_packet->id, Vec3(my_packet->pos.x, my_packet->pos.y, my_packet->pos.z));
+	}
+	break;
+
+	case S2C_CREATE_ARROW:
+	{
+		sc_packet_arrow* my_packet = reinterpret_cast<sc_packet_arrow*>(ptr);
+		CSceneMgr::GetInst()->net_initArrow(my_packet->Clinetid, my_packet->Arrowid,
+			Vec3(my_packet->Pos.x, my_packet->Pos.y, my_packet->Pos.z),
+			Vec3(my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z));
+	}
+	break;
+
+	case S2C_MOVE_ARROW:
+	{
+		sc_packet_arrow* my_packet = reinterpret_cast<sc_packet_arrow*>(ptr);
+		CSceneMgr::GetInst()->net_moveArrow(my_packet->Clinetid, my_packet->Arrowid,
+			Vec3(my_packet->Pos.x, my_packet->Pos.y, my_packet->Pos.z),
+			Vec3(my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z));
+	}
+	break;
+
+	case S2C_CHANGE_ANIM:
+	{
+		sc_packet_change_anim* my_packet = reinterpret_cast<sc_packet_change_anim*>(ptr);
+		CSceneMgr::GetInst()->net_animUpdate(my_packet->id,my_packet->state);
 	}
 	break;
 	//case S2C_LEAVE:
@@ -256,7 +283,7 @@ void Network::ProcessPacket(char* ptr)
 	//default:
 	//	printf("Unknown PACKET type [%d]\n", ptr[1]);
 
-	}
+	};
 }
 
 void Network::send_packet(void* buffer)
@@ -308,17 +335,15 @@ void Network::send_key_up_packet(unsigned char dir, float x, float y, float z, i
 	send_packet(&m_packet);
 }
 
-void Network::send_animation_packet(int state)
+
+void Network::send_attack_ready_packet(int id, int state)
 {
-	////cs ¼öÁ¤ ÇÊ¿ä Áö±Ý±ÍÂú;
-	//cs_packet_move m_packet;
-	//m_packet.type = C2S_MOVE;
-	//m_packet.size = sizeof(m_packet);
-	//m_packet.direction = dir;
-	//m_packet.dir.x = x;
-	//m_packet.dir.y = y;
-	//m_packet.dir.z = z;
-	//send_packet(&m_packet);
+	cs_packet_attack_ready m_packet;
+	m_packet.type = C2S_ATTACK_READY;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	m_packet.state = state;
+
 }
 
 void Network::send_rotation_packet(Vec3 Rot)
@@ -340,6 +365,26 @@ void Network::send_game_start_packet()
 	m_packet.id = m_Client.id;
 	send_packet(&m_packet);
 	cout << "Send Enter Packet" << endl;
+
+}
+void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
+{
+	cs_packet_arrow m_packet;
+	m_packet.type = C2S_CREATE_ARROW;
+	m_packet.size = sizeof(m_packet);
+	m_packet.Clinet_id = m_Client.id;
+	m_packet.Arrow_id = ArrowId;
+	m_packet.Pos.x = Pos.x;
+	m_packet.Pos.y = Pos.y;
+	m_packet.Pos.z = Pos.z;
+	m_packet.Rot.x = Rot.x;
+	m_packet.Rot.y = Rot.y;
+	m_packet.Rot.z = Rot.z;
+	m_packet.Dir.x = Dir.x;
+	m_packet.Dir.y = Dir.y;
+	m_packet.Dir.z = Dir.z;
+	m_packet.Power = Power;
+	send_packet(&m_packet);
 
 }
 

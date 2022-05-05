@@ -5,6 +5,7 @@
 #include "SceneMgr.h"
 #include "EventMgr.h"
 #include "TimeMgr.h"
+#include "Server.h"
 
 void CThread::Init()
 {
@@ -60,7 +61,6 @@ void CThread::do_timer()
 {
 	while (true)
 	{
-		CTimeMgr::GetInst()->Update();
 
 		//CEventMgr::GetInst()->Clear();
 		//CSceneMgr::GetInst()->Update();
@@ -208,6 +208,7 @@ void CThread::worker_Thread()
 		case OP_UPDATE:
 		{
 			CEventMgr::GetInst()->Clear();
+			CTimeMgr::GetInst()->Update();
 			CSceneMgr::GetInst()->Update();
 			CEventMgr::GetInst()->Update();
 			//CService::GetInst()->update_minion();
@@ -282,6 +283,21 @@ void CThread::process_packet(int user_id, char* buf)
 
 		}
 
+	}
+	case C2S_ATTACK_READY:
+	{	
+		cs_packet_attack_ready* packet = reinterpret_cast<cs_packet_attack_ready*>(buf);
+		CServer::GetInst()->send_update_animation(packet->id, packet->state);
+	}
+	break;
+	case C2S_CREATE_ARROW:
+	{
+		cout << "C2S_CREATE_ARROW" << endl;
+		cs_packet_arrow* packet = reinterpret_cast<cs_packet_arrow*>(buf);
+		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->Clinet_id, packet->Arrow_id,
+			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
+			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, CAMP_STATE::BLUE);
+		std::cout << packet->Dir.x << packet->Dir.y << packet->Dir.z << endl;
 	}
 	break;
 	default:

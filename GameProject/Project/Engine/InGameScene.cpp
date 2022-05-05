@@ -128,6 +128,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 		pObject->MeshRender()->SetDynamicShadow(true);
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+		pObject->GetScript<CPlayerScript>()->m_SetId(i);
 
 
 

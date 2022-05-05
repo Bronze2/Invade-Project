@@ -29,6 +29,32 @@ void CInGameScene::Init()
 	GetLayer(1)->SetName(L"Blue");
 	GetLayer(2)->SetName(L"RedSpawnPlace");
 	GetLayer(3)->SetName(L"BlueSpawnPlace");
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+		CGameObject* pObject = new CGameObject;
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CCollider3D);
+		pObject->AddComponent(new CPlayerScript);
+		//pObject->AddComponent(new CSensor);
+		//pObject->Sensor()->SetRadius(300.f);
+		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObject->Collider3D()->SetOffsetScale(Vec3(1.0f, 1.0f, 1.0f));
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		pObject->GetScript<CPlayerScript>()->m_SetId(i);
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+		pObject->GetScript<CPlayerScript>()->Init();
+		FindLayer(L"Blue")->AddGameObject(pObject, false);
+
+		//if (i % 2 == 0)
+		//	FindLayer(L"Blue")->AddGameObject(pObject, false);
+		//else
+		//	FindLayer(L"Red")->AddGameObject(pObject, false);
+
+		std::cout << "플레이어 [" << i << "] 생성" << endl;
+	}
+
 	
 	CGameObject* pNexus = nullptr;
 	CGameObject* pObject = new CGameObject;
@@ -78,29 +104,6 @@ void CInGameScene::Init()
 	pObject1->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 	FindLayer(L"Blue")->AddGameObject(pObject1);
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		CGameObject* pObject = new CGameObject;
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CCollider3D);
-		pObject->AddComponent(new CPlayerScript);
-		//pObject->AddComponent(new CSensor);
-		//pObject->Sensor()->SetRadius(300.f);
-		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(1.0f, 1.0f, 1.0f));
-		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		pObject->Transform()->SetLocalPos(Vec3(0.f,0.f,0.f));
-		pObject->GetScript<CPlayerScript>()->m_SetId(i);
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
-		pObject->GetScript<CPlayerScript>()->Init();
-
-		if(i %2==0)
-			FindLayer(L"Blue")->AddGameObject(pObject, false);
-		else 
-			FindLayer(L"Red")->AddGameObject(pObject, false);
-
-		std::cout << "플레이어 [" << i << "] 생성" << endl;
-	}
 
 	///////////////////--타워
 	CGameObject* pRedFirstTower = new CGameObject;

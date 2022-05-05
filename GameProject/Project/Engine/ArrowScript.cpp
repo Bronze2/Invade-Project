@@ -4,6 +4,7 @@
 #include "MeshRender.h"
 #include "PlayerScript.h"
 #include "ParticleSystem.h"
+#include "SceneMgr.h"
 #include <math.h>
 void CArrowScript::Awake()
 {
@@ -87,31 +88,23 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-		if (Transform()->GetWorldPos().y < 0.f)
-		{
-			GetObj()->SetActive(false);
-			Init();
-			m_eState = ARROW_STATE::IDLE;
-		}
+		//if (Transform()->GetLocalPos().y < 0.f)
+		//{
+		//	GetObj()->SetActive(false);
+		//	Init();
+		//	m_eState = ARROW_STATE::IDLE;
+		//}
 
-		m_vRestorePos = vPos;
-
-		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		vPos += m_vDir * m_fSpeed * DT;
-		m_fVelocityY -= (GRAVITY * DT) / 10;
-		m_fFallSpeed += m_fVelocityY;
-		vPos.y += m_fFallSpeed * DT;
-
-		m_vDeltaPos = vPos - m_vRestorePos;
-		float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
-		//vRot.y += fAngle;
-
+		vPos = CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id);
+		vRot = CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id);
+		//cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
-		m_vTargetDir = vPos - m_vRestorePos;
-		m_vTargetDir.Normalize();
 
+		//cout<<"화살 주인은" <<GetObj()->GetParent()->GetParent()->GetScript<CPlayerScript>()->m_GetId() <<endl;
+		//cout << "화살 주인은" << GetParentId() << endl;
+		
 		//float value = XMConvertToRadians(90.f * DT * 10);
 
 		//float vDotValue = Dot(vDir, m_vTargetDir);

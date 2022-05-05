@@ -19,6 +19,8 @@ public:
     CPlayerScript();
     virtual ~CPlayerScript();
 
+    void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
+
 
 
     void m_SetId(int id) { m_id = id; };

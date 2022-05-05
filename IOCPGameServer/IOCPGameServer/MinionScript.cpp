@@ -183,7 +183,7 @@ void CMinionScript::CheckRange()
 		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 			SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
 
-			cout << "[" << m_GetId() << "] 공격하라~" << endl;
+		//	cout << "[" << m_GetId() << "] 공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
 			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 

@@ -287,3 +287,54 @@ void CServer::send_projectile_packet(int projectile_id, int type)
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 }
+
+void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot)
+{
+	sc_packet_arrow packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_CREATE_ARROW;
+	packet.Clinetid = client_id;
+	packet.Arrowid = arrow_id;
+	packet.Pos.x = Pos.x;
+	packet.Pos.y = Pos.y;
+	packet.Pos.z = Pos.z;
+
+	packet.Rot.x = Rot.x;
+	packet.Rot.y = Rot.y;
+	packet.Rot.z = Rot.z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		if (i == client_id) continue;
+		else send_packet(i, &packet);
+}
+void CServer::send_update_animation(int client_id, int state)
+{
+	sc_packet_change_anim packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_CHANGE_ANIM;
+	packet.id = client_id;
+	packet.state = state;
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		if (i == client_id) continue;
+		else send_packet(i, &packet);
+}
+
+void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot)
+{
+	sc_packet_arrow packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_MOVE_ARROW;
+
+	packet.Clinetid = client_id;
+	packet.Arrowid = arrow_id;
+	packet.Pos.x = Pos.x;
+	packet.Pos.y = Pos.y;
+	packet.Pos.z = Pos.z;
+
+	packet.Rot.x = Rot.x;
+	packet.Rot.y = Rot.y;
+	packet.Rot.z = Rot.z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+}

@@ -31,6 +31,10 @@ void CService::update_minionindex(int minion_id)
 	//	CServer::GetInst()->send_move_minion_packet(i);
 	//CServer::GetInst()->send_move_minion_packet(0);
 }
+void CService::update_arrow()
+{
+
+}
 
 
 bool CService::is_near(int a, int b)

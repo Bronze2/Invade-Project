@@ -46,6 +46,7 @@
 #include "LobbyScene.h"
 #include "InGameScene.h"
 #include "ProjectileScript.h"
+#include "BowScript.h"
 
 
 #include "Network.h";
@@ -367,4 +368,23 @@ void CSceneMgr::net_spawnProjectile(int id, Vec3 Pos)
 void CSceneMgr::net_moveProjectile(int id, Vec3 Pos)
 {
 	m_projectile[id] = Pos;
+}
+
+void CSceneMgr::net_moveArrow(int parentid, int id, Vec3 pos, Vec3 rot)
+{
+	m_arrow[parentid][id].Pos = pos;
+	m_arrow[parentid][id].Rot = rot;
+}
+
+void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
+{
+	m_arrow[parentid][id].Pos = pos;
+	m_arrow[parentid][id].Rot = rot;
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetScript<CPlayerScript>()->SetState(3);
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetChild()[0]->
+		GetScript<CBowScript>()->InitArrow(id, pos, rot);
+}
+void CSceneMgr::net_animUpdate(int id, int state)
+{
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[id]->GetScript<CPlayerScript>()->SetState(state);
 }

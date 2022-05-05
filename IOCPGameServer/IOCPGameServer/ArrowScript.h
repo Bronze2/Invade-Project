@@ -42,6 +42,8 @@ private:
     Vec3 m_vDeltaPos;
 
     CGameObject* m_pBow;
+    int m_ParentId;
+    int m_id;
 
 public:
     virtual void Awake();
@@ -54,7 +56,7 @@ public:
     void SetTime(float _fTime) { m_fTime = _fTime; }
     void SetStartPos(Vec3 _vPos) { m_vStartPos = _vPos; }
     void SetVelocityY(float _fVelocityY) { m_fVelocityY = _fVelocityY; }
-    void SetVelocityX() { m_fVelocityX = m_vDir.x * m_fSpeed * DT; }
+    void SetVelocityX() { m_fVelocityX = m_vDir.x * m_fSpeed * DT; } //*DT
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
     void SetType(UINT _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }
@@ -66,6 +68,11 @@ public:
     void SetRestorePos(const Vec3 _vPos) { m_vRestorePos = _vPos; }
 
     void SetBow(CGameObject* _Obj) { m_pBow = _Obj; }
+
+    void SetParentId(int _pid) { m_ParentId = _pid; }
+    int GetParentId() { return m_ParentId; }
+    void m_SetId(int _pid) { m_id = _pid; }
+    int   m_GetId() { return m_id; }
 
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 private:

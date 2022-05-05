@@ -30,6 +30,14 @@ struct EXOVER
 	};
 };
 
+struct ARROW {
+	int m_id;
+	Vec3 Pos;
+	Vec3 Rot;
+	Vec3 Dir;
+	float Speed;
+	bool enable_shoot = false;
+};
 
 //클라이언트 정보 저장 구조체
 struct CLIENT
@@ -50,7 +58,7 @@ struct CLIENT
 	char m_name[MAX_ID_LEN + 1];			//lock으로 보호
 
 	unsigned  m_move_time;
-
+	map <int, ARROW> g_arrow;
 	char m_camp;
 	bool m_isHost;
 	bool isMove = false;
@@ -72,6 +80,7 @@ struct MINION {
 };
 
 
+
 namespace SHARED_DATA {
 	extern HANDLE g_iocp;					//iocp 핸들
 	extern CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
@@ -84,8 +93,6 @@ namespace SHARED_DATA {
 	extern map <int, Vec3> g_tower;
 	extern unordered_map<int, Vec3> g_bullet;
 	extern int g_bulletindex;
-
-
 };
 //struct tResolution
 //{

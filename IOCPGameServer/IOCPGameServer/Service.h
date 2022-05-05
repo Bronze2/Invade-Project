@@ -15,7 +15,7 @@ public:
 	void disconnect(int user_id);
 	void update_minion();
 	void update_minionindex(int minion_id);
-
+	void update_arrow();
 	//void spawn_minion(int id, Vec3 pos);
 	void Init();
 

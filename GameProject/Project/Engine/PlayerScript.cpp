@@ -363,6 +363,8 @@ void CPlayerScript::Update()
 			vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f 더 회전시킬건지?
 
 			m_eState = PLAYER_STATE::ATTACK_READY;
+			Network::GetInst()->send_attack_ready_packet(m_GetId(),2);
+
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
@@ -407,6 +409,14 @@ void CPlayerScript::SetState(int state)
 	if (state == 1)
 	{
 		m_eState = PLAYER_STATE::IDLE;
+	}
+	if (state == 2)
+	{
+		m_eState = PLAYER_STATE::ATTACK_READY;
+	}
+	if (state == 3)
+	{
+		m_eState = PLAYER_STATE::ATTACK;
 	}
 }
 

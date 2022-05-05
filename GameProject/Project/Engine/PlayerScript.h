@@ -39,6 +39,7 @@ private:
     float m_fTurnDegree;
     float m_fFactor;
     bool m_bTurn;
+    int m_id;
     vector<CGameObject*>m_arrColObject;
 public:
     void m_FAnimation();
@@ -48,7 +49,8 @@ public:
     void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
     void SetMain() { isMain = true; }
     void SetState(int state);
-
+    void m_SetId(int id) { m_id = id; }
+    int m_GetId() { return m_id; }
     void Update_LerpPos();
     void SetLerpPos(Vec3 Pos) { m_PrevLerpPos = m_LerpPos; m_LerpPos = Pos; }
     void SetPrevLerpPos(Vec3 Pos) { m_PrevLerpPos = Pos; }

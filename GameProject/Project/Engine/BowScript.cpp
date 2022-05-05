@@ -57,14 +57,14 @@ void CBowScript::Update()
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetParentId(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId());
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->m_SetId(m_iCurArrow);
 			Vec3 vTargetDir = pEmptyCamera->GetScript<CEmptyCameraScript>()->GetShootDir();
 
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
-
-
 			Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
 			Vec3 vArrowRot = GetObj()->GetParent()->Transform()->GetLocalRot() + Vec3(0.f, XMConvertToRadians(90.f), 0.f);
 
@@ -72,6 +72,8 @@ void CBowScript::Update()
 
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
+
+			Network::GetInst()->send_arrow_packet(m_iCurArrow,vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed);
 
 			m_iCurArrow++;
 			m_iPower = 1;
@@ -82,6 +84,22 @@ void CBowScript::Update()
 			m_bMaxCharged = false;
 		}
 	}
+}
+
+void CBowScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot)
+{
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParentId(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId());
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
+
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
+	m_pArrow[ArrowId]->ClearParent();
+	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
+	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
+	m_pArrow[ArrowId]->SetActive(true);
+
+	cout << "화살 생성 -other"<< m_pArrow[ArrowId]->GetScript<CArrowScript>()->GetParentId()<<"에서 받아옴" << endl;
+
 }
 
 void CBowScript::m_FAnimation()
