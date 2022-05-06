@@ -226,12 +226,12 @@ void CMinionScript::CheckRange()
 			CServer::GetInst()->send_anim_minion_packet(m_GetId());
 
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = true;
-			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time ++;
+			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time++;
 
 
 		}
 		else if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
-
+			cout << " WAlk" << endl;
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
 			m_eState = MINION_STATE::WALK;

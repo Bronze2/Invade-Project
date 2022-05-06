@@ -38,8 +38,8 @@ void CInGameScene::Init()
 		//pObject->AddComponent(new CSensor);
 		//pObject->Sensor()->SetRadius(300.f);
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(1.0f, 1.0f, 1.0f));
-		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
+		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		pObject->GetScript<CPlayerScript>()->m_SetId(i);
 		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
@@ -178,6 +178,7 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
+
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 
 	Awake();

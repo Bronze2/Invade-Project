@@ -55,6 +55,11 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 	CServer::GetInst()->send_create_arrow_packet(m_GetId(), ArrowId, Pos, Rot);
 
 }
+#include "Collider3D.h"
+void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
+{
+	std::cout << "CollPlayer  :" << m_GetId() << endl;
+}
 
 
 

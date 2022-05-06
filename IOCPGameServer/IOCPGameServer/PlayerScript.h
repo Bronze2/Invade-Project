@@ -21,6 +21,7 @@ public:
 
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
 
+    virtual void OnCollision3DEnter(CCollider3D* _pOther);
 
 
     void m_SetId(int id) { m_id = id; };
