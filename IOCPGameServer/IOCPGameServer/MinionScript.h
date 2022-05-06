@@ -38,6 +38,9 @@ class CMinionScript :
 =======
 
     int attack_delay;
+<<<<<<< HEAD
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
+=======
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 public:
     void CheckHp();
@@ -57,7 +60,11 @@ public:
 
     void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
 <<<<<<< HEAD
+<<<<<<< HEAD
     //void SetAttackMaxTime(float time) { m_attack_max_time = time; }
+=======
+
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)

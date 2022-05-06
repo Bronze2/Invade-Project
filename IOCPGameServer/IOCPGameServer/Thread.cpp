@@ -62,7 +62,11 @@ void CThread::do_timer()
 	while (true)
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+		CTimeMgr::GetInst()->Update();
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 		CTimeMgr::GetInst()->Update();
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)

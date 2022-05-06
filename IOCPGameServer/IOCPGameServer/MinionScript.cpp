@@ -31,7 +31,11 @@ void CMinionScript::Init()
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	attack_delay = 0;
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 	attack_delay = 0;
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
@@ -88,8 +92,11 @@ void CMinionScript::Update()
 		if (m_ePrevState != m_eState) {
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 			//cout <<"["<<m_GetId()<<"]"  <<m_pTarget->GetScript<CMinionScript>()->m_GetId() << endl;
+=======
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
@@ -179,10 +186,14 @@ void CMinionScript::CheckHp()
 void CMinionScript::CheckRange()
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 		SHARED_DATA::g_minion[m_GetId()].m_attack_current_time += 1;
 	}
 
+=======
+	attack_delay++;
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 	attack_delay++;
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
@@ -191,6 +202,7 @@ void CMinionScript::CheckRange()
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 			cout << "[" << m_GetId() << "] 공격하라~" << endl;
@@ -250,11 +262,14 @@ void CMinionScript::CheckRange()
 			m_eState = MINION_STATE::WALK;
 
 =======
+=======
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 		if (attack_delay > 100) {
 			//m_eState = MINION_STATE::ATTACK;
 			m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
 			std::cout << this->m_GetId() << " : ATTACK!" << endl;
 			attack_delay = 0;
+<<<<<<< HEAD
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 		}
 	}
@@ -265,6 +280,14 @@ void CMinionScript::CheckRange()
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
 =======
+		if (attack_delay > 100) {
+			
+			
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
+=======
+		}
+	}
+	else {
 		if (attack_delay > 100) {
 			
 			

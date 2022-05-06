@@ -194,6 +194,7 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_move_minion* my_packet = reinterpret_cast<sc_packet_move_minion*>(ptr);
 		CSceneMgr::GetInst()->net_moveMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z, my_packet->state);
+<<<<<<< HEAD
 	}
 	break;
 	case S2C_ANIM_MINION:
@@ -201,6 +202,8 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_move_minion* my_packet = reinterpret_cast<sc_packet_move_minion*>(ptr);
 		CSceneMgr::GetInst()->net_animMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z,
 			my_packet->rot.x, my_packet->rot.y, my_packet->rot.z, my_packet->state);
+=======
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 	}
 	break;
 

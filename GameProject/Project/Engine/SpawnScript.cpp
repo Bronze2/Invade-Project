@@ -9,11 +9,15 @@
 #include "Animator3D.h"
 #include "Sensor.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ProjectileScript.h"
 
 CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
     Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange,
     CAnimation* _pAnimation, CAMP_STATE _eCamp)
+=======
+CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange, CAnimation* _pAnimation, CAMP_STATE _eCamp)
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange, CAnimation* _pAnimation, CAMP_STATE _eCamp)
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
@@ -74,9 +78,13 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 <<<<<<< HEAD
+<<<<<<< HEAD
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", 
             vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
+=======
+        CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
@@ -91,9 +99,13 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 125, 174);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 <<<<<<< HEAD
+<<<<<<< HEAD
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", 
             vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
+=======
+        CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)

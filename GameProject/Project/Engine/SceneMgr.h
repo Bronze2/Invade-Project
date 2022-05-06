@@ -57,6 +57,7 @@ public:
 	void net_setRotationByID(int id, float x, float y, float z);
 	void net_setAnimationByID(int id , int state);
 <<<<<<< HEAD
+<<<<<<< HEAD
 	void net_spawnMinion_blue(int id, int mtype,float x, float y, float z);
 	void net_spawnMinion_red(int id, int mtype,float x, float y, float z);
 	void net_moveMinion(int id, float x, float y, float z, 
@@ -87,6 +88,11 @@ public:
 	Vec3 get_ProjectilePos(int id) { return m_projectile[id]; }
 
 
+=======
+	void net_spawnMinion_blue(int id, float x, float y, float z);
+	void net_spawnMinion_red(int id, float x, float y, float z);
+	void net_moveMinion(int id, float x, float y, float z, int state);
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 	void net_spawnMinion_blue(int id, float x, float y, float z);
 	void net_spawnMinion_red(int id, float x, float y, float z);

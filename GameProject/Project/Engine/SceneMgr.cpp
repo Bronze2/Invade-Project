@@ -308,6 +308,7 @@ void CSceneMgr::net_spawnMinion_red(int id, int mtype,float x, float y, float z)
 }
 
 void CSceneMgr::net_moveMinion(int id, float x, float y, float z , int state)
+<<<<<<< HEAD
 {
 	m_minion[id].pos.x = x;
 	m_minion[id].pos.y = y;
@@ -326,13 +327,18 @@ void CSceneMgr::net_moveMinion(int id, float x, float y, float z , int state)
 }
 
 void CSceneMgr::net_animMinion(int id, float x, float y, float z, float r_x, float r_y, float r_z, int state)
+=======
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 {
 	m_minion[id].pos.x = x;
 	m_minion[id].pos.y = y;
 	m_minion[id].pos.z = z;
+<<<<<<< HEAD
 	m_minion[id].rot.x = r_x;
 	m_minion[id].rot.y = r_y;
 	m_minion[id].rot.z = r_z;
+=======
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 =======
 >>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 	if(state == 0)
