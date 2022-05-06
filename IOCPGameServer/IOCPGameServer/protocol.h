@@ -18,6 +18,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_KEY_UP		3
 #define C2S_MOUSE		4
 #define C2S_GAMESTART	5
+#define C2S_CREATE_ARROW  6
+#define C2S_ATTACK_READY 7
 
 #define S2C_LOGIN_OK		1
 #define S2C_KEY_DOWN		2
@@ -30,6 +32,13 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_SPAWN_MINION	7
 #define S2C_LOBBY_ENTER		8
 #define S2C_MOVE_MINION		9
+#define S2C_ANIM_MINION		10
+#define S2C_ROT_TOWER		11
+#define S2C_CREATE_PROJECTILE		12
+#define S2C_PROJECTILE		13
+#define S2C_CREATE_ARROW		14
+#define S2C_MOVE_ARROW		15
+#define S2C_CHANGE_ANIM		16
 
 
 struct p_Vec3 {
@@ -105,10 +114,20 @@ struct cs_packet_login {
 	char	name[MAX_ID_LEN];
 };
 
+struct sc_packet_change_anim {
+	char	size;
+	char	type;
+	int id;
+	int state;
+};
+
+
 constexpr unsigned char D_UP = 0;
 constexpr unsigned char D_DOWN = 1;
 constexpr unsigned char D_LEFT = 2;
 constexpr unsigned char D_RIGHT = 3;
+
+
 
 struct cs_packet_move {
 	char	size;
@@ -129,6 +148,28 @@ struct cs_packet_mouse {
 	unsigned move_time;
 };
 
+struct cs_packet_attack_ready {
+	char	size;
+	char	type;
+	int id;
+	int state;
+	//unsigned move_time;
+};
+
+
+
+struct cs_packet_arrow {
+	char	size;
+	char	type;
+	int Clinet_id;
+	int Arrow_id;
+	float Power;
+	p_Vec3 Pos;
+	p_Vec3 Rot;
+	p_Vec3 Dir;
+	unsigned move_time;
+};
+
 constexpr unsigned char RED = 0;
 constexpr unsigned char BLUE = 1;
 
@@ -142,7 +183,7 @@ struct sc_packet_spawn_minion {
 	char	type;
 	int		id;
 	char    camp;
-
+	int		mtype;
 	p_Vec3  pos;
 	p_Vec3  dir;
 	p_Vec3  rot;
@@ -158,6 +199,30 @@ struct sc_packet_move_minion {
 	p_Vec3 rot;
 	int state;
 };
+
+struct sc_packet_rot_tower {
+	char size;
+	char type;
+	int  id;
+	p_Vec3 rot;
+};
+
+struct sc_packet_projectile {
+	char size;
+	char type;
+	int  id;
+	p_Vec3 pos;
+};
+
+struct sc_packet_arrow {
+	char size;
+	char type;
+	int  Clinetid;
+	int  Arrowid;
+	p_Vec3 Pos;
+	p_Vec3 Rot;
+};
+
 
 
 ////////////////// Lobby ///////////////////////////////////

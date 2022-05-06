@@ -6,14 +6,17 @@
 #include "SceneMgr.h"
 //
 namespace SHARED_DATA {
-	HANDLE g_iocp;					//iocp 핸들
-	CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
+	HANDLE g_iocp;					
+	CLIENT g_clients[MAX_USER];		
 	unordered_map<int, MINION> g_minion;
 	priority_queue<event_type> timer_queue;
 	mutex timer_lock;
 	SOCKET listenSocket;
 	int g_minionindex;
 	int current_user;
+	map <int, Vec3> g_tower;
+	unordered_map<int, Vec3> g_bullet;
+	int g_bulletindex;
 };
 
 
@@ -21,7 +24,7 @@ namespace SHARED_DATA {
 void main()
 {
 	std::cout << "Run Server" << std::endl;
-	CSceneMgr::GetInst()->Init();
+	//CSceneMgr::GetInst()->Init();
 	CServer::GetInst()->Init();
 	CService::GetInst()->Init();
 

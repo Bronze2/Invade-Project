@@ -31,6 +31,10 @@ void CService::update_minionindex(int minion_id)
 	//	CServer::GetInst()->send_move_minion_packet(i);
 	//CServer::GetInst()->send_move_minion_packet(0);
 }
+void CService::update_arrow()
+{
+
+}
 
 
 bool CService::is_near(int a, int b)
@@ -41,8 +45,6 @@ bool CService::is_near(int a, int b)
 
 void CService::do_move(int user_id, int direction)
 {
-	
-	Vec3 vPos;
 	SHARED_DATA::g_clients[user_id].Pos += SHARED_DATA::g_clients[user_id].dir * 30.f;
 	CServer::GetInst()->send_move_packet(user_id, user_id);
 	for (int i = 0; i < SHARED_DATA::current_user; ++i) {

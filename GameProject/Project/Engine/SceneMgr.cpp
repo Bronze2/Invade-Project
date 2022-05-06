@@ -45,7 +45,8 @@
 #include "TowerScript.h"
 #include "LobbyScene.h"
 #include "InGameScene.h"
-
+#include "ProjectileScript.h"
+#include "BowScript.h"
 
 
 #include "Network.h";
@@ -109,7 +110,7 @@ void CSceneMgr::Init()
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
-
+	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
@@ -246,6 +247,7 @@ void CSceneMgr::net_setLerpMoveByID(int id, float x , float y, float z)
 	Vec3 pos(x, y, z);
 	//pos*= DT;
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
+
 }
 
 void CSceneMgr::net_setLocalPosByID(int id, float x, float y, float z)
@@ -292,18 +294,37 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }
 
-void CSceneMgr::net_spawnMinion_blue(int id, float x, float y ,float z)
+void CSceneMgr::net_spawnMinion_blue(int id, int mtype,float x, float y ,float z)
 {
 	Vec3 Pos{ x,y,z };
-	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, MINION_ATTACK_TYPE::MELEE);
+	m_minion[id].pos = Pos;
+	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
-void CSceneMgr::net_spawnMinion_red(int id, float x, float y, float z)
+void CSceneMgr::net_spawnMinion_red(int id, int mtype,float x, float y, float z)
 {
 	Vec3 Pos{ x,y,z };
-	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos,MINION_ATTACK_TYPE::MELEE);
+	m_minion[id].pos = Pos;
+	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
 
 void CSceneMgr::net_moveMinion(int id, float x, float y, float z, float r_x, float r_y, float r_z, int state)
+{
+	m_minion[id].pos.x = x;
+	m_minion[id].pos.y = y;
+	m_minion[id].pos.z = z;
+	m_minion[id].rot.x = r_x;
+	m_minion[id].rot.y = r_y;
+	m_minion[id].rot.z = r_z;
+	//if(state == 0)
+	//	m_minion[id].state = MINION_STATE::WALK;
+	//if (state == 1)
+	//	m_minion[id].state = MINION_STATE::ATTACK;
+	//if (state == 2)
+	//	m_minion[id].state = MINION_STATE::DIE;
+
+}
+
+void CSceneMgr::net_animMinion(int id, float x, float y, float z, float r_x, float r_y, float r_z, int state)
 {
 	m_minion[id].pos.x = x;
 	m_minion[id].pos.y = y;
@@ -317,5 +338,53 @@ void CSceneMgr::net_moveMinion(int id, float x, float y, float z, float r_x, flo
 		m_minion[id].state = MINION_STATE::ATTACK;
 	if (state == 2)
 		m_minion[id].state = MINION_STATE::DIE;
+}
+void CSceneMgr::net_setRotTower(int id,	Vec3 Rot)
+{
+	m_tower[id] = Rot;
+}
 
+void CSceneMgr::net_spawnProjectile(int id, Vec3 Pos)
+{
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\blueball.mdat", L"MeshData\\blueball.mdat");
+	//CGameObject* pObject = pMeshData->Instantiate();
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CCollider3D);
+	//pObject->AddComponent(new CProjectileScript);
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//pObject->FrustumCheck(false);
+	//pObject->Transform()->SetLocalPos(Pos);
+	//pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	//pObject->GetScript<CProjectileScript>()->Init();
+	//m_pCurScene->FindLayer(L"Red")->AddGameObject(pObject);
+	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Pro(id, Pos);
+
+
+}
+
+void CSceneMgr::net_moveProjectile(int id, Vec3 Pos)
+{
+	m_projectile[id] = Pos;
+}
+
+void CSceneMgr::net_moveArrow(int parentid, int id, Vec3 pos, Vec3 rot)
+{
+	m_arrow[parentid][id].Pos = pos;
+	m_arrow[parentid][id].Rot = rot;
+}
+
+void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
+{
+	m_arrow[parentid][id].Pos = pos;
+	m_arrow[parentid][id].Rot = rot;
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetScript<CPlayerScript>()->SetState(3);
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetChild()[0]->
+		GetScript<CBowScript>()->InitArrow(id, pos, rot);
+}
+void CSceneMgr::net_animUpdate(int id, int state)
+{
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[id]->GetScript<CPlayerScript>()->SetState(state);
 }

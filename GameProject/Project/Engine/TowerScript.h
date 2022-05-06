@@ -29,6 +29,7 @@ private:
     vector<CGameObject*> m_arrEnemy;
     CGameObject* m_pTarget;
     bool m_bFindNear;
+    int m_id;
 public:
 
     void Init();
@@ -53,6 +54,9 @@ public:
     virtual ~CTowerScript();
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
+
+    void m_SetId(int id) { m_id = id; }
+    int  m_GetId() { return m_id; }
 
     CLONE(CTowerScript);
 };

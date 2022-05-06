@@ -8,6 +8,8 @@
 #include "MeshRender.h"
 #include "Animator3D.h"
 #include "Sensor.h"
+#include "ProjectileScript.h"
+
 CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
     Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange,
     CAnimation* _pAnimation, CAMP_STATE _eCamp)
@@ -46,7 +48,6 @@ void CSpawnScript::Update()
 void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
 {
     CAnimation* pNewAnimation = new CAnimation;
-
     switch (type)
     {
     case MINION_ATTACK_TYPE::MELEE:
@@ -54,8 +55,9 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"WALK", 30, 49);
         pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
         pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
+        Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat",
-            Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
+            vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::MELEE, pNewAnimation, CAMP_STATE::RED);
         pObject->SetId(id);
         CreateObject(pObject, L"Red");
@@ -68,7 +70,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", 
-            Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f), 
+            vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
         pObject->SetId(id);
         CreateObject(pObject, L"Red");
@@ -81,7 +83,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 125, 174);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", 
-            Pos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
+            vPos, Vec3(0.3f, 0.3f, 0.3f), Vec3(0.f, 10.f, 0.f), Vec3(60.f, 100.f, 60.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
         pObject->SetId(id);
         CreateObject(pObject, L"Red");
@@ -143,9 +145,38 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
         break;
     }
 
+}
+void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
+{
+    Vec3 vPos = GetObj()->Transform()->GetLocalPos();
+    CGameObject* pObject = SpawnObject_Proejectile(L"MeshData\\redball.mdat", Pos,
+        Vec3(0.1f, 0.1f, 0.1f), Vec3(0.f, 0.f, 0.f), Vec3(100.f, 100.f, 100.f));
+    pObject->GetScript<CProjectileScript>()->m_SetId(id);
+    CreateObject(pObject, L"Blue");
+    std::cout << "Åº»ý" << endl;
+}
 
 
 
+CGameObject* CSpawnScript::SpawnObject_Proejectile(const wstring& _strKey, Vec3 _vLocalPos,
+    Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale)
+{
+    Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_strKey, _strKey);
+    CGameObject* pObject = pMeshData->Instantiate();
+    pObject->AddComponent(new CTransform);
+    pObject->AddComponent(new CCollider3D);
+    pObject->AddComponent(new CProjectileScript);
+    pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+    pObject->Collider3D()->SetOffsetScale(_vOffsetScale);
+    pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
+    pObject->FrustumCheck(false);
+    pObject->Transform()->SetLocalPos(_vLocalPos);
+    pObject->Transform()->SetLocalScale(_vLocalScale);
+    pObject->MeshRender()->SetDynamicShadow(true);
+    pObject->GetScript<CProjectileScript>()->Init();
+
+
+    return pObject;
 }
 
 

@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "MinionScript.h"
 #include "PlayerScript.h"
+#include "SceneMgr.h"
 
 void CTowerScript::Init()
 {
@@ -19,6 +20,8 @@ void CTowerScript::Init()
 	default:
 		break;
 	}
+
+	CSceneMgr::GetInst()->set_towerRot(m_GetId(), GetObj()->Transform()->GetLocalRot());
 }
 
 void CTowerScript::SetSecondTower(CGameObject* _pGameObject)
@@ -82,12 +85,17 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
-	if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
-		ChangeScene(SCENE_TYPE::INGAME);
-	}
-	FindNearObject(m_arrEnemy);
-	m_FRotate();
-	m_FAttack();
+
+	Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_towerRot(m_GetId()), DT * 10.f);
+
+	Transform()->SetLocalRot(vRot);
+
+	//if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
+	//	ChangeScene(SCENE_TYPE::INGAME);
+	//}
+	//FindNearObject(m_arrEnemy);
+	//m_FRotate();
+	//m_FAttack();
 }
 
 void CTowerScript::FinalUpdate()

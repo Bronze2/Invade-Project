@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
-constexpr auto BUF_SIZE = 200;
+constexpr auto BUF_SIZE = 8192;
 //int NPC_ID_START = 10000;
 #define MAX_BUF	8192
 #define MAX_PACKET_SIZE	8192
@@ -57,7 +57,9 @@ public:
 
 	void send_packet(void* packet);
 	void send_login_packet();
-	void send_move_packet(unsigned char dir, float x, float y , float z, int state);
+	void send_key_down_packet(unsigned char dir, float x, float y , float z, int state);
+	void send_key_up_packet(unsigned char dir, float x, float y, float z, int state);
+
 	void send_rotation_packet(Vec3 Rot);
 	void send_animation_packet(int state);
 	void send_game_start_packet();

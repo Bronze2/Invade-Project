@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "Collider2D.h"
+#include "ArrowScript.h"
+#include "Server.h"
 
 void CPlayerScript::Init()
 {
@@ -7,24 +10,56 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	for (int i = 0; i < 20; ++i) {
+		m_pArrow[i] = new CGameObject;
+		m_pArrow[i]->SetName(L"Arrow");
+
+
+		m_pArrow[i]->AddComponent(new CTransform());
+		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+		m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));
+
+		m_pArrow[i]->AddComponent(new CCollider2D);
+		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
+
+		m_pArrow[i]->AddComponent(new CArrowScript(ELEMENT_TYPE::AllElements));
+		pCurScene->FindLayer(L"Blue")->AddGameObject(m_pArrow[i]);
+		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
+		m_pArrow[i]->SetActive(false);
+		GetObj()->AddChild(m_pArrow[i]);
+	}
 }
 
 void CPlayerScript::Update()
 {
-	Vec3 vPos = Transform()->GetWorldPos();
-	Vec3 vRot = Transform()->GetLocalRot();
-	Vec3 vLocalPos = Transform()->GetLocalPos();
-	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-	vLocalPos.x -= vWorldDir.x * 10.f;
-	vLocalPos.z -= vWorldDir.z * 10.f;
-
-	Transform()->SetLocalPos(vLocalPos);
-	Transform()->SetLocalRot(vRot);
-
-
-
+	Transform()->SetLocalPos(SHARED_DATA::g_clients[m_id].Pos);
+	Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
 }
 
+void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
+{
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSpeed(Power*2);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetDir(Dir);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParentId(m_GetId());
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
+
+	m_pArrow[ArrowId]->ClearParent();
+	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
+	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
+	m_pArrow[ArrowId]->SetActive(true);
+
+	cout << "플레이어 ID: " <<m_GetId() <<"화살 ID "<< ArrowId <<" 생성 "<<endl;
+	CServer::GetInst()->send_create_arrow_packet(m_GetId(), ArrowId, Pos, Rot);
+
+}
+#include "Collider3D.h"
+void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
+{
+	std::cout << "CollPlayer  :" << m_GetId() << endl;
+}
 
 
 

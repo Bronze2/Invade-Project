@@ -61,8 +61,10 @@ public:
 	void send_key_up_packet(unsigned char dir, float x, float y, float z, int state);
 
 	void send_rotation_packet(Vec3 Rot);
-	void send_animation_packet(int state);
 	void send_game_start_packet();
+	void send_attack_ready_packet(int id,int state);
+	void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
+
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 

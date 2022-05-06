@@ -195,7 +195,7 @@ void CServer::send_leave_packet(int user_id, int o_id)
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
-void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z, CAMP_STATE camp)
+void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z, MINION_ATTACK_TYPE type,CAMP_STATE camp)
 {
 	sc_packet_spawn_minion packet;
 	packet.size = sizeof(packet);
@@ -208,7 +208,7 @@ void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z,
 	p_Vec3 pos = { x,y,z };
 	packet.pos = pos;
 	std::cout << packet.id << endl;
-
+	packet.mtype = (int)type;
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 
@@ -234,4 +234,107 @@ void CServer::send_move_minion_packet(int minion_id)
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 
+}
+
+void CServer::send_anim_minion_packet(int minion_id)
+{
+	sc_packet_move_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ANIM_MINION;
+	packet.id = minion_id;
+	packet.pos.x = SHARED_DATA::g_minion[minion_id].Pos.x;
+	packet.pos.y = SHARED_DATA::g_minion[minion_id].Pos.y;
+	packet.pos.z = SHARED_DATA::g_minion[minion_id].Pos.z;
+
+	packet.rot.x = SHARED_DATA::g_minion[minion_id].Rot.x;
+	packet.rot.y = SHARED_DATA::g_minion[minion_id].Rot.y;
+	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
+	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
+void CServer::send_rot_tower_packet(int tower_id)
+{
+	sc_packet_rot_tower packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ROT_TOWER;
+	packet.id = tower_id;
+	packet.rot.x = SHARED_DATA::g_tower[tower_id].x;
+	packet.rot.y = SHARED_DATA::g_tower[tower_id].y;
+	packet.rot.z = SHARED_DATA::g_tower[tower_id].z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+}
+
+void CServer::send_projectile_packet(int projectile_id, int type)
+{
+	sc_packet_projectile packet;
+	packet.size = sizeof(packet);
+	if(type == 0)
+		packet.type = S2C_CREATE_PROJECTILE;
+	else
+		packet.type = S2C_PROJECTILE;
+
+	packet.id = projectile_id;
+	packet.pos.x = SHARED_DATA::g_bullet[projectile_id].x;
+	packet.pos.y = SHARED_DATA::g_bullet[projectile_id].y;
+	packet.pos.z = SHARED_DATA::g_bullet[projectile_id].z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+}
+
+void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot)
+{
+	sc_packet_arrow packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_CREATE_ARROW;
+	packet.Clinetid = client_id;
+	packet.Arrowid = arrow_id;
+	packet.Pos.x = Pos.x;
+	packet.Pos.y = Pos.y;
+	packet.Pos.z = Pos.z;
+
+	packet.Rot.x = Rot.x;
+	packet.Rot.y = Rot.y;
+	packet.Rot.z = Rot.z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		if (i == client_id) continue;
+		else send_packet(i, &packet);
+}
+void CServer::send_update_animation(int client_id, int state)
+{
+	sc_packet_change_anim packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_CHANGE_ANIM;
+	packet.id = client_id;
+	packet.state = state;
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		if (i == client_id) continue;
+		else send_packet(i, &packet);
+}
+
+void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot)
+{
+	sc_packet_arrow packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_MOVE_ARROW;
+
+	packet.Clinetid = client_id;
+	packet.Arrowid = arrow_id;
+	packet.Pos.x = Pos.x;
+	packet.Pos.y = Pos.y;
+	packet.Pos.z = Pos.z;
+
+	packet.Rot.x = Rot.x;
+	packet.Rot.y = Rot.y;
+	packet.Rot.z = Rot.z;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
 }

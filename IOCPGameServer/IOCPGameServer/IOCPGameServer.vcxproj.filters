@@ -36,9 +36,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="protocol.h">
-      <Filter>소스 파일\헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Server.h">
       <Filter>소스 파일\Server</Filter>
     </ClInclude>
@@ -129,6 +126,15 @@
     <ClInclude Include="TimeMgr.h">
       <Filter>소스 파일\GameLogic\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectileScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol.h">
+      <Filter>소스 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrowScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -211,6 +217,12 @@
     </ClCompile>
     <ClCompile Include="TimeMgr.cpp">
       <Filter>소스 파일\GameLogic\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrowScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

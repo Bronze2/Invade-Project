@@ -30,6 +30,14 @@ struct EXOVER
 	};
 };
 
+struct ARROW {
+	int m_id;
+	Vec3 Pos;
+	Vec3 Rot;
+	Vec3 Dir;
+	float Speed;
+	bool enable_shoot = false;
+};
 
 //클라이언트 정보 저장 구조체
 struct CLIENT
@@ -50,7 +58,7 @@ struct CLIENT
 	char m_name[MAX_ID_LEN + 1];			//lock으로 보호
 
 	unsigned  m_move_time;
-
+	map <int, ARROW> g_arrow;
 	char m_camp;
 	bool m_isHost;
 	bool isMove = false;
@@ -64,7 +72,13 @@ struct MINION {
 	p_Vec3 Dir;
 	p_Vec3 Rot;
 	MINION_STATE State;
+	MINION_ATTACK_TYPE Type;
+	CAMP_STATE Camp;
+	float m_attack_max_time = 100;
+	float m_attack_current_time = 0;
+	bool m_during_attack = false;
 };
+
 
 
 namespace SHARED_DATA {
@@ -76,7 +90,9 @@ namespace SHARED_DATA {
 	extern SOCKET listenSocket;
 	extern int g_minionindex;
 	extern int current_user;
-
+	extern map <int, Vec3> g_tower;
+	extern unordered_map<int, Vec3> g_bullet;
+	extern int g_bulletindex;
 };
 //struct tResolution
 //{
