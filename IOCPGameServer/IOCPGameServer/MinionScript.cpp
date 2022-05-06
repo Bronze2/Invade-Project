@@ -252,6 +252,7 @@ static bool iSeparate=true;
 
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
+	cout << "½Ã¹ß¾Æ" << endl;
 	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
 	
 	}
