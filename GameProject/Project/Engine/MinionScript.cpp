@@ -9,7 +9,7 @@
 #include "TowerScript.h"
 
 // Animation State (IDLE / WALK / ATTACK / DIE)
-// enum class MINION_STATE (WALK / ATTACK / FIND / DIE / END)
+// enum class MINION_STATE (WALK / ATTACK / DIE / END)
 
 void CMinionScript::Init()
 {

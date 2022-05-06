@@ -246,19 +246,20 @@ void CPlayerScript::Update()
 		int a = 0;
 	}
 
-	if ((KEY_NONE(KEY_TYPE::KEY_W) && KEY_NONE(KEY_TYPE::KEY_S) && KEY_NONE(KEY_TYPE::KEY_A) && KEY_NONE(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		// 여기가 맞긴 한가..
+	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		m_fFactor = 0.f;
-		m_fTurnDegree = 0.f;	// 여기있음안됨
+		m_fTurnDegree = 0.f;
 		m_bTurn = true;
 
+		m_vRestoreRot = vRot;
 	}
 
-	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		//m_fTurnDegree = 0.f;	// 여기있음안됨
-		//m_bTurn = true;
-		//m_fFactor = 0.f;
 
+	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+		m_eState = PLAYER_STATE::IDLE;
+		m_fTurnDegree = 0.f;
+		m_fFactor = 0.f;
+		m_bTurn = true;
 		m_vRestoreRot = vRot;
 	}
 
@@ -271,8 +272,6 @@ void CPlayerScript::Update()
 
 		m_fCurDegree = 0.f;
 		m_iKeyHoldCnt = 0;
-
-		// m_fTurnDegree = m_fRotateDegree;
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 			m_fCurDegree += 0.f;
@@ -289,7 +288,6 @@ void CPlayerScript::Update()
 			else {
 				m_fCurDegree -= 90.f;
 			}
-			//m_fCurDegree -= 90.f;
 			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
@@ -297,37 +295,21 @@ void CPlayerScript::Update()
 			m_iKeyHoldCnt++;
 		}
 
-		//if (m_fFrontDegree >= 360.f) {
-		//	m_fFrontDegree -= 360.f;
-		//}
-
 		m_fCurDegree /= (float)m_iKeyHoldCnt;
 
 		if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
 			m_fCurDegree = 0.f;
 		}
 
-		// 만약에 frontDegree가 180이면 side degree 뺴주고 아니면 더해주고 이런거
 		m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
 		
-		// 무조건 양수로 변경 (CW)
-		float fRotDegree = XMConvertToDegrees(vRot.y);
-		if (fRotDegree < 0.f) {
-			fRotDegree += 360.f;		
-		}
-		if (m_fTurnDegree < 0.f) {
-			m_fTurnDegree += 360.f; 
-		}
+		float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
 
-		/*if (fRotDegree - m_fTurnDegree > 0.f) {
-			m_fTurnDegree -= 360.f;
-		}*/
-
-
-		vRot.y = XMConvertToRadians(fRotDegree * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
+		vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
 
 		if (m_fFactor < 1.f) {
-			m_fFactor += 0.05f;
+			// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
+			m_fFactor += 5.f * DT;
 		}
 		else {
 			if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
@@ -337,19 +319,13 @@ void CPlayerScript::Update()
 				m_bTurn = false;
 			}
 		}
-
+		
 		if (!m_bTurn) {
 			vPos += vFront * m_fMoveSpeed * DT;
 		}
 
 		m_FColCheck(vPos3, vPos);
 		m_eState = PLAYER_STATE::WALK;
-	}
-
-	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		m_eState = PLAYER_STATE::IDLE;
-		m_fTurnDegree = 0.f;
-		m_fFactor = 0.f;
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
