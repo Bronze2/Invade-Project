@@ -77,6 +77,9 @@ public:
 	
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
 	Vec3 get_arrowRot(int p_id, int m_id) { return m_arrow[p_id][m_id].Rot; }
+	void set_arrowPos(int p_id, int m_id,Vec3 pos) {  m_arrow[p_id][m_id].Pos = pos; }
+	void set_arrowRot(int p_id, int m_id,Vec3 rot) {  m_arrow[p_id][m_id].Rot = rot; }
+
 
 	Vec3 get_towerRot(int id) { return m_tower[id]; }
 	void set_towerRot(int id, Vec3 rot) { m_tower[id] = rot; };

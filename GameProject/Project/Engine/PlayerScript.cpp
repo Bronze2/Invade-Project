@@ -364,7 +364,6 @@ void CPlayerScript::Update()
 
 			m_eState = PLAYER_STATE::ATTACK_READY;
 			Network::GetInst()->send_attack_ready_packet(m_GetId(),2);
-
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {

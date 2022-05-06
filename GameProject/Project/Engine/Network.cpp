@@ -343,7 +343,7 @@ void Network::send_attack_ready_packet(int id, int state)
 	m_packet.size = sizeof(m_packet);
 	m_packet.id = id;
 	m_packet.state = state;
-
+	send_packet(&m_packet);
 }
 
 void Network::send_rotation_packet(Vec3 Rot)

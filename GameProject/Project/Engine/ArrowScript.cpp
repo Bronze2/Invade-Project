@@ -94,9 +94,8 @@ void CArrowScript::Update()
 		//	Init();
 		//	m_eState = ARROW_STATE::IDLE;
 		//}
-
-		vPos = CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id);
-		vRot = CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id);
+		vPos = Vec3::Lerp(vPos,CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id),DT *10.f);
+		vRot = Vec3::Lerp(vRot, CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id), DT * 10.f);
 		//cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);

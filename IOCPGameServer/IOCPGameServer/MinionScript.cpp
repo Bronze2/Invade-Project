@@ -54,6 +54,7 @@ void CMinionScript::Update()
 	}
 	if (m_bAllienceCol&&!m_bSeparate) {
 		if (m_bRotate) {
+			cout << "Rot M" << endl;
 			if (m_eCamp == CAMP_STATE::RED) {
 				vRot.y -= PI / 2;
 			}
@@ -79,14 +80,14 @@ void CMinionScript::Update()
 		break;
 	case MINION_STATE::ATTACK:
 	{
-//		if (m_ePrevState != m_eState) {
+		if (m_ePrevState != m_eState) {
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 
 			//cout <<"["<<m_GetId()<<"]"  <<m_pTarget->GetScript<CMinionScript>()->m_GetId() << endl;
 			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 			float rotate = angle * 0.0174532925f;
 			vRot.y = rotate;
-	//	}
+		}
 	}
 		break;
 	case MINION_STATE::DIE:
@@ -170,20 +171,16 @@ void CMinionScript::CheckHp()
 void CMinionScript::CheckRange()
 {
 	if (SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
-		SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
 		SHARED_DATA::g_minion[m_GetId()].m_attack_current_time += 1;
-		SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
-
 	}
+
 	if (m_pTarget == nullptr)return;
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
 		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
-			SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
-
-		//	cout << "[" << m_GetId() << "] 공격하라~" << endl;
+			cout << "[" << m_GetId() << "] 공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
 			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 
@@ -230,7 +227,6 @@ void CMinionScript::CheckRange()
 
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = true;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time ++;
-			SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
 
 
 		}
@@ -238,7 +234,7 @@ void CMinionScript::CheckRange()
 
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
-			//m_eState = MINION_STATE::WALK;
+			m_eState = MINION_STATE::WALK;
 
 		}
 		//if (m_GetId() == 0) cout << "DT :" << m_attack_current_time << endl;
@@ -247,12 +243,8 @@ void CMinionScript::CheckRange()
 	else {
 		if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
 			
-			SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
-
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
-			SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
-
 			m_eState = MINION_STATE::WALK;
 				
 		}
@@ -314,11 +306,14 @@ static bool iSeparate=true;
 
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
+	cout << " Coll " << endl;
+
 	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
 	
 	}
 	else {
 		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp&&m_eState==MINION_STATE::WALK) {
+			cout <<" Coll in "<<endl;
 			m_bAllienceCol = true;
 			m_bRotate = true;
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {

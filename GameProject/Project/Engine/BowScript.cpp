@@ -5,6 +5,7 @@
 #include "ArrowScript.h"
 #include "CameraScript.h"
 #include "EmptyCameraScript.h"
+#include "SceneMgr.h"
 #include "Network.h"
 
 void CBowScript::Update()
@@ -69,9 +70,10 @@ void CBowScript::Update()
 			Vec3 vArrowRot = GetObj()->GetParent()->Transform()->GetLocalRot() + Vec3(0.f, XMConvertToRadians(90.f), 0.f);
 
 			m_pArrow[m_iCurArrow]->ClearParent();
-
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
+			CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(),m_iCurArrow,vArrowPos);
+			CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(),m_iCurArrow,vArrowRot);
 
 			Network::GetInst()->send_arrow_packet(m_iCurArrow,vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed);
 
@@ -96,6 +98,9 @@ void CBowScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot)
 	m_pArrow[ArrowId]->ClearParent();
 	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
 	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
+	CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), ArrowId, Pos);
+	CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), ArrowId, Rot);
+
 	m_pArrow[ArrowId]->SetActive(true);
 
 	cout << "화살 생성 -other"<< m_pArrow[ArrowId]->GetScript<CArrowScript>()->GetParentId()<<"에서 받아옴" << endl;

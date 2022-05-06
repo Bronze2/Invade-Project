@@ -41,7 +41,7 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 {
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
-	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSpeed(Power);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSpeed(Power*2);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetDir(Dir);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParentId(m_GetId());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);

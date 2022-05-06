@@ -206,9 +206,9 @@ void CThread::worker_Thread()
 		break;
 
 		case OP_UPDATE:
-		{
-			CEventMgr::GetInst()->Clear();
+		{		
 			CTimeMgr::GetInst()->Update();
+			CEventMgr::GetInst()->Clear();
 			CSceneMgr::GetInst()->Update();
 			CEventMgr::GetInst()->Update();
 			//CService::GetInst()->update_minion();
