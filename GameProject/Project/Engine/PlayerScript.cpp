@@ -263,38 +263,37 @@ void CPlayerScript::Update()
 	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		
-		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
-		
+
+		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
 		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 
-		m_fFrontDegree = 0.f;
-		m_fSideDegree = 0.f;
+		m_fCurDegree = 0.f;
 		m_iKeyHoldCnt = 0;
 
 		// m_fTurnDegree = m_fRotateDegree;
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			m_fFrontDegree += 0.f;
+			m_fCurDegree += 0.f;
 			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			m_fFrontDegree += 180.f;
+			m_fCurDegree += 180.f;
 			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			// 개야매코드죄송합니다
-			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-				m_fFrontDegree -= 90.f;
+			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+				m_fCurDegree += 270.f;
 			}
 			else {
-				m_fFrontDegree += 270.f;
+				m_fCurDegree -= 90.f;
 			}
+			//m_fCurDegree -= 90.f;
 			m_iKeyHoldCnt++;
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			m_fFrontDegree += 90.f;
+			m_fCurDegree += 90.f;
 			m_iKeyHoldCnt++;
 		}
 
@@ -302,18 +301,41 @@ void CPlayerScript::Update()
 		//	m_fFrontDegree -= 360.f;
 		//}
 
-		m_fFrontDegree /= (float)m_iKeyHoldCnt;
-		
-		// 만약에 frontDegree가 180이면 side degree 뺴주고 아니면 더해주고 이런거
-		m_fTurnDegree = m_fRotateDegree + m_fFrontDegree;
+		m_fCurDegree /= (float)m_iKeyHoldCnt;
 
-		vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
+		if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+			m_fCurDegree = 0.f;
+		}
+
+		// 만약에 frontDegree가 180이면 side degree 뺴주고 아니면 더해주고 이런거
+		m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
+		
+		// 무조건 양수로 변경 (CW)
+		float fRotDegree = XMConvertToDegrees(vRot.y);
+		if (fRotDegree < 0.f) {
+			fRotDegree += 360.f;		
+		}
+		if (m_fTurnDegree < 0.f) {
+			m_fTurnDegree += 360.f; 
+		}
+
+		/*if (fRotDegree - m_fTurnDegree > 0.f) {
+			m_fTurnDegree -= 360.f;
+		}*/
+
+
+		vRot.y = XMConvertToRadians(fRotDegree * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
 
 		if (m_fFactor < 1.f) {
-			m_fFactor += 0.2f;
+			m_fFactor += 0.05f;
 		}
 		else {
-			m_bTurn = false;
+			if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+				m_bTurn = true;
+			}
+			else {
+				m_bTurn = false;
+			}
 		}
 
 		if (!m_bTurn) {
