@@ -61,7 +61,11 @@ void CThread::do_timer()
 {
 	while (true)
 	{
+<<<<<<< HEAD
 
+=======
+		CTimeMgr::GetInst()->Update();
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 		//CEventMgr::GetInst()->Clear();
 		//CSceneMgr::GetInst()->Update();
 		//CEventMgr::GetInst()->Update();

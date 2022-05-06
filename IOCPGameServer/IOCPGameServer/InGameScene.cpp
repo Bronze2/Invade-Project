@@ -103,6 +103,7 @@ void CInGameScene::Init()
 	pObject1->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject1->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
 	FindLayer(L"Blue")->AddGameObject(pObject1);
+<<<<<<< HEAD
 
 
 	///////////////////--Å¸¿ö
@@ -179,6 +180,9 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
 
+=======
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 
 	Awake();

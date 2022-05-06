@@ -92,7 +92,6 @@ void CAnimator3D::FinalUpdate()
 		m_fBlendFrame += 0.2f;
 		m_vecClipUpdateTime[m_iCurClip] += DT;
 		m_vecClipUpdateTime[m_iNextClip] += DT;
-	
 		if (nullptr == m_pAnimation) {
 			m_dCurTime = 0.f;
 			// 현재 재생중인 Clip 의 시간을 진행한다.

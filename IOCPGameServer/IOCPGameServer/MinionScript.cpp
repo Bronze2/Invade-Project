@@ -30,7 +30,11 @@ void CMinionScript::Init()
 	}
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
+<<<<<<< HEAD
 
+=======
+	attack_delay = 0;
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 }
 
 
@@ -48,7 +52,7 @@ void CMinionScript::Update()
 	if (nullptr != m_pTarget&&!m_bAllienceCol) {
 		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-		float rotate = angle * 0.0174532925f; //0.0174532925f
+		float rotate = angle * 0.0174532925f;
 		vRot.y = rotate;
 
 	}
@@ -64,6 +68,7 @@ void CMinionScript::Update()
 			m_bRotate = false;
 		}
 	}
+
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	//
@@ -82,8 +87,11 @@ void CMinionScript::Update()
 	{
 		if (m_ePrevState != m_eState) {
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+<<<<<<< HEAD
 
 			//cout <<"["<<m_GetId()<<"]"  <<m_pTarget->GetScript<CMinionScript>()->m_GetId() << endl;
+=======
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 			float rotate = angle * 0.0174532925f;
 			vRot.y = rotate;
@@ -96,24 +104,23 @@ void CMinionScript::Update()
 		break;
 	}
 
-	Transform()->SetLocalPos(vLocalPos);
-	Transform()->SetLocalRot(vRot);
+
 
 	/*if (m_id == 0 || m_id == 1)
 		cout << "Minion ID:" << m_id << "Pos:" << Transform()->GetLocalPos().x << "," << Transform()->GetLocalPos().y << "," << Transform()->GetLocalPos().z << endl << endl;*/
 
 
 	//미니언 정보 update
-	//SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
+	SHARED_DATA::g_minion[m_GetId()].m_cLock.lock();
 	SHARED_DATA::g_minion[m_GetId()].Pos.x = vLocalPos.x;
 	SHARED_DATA::g_minion[m_GetId()].Pos.y = vLocalPos.y;
 	SHARED_DATA::g_minion[m_GetId()].Pos.z = vLocalPos.z;
 	SHARED_DATA::g_minion[m_GetId()].Rot.x = vRot.x;
 	SHARED_DATA::g_minion[m_GetId()].Rot.y = vRot.y;
 	SHARED_DATA::g_minion[m_GetId()].Rot.z = vRot.z;
-	SHARED_DATA::g_minion[m_GetId()].State = m_eState;
+	SHARED_DATA::g_minion[m_GetId()].State = MINION_STATE::DIE;
 
-	//SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
+	SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
 	//std::cout << GetObj()->GetId() << endl;
 	CServer::GetInst()->send_move_minion_packet(m_GetId());
 	//
@@ -165,20 +172,26 @@ void CMinionScript::CheckHp()
 	if (m_iCurHp <= 0.f&&!GetObj()->IsFallDown()) {
 		m_eState = MINION_STATE::DIE;
 		GetObj()->SetFallDown();
+		std::cout << m_GetId() << ": 뒤졌음 " << endl;
 	}
 }
 
 void CMinionScript::CheckRange()
 {
+<<<<<<< HEAD
 	if (SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 		SHARED_DATA::g_minion[m_GetId()].m_attack_current_time += 1;
 	}
 
+=======
+	attack_delay++;
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 	if (m_pTarget == nullptr)return;
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
+<<<<<<< HEAD
 		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 			cout << "[" << m_GetId() << "] 공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
@@ -236,17 +249,29 @@ void CMinionScript::CheckRange()
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
 			m_eState = MINION_STATE::WALK;
 
+=======
+		if (attack_delay > 100) {
+			//m_eState = MINION_STATE::ATTACK;
+			m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+			std::cout << this->m_GetId() << " : ATTACK!" << endl;
+			attack_delay = 0;
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 		}
-		//if (m_GetId() == 0) cout << "DT :" << m_attack_current_time << endl;
-
 	}
 	else {
+<<<<<<< HEAD
 		if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
 			
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
+=======
+		if (attack_delay > 100) {
+			
+			
+>>>>>>> parent of 1dcb62e (Minion_Attack_Pos)
 			m_eState = MINION_STATE::WALK;
-				
+			
+			
 		}
 		
 	}

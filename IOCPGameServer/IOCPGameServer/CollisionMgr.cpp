@@ -129,7 +129,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 						m_mapCol.insert(make_pair(id.ID, true));
 					}
 					else
-					{   //56
+					{
 						iter->second = true;
 					}
 				}
@@ -208,6 +208,7 @@ void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLay
 				{
 					if (IsDead)
 						continue;
+
 					pCollider1->OnCollisionEnter(pCollider2);
 					pCollider2->OnCollisionEnter(pCollider1);
 
