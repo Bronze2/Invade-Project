@@ -15,6 +15,7 @@ void CProjectileScript::Update()
 	}
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
+	Vec3 vRestoreLocalPos = vLocalPos;
 	if (m_pObject != nullptr) {
 		if (m_pObject->GetScript<CMinionScript>() != nullptr) {
 			if (m_pObject->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
@@ -51,8 +52,8 @@ void CProjectileScript::Update()
 	}
 
 	Vec3 vPos = Transform()->GetWorldPos();
-	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-
+	Vec3 vWorldDir = m_pObject->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 vLocalDir = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
 	if (!m_bRotate) {
 		Vec3 vRot = Transform()->GetLocalRot();
@@ -72,10 +73,10 @@ void CProjectileScript::Update()
 	int a = 0;
 	float xvalue = m_vDir.x * 100.f * DT;
 
-	vLocalPos += vWorldDir * 1000.f * DT;
-	vLocalPos.y += m_vDir.y *1000.f* DT;
-
-
+	// 이렇게 하면 행복해요 (저는...)
+	//vLocalPos -= vWorldDir * 500.f * DT;
+	vLocalPos -= m_vDir * 500.f * DT;
+	vLocalPos.y = vRestoreLocalPos.y;
 
 	Transform()->SetLocalPos(vLocalPos);
 
@@ -127,9 +128,9 @@ void CProjectileScript::Init()
 	//matWorld *= m_matObjectWorldMatrix;
 	//Vec3 vPos = matWorld.Translation();
 	//Vec3 vTest = m_vTargetPos  - vPos;
-	Vec3 vTest = m_vTargetPos - vLocalPos;
-	vTest.Normalize();
-	m_vDir = vTest;
+	//Vec3 vTest = m_vTargetPos - Transform()->GetWorldPos();
+	//vTest.Normalize();
+	//m_vDir = vTest;
 }
 
 CProjectileScript::CProjectileScript():CScript((UINT)SCRIPT_TYPE::PROJECTILESCRIPT),m_pObject(nullptr),m_fSpeed(),m_uiDamage(),m_fAlpha(0.f)

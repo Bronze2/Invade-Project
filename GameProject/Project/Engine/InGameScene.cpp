@@ -154,6 +154,9 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddChild(pEmptyCam);
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
+	
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
+	//pMeshData->Save(pMeshData->GetPath());
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 	CGameObject* pBow;
 	pBow = pMeshData->Instantiate();

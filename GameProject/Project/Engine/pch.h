@@ -20,6 +20,7 @@
 // 콘솔창 띄우기
 
 //#include <iostream>
+//using namespace std;
 //#ifdef UNICODE
 //#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
 //#else
