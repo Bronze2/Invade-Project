@@ -83,6 +83,19 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::DEFEAT:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DEFEAT);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DEFEAT, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::DEFEAT;
+			}
+		}
+		break;
 		case PLAYER_STATE::DIE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
@@ -173,6 +186,19 @@ void CPlayerScript::m_FAnimation()
 						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
 					}
 				}
+			}
+		}
+		break;
+		case PLAYER_STATE::DEFEAT:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT");
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						m_eState = PLAYER_STATE::IDLE;
+					}
+				}
+
 			}
 		}
 		break;
@@ -305,6 +331,17 @@ void CPlayerScript::Update()
 		
 		float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
 
+		// 180도 이상 회전하는 경우 없도록
+		if ((fRotDegree - m_fTurnDegree > 180.f) || (fRotDegree - m_fTurnDegree < -180.f)) {
+			if (m_fTurnDegree > 180.f) {		// 0, 270 || -90, 180 -> -90, -180
+				m_fTurnDegree -= 360.f;
+			}
+			else {								// -135, 90
+				m_fTurnDegree += 360.f;
+			}
+		}
+
+		// 0 -> 270보다는 0 -> -90되는게 이쁘니까
 		vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
 
 		if (m_fFactor < 1.f) {
@@ -345,12 +382,17 @@ void CPlayerScript::Update()
 		m_bMoveCheck = false;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_NUM4))
+	if (KEY_TAB(KEY_TYPE::KEY_3))
+	{
+		m_eState = PLAYER_STATE::DEFEAT;
+	}
+
+	if (KEY_TAB(KEY_TYPE::KEY_4))
 	{
 		m_eState = PLAYER_STATE::JUMP;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_NUM5))
+	if (KEY_TAB(KEY_TYPE::KEY_5))
 	{
 		m_eState = PLAYER_STATE::DIE;
 	}

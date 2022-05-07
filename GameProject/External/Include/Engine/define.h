@@ -375,6 +375,7 @@ enum class PLAYER_STATE {
 	JUMP,
 	ATTACK_READY,
 	ATTACK,
+	DEFEAT,
 	DIE,
 	END,
 };
