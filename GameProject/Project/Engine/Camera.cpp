@@ -112,6 +112,7 @@ void CCamera::FinalUpdate()
 	{
 		m_matProj = XMMatrixOrthographicLH(m_fWidth * m_fScale,m_fHeight * m_fScale, m_fNear, m_fFar);
 		//m_matProj = XMMatrixOrthographicOffCenterLH(0.f, res.fWidth, res.fHeight, 0.f, m_fNear, m_fFar);		
+		//±×¸²ÀÚ
 	}
 
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
