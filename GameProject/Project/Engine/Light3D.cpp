@@ -36,7 +36,7 @@ void CLight3D::SetLightType(LIGHT_TYPE _eType)
 		m_pVolumeMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_pLightMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
 		m_pCamObj->Camera()->SetProjType(PROJ_TYPE::ORTHGRAPHIC);
-		m_pCamObj->Camera()->SetScale(1.f);
+		m_pCamObj->Camera()->SetScale(6.f);
 		m_pCamObj->Camera()->SetFar(100000.f);
 		m_pCamObj->Camera()->SetWidth(512.f);
 		m_pCamObj->Camera()->SetHeight(512.f);

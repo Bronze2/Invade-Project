@@ -178,7 +178,6 @@ void CSceneMgr::Update()
 
 void CSceneMgr::Update_Tool()
 {
-	// rendermgr ī�޶� �ʱ�ȭ
 	CRenderMgr::GetInst()->ClearCamera();
 	m_pCurScene->FinalUpdate();
 }

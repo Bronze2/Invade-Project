@@ -46,7 +46,8 @@
 void CInGameScene::Init()
 {
 	ShowCursor(false);
-
+	Ptr<CTexture> pColor = CResMgr::GetInst()->FindRes<CTexture>(L"Tile");
+	Ptr<CTexture> pNormal = CResMgr::GetInst()->FindRes<CTexture>(L"Tile_n");
 
 	GetLayer(0)->SetName(L"Default");
 	GetLayer(1)->SetName(L"Player");
@@ -92,10 +93,28 @@ void CInGameScene::Init()
 	pObject->Light3D()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->Light3D()->SetLightDir(Vec3(1.f, -1.f, 1.f));
 	pObject->Light3D()->SetLightRange(1000.f);
-	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1000.f));
+	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1500.f));
 	FindLayer(L"Default")->AddGameObject(pObject);
 
+	pObject = new CGameObject;
+	pObject->SetName(L"Tile");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
 
+	// Transform 설정
+	pObject->Transform()->SetLocalPos(Vec3(0.f, -1.f, 2300.f));
+	pObject->Transform()->SetLocalScale(Vec3(2000.f, 10000.f, 1.f));
+	pObject->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f,0.f));
+
+	// MeshRender 설정
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
+	pObject->MeshRender()->SetDynamicShadow(true);
+
+	// AddGameObject
+	FindLayer(L"Player")->AddGameObject(pObject);
 
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
 
@@ -110,10 +129,10 @@ void CInGameScene::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1500.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
-	pObject->MeshRender()->SetDynamicShadow(false);
+	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 	pMainCam->GetScript<CCameraScript>()->SetDistanceOffset(pObject);
 
@@ -225,7 +244,7 @@ void CInGameScene::Init()
 	pRedSecondTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedSecondTower->FrustumCheck(false);
 	pRedSecondTower->GetScript<CTowerScript>()->Init();
-	pRedSecondTower->MeshRender()->SetDynamicShadow(false);
+	pRedSecondTower->MeshRender()->SetDynamicShadow(true);
 
 
 	FindLayer(L"Red")->AddGameObject(pRedSecondTower);
@@ -292,10 +311,13 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
-	pObject->MeshRender()->SetDynamicShadow(false);
+	pObject->MeshRender()->SetDynamicShadow(true);
 
 
 	FindLayer(L"Default")->AddGameObject(pObject);
+
+
+
 
 
 	CGameObject* pNexus = nullptr;

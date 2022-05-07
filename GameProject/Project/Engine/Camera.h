@@ -48,7 +48,7 @@ private:
     Vec3 m_vLook;
     bool m_bPlayer = false;
     Vec3 m_vFront;
-    Vec3 m_vStoreFront;
+ 
     vector<CGameObject*> m_arrInterSectObject;
     Matrix m_matCamera;
 public:
