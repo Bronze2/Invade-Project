@@ -270,10 +270,11 @@ void CPlayerScript::Update()
 	else {
 		m_bCheckDegree = false;
 	}
-	if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
-		int a = 0;
-	}
+	
 
+
+
+	
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		
@@ -282,6 +283,7 @@ void CPlayerScript::Update()
 
 		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
 			vRot.y = 0.f;
+			
 		}
 		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
 			vRot.y = XMConvertToRadians(180.f);

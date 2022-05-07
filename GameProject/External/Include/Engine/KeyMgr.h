@@ -33,6 +33,8 @@ enum class KEY_TYPE
 	KEY_Z,
 	KEY_L,
 	KEY_K,
+	KEY_E,
+	KEY_T,
 
 	KEY_LBTN,
 	KEY_RBTN,

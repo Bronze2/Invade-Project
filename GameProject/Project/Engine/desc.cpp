@@ -161,3 +161,4 @@ D3D12_DEPTH_STENCIL_DESC g_arrDepthStencilDesc[(UINT)DEPTH_STENCIL_TYPE::END] =
 
 };
 tGlobalValue g_global = {};
+

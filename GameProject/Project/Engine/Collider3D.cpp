@@ -33,7 +33,16 @@ void CCollider3D::FinalUpdate()
 
 void CCollider3D::Render()
 {
+	static bool bRender = true;
+	if (KEY_TAB(KEY_TYPE::KEY_T)) {
+		bRender = !bRender;
+	}
+
+	if (!bRender)
+		return;
+
 	
+
 
 	if (!IsActive())
 		return;
