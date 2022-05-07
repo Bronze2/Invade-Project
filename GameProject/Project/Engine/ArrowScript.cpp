@@ -134,7 +134,7 @@ void CArrowScript::Init()
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-	if (L"Monster" == _pColldier->GetObj()->GetName())
+	if (L"Temp" == _pColldier->GetObj()->GetName())
 	{
 		GetObj()->SetActive(false);
 		Init();

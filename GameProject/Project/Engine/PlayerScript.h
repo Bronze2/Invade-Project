@@ -41,6 +41,8 @@ private:
     bool m_bTurn;
     int m_id;
     vector<CGameObject*>m_arrColObject;
+
+    Vec3 m_LerpRot;
 public:
     void m_FAnimation();
     void Init();
@@ -53,7 +55,9 @@ public:
     int m_GetId() { return m_id; }
     void Update_LerpPos();
     void SetLerpPos(Vec3 Pos) { m_PrevLerpPos = m_LerpPos; m_LerpPos = Pos; }
+    Vec3 GetLerpPos() { return m_LerpPos; }
     void SetPrevLerpPos(Vec3 Pos) { m_PrevLerpPos = Pos; }
+    void SetLerpRot(Vec3 Rot) { m_LerpRot = Rot; }
     CPlayerScript();
     virtual ~CPlayerScript();
 

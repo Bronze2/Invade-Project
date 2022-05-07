@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EmptyPlayerScript.h"
 #include "Network.h"
+#include "PlayerScript.h"
 
 void CEmptyPlayerScript::Update()
 {
@@ -29,7 +30,8 @@ void CEmptyPlayerScript::Update()
 		}
 	}
 
-	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), pPlayer->Transform()->GetLocalPos() , DT * 10.f);
+	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), pPlayer->GetScript<CPlayerScript>()->GetLerpPos() , DT * 10.f);
+	//Vec3 vPos = pPlayer->Transform()->GetLocalPos();
 
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);

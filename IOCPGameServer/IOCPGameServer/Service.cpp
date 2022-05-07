@@ -45,11 +45,11 @@ bool CService::is_near(int a, int b)
 
 void CService::do_move(int user_id, int direction)
 {
-	SHARED_DATA::g_clients[user_id].Pos += SHARED_DATA::g_clients[user_id].dir * 30.f;
-	CServer::GetInst()->send_move_packet(user_id, user_id);
+	SHARED_DATA::g_clients[user_id].Pos += SHARED_DATA::g_clients[user_id].dir * 50.f;
+	//CServer::GetInst()->send_move_packet(user_id, user_id);
 	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		if (i == user_id) continue;
-		else
+		//if (i == user_id) continue;
+		//else
 			CServer::GetInst()->send_move_packet(i, user_id);
 	}
 }

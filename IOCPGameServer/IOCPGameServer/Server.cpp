@@ -256,6 +256,17 @@ void CServer::send_anim_minion_packet(int minion_id)
 
 }
 
+void CServer::send_delete_minion(int minion_id)
+{
+	sc_packet_delete_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_DELETE_MINION;
+	packet.id = minion_id;
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
 void CServer::send_rot_tower_packet(int tower_id)
 {
 	sc_packet_rot_tower packet;

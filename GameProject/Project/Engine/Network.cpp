@@ -250,6 +250,13 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_animUpdate(my_packet->id,my_packet->state);
 	}
 	break;
+
+	case S2C_DELETE_MINION:
+	{
+		sc_packet_delete_minion* my_packet = reinterpret_cast<sc_packet_delete_minion*>(ptr);
+		CSceneMgr::GetInst()->net_deleteMinion(my_packet->id);
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

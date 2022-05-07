@@ -2,8 +2,9 @@
 #include "MinionScript.h"
 #include "Animator3D.h"
 #include "SceneMgr.h"
-
 #include "Sensor.h"
+
+
 void CMinionScript::Init()
 {
 	m_eState = MINION_STATE::WALK;
@@ -46,8 +47,6 @@ void CMinionScript::Init()
 
 void CMinionScript::Update()
 {
-
-
 	//CheckHp();
 	if(m_eState != CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).state)
 		m_eState = CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).state;
@@ -280,6 +279,7 @@ void CMinionScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
 				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) ||
 					m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
+					GetObj()->SetFallDown();
 					DeleteObject(GetObj());
 				}
 			}

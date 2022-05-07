@@ -240,7 +240,7 @@ void CProjectileScript::Init()
 	m_vDir = vTest;
 
 	std::cout << "Bullet Init  ";
-	cout << SHARED_DATA::g_bulletindex << endl;
+	//cout << SHARED_DATA::g_bulletindex << endl;
 	m_id = SHARED_DATA::g_bulletindex;
 }
 

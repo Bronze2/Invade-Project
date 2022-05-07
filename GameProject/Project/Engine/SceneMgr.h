@@ -62,6 +62,7 @@ public:
 							float r_x, float r_y, float r_z, int state);
 	void net_animMinion(int id, float x, float y, float z,
 		float r_x, float r_y, float r_z, int state);
+
 	void net_setRotTower(int id, Vec3 rot);
 	void net_spawnProjectile(int id, Vec3 pos);
 	void net_moveProjectile(int id, Vec3 pos);
@@ -69,6 +70,7 @@ public:
 	void net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot);
 	void net_moveArrow(int parentid,int id, Vec3 pos,Vec3 rot);
 	void net_animUpdate(int id, int state);
+	void net_deleteMinion(int id);
 
 
 	

@@ -45,6 +45,9 @@ public:
 	void send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot);
 	
 	void send_update_animation(int client_id, int state);
+	
+	void send_delete_minion(int minion_id);
+
 
 
 private:

@@ -238,8 +238,9 @@ void CSceneMgr::net_enterClient(int id ,float x, float y, float z)
 
 void CSceneMgr::net_setRotationByID(int id, float x, float y, float z)
 {
+	Vec3 rot(x, y, z);
 
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalRot(Vec3(x,y,z));
+    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpRot(rot);
 }
 
 void CSceneMgr::net_setLerpMoveByID(int id, float x , float y, float z)
@@ -339,6 +340,12 @@ void CSceneMgr::net_animMinion(int id, float x, float y, float z, float r_x, flo
 	if (state == 2)
 		m_minion[id].state = MINION_STATE::DIE;
 }
+
+void CSceneMgr::net_deleteMinion(int id)
+{
+	m_minion[id].state = MINION_STATE::DIE;
+}
+
 void CSceneMgr::net_setRotTower(int id,	Vec3 Rot)
 {
 	m_tower[id] = Rot;

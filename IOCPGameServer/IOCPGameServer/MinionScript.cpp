@@ -9,10 +9,11 @@ void CMinionScript::Init()
 	m_eState = MINION_STATE::WALK;
 	switch (m_eAttackType)
 	{
-	case MINION_ATTACK_TYPE::MELEE:{
+	case MINION_ATTACK_TYPE::MELEE:
+	{
 		SetAttackRange(50);
 		m_uiMaxHp = 450; m_uiAttackDamage = 30;
-		}
+	}
 		break;
 
 	case MINION_ATTACK_TYPE::RANGE: {
@@ -52,9 +53,8 @@ void CMinionScript::Update()
 		vRot.y = rotate;
 
 	}
-	if (m_bAllienceCol&&!m_bSeparate) {
+	if (m_bAllienceCol&&!m_bSeparate && !SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 		if (m_bRotate) {
-			cout << "Rot M" << endl;
 			if (m_eCamp == CAMP_STATE::RED) {
 				vRot.y -= PI / 2;
 			}
@@ -164,6 +164,7 @@ void CMinionScript::CheckHp()
 {
 	if (m_iCurHp <= 0.f&&!GetObj()->IsFallDown()) {
 		m_eState = MINION_STATE::DIE;
+		CServer::GetInst()->send_delete_minion(m_GetId());
 		GetObj()->SetFallDown();
 	}
 }
@@ -180,7 +181,7 @@ void CMinionScript::CheckRange()
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
 		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
-			cout << "[" << m_GetId() << "] 공격하라~" << endl;
+			//cout << "[" << m_GetId() << "] 공격하라~" << endl;
 			m_eState = MINION_STATE::ATTACK;
 			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 
@@ -231,13 +232,11 @@ void CMinionScript::CheckRange()
 
 		}
 		else if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
-			cout << " WAlk" << endl;
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
 			m_eState = MINION_STATE::WALK;
 
 		}
-		//if (m_GetId() == 0) cout << "DT :" << m_attack_current_time << endl;
 
 	}
 	else {
@@ -306,14 +305,11 @@ static bool iSeparate=true;
 
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
-	cout << " Coll " << endl;
-
 	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
 	
 	}
 	else {
 		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp&&m_eState==MINION_STATE::WALK) {
-			cout <<" Coll in "<<endl;
 			m_bAllienceCol = true;
 			m_bRotate = true;
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {

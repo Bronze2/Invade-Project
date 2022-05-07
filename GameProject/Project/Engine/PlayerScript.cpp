@@ -265,50 +265,18 @@ void CPlayerScript::Update()
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
 			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-
-			//vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * m_fFactor + m_fRotateDegree * (1.f - m_fFactor));
-			///vRot.y = XMConvertToRadians(m_fRotateDegree);
-
 			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-				//m_fTurnDegree += 30.f;
-				//if (m_fTurnDegree > 0.f) {
-				//	m_fTurnDegree = 0.f;
-				//	m_bTurn = false;
-				//}
-				//vRot.y += XMConvertToRadians(m_fTurnDegree);
-
 				m_fTurnDegree = m_fRotateDegree;
-				//if (m_fTurnDegree > 180.f) {
-				//	m_fTurnDegree -= 360.f;
-				//}
-
 				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-				//m_fTurnDegree += 30.f;
-				//if (m_fTurnDegree > 180.f) {
-				//	m_fTurnDegree = 180.f;
-				//	m_bTurn = false;
-				//}
-				//vRot.y += XMConvertToRadians(m_fTurnDegree);
-
 				m_fTurnDegree = m_fRotateDegree + 180.f;
 				if (m_fTurnDegree > 180.f) {
 					m_fTurnDegree -= 360.f;
 				}
 				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
-
-				//vRot.y += XMConvertToRadians(180.f);
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-				//m_fTurnDegree -= 15.f;
-				//if (m_fTurnDegree < -90.f) {
-				//	m_fTurnDegree = -90.f;
-				//	m_bTurn = false;
-				//}
-				//vRot.y += XMConvertToRadians(m_fTurnDegree);
-				//vRot.y += XMConvertToRadians(-90.f);
-
 				m_fTurnDegree = m_fRotateDegree - 90.f;
 				if (m_fTurnDegree > 180.f) {
 					m_fTurnDegree -= 180.f;
@@ -316,14 +284,6 @@ void CPlayerScript::Update()
 				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
 			}
 			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-				//m_fTurnDegree += 15.f;
-				//if (m_fTurnDegree >  90.f) {
-				//	m_fTurnDegree =  90.f;
-				//	m_bTurn = false;
-				//}
-				//vRot.y += XMConvertToRadians(m_fTurnDegree);
-				//vRot.y += XMConvertToRadians(90.f);
-
 				m_fTurnDegree = m_fRotateDegree + 90.f;
 				if (m_fTurnDegree > 180.f) {
 					m_fTurnDegree -= 180.f;
@@ -344,8 +304,6 @@ void CPlayerScript::Update()
 				Network::GetInst()->send_rotation_packet(vRot);
 				Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
 			}
-			//vRot.y += XMConvertToRadians(m_fRotateDegree);
-
 			m_eState = PLAYER_STATE::WALK;
 		}
 
@@ -353,7 +311,6 @@ void CPlayerScript::Update()
 			m_eState = PLAYER_STATE::IDLE;
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
-
 			m_fTurnDegree = 0.f;
 		}
 
@@ -361,7 +318,6 @@ void CPlayerScript::Update()
 			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 			// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
 			vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f 더 회전시킬건지?
-
 			m_eState = PLAYER_STATE::ATTACK_READY;
 			Network::GetInst()->send_attack_ready_packet(m_GetId(),2);
 		}
@@ -386,14 +342,9 @@ void CPlayerScript::Update()
 		}
 		Transform()->SetLocalRot(vRot);
 		Network::GetInst()->send_rotation_packet(vRot);
-
-		//Transform()->SetLocalPos(vPos);
 	}
-	//Update_LerpPos();
+	Update_LerpPos();
 	m_FAnimation();
-
-	//m_FAnimation();
-
 }
 
 //
@@ -422,15 +373,15 @@ void CPlayerScript::SetState(int state)
 void CPlayerScript::Update_LerpPos()
 {
 	Vec3 vPos = Transform()->GetLocalPos();
-	//m_FColCheck(vPos, m_PrevLerpPos);
-	//if (m_bMoveCheck) {
-	//	m_bMoveCheck = false;
-	//	//vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_PrevLerpPos, DT * (10.f));
-	//}
-	//else
-		vPos = Vec3::Lerp(Transform()->GetLocalPos(), m_LerpPos, DT*(10.f)); 
+	vPos = Vec3::Lerp(vPos, m_LerpPos, DT*(5.f));
 
 	Transform()->SetLocalPos(vPos);
+	if (!isMain) {
+		Vec3 vRot = Transform()->GetLocalRot();
+		vRot = Vec3::Lerp(Transform()->GetLocalRot(), m_LerpRot, DT * (10.f));
+		Transform()->SetLocalRot(vRot);
+	}
+
 }
 
 #include "Collider3D.h"
@@ -450,11 +401,9 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	int a = 0;
 	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
-
 	}
 	else {
 		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
-
 		}
 		else {
 			m_arrColObject.push_back(_pOther->GetObj());

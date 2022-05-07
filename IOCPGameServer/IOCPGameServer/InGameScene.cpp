@@ -29,6 +29,8 @@ void CInGameScene::Init()
 	GetLayer(1)->SetName(L"Blue");
 	GetLayer(2)->SetName(L"RedSpawnPlace");
 	GetLayer(3)->SetName(L"BlueSpawnPlace");
+	GetLayer(4)->SetName(L"Arrow");
+
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
 		CGameObject* pObject = new CGameObject;
@@ -178,6 +180,9 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
+
 
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 

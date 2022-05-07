@@ -14,6 +14,8 @@ class CArrowScript :
     public CScript
 {
 private:
+
+    CAMP_STATE m_ecamp;
     float m_fSpeed;
     Vec3 m_vDir;
     Vec3 m_vStartPos;
@@ -35,6 +37,7 @@ private:
 
     bool m_bCheckDegree;
     bool m_bMaxCharged;
+    UINT m_uiAttackDamage;
 
     ARROW_STATE m_eState;
     Vec3 m_vRestorePos;
@@ -60,6 +63,10 @@ public:
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
     void SetType(UINT _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }
+    void SetCamp(CAMP_STATE e_camp) { m_ecamp = e_camp; }
+    void SetAttackDamge(float Power) { m_uiAttackDamage = Power; }
+    UINT GetAttackDamge() { return m_uiAttackDamage; }
+    const CAMP_STATE& GetCamp() { return m_ecamp; }
     void Init();
 
     void SetState(ARROW_STATE _eState) { m_eState = _eState; }
