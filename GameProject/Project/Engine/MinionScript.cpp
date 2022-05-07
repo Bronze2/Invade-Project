@@ -149,31 +149,34 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pObject->FrustumCheck(false);
 	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
-	pObject->GetScript<CProjectileScript>()->SetBone(_Bone);
-	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
+	//pObject->GetScript<CProjectileScript>()->SetBone(_Bone);
+	//pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
 
 	pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
-	tMTBone* p = const_cast<tMTBone*>(MeshRender()->GetMesh()->GetBone(_Bone));//6
-	pObject->Transform()->SetLocalPos(p->vecKeyFrame[Animator3D()->GetFrameIdx()].vTranslate);
+	
+	// 뼈 부분인데 이 부분을 그냥 localPos로 한다고용??
+	//tMTBone* p = const_cast<tMTBone*>(MeshRender()->GetMesh()->GetBone(_Bone));//6
+	//pObject->Transform()->SetLocalPos(p->vecKeyFrame[Animator3D()->GetFrameIdx()].vTranslate);
+	pObject->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos());
 
 
-	Vec3 vPos = Transform()->GetLocalPos();
-	Matrix matTranslation = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
-	Vec3 vScale = Transform()->GetLocalScale();
-	Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
-	Vec3 vRot = Transform()->GetLocalRot();
-	Matrix matRot = XMMatrixRotationX(vRot.x);
-	matRot *= XMMatrixRotationY(vRot.y);
-	matRot *= XMMatrixRotationZ(vRot.z);
-	Matrix Matrix = matScale *matRot* matTranslation;
-	pObject->Transform()->SetNotParent(true);
-	pObject->Transform()->SetObjectMatrix(Matrix);
-	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
+	//Vec3 vPos = Transform()->GetLocalPos();
+	//Matrix matTranslation = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
+	//Vec3 vScale = Transform()->GetLocalScale();
+	//Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+	//Vec3 vRot = Transform()->GetLocalRot();
+	//Matrix matRot = XMMatrixRotationX(vRot.x);
+	//matRot *= XMMatrixRotationY(vRot.y);
+	//matRot *= XMMatrixRotationZ(vRot.z);
+	//Matrix Matrix = matScale *matRot* matTranslation;
+	//pObject->Transform()->SetNotParent(true);
+	//pObject->Transform()->SetObjectMatrix(Matrix);
+	//pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
 
-	//		GetObj()->AddChild(pObject);
-	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
-	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
+	////		GetObj()->AddChild(pObject);
+	////		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
+	//pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 	pObject->GetScript<CProjectileScript>()->Init();
 	CreateObject(pObject, _Layer);
 }

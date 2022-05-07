@@ -33,11 +33,11 @@ void CProjectileScript::Update()
 	{
 	case PROJECTILE_TYPE::MINION:
 	{
-		tMTBone* p = const_cast<tMTBone*>(m_pObject->MeshRender()->GetMesh()->GetBone(m_iBone));
-		int d = m_pObject->Animator3D()->GetFrameIdx();
-		if (p->vecKeyFrame.size() < d) {
-			return;
-		}
+		//tMTBone* p = const_cast<tMTBone*>(m_pObject->MeshRender()->GetMesh()->GetBone(m_iBone));
+		//int d = m_pObject->Animator3D()->GetFrameIdx();
+		//if (p->vecKeyFrame.size() < d) {
+		//	return;
+		//}
 	}
 		
 	break;
@@ -113,23 +113,23 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 void CProjectileScript::Init()
 {
 	Vec3 vLocalPos = Transform()->GetLocalPos();
-	Vec3 vLocalRot = Transform()->GetLocalRot();
-	Vec3 vLocalScale = Transform()->GetLocalScale();
+	//Vec3 vLocalRot = Transform()->GetLocalRot();
+	//Vec3 vLocalScale = Transform()->GetLocalScale();
 
-	Matrix matTranslation = XMMatrixTranslation(vLocalPos.x, vLocalPos.y, vLocalPos.z);
-	Matrix matScale = XMMatrixScaling(vLocalScale.x, vLocalScale.y, vLocalScale.z);
+	//Matrix matTranslation = XMMatrixTranslation(vLocalPos.x, vLocalPos.y, vLocalPos.z);
+	//Matrix matScale = XMMatrixScaling(vLocalScale.x, vLocalScale.y, vLocalScale.z);
 
 
-	Matrix matRot = XMMatrixRotationX(vLocalRot.x);
-	matRot *= XMMatrixRotationY(vLocalRot.y);
-	matRot *= XMMatrixRotationZ(vLocalRot.z);
-	Matrix matWorld = matScale * matRot  * matTranslation;
-	matWorld *= m_matObjectWorldMatrix;
-	Vec3 vPos = matWorld.Translation();
-	Vec3 vTest = m_vTargetPos  - vPos;
+	//Matrix matRot = XMMatrixRotationX(vLocalRot.x);
+	//matRot *= XMMatrixRotationY(vLocalRot.y);
+	//matRot *= XMMatrixRotationZ(vLocalRot.z);
+	//Matrix matWorld = matScale * matRot  * matTranslation;
+	//matWorld *= m_matObjectWorldMatrix;
+	//Vec3 vPos = matWorld.Translation();
+	//Vec3 vTest = m_vTargetPos  - vPos;
+	Vec3 vTest = m_vTargetPos - vLocalPos;
 	vTest.Normalize();
 	m_vDir = vTest;
-
 }
 
 CProjectileScript::CProjectileScript():CScript((UINT)SCRIPT_TYPE::PROJECTILESCRIPT),m_pObject(nullptr),m_fSpeed(),m_uiDamage(),m_fAlpha(0.f)
