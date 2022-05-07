@@ -130,8 +130,9 @@ void CInGameScene::Init()
 	pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // 점프 후 팔벌리기 81, 125
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
-	pNewAnimation->InsertAnimClip(L"DEFEAT", 230, 242); // 168 175
-	pNewAnimation->InsertAnimClip(L"DIE", 240, 269);      // 누워서 끝 240, 261
+	pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // 누워서 끝 240, 261
+	pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -155,9 +156,7 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddChild(pEmptyCam);
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
-	
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
-	//pMeshData->Save(pMeshData->GetPath());
+
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 	CGameObject* pBow;
 	pBow = pMeshData->Instantiate();

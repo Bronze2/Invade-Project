@@ -463,7 +463,8 @@ void CMinionScript::m_FAnimation()
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) || m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
-						DeleteObject(GetObj());
+						//DeleteObject(GetObj());
+						GetObj()->MeshRender()->SetRender(false);
 					}
 				}
 			}

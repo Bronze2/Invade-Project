@@ -42,6 +42,19 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::RUN;
+			}
+		}
+		break;
 		case PLAYER_STATE::JUMP:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
@@ -83,16 +96,16 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::DEFEAT:
+		case PLAYER_STATE::DEMAGED:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT")) {
-				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT");
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED");
 				GetObj()->Animator3D()->SetBlendState(true);
-				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DEFEAT);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DEMAGED);
 				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DEFEAT, 0.f);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DEMAGED, 0.f);
 				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-				m_ePrevState = PLAYER_STATE::DEFEAT;
+				m_ePrevState = PLAYER_STATE::DEMAGED;
 			}
 		}
 		break;
@@ -151,6 +164,23 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
+
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::RUN);
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+						GetObj()->Animator3D()->SetCurTime(0.f);
+						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+					}
+				}
+
+			}
+		}
+		break;
 		case PLAYER_STATE::JUMP:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
@@ -189,11 +219,11 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::DEFEAT:
+		case PLAYER_STATE::DEMAGED:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT")) {
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEFEAT");
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
 						m_eState = PLAYER_STATE::IDLE;
 					}
@@ -290,6 +320,12 @@ void CPlayerScript::Update()
 	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+		m_eState = PLAYER_STATE::WALK;
+		if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
+		{
+			m_eState = PLAYER_STATE::RUN;
+		}
+
 
 		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
@@ -330,13 +366,34 @@ void CPlayerScript::Update()
 		m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
 		
 		float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
-
+		if (fRotDegree > 360.f) {
+			fRotDegree -= 360.f;
+		}
+		
 		// 180도 이상 회전하는 경우 없도록
-		if ((fRotDegree - m_fTurnDegree > 180.f) || (fRotDegree - m_fTurnDegree < -180.f)) {
-			if (m_fTurnDegree > 180.f) {		// 0, 270 || -90, 180 -> -90, -180
+		if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
+			cout << fRotDegree << "                  " << m_fTurnDegree << endl;
+			//if (m_fTurnDegree > 0.f) {		// 0, 270 || -90, 180 -> -90, -180
+			//	m_fTurnDegree -= 360.f;
+			//}
+			//else {								// -135, 90
+			//	m_fTurnDegree += 360.f;
+			//}
+			//if (/*abs(m_fTurnDegree) > abs(fRotDegree)) &&*/ m_fTurnDegree > 0.f) {		// 0, 270 || -90, 180 -> -90, -180 
+			//	m_fTurnDegree -= 360.f;
+			//	//if (m_fTurnDegree > 0.f) {		// 0, 270 || -90, 180 -> -90, -180 
+			//	//	m_fTurnDegree -= 360.f;
+			//	//}
+			//}
+			//else {								// -135, 90
+			//	m_fTurnDegree += 360.f;
+			//}
+
+
+			if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
 				m_fTurnDegree -= 360.f;
 			}
-			else {								// -135, 90
+			else {
 				m_fTurnDegree += 360.f;
 			}
 		}
@@ -362,7 +419,6 @@ void CPlayerScript::Update()
 		}
 
 		m_FColCheck(vPos3, vPos);
-		m_eState = PLAYER_STATE::WALK;
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
@@ -384,7 +440,7 @@ void CPlayerScript::Update()
 
 	if (KEY_TAB(KEY_TYPE::KEY_3))
 	{
-		m_eState = PLAYER_STATE::DEFEAT;
+		m_eState = PLAYER_STATE::DEMAGED;
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_4))

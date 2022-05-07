@@ -372,10 +372,11 @@ enum class ELEMENT_TYPE {
 enum class PLAYER_STATE {
 	IDLE,
 	WALK,
+	RUN,
 	JUMP,
 	ATTACK_READY,
 	ATTACK,
-	DEFEAT,
+	DEMAGED,
 	DIE,
 	END,
 };
