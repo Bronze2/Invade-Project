@@ -257,6 +257,14 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_deleteMinion(my_packet->id);
 	}
 	break;
+
+	case S2C_DELETE_ARROW:
+	{
+		sc_packet_delete_arrow* my_packet = reinterpret_cast<sc_packet_delete_arrow*>(ptr);
+		CSceneMgr::GetInst()->net_deleteArrow(my_packet->client_id, my_packet->arrow_id);
+		CSceneMgr::GetInst()->net_DamagedByArrow(my_packet->coll_type, my_packet->coll_id, my_packet->damage);
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

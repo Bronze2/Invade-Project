@@ -330,6 +330,7 @@ enum class MINION_ATTACK_TYPE {
 };
 
 enum class MINION_STATE {
+	IDLE,
 	WALK,
 	ATTACK,
 	DIE,

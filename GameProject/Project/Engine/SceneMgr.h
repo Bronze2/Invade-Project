@@ -71,6 +71,8 @@ public:
 	void net_moveArrow(int parentid,int id, Vec3 pos,Vec3 rot);
 	void net_animUpdate(int id, int state);
 	void net_deleteMinion(int id);
+	void net_deleteArrow(int client_id, int arrow_id);
+	void net_DamagedByArrow(int coll_type, int coll_id, int damage);
 
 
 	

@@ -299,12 +299,20 @@ void CSceneMgr::net_spawnMinion_blue(int id, int mtype,float x, float y ,float z
 {
 	Vec3 Pos{ x,y,z };
 	m_minion[id].pos = Pos;
+	cout << "블루 미니언 스폰" << m_minion[id].pos.x << "," <<
+		m_minion[id].pos.y << "," <<
+		m_minion[id].pos.z << endl;
+
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
 void CSceneMgr::net_spawnMinion_red(int id, int mtype,float x, float y, float z)
 {
 	Vec3 Pos{ x,y,z };
 	m_minion[id].pos = Pos;
+	cout<<"레드 미니언 스폰" << m_minion[id].pos.x <<","<<
+	 m_minion[id].pos.y << ","<<
+	 m_minion[id].pos.z << endl;
+
 	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
 
@@ -316,12 +324,14 @@ void CSceneMgr::net_moveMinion(int id, float x, float y, float z, float r_x, flo
 	m_minion[id].rot.x = r_x;
 	m_minion[id].rot.y = r_y;
 	m_minion[id].rot.z = r_z;
-	//if(state == 0)
-	//	m_minion[id].state = MINION_STATE::WALK;
-	//if (state == 1)
-	//	m_minion[id].state = MINION_STATE::ATTACK;
-	//if (state == 2)
-	//	m_minion[id].state = MINION_STATE::DIE;
+	if(state == 0)
+		m_minion[id].state = MINION_STATE::IDLE;
+	if(state == 1)
+		m_minion[id].state = MINION_STATE::WALK;
+	if (state == 2)
+		m_minion[id].state = MINION_STATE::ATTACK;
+	if (state == 3)
+		m_minion[id].state = MINION_STATE::DIE;
 
 }
 
@@ -333,11 +343,14 @@ void CSceneMgr::net_animMinion(int id, float x, float y, float z, float r_x, flo
 	m_minion[id].rot.x = r_x;
 	m_minion[id].rot.y = r_y;
 	m_minion[id].rot.z = r_z;
+	cout << state << endl;
 	if(state == 0)
-		m_minion[id].state = MINION_STATE::WALK;
+		m_minion[id].state = MINION_STATE::IDLE;
 	if (state == 1)
-		m_minion[id].state = MINION_STATE::ATTACK;
+		m_minion[id].state = MINION_STATE::WALK;
 	if (state == 2)
+		m_minion[id].state = MINION_STATE::ATTACK;
+	if (state == 3)
 		m_minion[id].state = MINION_STATE::DIE;
 }
 
@@ -367,6 +380,7 @@ void CSceneMgr::net_spawnProjectile(int id, Vec3 Pos)
 	//pObject->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 	//pObject->GetScript<CProjectileScript>()->Init();
 	//m_pCurScene->FindLayer(L"Red")->AddGameObject(pObject);
+	m_projectile[id] = Pos;
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Pro(id, Pos);
 
 
@@ -391,6 +405,36 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
 	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetChild()[0]->
 		GetScript<CBowScript>()->InitArrow(id, pos, rot);
 }
+void CSceneMgr::net_deleteArrow(int client_id, int arrow_id)
+{
+	m_arrow[client_id][arrow_id].Pos = Vec3(1000,1000,1000);
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[client_id]->GetChild()[0]->
+		GetScript<CBowScript>()->DeleteArrow(arrow_id);
+}
+
+void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
+{
+	//0 자기자신 return
+
+	// 1플레이어
+	// 2미니언
+	// 3 tower;
+	if (coll_type == 0) return;
+	else if (coll_type == 1) {
+		cout<<"쳐맞씀" << m_pCurScene->FindLayer(L"Blue")->GetParentObj()[coll_id]->GetScript<CPlayerScript>()->m_GetId() << endl;
+	}
+	else if (coll_type == 2) {
+
+	}
+	else if (coll_type == 3) {
+
+	}
+
+
+}
+
+
+
 void CSceneMgr::net_animUpdate(int id, int state)
 {
 	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[id]->GetScript<CPlayerScript>()->SetState(state);

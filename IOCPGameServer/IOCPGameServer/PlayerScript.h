@@ -10,6 +10,10 @@ private:
     bool isMain;
     int m_id;
     CGameObject* m_pArrow[20];
+    UINT m_uiMaxHp;
+    int m_iCurHp;
+    CAMP_STATE m_eCamp;
+
 
 public:
     void Init();
@@ -22,7 +26,10 @@ public:
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
+    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
 
+    void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
+    const CAMP_STATE& GetCamp()const { return m_eCamp; }
 
     void m_SetId(int id) { m_id = id; };
     int m_GetId() { return m_id; };

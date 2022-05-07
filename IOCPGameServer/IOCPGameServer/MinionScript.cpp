@@ -41,6 +41,7 @@ void CMinionScript::Update()
 	if (m_eState == MINION_STATE::DIE) {
 		return;
 	}
+
 	FindNearObject(m_arrEnemy);
 	CheckRange();
 	Vec3 vPos = Transform()->GetWorldPos(); 
@@ -70,6 +71,10 @@ void CMinionScript::Update()
 
 	switch (m_eState)
 	{
+	case MINION_STATE::IDLE:
+	{
+	}
+	break;
 	case MINION_STATE::WALK: {
 		Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		vLocalPos.x -= vWorldDir.x * 5;
@@ -200,13 +205,13 @@ void CMinionScript::CheckRange()
 
 			case MINION_ATTACK_TYPE::RANGE: {
 
-				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-					m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
-				}
-				//if(m_eCamp == CAMP_STATE::BLUE)
-				//	CreateProjectile(L"Blue");					
-				//else
-				//	CreateProjectile(L"Red");
+//				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
+//					m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
+//				}
+				if(m_eCamp == CAMP_STATE::BLUE)
+					CreateProjectile(L"Blue");					
+				else
+					CreateProjectile(L"Red");
 			}
 			break;
 
@@ -382,25 +387,34 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
 		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
 	}
 
-	
-	Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vProjectilePos = vPos;
-	vProjectilePos.y += 10;
-	pObject->Transform()->SetLocalPos(vProjectilePos);
+	pObject->Transform()->SetLocalPos(Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + GetObj()->Collider3D()->GetOffsetPos().y, GetObj()->Transform()->GetWorldPos().z));
 
-	pObject->GetScript<CProjectileScript>()->SetStartPos(vProjectilePos);
-	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
-	//		GetObj()->AddChild(pObject);
-	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
-
+	pObject->Transform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+	pObject->GetScript<CProjectileScript>()->SetDir(GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT));
 	pObject->GetScript<CProjectileScript>()->Init();
-	pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
-	m_pProjectile = pObject;
-	CreateObject(pObject, _Layer);
 
-	SHARED_DATA::g_bullet[pObject->GetScript<CProjectileScript>()->m_GetId()] = vProjectilePos;
-	CServer::GetInst()->send_projectile_packet(pObject->GetScript<CProjectileScript>()->m_GetId(), 0);
-	SHARED_DATA::g_bulletindex++;
+
+	CreateObject(pObject, _Layer);
+	//SHARED_DATA::g_bullet[pObject->GetScript<CProjectileScript>()->m_GetId()] = vProjectilePos;
+	//CServer::GetInst()->send_projectile_packet(pObject->GetScript<CProjectileScript>()->m_GetId(), 0);
+	//SHARED_DATA::g_bulletindex++;
+	
+	//Vec3 vPos = Transform()->GetLocalPos();
+	//Vec3 vProjectilePos = vPos;
+	//vProjectilePos.y += 10;
+	//pObject->Transform()->SetLocalPos(vProjectilePos);
+	//pObject->GetScript<CProjectileScript>()->SetStartPos(vProjectilePos);
+	//pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
+	////		GetObj()->AddChild(pObject);
+	////		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
+	//pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
+
+	//pObject->GetScript<CProjectileScript>()->Init();
+	//pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
+	//m_pProjectile = pObject;
+	//CreateObject(pObject, _Layer);
+
+
 }

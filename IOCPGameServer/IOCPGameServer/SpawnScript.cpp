@@ -17,7 +17,7 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
     pObject->SetName(L"Minion");
 	pObject->Sensor()->SetRadius(300.f);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(70.f, 100.f, 70.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(120.f, 100.f, 120.f));
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
 	pObject->Transform()->SetLocalPos(_vLocalPos);
     //if(CAMP_STATE::BLUE == _eCamp)

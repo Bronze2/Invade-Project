@@ -75,6 +75,9 @@ void CArrowScript::Update()
 	{
 	case ARROW_STATE::IDLE:
 	{
+		Init();
+		GetObj()->Transform()->SetLocalPos(Vec3(1000, 1000, 1000));
+		GetObj()->SetActive(false);
 	}
 	break;
 	case ARROW_STATE::ATTACK_READY:

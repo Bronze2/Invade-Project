@@ -52,6 +52,7 @@ public:
     void SetMain() { isMain = true; }
     void SetState(BOW_STATE _eState) { m_eState = _eState; }
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot);
+    void DeleteArrow(int ArrowId);
     CBowScript();
     virtual ~CBowScript();
 

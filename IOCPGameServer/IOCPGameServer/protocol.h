@@ -40,6 +40,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_MOVE_ARROW		15
 #define S2C_CHANGE_ANIM		16
 #define S2C_DELETE_MINION	17
+#define S2C_DELETE_ARROW	18
 
 
 struct p_Vec3 {
@@ -206,6 +207,17 @@ struct sc_packet_delete_minion {
 	char type;
 	int id;
 };
+
+struct sc_packet_delete_arrow {
+	char size;
+	char type;
+	int client_id;
+	int arrow_id;
+	int coll_type;
+	int coll_id;
+	int damage;
+};
+
 
 struct sc_packet_rot_tower {
 	char size;

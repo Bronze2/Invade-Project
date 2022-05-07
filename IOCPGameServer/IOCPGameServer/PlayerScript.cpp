@@ -6,6 +6,7 @@
 
 void CPlayerScript::Init()
 {
+	m_iCurHp = 1000;
 }
 
 void CPlayerScript::Awake()
@@ -28,6 +29,8 @@ void CPlayerScript::Awake()
 		//m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
 
 		m_pArrow[i]->AddComponent(new CArrowScript(ELEMENT_TYPE::AllElements));
+		m_pArrow[i]->GetScript<CArrowScript>()->SetCamp(GetCamp());
+
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);
@@ -39,6 +42,7 @@ void CPlayerScript::Update()
 {
 	Transform()->SetLocalPos(SHARED_DATA::g_clients[m_id].Pos);
 	Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
+
 }
 
 void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
@@ -49,7 +53,7 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetDir(Dir);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParentId(m_GetId());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
-	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetCamp(CAMP_STATE::BLUE);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetCamp(GetCamp());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetAttackDamge(Power/7);
 
 	m_pArrow[ArrowId]->ClearParent();
@@ -64,7 +68,6 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 #include "Collider3D.h"
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
-	std::cout << "CollPlayer  :" << m_GetId() << endl;
 }
 
 

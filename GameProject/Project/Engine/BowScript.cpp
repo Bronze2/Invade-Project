@@ -208,6 +208,14 @@ void CBowScript::Init()
 	}
 }
 
+void CBowScript::DeleteArrow(int ArrowId)
+{
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);
+	//m_pArrow[ArrowId]->Transform()->SetLocalPos(Vec3(1000, 1000, 1000));
+	//m_pArrow[ArrowId]->SetActive(false);
+}
+
+
 void CBowScript::Awake()
 {
 	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");

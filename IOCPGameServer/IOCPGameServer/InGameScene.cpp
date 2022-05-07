@@ -26,10 +26,11 @@
 void CInGameScene::Init()
 {
 	GetLayer(0)->SetName(L"Red");
-	GetLayer(1)->SetName(L"Blue");
-	GetLayer(2)->SetName(L"RedSpawnPlace");
-	GetLayer(3)->SetName(L"BlueSpawnPlace");
-	GetLayer(4)->SetName(L"Arrow");
+	GetLayer(1)->SetName(L"Player");
+	GetLayer(2)->SetName(L"Blue");
+	GetLayer(3)->SetName(L"RedSpawnPlace");
+	GetLayer(4)->SetName(L"BlueSpawnPlace");
+	GetLayer(5)->SetName(L"Arrow");
 
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
@@ -47,13 +48,25 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 		pObject->GetScript<CPlayerScript>()->Init();
+
 		FindLayer(L"Blue")->AddGameObject(pObject, false);
+		if (i % 2 == 0) {
+			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+		}
+		else {
+			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 
-		//if (i % 2 == 0)
+		}
+
+		//if (i % 2 == 0) {
 		//	FindLayer(L"Blue")->AddGameObject(pObject, false);
-		//else
-		//	FindLayer(L"Red")->AddGameObject(pObject, false);
+		//	pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
+		//}
+		//else {
+		//	FindLayer(L"Red")->AddGameObject(pObject, false);
+		//	pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+		//}
 		std::cout << "플레이어 [" << i << "] 생성" << endl;
 	}
 
@@ -182,6 +195,8 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
+
+
 
 
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");

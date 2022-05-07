@@ -349,3 +349,23 @@ void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 }
+
+void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type, int coll_id, int damage)
+{
+	//0 ÀÚ¿¬»ç
+	//1 -> Player
+	//2 -> Monster
+	//3 -> Tower
+
+	sc_packet_delete_arrow packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_DELETE_ARROW;
+	packet.client_id = clinet_id;
+	packet.arrow_id = arrow_id;
+	packet.coll_type = coll_type;
+	packet.coll_id = coll_id;
+	packet.damage = damage;
+	
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+}
