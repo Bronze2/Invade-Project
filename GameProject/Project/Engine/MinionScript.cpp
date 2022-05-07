@@ -164,7 +164,7 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 
 
 	Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vRot = Transform()->GetLocalRot();
+	/*Vec3 vRot = Transform()->GetLocalRot();
 	Matrix matTranslation = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
 	Vec3 vScale = Transform()->GetLocalScale();
 	Matrix matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
@@ -178,7 +178,8 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	pObject->Transform()->SetObjectMatrix(Matrix);
 	pObject->GetScript<CProjectileScript>()->SetRotY(vRot.y);
 	pObject->GetScript<CProjectileScript>()->SetMatrixObject(Matrix);
-	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
+	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());*/
+	pObject->GetScript<CProjectileScript>()->SetStartPos(vPos);
 	pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
 	//		GetObj()->AddChild(pObject);
 	//		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));

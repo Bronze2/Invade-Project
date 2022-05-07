@@ -221,7 +221,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 void CProjectileScript::Init()
 {
 	Vec3 vLocalPos = Transform()->GetLocalPos();
-	Vec3 vLocalRot = Transform()->GetLocalRot();
+	/*Vec3 vLocalRot = Transform()->GetLocalRot();
 	Vec3 vLocalScale = Transform()->GetLocalScale();
 
 	Matrix matTranslation = XMMatrixTranslation(vLocalPos.x, vLocalPos.y, vLocalPos.z);
@@ -234,7 +234,8 @@ void CProjectileScript::Init()
 	Matrix matWorld = matScale * matRot  * matTranslation;
 	matWorld *= m_matObjectWorldMatrix;
 	Vec3 vPos = matWorld.Translation();
-	Vec3 vTest = m_vTargetPos  - vPos;
+	Vec3 vTest = m_vTargetPos  - vPos;*/
+	Vec3 vTest = m_vTargetPos - vLocalPos;
 	vTest.Normalize();
 	m_vDir = vTest;
 

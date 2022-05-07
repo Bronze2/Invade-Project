@@ -129,7 +129,7 @@ void CInGameScene::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1500.f));
+	pObject->Transform()->SetLocalPos(Vec3(0., 0.f, -0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
