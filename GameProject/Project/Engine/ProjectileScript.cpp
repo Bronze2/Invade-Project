@@ -73,8 +73,6 @@ void CProjectileScript::Update()
 	int a = 0;
 	float xvalue = m_vDir.x * 100.f * DT;
 
-	// 이렇게 하면 행복해요 (저는...)
-	//vLocalPos -= vWorldDir * 500.f * DT;
 	vLocalPos -= m_vDir * 500.f * DT;
 	vLocalPos.y = vRestoreLocalPos.y;
 
@@ -113,24 +111,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 void CProjectileScript::Init()
 {
-	Vec3 vLocalPos = Transform()->GetLocalPos();
-	//Vec3 vLocalRot = Transform()->GetLocalRot();
-	//Vec3 vLocalScale = Transform()->GetLocalScale();
 
-	//Matrix matTranslation = XMMatrixTranslation(vLocalPos.x, vLocalPos.y, vLocalPos.z);
-	//Matrix matScale = XMMatrixScaling(vLocalScale.x, vLocalScale.y, vLocalScale.z);
-
-
-	//Matrix matRot = XMMatrixRotationX(vLocalRot.x);
-	//matRot *= XMMatrixRotationY(vLocalRot.y);
-	//matRot *= XMMatrixRotationZ(vLocalRot.z);
-	//Matrix matWorld = matScale * matRot  * matTranslation;
-	//matWorld *= m_matObjectWorldMatrix;
-	//Vec3 vPos = matWorld.Translation();
-	//Vec3 vTest = m_vTargetPos  - vPos;
-	//Vec3 vTest = m_vTargetPos - Transform()->GetWorldPos();
-	//vTest.Normalize();
-	//m_vDir = vTest;
 }
 
 CProjectileScript::CProjectileScript():CScript((UINT)SCRIPT_TYPE::PROJECTILESCRIPT),m_pObject(nullptr),m_fSpeed(),m_uiDamage(),m_fAlpha(0.f)
