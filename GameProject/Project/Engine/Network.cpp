@@ -27,7 +27,7 @@ void Network::Init()
 	ServerAddr.sin_port = htons(SERVER_PORT);
 	//°ú¹æ 192.168.207.150
 	//127.0.0.1
-	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	ServerAddr.sin_addr.s_addr = inet_addr("192.168.207.150");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
