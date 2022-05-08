@@ -324,6 +324,18 @@ void Network::send_login_packet()
 	cout << "Send Login Packet" << endl;
 }
 
+void Network::send_move_block_packet(int Client_id, Vec3 Pos)
+{
+	cs_packet_move_block m_packet;
+	m_packet.type = C2S_MOVE_BLOCK;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = Client_id;
+	m_packet.Pos.x = Pos.x;
+	m_packet.Pos.y = Pos.y;
+	m_packet.Pos.z = Pos.z;
+	send_packet(&m_packet);
+}
+
 void Network::send_key_down_packet(unsigned char dir, float x, float y , float z,int state)
 {
 	//cs ¼öÁ¤ ÇÊ¿ä Áö±Ý±ÍÂú;

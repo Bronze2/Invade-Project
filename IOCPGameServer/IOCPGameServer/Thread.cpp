@@ -297,6 +297,15 @@ void CThread::process_packet(int user_id, char* buf)
 			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
 			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, CAMP_STATE::BLUE);
 	}
+	case C2S_MOVE_BLOCK:
+	{
+		cs_packet_move_block* packet = reinterpret_cast<cs_packet_move_block*>(buf);
+		SHARED_DATA::g_clients[packet->id].Pos.x = packet->Pos.x;
+		SHARED_DATA::g_clients[packet->id].Pos.y = packet->Pos.y;
+		SHARED_DATA::g_clients[packet->id].Pos.z = packet->Pos.z;
+
+
+	}
 	break;
 	default:
 		cout << "unknown packet type error \n";

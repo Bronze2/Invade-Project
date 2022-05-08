@@ -44,10 +44,12 @@ private:
 
     Vec3 m_LerpRot;
 
-
+    float m_fCurDegree;
+    int m_iKeyHoldCnt;
     UINT m_uiMaxHp;
     int m_iCurHp = 1500;
     CAMP_STATE m_eCamp;
+    Vec3 restorePos;
 public:
     void m_FAnimation();
     void Init();
@@ -68,7 +70,8 @@ public:
     void GetDamage(const UINT& _uiDamage);
 
     void m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos);
-
+    bool GetCollCheck(){return m_bColCheck;}
+    void SetCollCheckFalse() { m_bColCheck = false; }
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
     virtual void OnCollision3D(CCollider3D* _pOther);
     virtual void OnCollision3DExit(CCollider3D* _pOther);

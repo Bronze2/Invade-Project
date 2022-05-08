@@ -249,8 +249,10 @@ void CSceneMgr::net_setLerpMoveByID(int id, float x , float y, float z)
 {
 	Vec3 pos(x, y, z);
 	//pos*= DT;
-	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
 
+	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
+	
+	//m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetCollCheckFalse();
 }
 
 void CSceneMgr::net_setLocalPosByID(int id, float x, float y, float z)

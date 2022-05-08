@@ -486,72 +486,116 @@ void CPlayerScript::Update()
 		else {
 			m_bCheckDegree = false;
 		}
-
 		if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
 			int a = 0;
 		}
 
-
 		if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			m_fFactor = 0.f;
 			m_fTurnDegree = 0.f;
 			m_bTurn = true;
+
 			m_vRestoreRot = vRot;
-			m_fFactor = 0.f;
 		}
 
-		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-			// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
-			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-				m_fTurnDegree = m_fRotateDegree;
-				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + m_fTurnDegree * m_fFactor);
-			}
-			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-				m_fTurnDegree = m_fRotateDegree + 180.f;
-				if (m_fTurnDegree > 180.f) {
-					m_fTurnDegree -= 360.f;
-				}
-				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
-			}
-			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-				m_fTurnDegree = m_fRotateDegree - 90.f;
-				if (m_fTurnDegree > 180.f) {
-					m_fTurnDegree -= 180.f;
-				}
-				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
-			}
-			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-				m_fTurnDegree = m_fRotateDegree + 90.f;
-				if (m_fTurnDegree > 180.f) {
-					m_fTurnDegree -= 180.f;
-				}
-				vRot.y = XMConvertToRadians(XMConvertToDegrees(vRot.y) * (1 - m_fFactor) + (m_fTurnDegree)*m_fFactor);
-			}
-
-			if (m_fFactor < 1.f) {
-				m_fFactor += 0.1f;
-			}
-			else {
-				m_bTurn = false;
-			}
-
-			if (!m_bTurn && CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
-				Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-
-				Network::GetInst()->send_rotation_packet(vRot);
-				Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
-			}
-			m_eState = PLAYER_STATE::WALK;
-		}
 
 		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 			m_eState = PLAYER_STATE::IDLE;
+			m_fTurnDegree = 0.f;
+			m_fFactor = 0.f;
+			m_bTurn = true;
+			m_vRestoreRot = vRot;
 			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 			Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
-			m_fTurnDegree = 0.f;
 		}
+
+		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			m_eState = PLAYER_STATE::WALK;
+			if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
+			{
+				m_eState = PLAYER_STATE::RUN;
+			}
+
+
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+			// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
+			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+
+			m_fCurDegree = 0.f;
+			m_iKeyHoldCnt = 0;
+
+			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+				m_fCurDegree += 0.f;
+				m_iKeyHoldCnt++;
+			}
+			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+				m_fCurDegree += 180.f;
+				m_iKeyHoldCnt++;
+			}
+			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+				if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+					m_fCurDegree += 270.f;
+				}
+				else {
+					m_fCurDegree -= 90.f;
+				}
+				m_iKeyHoldCnt++;
+			}
+			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+				m_fCurDegree += 90.f;
+				m_iKeyHoldCnt++;
+			}
+
+			m_fCurDegree /= (float)m_iKeyHoldCnt;
+
+			if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+				m_fCurDegree = 0.f;
+			}
+
+			m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
+
+			float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
+			if (fRotDegree > 360.f) {
+				fRotDegree -= 360.f;
+			}
+
+			// 180도 이상 회전하는 경우 없도록
+			if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
+				if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
+					m_fTurnDegree -= 360.f;
+				}
+				else {
+					m_fTurnDegree += 360.f;
+				}
+			}
+			// 0 -> 270보다는 0 -> -90되는게 이쁘니까
+			vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
+			if (m_fFactor < 1.f) {
+				// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
+				m_fFactor += 10.f * DT;
+			}
+			else {
+				if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+					m_bTurn = true;
+				}
+				else {
+					m_bTurn = false;
+				}
+			}
+
+
+			if (!m_bTurn && CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
+				Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+				restorePos = Transform()->GetLocalPos();
+				Network::GetInst()->send_rotation_packet(vRot);
+				Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+				//m_bColCheck = false;
+			}
+
+		}
+
+
 
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
@@ -603,31 +647,26 @@ void CPlayerScript::SetState(int state)
 	//};
 
 	m_eState = (PLAYER_STATE)state;
-	/*if (state == 0)
-	{
-		m_eState = PLAYER_STATE::WALK;
-
-	}
-	if (state == 1)
-	{
-		m_eState = PLAYER_STATE::IDLE;
-	}
-	if (state == 2)
-	{
-		m_eState = PLAYER_STATE::ATTACK_READY;
-	}
-	if (state == 3)
-	{
-		m_eState = PLAYER_STATE::ATTACK;
-	}*/
 }
 
 void CPlayerScript::Update_LerpPos()
 {
-	Vec3 vPos = Transform()->GetLocalPos();
-	vPos = Vec3::Lerp(vPos, m_LerpPos, DT*(5.f));
 
-	Transform()->SetLocalPos(vPos);
+		Vec3 vPos = Transform()->GetLocalPos();
+		m_FColCheck(m_PrevLerpPos, m_LerpPos);
+		if (m_bMoveCheck)
+		{
+			m_LerpPos = vPos;
+			Transform()->SetLocalPos(vPos);
+			Network::GetInst()->send_move_block_packet(m_GetId(), vPos);
+			m_bMoveCheck = false;
+
+		}
+		else {
+			vPos = Vec3::Lerp(vPos, m_LerpPos, DT * (5.f));
+			Transform()->SetLocalPos(vPos);
+
+		}
 	if (!isMain) {
 		Vec3 vRot = Transform()->GetLocalRot();
 		vRot = Vec3::Lerp(Transform()->GetLocalRot(), m_LerpRot, DT * (10.f));
@@ -649,6 +688,7 @@ void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 		}
 	}
 }
+#include "MinionScript.h"
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	int a = 0;
@@ -656,6 +696,12 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 	}
 	else {
 		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
+		}
+		else if (_pOther->GetObj()->GetScript<CPlayerScript>() != nullptr) {
+
+		}
+		else if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
+
 		}
 		else {
 			m_arrColObject.push_back(_pOther->GetObj());
@@ -666,10 +712,12 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 void CPlayerScript::OnCollision3D(CCollider3D* _pOther)
 {
+
 }
 
 void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 {
+	m_bColCheck = false;
 
 	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
 

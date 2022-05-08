@@ -64,7 +64,7 @@ public:
 	void send_game_start_packet();
 	void send_attack_ready_packet(int id,int state);
 	void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
-
+	void send_move_block_packet(int Client_id, Vec3 Pos);
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 
