@@ -20,9 +20,13 @@ bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
 
 void CProjectileScript::Update()
 {
-
-	Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_ProjectilePos(m_id), DT * 10.f);
-	Transform()->SetLocalPos(vPos);
+	if (!CSceneMgr::GetInst()->get_ProjectileDelete(m_id)) {
+		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_ProjectilePos(m_id), DT * 10.f);
+		Transform()->SetLocalPos(vPos);
+	}
+	else {
+		DeleteObject(GetObj());
+	}
 
 }
 
@@ -30,27 +34,27 @@ void CProjectileScript::Update()
 #include "TowerScript.h"
 void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
-	if (m_pObject = _pOther->GetObj())
-		return;
-	if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
-		if (nullptr != _pOther->GetObj()) {
-			if (m_pObject->GetScript<CMinionScript>() != nullptr) {
-				if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_pObject->GetScript<CMinionScript>()->GetCamp())
-				{
-					_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
-					DeleteObject(GetObj());
-				}
-			}
-			else {
-				//if ((UINT)(_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp()) != (UINT)(m_pObject->GetScript<CTowerScript>()->GetCamp()))
-				//{
-				//	_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
-				//	DeleteObject(GetObj());
-				//}
-			}
-		}
+	//if (m_pObject = _pOther->GetObj())
+	//	return;
+	//if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
+	//	if (nullptr != _pOther->GetObj()) {
+	//		if (m_pObject->GetScript<CMinionScript>() != nullptr) {
+	//			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_pObject->GetScript<CMinionScript>()->GetCamp())
+	//			{
+	//				_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
+	//				DeleteObject(GetObj());
+	//			}
+	//		}
+	//		else {
+	//			//if ((UINT)(_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp()) != (UINT)(m_pObject->GetScript<CTowerScript>()->GetCamp()))
+	//			//{
+	//			//	_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
+	//			//	DeleteObject(GetObj());
+	//			//}
+	//		}
+	//	}
 
-	}
+	//}
 
 }
 

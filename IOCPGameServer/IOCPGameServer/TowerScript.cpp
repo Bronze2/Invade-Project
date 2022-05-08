@@ -59,17 +59,17 @@ void CTowerScript::m_FAttack()
 			m_cAttackInterval = (m_cAttackEnd - m_cAttackStart) / CLOCKS_PER_SEC;
 			if (m_cAttackInterval >= ATTACK_INTERVAL) {
 				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-					if (CAMP_STATE::BLUE == m_eCampState)
-						CreateProjectile( L"Blue");
-					else if (CAMP_STATE::RED == m_eCampState)
-						CreateProjectile(L"Red");
-				}
-				if (m_pTarget->GetScript<CPlayerScript>() != nullptr && m_pTarget->GetScript<CPlayerScript>()->GetCamp() != m_eCampState) {
-					std::cout << " Found Player" << endl;
-					if (CAMP_STATE::BLUE == m_eCampState )
-						CreateProjectile(L"Blue");
-					else if (CAMP_STATE::RED == m_eCampState)
-						CreateProjectile(L"Red");
+				//	if (CAMP_STATE::BLUE == m_eCampState)
+				//		CreateProjectile( L"Blue");
+				//	else if (CAMP_STATE::RED == m_eCampState)
+				//		CreateProjectile(L"Red");
+				//}
+				//if (m_pTarget->GetScript<CPlayerScript>() != nullptr && m_pTarget->GetScript<CPlayerScript>()->GetCamp() != m_eCampState) {
+				//	std::cout << " Found Player" << endl;
+				//	if (CAMP_STATE::BLUE == m_eCampState )
+				//		CreateProjectile(L"Blue");
+				//	else if (CAMP_STATE::RED == m_eCampState)
+				//		CreateProjectile(L"Red");
 				}
 				m_bAttackStart = false;
 			}

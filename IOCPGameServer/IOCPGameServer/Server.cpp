@@ -287,8 +287,11 @@ void CServer::send_projectile_packet(int projectile_id, int type)
 	packet.size = sizeof(packet);
 	if(type == 0)
 		packet.type = S2C_CREATE_PROJECTILE;
-	else
+	else if(type ==1)
 		packet.type = S2C_PROJECTILE;
+	else if (type == 2) {
+		packet.type = S2C_DELETE_PROJECTILE;
+	}
 
 	packet.id = projectile_id;
 	packet.pos.x = SHARED_DATA::g_bullet[projectile_id].x;

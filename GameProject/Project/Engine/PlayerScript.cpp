@@ -496,17 +496,22 @@ void CPlayerScript::Update()
 			m_bTurn = true;
 
 			m_vRestoreRot = vRot;
+
+		}
+		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D))) {
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+			Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
 		}
 
-
 		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+
+			
 			m_eState = PLAYER_STATE::IDLE;
 			m_fTurnDegree = 0.f;
 			m_fFactor = 0.f;
 			m_bTurn = true;
 			m_vRestoreRot = vRot;
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-			Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
+
 		}
 
 		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
@@ -575,7 +580,8 @@ void CPlayerScript::Update()
 				// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
 				m_fFactor += 10.f * DT;
 			}
-			else {
+			else{
+				m_fFactor = 1.f;
 				if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
 					m_bTurn = true;
 				}
@@ -609,10 +615,6 @@ void CPlayerScript::Update()
 			m_eState = PLAYER_STATE::ATTACK;
 		}
 
-		if (m_bMoveCheck) {
-			vPos = vPos2;
-			m_bMoveCheck = false;
-		}
 
 		if (KEY_TAB(KEY_TYPE::KEY_NUM4))
 		{
@@ -656,13 +658,17 @@ void CPlayerScript::Update_LerpPos()
 		m_FColCheck(m_PrevLerpPos, m_LerpPos);
 		if (m_bMoveCheck)
 		{
-			m_LerpPos = vPos;
-			Transform()->SetLocalPos(vPos);
-			Network::GetInst()->send_move_block_packet(m_GetId(), vPos);
+			m_LerpPos = m_PrevLerpPos;
+			m_PrevLerpPos.y = 0;
+			m_LerpPos.y = 0;
+			Transform()->SetLocalPos(m_PrevLerpPos);
+			Network::GetInst()->send_move_block_packet(m_GetId(), m_PrevLerpPos);
 			m_bMoveCheck = false;
 
 		}
 		else {
+			vPos.y = 0;
+			m_LerpPos.y = 0;
 			vPos = Vec3::Lerp(vPos, m_LerpPos, DT * (5.f));
 			Transform()->SetLocalPos(vPos);
 
@@ -692,10 +698,11 @@ void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	int a = 0;
-	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
-	}
-	else {
-		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
+
+
+		if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
+		}
+		else if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
 		}
 		else if (_pOther->GetObj()->GetScript<CPlayerScript>() != nullptr) {
 
@@ -703,11 +710,13 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 		else if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
 
 		}
+		else if (_pOther->GetObj()->GetScript<CBowScript>() != nullptr) {
+
+		}
 		else {
 			m_arrColObject.push_back(_pOther->GetObj());
 			m_bColCheck = true;
 		}
-	}
 }
 
 void CPlayerScript::OnCollision3D(CCollider3D* _pOther)

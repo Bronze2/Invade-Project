@@ -9,7 +9,9 @@
 void CProjectileScript::Update()
 {
 	if (m_pObject->IsDead()) {
+
 		DeleteObject(GetObj());
+		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		return;
 	}
 	Vec3 vLocalPos = Transform()->GetLocalPos();
@@ -24,10 +26,12 @@ void CProjectileScript::Update()
 		}
 	}
 	else {
+		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		DeleteObject(GetObj());
 	}
 
 	if (vLocalPos.y < 0) {
+		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		DeleteObject(GetObj());
 	}
 	switch (m_eProjectileType)
@@ -104,6 +108,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 				if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_pObject->GetScript<CMinionScript>()->GetCamp())
 				{
 					_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
+					CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 					DeleteObject(GetObj());
 				}
 			}
@@ -119,6 +124,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 	}
 	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr&& m_eProjectileType == PROJECTILE_TYPE::MINION) {
 		_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
+		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		DeleteObject(GetObj());
 	}
 }

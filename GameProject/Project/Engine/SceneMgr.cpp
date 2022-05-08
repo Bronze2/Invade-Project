@@ -341,7 +341,6 @@ void CSceneMgr::net_animMinion(int id, float x, float y, float z, float r_x, flo
 	m_minion[id].rot.x = r_x;
 	m_minion[id].rot.y = r_y;
 	m_minion[id].rot.z = r_z;
-	cout << state << endl;
 	if(state == 0)
 		m_minion[id].state = MINION_STATE::IDLE;
 	if (state == 1)
@@ -379,6 +378,7 @@ void CSceneMgr::net_spawnProjectile(int id, Vec3 Pos)
 	//pObject->GetScript<CProjectileScript>()->Init();
 	//m_pCurScene->FindLayer(L"Red")->AddGameObject(pObject);
 	m_projectile[id] = Pos;
+	m_projectile_die[id] = false;
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Pro(id, Pos);
 
 
@@ -431,7 +431,10 @@ void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 
 
 }
-
+void CSceneMgr::net_deletProjectile(int id)
+{
+	m_projectile_die[id] = true;
+}
 
 
 void CSceneMgr::net_animUpdate(int id, int state)

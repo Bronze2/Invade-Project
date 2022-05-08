@@ -40,6 +40,8 @@ private:
 	map<int, minioninfo> m_minion;
 	map<int, Vec3> m_tower;
 	map<int, Vec3> m_projectile;
+	map<int, bool> m_projectile_die;
+
 	map<int, map<int,arrowMove>> m_arrow;
 
 public:
@@ -73,6 +75,7 @@ public:
 	void net_deleteMinion(int id);
 	void net_deleteArrow(int client_id, int arrow_id);
 	void net_DamagedByArrow(int coll_type, int coll_id, int damage);
+	void net_deletProjectile(int id);
 
 
 	
@@ -88,6 +91,7 @@ public:
 	Vec3 get_towerRot(int id) { return m_tower[id]; }
 	void set_towerRot(int id, Vec3 rot) { m_tower[id] = rot; };
 	Vec3 get_ProjectilePos(int id) { return m_projectile[id]; }
+	bool get_ProjectileDelete(int id) { return m_projectile_die[id]; }
 
 
 

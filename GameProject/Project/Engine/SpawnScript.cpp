@@ -159,7 +159,6 @@ void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
         Vec3(0.1f, 0.1f, 0.1f), Vec3(0.f, 0.f, 0.f), Vec3(100.f, 100.f, 100.f));
     pObject->GetScript<CProjectileScript>()->m_SetId(id);
     CreateObject(pObject, L"Blue");
-    std::cout << "Åº»ý" << endl;
 }
 
 

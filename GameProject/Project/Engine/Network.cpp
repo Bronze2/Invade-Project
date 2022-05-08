@@ -267,6 +267,12 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_DamagedByArrow(my_packet->coll_type, my_packet->coll_id, my_packet->damage);
 	}
 	break;
+	case S2C_DELETE_PROJECTILE:
+	{
+		sc_packet_projectile* my_packet = reinterpret_cast<sc_packet_projectile*>(ptr);
+		CSceneMgr::GetInst()->net_deletProjectile(my_packet->id);
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);

@@ -42,6 +42,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_CHANGE_ANIM		16
 #define S2C_DELETE_MINION	17
 #define S2C_DELETE_ARROW	18
+#define S2C_DELETE_PROJECTILE	19
 
 
 struct p_Vec3 {

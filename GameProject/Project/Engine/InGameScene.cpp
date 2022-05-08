@@ -181,12 +181,8 @@ void CInGameScene::Init()
 		pBow->SetName(L"Bow");
 
 		pBow->AddComponent(new CTransform);
-		pBow->AddComponent(new CCollider3D);
 		pBow->AddComponent(new CSensor);
 		pBow->AddComponent(new CBowScript);
-		pBow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pBow->Collider3D()->SetOffsetScale(Vec3(20.f, 115.f, 10.f));
-		pBow->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 		pBow->FrustumCheck(false);
 		pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
 		pBow->Transform()->SetLocalScale(Vec3(2.4f, 1.2f, 2.4f));
