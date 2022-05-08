@@ -216,6 +216,13 @@ void CInGameScene::Init()
 		pObject->AddChild(pBow);
 		FindLayer(L"Blue")->AddGameObject(pBow);
 		if (i == Network::GetInst()->getHostId()) {
+			if (i % 2 == 0) {
+				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+
+			}
+			else {
+				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800));
+			}
 			pMainCam->Camera()->SetPlayer(pObject);
 			pMainCam->Camera()->SetbPlay(true);
 			pObject->GetScript<CPlayerScript>()->SetMain();
