@@ -86,7 +86,10 @@ void CTowerScript::m_FRotate()
 void CTowerScript::Update()
 {
 
-	Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_towerRot(m_GetId()), DT * 10.f);
+	Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(),
+		Vec3(Transform()->GetLocalRot().x,
+		CSceneMgr::GetInst()->get_towerRot(m_GetId()).y,
+		Transform()->GetLocalRot().z), DT * 10.f);
 
 	Transform()->SetLocalRot(vRot);
 

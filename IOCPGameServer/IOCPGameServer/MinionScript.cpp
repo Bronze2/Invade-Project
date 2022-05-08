@@ -396,25 +396,5 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
 
 
 	CreateObject(pObject, _Layer);
-	//SHARED_DATA::g_bullet[pObject->GetScript<CProjectileScript>()->m_GetId()] = vProjectilePos;
-	//CServer::GetInst()->send_projectile_packet(pObject->GetScript<CProjectileScript>()->m_GetId(), 0);
-	//SHARED_DATA::g_bulletindex++;
-	
-	//Vec3 vPos = Transform()->GetLocalPos();
-	//Vec3 vProjectilePos = vPos;
-	//vProjectilePos.y += 10;
-	//pObject->Transform()->SetLocalPos(vProjectilePos);
-	//pObject->GetScript<CProjectileScript>()->SetStartPos(vProjectilePos);
-	//pObject->GetScript<CProjectileScript>()->SetTarget(m_pTarget);
-	////		GetObj()->AddChild(pObject);
-	////		pObject->Transform()->SetLocalPos(Vec3(0.f, 50.f, -100.f));
-	//pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
-
-	//pObject->GetScript<CProjectileScript>()->Init();
-	//pObject->GetScript<CProjectileScript>()->SetSpeed(500.f);
-	//m_pProjectile = pObject;
-	//CreateObject(pObject, _Layer);
-
 
 }

@@ -45,6 +45,15 @@ void CProjectileScript::Update()
 	case PROJECTILE_TYPE::TOWER:
 	{
 
+		Vec3 vPos = Transform()->GetLocalPos();
+		Vec3 vRot = Transform()->GetLocalRot();
+
+		//cout <<"["<<m_GetId()<<"]"  <<m_pTarget->GetScript<CMinionScript>()->m_GetId() << endl;
+		float angle = atan2(vPos.y - m_vTargetPos.y, vPos.z - m_vTargetPos.z) * (180 / PI);
+		float rotate = angle * 0.0174532925f;
+		vRot.x = rotate;
+		Transform()->SetLocalRot(vRot);
+		//SetDir(vRot);
 	}
 	break;
 	default:
@@ -108,7 +117,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 		}
 
 	}
-	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr) {
+	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr&& m_eProjectileType == PROJECTILE_TYPE::MINION) {
 		_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
 		DeleteObject(GetObj());
 	}

@@ -110,6 +110,8 @@ void CSceneMgr::Init()
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
+	Ptr<CTexture> pPlayerRed = CResMgr::GetInst()->Load<CTexture>(L"Player_Red", L"Texture\\ArchersTextureRed.png");
+	Ptr<CTexture> pPlayerBlue = CResMgr::GetInst()->Load<CTexture>(L"Player_Blue", L"Texture\\ArchersTextureBlue.png");
 	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");

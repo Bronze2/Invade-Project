@@ -59,7 +59,17 @@ void CTowerScript::m_FAttack()
 			m_cAttackInterval = (m_cAttackEnd - m_cAttackStart) / CLOCKS_PER_SEC;
 			if (m_cAttackInterval >= ATTACK_INTERVAL) {
 				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-					m_pTarget->GetScript<CMinionScript>()->GetDamage(150);
+					if (CAMP_STATE::BLUE == m_eCampState)
+						CreateProjectile( L"Blue");
+					else if (CAMP_STATE::RED == m_eCampState)
+						CreateProjectile(L"Red");
+				}
+				if (m_pTarget->GetScript<CPlayerScript>() != nullptr && m_pTarget->GetScript<CPlayerScript>()->GetCamp() != m_eCampState) {
+					std::cout << " Found Player" << endl;
+					if (CAMP_STATE::BLUE == m_eCampState )
+						CreateProjectile(L"Blue");
+					else if (CAMP_STATE::RED == m_eCampState)
+						CreateProjectile(L"Red");
 				}
 				m_bAttackStart = false;
 			}
@@ -88,7 +98,7 @@ void CTowerScript::Update()
 {
 	FindNearObject(m_arrEnemy);
 	m_FRotate();
-	//m_FAttack();
+	m_FAttack();
 }
 
 void CTowerScript::FinalUpdate()
@@ -149,5 +159,43 @@ void CTowerScript::FindNearObject(const vector<CGameObject*>& _pObject)
 			}
 		}
 	}
+
+}
+
+#include "ProjectileScript.h"
+#include "Collider3D.h"
+
+void CTowerScript::CreateProjectile(const wstring& _Layer)
+{
+	if (nullptr == m_pTarget)
+		return;
+	if (m_pTarget->IsDead())
+		return;
+	CGameObject* pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CProjectileScript);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
+	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
+	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
+	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+	}
+	else {
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+	}
+
+	pObject->Transform()->SetLocalPos(Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + GetObj()->Collider3D()->GetOffsetPos().y, GetObj()->Transform()->GetWorldPos().z));
+
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+	pObject->GetScript<CProjectileScript>()->SetDir(GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT));
+	pObject->GetScript<CProjectileScript>()->Init();
+
+
+	CreateObject(pObject, _Layer);
 
 }

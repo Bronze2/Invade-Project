@@ -13,10 +13,10 @@ private:
     UINT m_iMaxHp;
     int m_uiCurHp;
     float m_fAttackRange;
-    CAMP_STATE m_eCamp;
+    CAMP_STATE  m_eCampState;
 
     UINT m_uiDef;
-
+    UINT m_uiAttackDamage = 50;
     TOWER_TYPE m_eType;
     CGameObject* m_pNexus;
     CGameObject* m_pFirstTower;
@@ -33,15 +33,14 @@ private:
 
 
 public:
-    void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
-    const CAMP_STATE& GetCamp()const { return m_eCamp; }
+    void SetCamp(CAMP_STATE _eCamp) { m_eCampState = _eCamp; }
+    const CAMP_STATE& GetCamp()const { return m_eCampState; }
 
     void Init();
 
     void SetSecondTower(CGameObject* _pGameObject);
     void SetFirstTower(CGameObject* _pGameObject);
     void SetNexus(CGameObject* _pObject);
-
     void m_FAttack();
     void m_FRotate();
 
@@ -60,6 +59,7 @@ public:
     virtual ~CTowerScript();
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
+    void CreateProjectile(const wstring& _Layer);
 
     CLONE(CTowerScript);
 };

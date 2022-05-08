@@ -25,7 +25,8 @@ void Network::Init()
 	setsockopt(m_Client.socket_info.m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 
 	ServerAddr.sin_port = htons(SERVER_PORT);
-	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	//°ú¹æ 192.168.207.150
+	ServerAddr.sin_addr.s_addr = inet_addr("192.168.207.150");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 

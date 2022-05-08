@@ -21,12 +21,12 @@ private:
     Matrix m_matObjectWorldMatrix;
     int m_id;
 
+
     PROJECTILE_TYPE m_eProjectileType;
 public:
     void SetProjectileType(PROJECTILE_TYPE _Type) { m_eProjectileType = _Type; }
     void SetMatrixObject(const Matrix& _Matrix) { m_matObjectWorldMatrix = _Matrix; }
-    \
-        void SetTargetPos(const Vec3& _Pos) { m_vTargetPos = _Pos; }
+    void SetTargetPos(const Vec3& _Pos) { m_vTargetPos = _Pos; }
 
     void SetObject(CGameObject* _pGameObject) { m_pObject = _pGameObject; }
     virtual void Update();
