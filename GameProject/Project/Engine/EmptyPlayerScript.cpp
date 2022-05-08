@@ -19,11 +19,11 @@ void CEmptyPlayerScript::Update()
 		if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 			vRot.y += vDrag.x * DT * 1.f;
 			float fDegree = XMConvertToDegrees(vRot.y);
-			if (fDegree < -360) {
+			if (fDegree < -360.f) {
 				fDegree += 360.f;
 				vRot.y = XMConvertToRadians(fDegree);
 			}
-			else if (fDegree > 360) {
+			else if (fDegree > 360.f) {
 				fDegree -= 360.f;
 				vRot.y = XMConvertToRadians(fDegree);
 			}

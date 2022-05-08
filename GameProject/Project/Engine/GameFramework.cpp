@@ -84,25 +84,25 @@ void CGameFramework::ProcessInput()
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);
-	RECT rt;
-	RECT rt2;
-	GetWindowRect(CRenderMgr::GetInst()->GethWnd(),&rt2);
-	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rt);
+	RECT rtClient;
+	RECT rtWindow;
+	GetWindowRect(CRenderMgr::GetInst()->GethWnd(),&rtWindow);
+	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rtClient);
 	LONG CursorPosy = ptCursorPos2.y;
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
-	if (rt.right < ptCursorPos.x) {
-		int left=rt2.left+13;
-		ptCursorPos.x = left;
+	if (rtWindow.right - 10 < ptCursorPos.x) {
+		ptCursorPos.x = rtWindow.left + 13;
 		
-		m_ptOldCursorPos.x = rt2.left+10;
+		m_ptOldCursorPos.x = rtWindow.left+10;
 		SetCursorPos(ptCursorPos.x, CursorPosy);
 	}
 	if (2 >= ptCursorPos.x) {
-		ptCursorPos.x = rt2.right-13	 ;
-		m_ptOldCursorPos.x = rt2.right-10;
+		ptCursorPos.x = rtWindow.right-13;
+		m_ptOldCursorPos.x = rtWindow.right-10;
 
 		SetCursorPos(ptCursorPos.x, CursorPosy);
 	}
+
 //	if (rt.bottom < ptCursorPos.y) {
 //		ptCursorPos.y = rt.bottom;
 //		m_ptOldCursorPos.y = rt.bottom;
