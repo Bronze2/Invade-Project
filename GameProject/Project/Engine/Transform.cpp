@@ -3,6 +3,7 @@
 
 #include "ConstantBuffer.h"
 #include "Device.h"
+#include "Camera.h"
 
 
 
@@ -50,7 +51,7 @@ void CTransform::FinalUpdate()
 		if (GetObj()->GetParent())
 		{
 			m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
-
+			
 			for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
 			{
 				m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
@@ -94,7 +95,13 @@ void CTransform::FinalUpdate()
 	if (GetObj()->GetParent())
 	{
 		m_matWorld *= GetObj()->GetParent()->Transform()->GetWorldMat();
+		if (GetObj()->Camera() && GetObj()->Camera()->GetPlay()) {
+			GetObj()->Camera()->SetMatrixCamera(m_matWorld);
+			m_matWorld._41 += GetObj()->Camera()->GetFront().x;
+			m_matWorld._42 += GetObj()->Camera()->GetFront().y;
 
+			m_matWorld._43 += GetObj()->Camera()->GetFront().z;
+		}
 		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
 		{
 			m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);

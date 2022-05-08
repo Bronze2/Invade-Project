@@ -11,6 +11,7 @@
 
 #include "ResMgr.h"
 #include "MRT.h"
+#include "CollisionMgr.h"
 CRenderMgr::CRenderMgr() 
 	:m_arrMRT{},m_iRTVHeapSize(0)
 {}
@@ -56,6 +57,9 @@ void CRenderMgr::Render()
 
 	// Ãâ·Â
 	CDevice::GetInst()->Render_Present();
+
+	if(CCollisionMgr::GetInst()->GetCamera()!=nullptr)
+	CCollisionMgr::GetInst()->GetCamera()->ClearInterSectObject();
 }
 
 void CRenderMgr::Render_Tool()
