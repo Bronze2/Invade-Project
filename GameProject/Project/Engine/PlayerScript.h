@@ -43,6 +43,11 @@ private:
     vector<CGameObject*>m_arrColObject;
 
     Vec3 m_LerpRot;
+
+
+    UINT m_uiMaxHp;
+    int m_iCurHp = 1500;
+    CAMP_STATE m_eCamp;
 public:
     void m_FAnimation();
     void Init();
@@ -60,6 +65,7 @@ public:
     void SetLerpRot(Vec3 Rot) { m_LerpRot = Rot; }
     CPlayerScript();
     virtual ~CPlayerScript();
+    void GetDamage(const UINT& _uiDamage);
 
     void m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos);
 

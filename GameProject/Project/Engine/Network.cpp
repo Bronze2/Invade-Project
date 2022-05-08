@@ -146,7 +146,8 @@ void Network::ProcessPacket(char* ptr)
 		}
 		else {
 			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
+			//CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
+			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, (int)PLAYER_STATE::WALK);
 		}
 	}
 	break;
@@ -162,7 +163,7 @@ void Network::ProcessPacket(char* ptr)
 		}
 		else {
 			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
+			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, (int)PLAYER_STATE::IDLE);
 		}
 	}
 	break;

@@ -317,7 +317,17 @@ enum class SHADER_POV
 	SHADOWMAP,
 };
 // State Description
-
+enum class PLAYER_STATE {
+	IDLE,
+	WALK,
+	RUN,
+	JUMP,
+	ATTACK_READY,
+	ATTACK,
+	DEMAGED,
+	DIE,
+	END,
+};
 
 
 //MINION STATE

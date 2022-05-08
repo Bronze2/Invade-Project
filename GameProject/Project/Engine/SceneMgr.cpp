@@ -299,9 +299,6 @@ void CSceneMgr::net_spawnMinion_blue(int id, int mtype,float x, float y ,float z
 {
 	Vec3 Pos{ x,y,z };
 	m_minion[id].pos = Pos;
-	cout << "블루 미니언 스폰" << m_minion[id].pos.x << "," <<
-		m_minion[id].pos.y << "," <<
-		m_minion[id].pos.z << endl;
 
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
@@ -309,9 +306,6 @@ void CSceneMgr::net_spawnMinion_red(int id, int mtype,float x, float y, float z)
 {
 	Vec3 Pos{ x,y,z };
 	m_minion[id].pos = Pos;
-	cout<<"레드 미니언 스폰" << m_minion[id].pos.x <<","<<
-	 m_minion[id].pos.y << ","<<
-	 m_minion[id].pos.z << endl;
 
 	m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, (MINION_ATTACK_TYPE)mtype);
 }
@@ -401,7 +395,7 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
 {
 	m_arrow[parentid][id].Pos = pos;
 	m_arrow[parentid][id].Rot = rot;
-	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetScript<CPlayerScript>()->SetState(3);
+	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
 	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetChild()[0]->
 		GetScript<CBowScript>()->InitArrow(id, pos, rot);
 }
@@ -421,7 +415,8 @@ void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 	// 3 tower;
 	if (coll_type == 0) return;
 	else if (coll_type == 1) {
-		cout<<"쳐맞씀" << m_pCurScene->FindLayer(L"Blue")->GetParentObj()[coll_id]->GetScript<CPlayerScript>()->m_GetId() << endl;
+		cout << "PlayerArrow Coll" << endl;
+		m_pCurScene->FindLayer(L"Blue")->GetParentObj()[coll_id]->GetScript<CPlayerScript>()->GetDamage(damage);
 	}
 	else if (coll_type == 2) {
 

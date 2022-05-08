@@ -140,9 +140,11 @@ void CInGameScene::Init()
 		pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
 		pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
 		pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // Á¡ÇÁ ÈÄ ÆÈ¹ú¸®±â 81, 125
-		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
-		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // È° ²¨³»¼­ ½î±â 125, 175
-		pNewAnimation->InsertAnimClip(L"DIE", 240, 269);      // ´©¿ö¼­ ³¡ 240, 261
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
+		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
+		pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
+		pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // ´©¿ö¼­ ³¡ 240, 261
+		pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
 		//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 		pObject->Animator3D()->SetAnimation(pNewAnimation);

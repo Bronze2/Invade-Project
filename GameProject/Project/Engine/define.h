@@ -357,9 +357,11 @@ enum class CAMP_STATE {
 enum class PLAYER_STATE {
 	IDLE,
 	WALK,
+	RUN,
 	JUMP,
 	ATTACK_READY,
 	ATTACK,
+	DEMAGED,
 	DIE,
 	END,
 };
