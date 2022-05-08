@@ -311,8 +311,6 @@ void CThread::process_packet(int user_id, char* buf)
 		SHARED_DATA::g_clients[packet->id].Pos.x = packet->Pos.x;
 		SHARED_DATA::g_clients[packet->id].Pos.y = 0;
 		SHARED_DATA::g_clients[packet->id].Pos.z = packet->Pos.z;
-		cout << "!!!!!" << endl;
-
 	}
 	break;
 	default:

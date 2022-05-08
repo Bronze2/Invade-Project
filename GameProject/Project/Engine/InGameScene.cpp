@@ -211,10 +211,13 @@ void CInGameScene::Init()
 		pObject->AddChild(pBow);
 		FindLayer(L"Blue")->AddGameObject(pBow);
 		if (i == Network::GetInst()->getHostId()) {
+
 			pObject->GetScript<CPlayerScript>()->SetMain();
 			pBow->GetScript<CBowScript>()->SetMain();
 			//pObject->AddChild(pMainCam);
 		}
+		pMainCam->Camera()->SetPlayer(pObject);
+		pMainCam->Camera()->SetbPlay(true);
 
 
 	}
