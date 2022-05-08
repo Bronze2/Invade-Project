@@ -41,7 +41,6 @@ public:
     void SpawnObject_Pro(int id, Vec3 Pos);
 
 
-
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }
     virtual void Update();
 

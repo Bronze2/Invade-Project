@@ -245,6 +245,7 @@ void CInGameScene::Init()
 	pRedFirstTower->AddComponent(new CTowerScript);
 	pRedFirstTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::FIRST);
 	pRedFirstTower->GetScript<CTowerScript>()->m_SetId(0);
+	pRedFirstTower->GetScript<CTowerScript>()->SetFirstTower(pRedFirstTower);
 	pRedFirstTower->Transform()->SetLocalPos(Vec3(-200.f, 0.f, 3550.f));
 	pRedFirstTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	//pRedFirstTower->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f),0.f, 0.f));
@@ -273,7 +274,7 @@ void CInGameScene::Init()
 	pRedSecondTower->Transform()->SetLocalPos(Vec3(200.f, 0.f, 2700.f));
 	pRedSecondTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::SECOND);
 	pRedSecondTower->GetScript<CTowerScript>()->m_SetId(1);
-	pRedSecondTower->GetScript<CTowerScript>()->SetFirstTower(pRedFirstTower);
+	pRedSecondTower->GetScript<CTowerScript>()->SetSecondTower(pRedSecondTower);
 	pRedSecondTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pRedSecondTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pRedSecondTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
@@ -297,6 +298,7 @@ void CInGameScene::Init()
 	pBlueFirstTower->AddComponent(new CTowerScript);
 	pBlueFirstTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::FIRST);
 	pBlueFirstTower->GetScript<CTowerScript>()->m_SetId(2);
+	pBlueFirstTower->GetScript<CTowerScript>()->SetFirstTower(pBlueFirstTower);
 	pBlueFirstTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pBlueFirstTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
 	pBlueFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
@@ -321,7 +323,7 @@ void CInGameScene::Init()
 	pBlueSecondTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::SECOND);
 	pBlueSecondTower->GetScript<CTowerScript>()->m_SetId(3);
 	pBlueSecondTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pBlueSecondTower->GetScript<CTowerScript>()->SetFirstTower(pBlueFirstTower);
+	pBlueSecondTower->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
 	pBlueSecondTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
 	pBlueSecondTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pBlueSecondTower->FrustumCheck(false);

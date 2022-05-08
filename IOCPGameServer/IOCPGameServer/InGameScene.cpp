@@ -51,12 +51,13 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 		pObject->GetScript<CPlayerScript>()->Init();
 
-		FindLayer(L"Blue")->AddGameObject(pObject, false);
 		if (i % 2 == 0) {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+			FindLayer(L"Blue")->AddGameObject(pObject, false);
 		}
 		else {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+			FindLayer(L"Red")->AddGameObject(pObject, false);
 
 		}
 

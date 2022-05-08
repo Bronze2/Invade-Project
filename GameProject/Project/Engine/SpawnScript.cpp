@@ -152,6 +152,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
     }
 
 }
+
 void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
 {
     Vec3 vPos = GetObj()->Transform()->GetLocalPos();
@@ -161,7 +162,6 @@ void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
     CreateObject(pObject, L"Blue");
     std::cout << "Åº»ý" << endl;
 }
-
 
 
 CGameObject* CSpawnScript::SpawnObject_Proejectile(const wstring& _strKey, Vec3 _vLocalPos,

@@ -15,7 +15,10 @@ void CProjectileScript::Update()
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	Vec3 vRestoreLocalPos = vLocalPos;
 	
-	
+	Vec3 vPos = Transform()->GetWorldPos();
+	Vec3 vWorldDir = m_pObject->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 vLocalDir = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
+
 	if (m_pObject != nullptr) {
 		if (m_pObject->GetScript<CMinionScript>() != nullptr) {
 			if (m_pObject->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
@@ -30,6 +33,7 @@ void CProjectileScript::Update()
 	if (vLocalPos.y < 0) {
 		DeleteObject(GetObj());
 	}
+
 	switch (m_eProjectileType)
 	{
 	case PROJECTILE_TYPE::MINION:
@@ -39,6 +43,27 @@ void CProjectileScript::Update()
 		//if (p->vecKeyFrame.size() < d) {
 		//	return;
 		//}
+
+		if (!m_bRotate) {
+			Vec3 vRot = Transform()->GetLocalRot();
+			float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+
+			Transform()->SetLocalRot(vRot);
+			m_bRotate = true;
+		}
+
+		if (vPos.z != 0.f && vPos.x != 0.f) {
+			Vec3 vvalue = vPos - m_vTargetPos;
+			vvalue.Normalize();
+			int b = 0;
+		}
+		int a = 0;
+		float xvalue = m_vDir.x * 100.f * DT;
+
+		vLocalPos -= m_vDir * 500.f * DT;
+		//vLocalPos.y = vRestoreLocalPos.y;
 	}
 
 	break;
@@ -54,36 +79,31 @@ void CProjectileScript::Update()
 		vRot.x = rotate;
 		Transform()->SetLocalRot(vRot);
 		//SetDir(vRot);
+
+		if (!m_bRotate) {
+			Vec3 vRot = Transform()->GetLocalRot();
+			float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
+			float rotate = angle * 0.0174532925f;
+			vRot.y = rotate;
+
+			Transform()->SetLocalRot(vRot);
+			m_bRotate = true;
+		}
+
+		if (vPos.z != 0.f && vPos.x != 0.f) {
+			Vec3 vvalue = vPos - m_vTargetPos;
+			vvalue.Normalize();
+			int b = 0;
+		}
+		int a = 0;
+		float xvalue = m_vDir.x * 100.f * DT;
+
+		vLocalPos += m_vDir * 500.f * DT;
 	}
 	break;
 	default:
 		break;
 	}
-
-	Vec3 vPos = Transform()->GetWorldPos();
-	Vec3 vWorldDir = m_pObject->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	Vec3 vLocalDir = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
-
-	if (!m_bRotate) {
-		Vec3 vRot = Transform()->GetLocalRot();
-		float angle = atan2(vPos.x - m_vTargetPos.x, vPos.z - m_vTargetPos.z) * (180 / PI);
-		float rotate = angle * 0.0174532925f;
-		vRot.y = rotate;
-
-		Transform()->SetLocalRot(vRot);
-		m_bRotate = true;
-	}
-
-	if (vPos.z != 0.f && vPos.x != 0.f) {
-		Vec3 vvalue = vPos - m_vTargetPos;
-		vvalue.Normalize();
-		int b = 0;
-	}
-	int a = 0;
-	float xvalue = m_vDir.x * 100.f * DT;
-
-	vLocalPos -= m_vDir * 500.f * DT;
-	vLocalPos.y = vRestoreLocalPos.y;
 
 	Transform()->SetLocalPos(vLocalPos);
 	SHARED_DATA::g_bullet[m_GetId()].x = vLocalPos.x;
