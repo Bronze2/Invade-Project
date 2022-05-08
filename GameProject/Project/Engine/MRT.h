@@ -33,7 +33,7 @@ public:
     Ptr<CTexture> GetRTTex(UINT _iIdx) { return m_arrRT[_iIdx].pTarget; }
     Ptr<CTexture> GetDSTex() { return m_pDSTex; }
 
+    D3D12_VIEWPORT GetVP() { return m_tVP; }
     CMRT();
     virtual ~CMRT();
 };
-

@@ -38,6 +38,9 @@ int arrVK[(UINT)KEY_TYPE::KEY_END] =
 	'Z',
 	'L',
 	'K',
+	'E',
+	'T',
+
 
 	VK_LBUTTON,
 	VK_RBUTTON,
@@ -54,8 +57,8 @@ int arrVK[(UINT)KEY_TYPE::KEY_END] =
 	VK_NUMPAD9,
 };
 
-CKeyMgr::CKeyMgr(){}
-CKeyMgr::~CKeyMgr(){}
+CKeyMgr::CKeyMgr() {}
+CKeyMgr::~CKeyMgr() {}
 
 void CKeyMgr::Init()
 {

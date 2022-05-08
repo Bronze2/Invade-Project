@@ -140,7 +140,10 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
 void CSceneMgr::InitArrowByPlayerId(int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
 {
 	//CGameObject* player = dynamic_cast<CGameObject*>(m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]);
-	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+	if(ClientId == 0)
+		m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+	if (ClientId == 1)
+		m_pCurScene->FindLayer(L"Red")->GetParentObj()[ClientId-1]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
 }
 
 

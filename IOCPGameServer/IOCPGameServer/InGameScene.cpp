@@ -45,18 +45,20 @@ void CInGameScene::Init()
 		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		pObject->GetScript<CPlayerScript>()->m_SetId(i);
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 		pObject->GetScript<CPlayerScript>()->Init();
-		FindLayer(L"Blue")->AddGameObject(pObject, false);
 
 		if (i % 2 == 0) {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+			FindLayer(L"Blue")->AddGameObject(pObject, false);
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+
 		}
 		else {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+			FindLayer(L"Red")->AddGameObject(pObject, false);
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5000.f));
 
 		}
 

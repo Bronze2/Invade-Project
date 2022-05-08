@@ -29,12 +29,56 @@ CCamera::CCamera()
 	, m_fScale(1.f)
 	, m_eProjType(PROJ_TYPE::PERSPECTIVE)
 	, m_iLayerCheck(0)
-	,m_bModule(false)
+	, m_bModule(false)
 {
 }
 
 CCamera::~CCamera()
 {
+	if (nullptr != m_pRay)
+		delete m_pRay;
+}
+
+void CCamera::InterSectsObject(CCollider3D* _pCollider)
+{
+	if (!m_pPlayer)return;
+	Vec3 vWorldPos = Vec3(m_matCamera._41, m_matCamera._42, m_matCamera._43);
+
+	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 target = m_pPlayer->Transform()->GetWorldPos();
+	target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
+	m_pRay->position = vWorldPos;
+	m_pRay->direction = vDir;
+	float min = INFINITE;
+
+
+	if (m_pRay->Intersects(_pCollider->GetBox(), min)) {
+		Vec3 target = m_pPlayer->Transform()->GetWorldPos();
+
+		target.y += m_pPlayer->Collider3D()->GetOffsetPos().z;
+		float distance = Vec3::Distance(target, vWorldPos);
+
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
+		if (distance2 > distance)
+			return;
+		if (_pCollider->GetObj()->GetName() == L"Cover") {
+
+			if (min > 0 && min < distance) {
+				min *= 1.5f;
+
+				if (min >= distance - 100.f) {
+					min = distance - 100.f;
+				}
+				m_vFront = (m_pRay->direction * min);
+
+			}
+		}
+		else {
+			m_arrInterSectObject.push_back(_pCollider->GetObj());
+		}
+
+	}
+
 }
 
 void CCamera::FinalUpdate()
@@ -52,6 +96,7 @@ void CCamera::FinalUpdate()
 	matViewRot._21 = vRight.y; matViewRot._22 = vUp.y; matViewRot._23 = vFront.y;
 	matViewRot._31 = vRight.z; matViewRot._32 = vUp.z; matViewRot._33 = vFront.z;
 
+	m_vLook.x = vRight.z; m_vLook.y = vUp.z; m_vLook.z = vFront.z;
 	m_matView = matViewTrans * matViewRot;
 
 	// 투영행렬
@@ -65,15 +110,16 @@ void CCamera::FinalUpdate()
 	}
 	else
 	{
-		m_matProj = XMMatrixOrthographicLH(res.fWidth * m_fScale, res.fHeight * m_fScale, m_fNear, m_fFar);
+		m_matProj = XMMatrixOrthographicLH(m_fWidth * m_fScale, m_fHeight * m_fScale, m_fNear, m_fFar);
 		//m_matProj = XMMatrixOrthographicOffCenterLH(0.f, res.fWidth, res.fHeight, 0.f, m_fNear, m_fFar);		
+		//그림자
 	}
 
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 
 	m_frustum.FinalUpdate();
-	if(!m_bModule)
+	if (!m_bModule)
 		CRenderMgr::GetInst()->RegisterCamera(this);
 }
 
@@ -85,7 +131,7 @@ void CCamera::SortGameObject()
 		pair.second.clear();
 
 	m_vecParticle.clear();
-	
+
 
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
@@ -106,6 +152,15 @@ void CCamera::SortGameObject()
 
 						for (UINT iMtrl = 0; iMtrl < iMtrlCount; ++iMtrl)
 						{
+							bool bIntersect = false;
+							for (int k = 0; k < m_arrInterSectObject.size(); ++k) {
+								if (m_arrInterSectObject[k] == vecObj[j]) {
+									bIntersect = true;
+									break;
+								}
+							}
+							if (bIntersect)
+								continue;
 							if (vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl) == nullptr
 								|| vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl)->GetShader() == nullptr)
 							{
@@ -116,6 +171,7 @@ void CCamera::SortGameObject()
 								continue;
 							}
 
+
 							Ptr<CMaterial> pMtrl = vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl);
 
 							// Material 을 참조하고 있지 않거나, Material 에 아직 Shader 를 연결하지 않은 상태라면 Continue
@@ -125,10 +181,12 @@ void CCamera::SortGameObject()
 							// Shader 가 Deferred 인지 Forward 인지에 따라서
 							// 인스턴싱 그룹을 분류한다.
 							map<ULONG64, vector<tInstObj>>* pMap = NULL;
-							if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::DEFERRED)
+							if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::DEFERRED) {
 								pMap = &m_mapInstGroup_D;
-							else if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::FORWARD)
+							}
+							else if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::FORWARD) {
 								pMap = &m_mapInstGroup_F;
+							}
 							else
 								continue;
 
@@ -169,12 +227,14 @@ void CCamera::SortShadowObject()
 			}
 		}
 	}
+
 }
 
 void CCamera::Render_Deferred()
 {
 	g_transform.matView = GetViewMat();
 	g_transform.matProj = GetProjMat();
+
 	g_transform.matViewInv = m_matViewInv;
 	g_transform.matProjInv = m_matProjInv;
 
@@ -483,6 +543,7 @@ void CCamera::Render_ShadowMap()
 		m_vecShadowObj[i]->MeshRender()->Render_ShadowMap();
 	}
 }
+
 
 void CCamera::SaveToScene(FILE* _pFile)
 {

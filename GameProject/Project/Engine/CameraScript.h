@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Script.h"
 
 class CCameraScript :
@@ -19,9 +19,15 @@ private:
     Vec3 m_vZoomRestoreFront;
     Vec3 m_vRestorePos;
 
+    bool m_bBackMode;
+    Vec3 m_vBackRestorePos;
+
     CAMERA_EFFECT_TYPE m_tEffectType;
 
+
+
 public:
+
     CCameraScript();
     virtual ~CCameraScript();
 
@@ -31,10 +37,29 @@ public:
 
     void SetStartMousePoint(const Vec2& _vStartMousePoint) { m_vStartMousePoint = _vStartMousePoint; }
 
-    Vec3& CameraShake(Vec3 _vPos, float _fDamageTime, float _fDamageSize);
-    Vec3& CameraZoom(Vec3 _vPos);
+    Vec3 CameraShake(Vec3 _vPos, float _fDamageTime, float _fDamageSize);
+    Vec3 CameraZoom(Vec3 _vPos);
+
+    void SetBackMode(bool _bTrue) { m_bBackMode = _bTrue; }
+    void SetBackRestorePos(Vec3 _vPos) { m_vBackRestorePos = _vPos; }
 
     void Init();
 
     CLONE(CCameraScript);
+
+    //¿©±â¼­ºÎÅÍ
+
+private:
+    float m_vCameraDistanceOffset;
+    CGameObject* m_pPlayer;
+
+
+public:
+    void SetDistanceOffset(CGameObject* _pObject);
+
+
+
+
+
+
 };

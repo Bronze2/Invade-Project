@@ -59,17 +59,17 @@ void CTowerScript::m_FAttack()
 			m_cAttackInterval = (m_cAttackEnd - m_cAttackStart) / CLOCKS_PER_SEC;
 			if (m_cAttackInterval >= ATTACK_INTERVAL) {
 				if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
-				//	if (CAMP_STATE::BLUE == m_eCampState)
-				//		CreateProjectile( L"Blue");
-				//	else if (CAMP_STATE::RED == m_eCampState)
-				//		CreateProjectile(L"Red");
-				//}
-				//if (m_pTarget->GetScript<CPlayerScript>() != nullptr && m_pTarget->GetScript<CPlayerScript>()->GetCamp() != m_eCampState) {
-				//	std::cout << " Found Player" << endl;
-				//	if (CAMP_STATE::BLUE == m_eCampState )
-				//		CreateProjectile(L"Blue");
-				//	else if (CAMP_STATE::RED == m_eCampState)
-				//		CreateProjectile(L"Red");
+					if (CAMP_STATE::BLUE == m_eCampState)
+						CreateProjectile(L"Blue");
+					else if (CAMP_STATE::RED == m_eCampState)
+						CreateProjectile(L"Red");
+				}
+				if (m_pTarget->GetScript<CPlayerScript>() != nullptr && m_pTarget->GetScript<CPlayerScript>()->GetCamp() != m_eCampState) {
+					std::cout << " Found Player" << endl;
+					if (CAMP_STATE::BLUE == m_eCampState)
+						CreateProjectile(L"Blue");
+					else if (CAMP_STATE::RED == m_eCampState)
+						CreateProjectile(L"Red");
 				}
 				m_bAttackStart = false;
 			}
@@ -80,7 +80,7 @@ void CTowerScript::m_FAttack()
 void CTowerScript::m_FRotate()
 {
 	Vec3 vPos = Transform()->GetWorldPos();
-	Vec3 vRot=Transform()->GetLocalRot();
+	Vec3 vRot = Transform()->GetLocalRot();
 	if (nullptr != m_pTarget) {
 		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
@@ -91,7 +91,7 @@ void CTowerScript::m_FRotate()
 		SHARED_DATA::g_tower[m_GetId()] = vRot;
 		CServer::GetInst()->send_rot_tower_packet(m_GetId());
 	}
-	
+
 }
 
 void CTowerScript::Update()
@@ -131,7 +131,7 @@ void CTowerScript::OnDetectionExit(CGameObject* _pOther)
 	}
 }
 
-CTowerScript::CTowerScript():CScript((UINT)SCRIPT_TYPE::TOWERSCRIPT), m_bAttackStart(false), m_bFindNear(false)
+CTowerScript::CTowerScript() :CScript((UINT)SCRIPT_TYPE::TOWERSCRIPT), m_bAttackStart(false), m_bFindNear(false)
 {
 }
 
@@ -181,18 +181,34 @@ void CTowerScript::CreateProjectile(const wstring& _Layer)
 	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
+
+	Vec3 vPlayerTargetPos = Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z);
+	Vec3 vMinionTargetPos = Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z);
+	Vec3 vProjectileStartPos = Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + 185.f, GetObj()->Transform()->GetWorldPos().z);
+
 	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
-		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(vPlayerTargetPos);
 	}
 	else {
-		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(vMinionTargetPos);
 	}
 
-	pObject->Transform()->SetLocalPos(Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + GetObj()->Collider3D()->GetOffsetPos().y, GetObj()->Transform()->GetWorldPos().z));
+	pObject->Transform()->SetLocalPos(vProjectileStartPos);
 
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	pObject->GetScript<CProjectileScript>()->SetDir(GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT));
+
+	Vec3 vDir;
+	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+		vDir = vPlayerTargetPos - vProjectileStartPos;
+	}
+	else {
+		vDir = vMinionTargetPos - vProjectileStartPos;
+	}
+	vDir.Normalize();
+
+	pObject->GetScript<CProjectileScript>()->SetDir(vDir);
+
 	pObject->GetScript<CProjectileScript>()->Init();
 
 

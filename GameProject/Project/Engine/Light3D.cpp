@@ -6,7 +6,7 @@
 #include "ResMgr.h"
 #include "Camera.h"
 
-CLight3D::CLight3D() :CComponent(COMPONENT_TYPE::LIGHT3D),m_iArrIdx(-1),m_pCamObj(nullptr)
+CLight3D::CLight3D() :CComponent(COMPONENT_TYPE::LIGHT3D), m_iArrIdx(-1), m_pCamObj(nullptr)
 {
 	m_pCamObj = new CGameObject;
 	m_pCamObj->AddComponent(new CTransform);
@@ -16,7 +16,7 @@ CLight3D::CLight3D() :CComponent(COMPONENT_TYPE::LIGHT3D),m_iArrIdx(-1),m_pCamOb
 	m_pCamObj->Camera()->SetLayerAllCheck();
 }
 
-CLight3D::CLight3D(const CLight3D& _Light):CComponent(_Light),m_tLightInfo(_Light.m_tLightInfo),m_pLightMtrl(_Light.m_pLightMtrl),m_pVolumeMesh(_Light.m_pVolumeMesh),m_iArrIdx(-1),m_pCamObj(nullptr)
+CLight3D::CLight3D(const CLight3D& _Light) :CComponent(_Light), m_tLightInfo(_Light.m_tLightInfo), m_pLightMtrl(_Light.m_pLightMtrl), m_pVolumeMesh(_Light.m_pVolumeMesh), m_iArrIdx(-1), m_pCamObj(nullptr)
 {
 	m_pCamObj = _Light.m_pCamObj->Clone();
 }
@@ -38,8 +38,8 @@ void CLight3D::SetLightType(LIGHT_TYPE _eType)
 		m_pCamObj->Camera()->SetProjType(PROJ_TYPE::ORTHGRAPHIC);
 		m_pCamObj->Camera()->SetScale(1.f);
 		m_pCamObj->Camera()->SetFar(100000.f);
-		m_pCamObj->Camera()->SetWidth(512.f);
-		m_pCamObj->Camera()->SetHeight(512.f);
+		m_pCamObj->Camera()->SetWidth(4096.f * 2.5f);					 //그림자 
+		m_pCamObj->Camera()->SetHeight(4096.f * 2.5f);				 //그림자 
 	}
 	else if (LIGHT_TYPE::POINT == (LIGHT_TYPE)m_tLightInfo.iLightType)
 	{

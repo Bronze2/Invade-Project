@@ -63,4 +63,3 @@ public:
 
     CLONE(CTowerScript);
 };
-

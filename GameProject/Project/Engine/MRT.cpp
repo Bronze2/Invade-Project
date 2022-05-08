@@ -45,6 +45,7 @@ void CMRT::Create(UINT _iCount, tRT* _arrRT, Ptr<CTexture> _pDSTex)
 	}
 	m_tVP = D3D12_VIEWPORT{ 0.f,0.f,m_arrRT[0].pTarget->Width(),m_arrRT[0].pTarget->Height(),0.f,1.f };
 	m_tScissorRect = D3D12_RECT{ 0,0,(LONG)m_arrRT[0].pTarget->Width(),(LONG)m_arrRT[0].pTarget->Height() };
+
 }
 
 void CMRT::OMSet(UINT _iCount, UINT _iOffset)
@@ -107,14 +108,14 @@ void CMRT::Clear(UINT _iRTIdx)
 	float arrClearColor[4] = { m_arrRT[_iRTIdx].vClearColor.x,m_arrRT[_iRTIdx].vClearColor.y,m_arrRT[_iRTIdx].vClearColor.z,m_arrRT[_iRTIdx].vClearColor.w };
 
 	CMDLIST->ClearRenderTargetView(hRTVHandle, arrClearColor, 0, nullptr);
-	if (nullptr != m_pDSTex) 
+	if (nullptr != m_pDSTex)
 	{
 		D3D12_CPU_DESCRIPTOR_HANDLE hDSVHandle = m_pDSTex->GetDSV()->GetCPUDescriptorHandleForHeapStart();
 		CMDLIST->ClearDepthStencilView(hDSVHandle, D3D12_CLEAR_FLAG_DEPTH, 1.f, 0, 0, nullptr);
 	}
 }
 
-CMRT::CMRT():m_arrRT{},m_iRTCount(),m_ResToTarget()
+CMRT::CMRT() :m_arrRT{}, m_iRTCount(), m_ResToTarget()
 {
 }
 

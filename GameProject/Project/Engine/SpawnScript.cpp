@@ -25,7 +25,7 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos,
 	pObject->Collider3D()->SetOffsetScale(Vec3(70.f, 150.f, 70.f));
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(_vLocalPos);
+	pObject->Transform()->SetLocalPos(Vec3(0,0,100));
 	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
    // if (CAMP_STATE::BLUE == _eCamp)
    //     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-180.f), 0.f, 0.f));

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Script.h"
 
 class CCameraScript :
@@ -24,7 +24,10 @@ private:
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
+
+
 public:
+
     CCameraScript();
     virtual ~CCameraScript();
 
@@ -43,4 +46,20 @@ public:
     void Init();
 
     CLONE(CCameraScript);
+
+    //¿©±â¼­ºÎÅÍ
+
+private:
+    float m_vCameraDistanceOffset;
+    CGameObject* m_pPlayer;
+
+
+public:
+    void SetDistanceOffset(CGameObject* _pObject);
+
+
+
+
+
+
 };

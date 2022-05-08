@@ -24,11 +24,28 @@ void CCollider3D::FinalUpdate()
 	Matrix matScale = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
+	Matrix bWorld = XMLoadFloat4x4(&m_matColWorld);
+	m_bBound = {};
+	m_bBound.Transform(m_bBound, m_matColWorld);
+	XMFLOAT3 corners[8] = {};
+	m_bBound.GetCorners(corners);
 }
 
 void CCollider3D::Render()
 {
-	//return;
+	static bool bRender = true;
+	if (KEY_TAB(KEY_TYPE::KEY_T)) {
+		bRender = !bRender;
+	}
+
+	if (!bRender)
+		return;
+	// Toggle Key
+
+
+
+
+
 	if (!IsActive())
 		return;
 	static CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
@@ -102,15 +119,15 @@ void CCollider3D::operator=(const CCollider3D* _pOther)
 	m_iColID = iColID;
 }
 
-CCollider3D::CCollider3D():CComponent(COMPONENT_TYPE::COLLIDER3D)
-,m_vOffsetPos(Vec3(0.f,0.f,0.f)),m_vOffsetScale(Vec3(1.f,1.f,1.f)),m_pColMtrl(nullptr),m_pColMesh(nullptr)
-,m_iColID(g_iColID++),m_iCollisionCount(0)
+CCollider3D::CCollider3D() :CComponent(COMPONENT_TYPE::COLLIDER3D)
+, m_vOffsetPos(Vec3(0.f, 0.f, 0.f)), m_vOffsetScale(Vec3(1.f, 1.f, 1.f)), m_pColMtrl(nullptr), m_pColMesh(nullptr)
+, m_iColID(g_iColID++), m_iCollisionCount(0)
 {
 	m_pColMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"Collider2DMtrl_0");
 }
 
 CCollider3D::CCollider3D(const CCollider3D& _Other) : CComponent(COMPONENT_TYPE::COLLIDER3D)
-,m_vOffsetPos(_Other.m_vOffsetPos), m_vOffsetScale(_Other.m_vOffsetScale), m_eType(_Other.m_eType),
+, m_vOffsetPos(_Other.m_vOffsetPos), m_vOffsetScale(_Other.m_vOffsetScale), m_eType(_Other.m_eType),
 m_pColMesh(_Other.m_pColMesh), m_pColMtrl(_Other.m_pColMtrl), m_iColID(g_iColID), m_iCollisionCount(0), m_matColWorld(_Other.m_matColWorld)
 {
 }
