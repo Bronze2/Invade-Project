@@ -115,6 +115,11 @@ void CInGameScene::Init()
 	Ptr<CTexture>pPlayerRed = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Red");
 	Ptr<CTexture>pPlayerBlue = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Blue");
 
+	CGameObject* pEmptyPlayer = new CGameObject;
+	pEmptyPlayer->AddComponent(new CTransform);
+	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
+	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
+
 
 	for (int i = 0; i < Network::GetInst()->getOtherClientSize() + 1; ++i) {
 		pObject = new CGameObject;
@@ -211,21 +216,21 @@ void CInGameScene::Init()
 		pObject->AddChild(pBow);
 		FindLayer(L"Blue")->AddGameObject(pBow);
 		if (i == Network::GetInst()->getHostId()) {
-
+			if (i % 2 == 0) {
+				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+			}
+			else {
+				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5000.f));
+			}
 			pObject->GetScript<CPlayerScript>()->SetMain();
 			pBow->GetScript<CBowScript>()->SetMain();
 			//pObject->AddChild(pMainCam);
 		}
-		pMainCam->Camera()->SetPlayer(pObject);
-		pMainCam->Camera()->SetbPlay(true);
+
 
 
 	}
-	CGameObject* pEmptyPlayer = new CGameObject;
-	pEmptyPlayer->AddComponent(new CTransform);
-	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
-	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
-
+	
 	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
 
