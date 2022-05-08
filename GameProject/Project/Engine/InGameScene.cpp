@@ -149,11 +149,11 @@ void CInGameScene::Init()
 		pObject->FrustumCheck(false);
 
 		if (i % 2 == 0) {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 		}
 		else {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5000.f));
-			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5000.f));
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
 		}
 
 
@@ -221,7 +221,7 @@ void CInGameScene::Init()
 
 			}
 			else {
-				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800));
+				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 			}
 			pMainCam->Camera()->SetPlayer(pObject);
 			pMainCam->Camera()->SetbPlay(true);
