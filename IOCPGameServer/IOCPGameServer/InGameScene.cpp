@@ -52,13 +52,13 @@ void CInGameScene::Init()
 		if (i % 2 == 0) {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 			FindLayer(L"Blue")->AddGameObject(pObject, false);
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 
 		}
 		else {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 			FindLayer(L"Red")->AddGameObject(pObject, false);
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5000.f));
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 
 		}
 

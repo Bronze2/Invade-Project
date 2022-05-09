@@ -61,7 +61,7 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
 	m_pArrow[ArrowId]->SetActive(true);
 
-	cout << "플레이어 ID: " <<m_GetId() <<"화살 ID "<< ArrowId <<" 생성 , 파워"<< Power<<endl;
+	//cout << "플레이어 ID: " <<m_GetId() <<"화살 ID "<< ArrowId <<" 생성 , 파워"<< Power<<endl;
 	CServer::GetInst()->send_create_arrow_packet(m_GetId(), ArrowId, Pos, Rot);
 
 }

@@ -268,7 +268,7 @@ void CInGameScene::Init()
 	pRedFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedFirstTower->FrustumCheck(false);
 
-	pRedFirstTower->MeshRender()->SetDynamicShadow(true);
+	pRedFirstTower->MeshRender()->SetDynamicShadow(false);
 
 
 

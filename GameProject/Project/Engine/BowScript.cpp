@@ -103,7 +103,7 @@ void CBowScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot)
 
 	m_pArrow[ArrowId]->SetActive(true);
 
-	cout << "화살 생성 -other"<< m_pArrow[ArrowId]->GetScript<CArrowScript>()->GetParentId()<<"에서 받아옴" << endl;
+	//cout << "화살 생성 -other"<< m_pArrow[ArrowId]->GetScript<CArrowScript>()->GetParentId()<<"에서 받아옴" << endl;
 
 }
 

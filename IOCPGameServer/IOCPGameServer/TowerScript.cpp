@@ -65,7 +65,7 @@ void CTowerScript::m_FAttack()
 						CreateProjectile(L"Red");
 				}
 				if (m_pTarget->GetScript<CPlayerScript>() != nullptr && m_pTarget->GetScript<CPlayerScript>()->GetCamp() != m_eCampState) {
-					std::cout << " Found Player" << endl;
+					//std::cout << " Found Player" << endl;
 					if (CAMP_STATE::BLUE == m_eCampState)
 						CreateProjectile(L"Blue");
 					else if (CAMP_STATE::RED == m_eCampState)

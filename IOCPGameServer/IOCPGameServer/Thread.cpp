@@ -179,11 +179,11 @@ void CThread::worker_Thread()
 
 				if (user_id % 2 == 0) {
 					SHARED_DATA::g_clients[user_id].m_camp = RED;
-					SHARED_DATA::g_clients[user_id].Pos = Vec3(0,0,0);
+					SHARED_DATA::g_clients[user_id].Pos = Vec3(0,0,1125);
 
 				}
 				else {
-					SHARED_DATA::g_clients[user_id].Pos = Vec3(0, 0, 5000);
+					SHARED_DATA::g_clients[user_id].Pos = Vec3(0, 0, 5800);
 					SHARED_DATA::g_clients[user_id].m_camp = BLUE;
 				}
 				SHARED_DATA::g_clients[user_id].view_list.clear();
@@ -276,8 +276,8 @@ void CThread::process_packet(int user_id, char* buf)
 		cs_packet_lobby_gamestart* packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
 		if (packet->id == user_id) {
 			if (SHARED_DATA::g_clients[user_id].m_isHost) {
-				SHARED_DATA::g_clients[0].Pos = Vec3(0, 0, 0);
-				SHARED_DATA::g_clients[1].Pos = Vec3(0, 0, 5000);
+				SHARED_DATA::g_clients[0].Pos = Vec3(0, 0, 1125);
+				SHARED_DATA::g_clients[1].Pos = Vec3(0, 0, 5800);
 
 				for (int i = 0; i < SHARED_DATA::current_user; ++i) {
 					CService::GetInst()->enter_game(i);

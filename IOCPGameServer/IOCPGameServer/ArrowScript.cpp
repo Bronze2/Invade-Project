@@ -165,7 +165,7 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 		if (nullptr != _pOther->GetObj()) {
 			if (_pOther->GetObj()->GetScript<CPlayerScript>()->GetCamp() != GetCamp())
 			{
-				cout << _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
+				//cout << _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
 				_pOther->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
 				GetObj()->SetActive(false);
 				Init();
