@@ -26,6 +26,7 @@ private:
 
     bool m_bCheckDegree;
 
+    SKILL* m_tSkill;
 
 public:
     virtual void Awake();

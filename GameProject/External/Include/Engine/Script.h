@@ -25,6 +25,7 @@ enum class SCRIPT_TYPE {
     BOWSCRIPT,
     EMPTYPLAYERSCRIPT,
 
+
     END,
 };
 

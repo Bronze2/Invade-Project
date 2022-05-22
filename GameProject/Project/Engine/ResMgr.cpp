@@ -788,6 +788,18 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"ParticleUpdateShader", pShader);
 
 	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate2", "cs_5_0");
+	AddRes(L"ParticleUpdateShader2", pShader);
+
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate3", "cs_5_0");
+	AddRes(L"ParticleUpdateShader3", pShader);
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate4", "cs_5_0");
+	AddRes(L"ParticleUpdateShader4", pShader);
+
+
+	pShader = new CShader;
 	pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
 	AddRes(L"Animation3DUpdateShader", pShader);
 
@@ -951,6 +963,29 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
 
 	AddRes(L"ParticleUpdateMtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader2"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate2Mtrl", pMtrl);
+
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader3"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate3Mtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader4"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate4Mtrl", pMtrl);
+
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();

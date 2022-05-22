@@ -30,11 +30,14 @@ private:
 
 	Vec4				m_vStartColor;	// 파티클 초기 색상
 	Vec4				m_vEndColor;    // 파티클 최종 색상
+	Vec4				m_vDir;
+
+	Vec2 m_vTime;
 
 public:
 	virtual void FinalUpdate();
 	virtual void Render();
-	void Init( Ptr<CTexture> _pTexture);
+	void Init( Ptr<CTexture> _pTexture, const wstring& _MtrlName= L"ParticleUpdateMtrl");
 
 
 	void SetMinSpeed(float _fMinSpeed) { m_fMinSpeed = _fMinSpeed; }
@@ -44,6 +47,7 @@ public:
 	void SetMinLifeTime(float _fMinLifeTime) { m_fMinLifeTime = _fMinLifeTime; }
 	void SetMaxLifeTime(float _fMaxLifeTime) { m_fMaxLifeTime = _fMaxLifeTime; }
 	void SetFrequency(float _fFrequency) { m_fFrequency = _fFrequency; }
+	void SetDir(Vec4 _vDir) { m_vDir = _vDir; }
 	void SetAccTime(float _fAccTime) { m_fAccTime = _fAccTime; }
 public:
 	void SetStartColor(const Vec4& _vColor) { m_vStartColor = _vColor; }

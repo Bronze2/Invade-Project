@@ -154,6 +154,7 @@ enum class COMPONENT_TYPE
 	PARTICLESYSTEM,
 	TERRAIN,
 	SENSOR,
+	SKILL,
 	END,
 	SCRIPT,
 };
@@ -366,7 +367,8 @@ enum class CAMERA_EFFECT_TYPE {
 };
 
 enum class ELEMENT_TYPE {
-	FROZEN = 0,
+	START=-1,
+	WATER = 0,
 	FIRE = 1,
 	DARK = 2,
 	THUNDER = 3,
@@ -382,3 +384,9 @@ enum class PLAYER_STATE {
 	DIE,
 	END,
 };
+
+enum class SKILL_TYPE {
+	ACT,
+	PASSIVE,
+};
+

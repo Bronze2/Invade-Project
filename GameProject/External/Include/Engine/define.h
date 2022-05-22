@@ -366,7 +366,7 @@ enum class CAMERA_EFFECT_TYPE {
 };
 
 enum class ELEMENT_TYPE {
-	FROZEN = 0,
+	WATER = 0,
 	FIRE = 1,
 	DARK = 2,
 	THUNDER = 3,

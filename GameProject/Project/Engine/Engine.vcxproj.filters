@@ -204,9 +204,6 @@
     <ClCompile Include="MinionScript.cpp">
       <Filter>Script\Minion</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterScript.cpp">
-      <Filter>Script\Monster</Filter>
-    </ClCompile>
     <ClCompile Include="ProjectileScript.cpp">
       <Filter>Script\Projectile</Filter>
     </ClCompile>
@@ -215,6 +212,42 @@
     </ClCompile>
     <ClCompile Include="TowerScript.cpp">
       <Filter>Script\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillMgr.cpp">
+      <Filter>Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterSkill0Script.cpp">
+      <Filter>Script\Skill\Water\E</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterSkill1Script.cpp">
+      <Filter>Script\Skill\Water\Z</Filter>
+    </ClCompile>
+    <ClCompile Include="DarkSkill0Script.cpp">
+      <Filter>Script\Skill\Dark\E</Filter>
+    </ClCompile>
+    <ClCompile Include="DarkSkill1Script.cpp">
+      <Filter>Script\Skill\Dark\Z</Filter>
+    </ClCompile>
+    <ClCompile Include="FireSkill0Script.cpp">
+      <Filter>Script\Skill\Fire\E</Filter>
+    </ClCompile>
+    <ClCompile Include="FireSkill1Script.cpp">
+      <Filter>Script\Skill\Fire\Z</Filter>
+    </ClCompile>
+    <ClCompile Include="WindSkill0Script.cpp">
+      <Filter>Script\Skill\Wind\E</Filter>
+    </ClCompile>
+    <ClCompile Include="WindSkill1Script.cpp">
+      <Filter>Script\Skill\Wind\Z</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderSkill1Script.cpp">
+      <Filter>Script\Skill\Thunder\Z</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderSkill0Script.cpp">
+      <Filter>Script\Skill\Thunder\E</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Object\Component\SKILL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +431,6 @@
     <ClInclude Include="MinionScript.h">
       <Filter>Script\Minion</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterScript.h">
-      <Filter>Script\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="ProjectileScript.h">
       <Filter>Script\Projectile</Filter>
     </ClInclude>
@@ -409,6 +439,42 @@
     </ClInclude>
     <ClInclude Include="TowerScript.h">
       <Filter>Script\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillMgr.h">
+      <Filter>Mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterSkill0Script.h">
+      <Filter>Script\Skill\Water\E</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterSkill1Script.h">
+      <Filter>Script\Skill\Water\Z</Filter>
+    </ClInclude>
+    <ClInclude Include="DarkSkill0Script.h">
+      <Filter>Script\Skill\Dark\E</Filter>
+    </ClInclude>
+    <ClInclude Include="DarkSkill1Script.h">
+      <Filter>Script\Skill\Dark\Z</Filter>
+    </ClInclude>
+    <ClInclude Include="FireSkill0Script.h">
+      <Filter>Script\Skill\Fire\E</Filter>
+    </ClInclude>
+    <ClInclude Include="FireSkill1Script.h">
+      <Filter>Script\Skill\Fire\Z</Filter>
+    </ClInclude>
+    <ClInclude Include="WindSkill0Script.h">
+      <Filter>Script\Skill\Wind\E</Filter>
+    </ClInclude>
+    <ClInclude Include="WindSkill1Script.h">
+      <Filter>Script\Skill\Wind\Z</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderSkill1Script.h">
+      <Filter>Script\Skill\Thunder\Z</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderSkill0Script.h">
+      <Filter>Script\Skill\Thunder\E</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Object\Component\SKILL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -496,9 +562,6 @@
     <Filter Include="Script\Minion">
       <UniqueIdentifier>{fd0af27b-d7d8-4618-886a-f4b9b0b4d284}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Monster">
-      <UniqueIdentifier>{4b430998-26ce-4dbb-9f52-a8e42b455f98}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\Projectile">
       <UniqueIdentifier>{2438b489-50a7-4e5f-87a2-d0fb15352840}</UniqueIdentifier>
     </Filter>
@@ -507,6 +570,57 @@
     </Filter>
     <Filter Include="Script\Tower">
       <UniqueIdentifier>{aa61d899-f866-45ec-987e-7d54f72d03f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill">
+      <UniqueIdentifier>{bc1f7b4c-e618-470c-909d-a18cdc5cf3a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Water">
+      <UniqueIdentifier>{9ff0ba5c-f604-49b0-9c1f-58da323095b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Water\E">
+      <UniqueIdentifier>{2b8ca456-dc49-4b8a-b96d-e75186b6bd88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Water\Z">
+      <UniqueIdentifier>{9cafcf9f-2e20-435f-950e-6d7f2c4c3fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Dark">
+      <UniqueIdentifier>{c4f01cc0-895b-41e9-851e-4526cb5c2e42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Dark\E">
+      <UniqueIdentifier>{031b9006-b2c7-4256-b62b-939d9b6fd200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Dark\Z">
+      <UniqueIdentifier>{41a868ee-9d31-4f6a-a921-aaac94f74fab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Thunder">
+      <UniqueIdentifier>{34ac0639-03af-4e2b-9fc7-867ea2a66eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Thunder\E">
+      <UniqueIdentifier>{4eb9e2ae-a4a1-4bd1-ada1-20b699358be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Thunder\Z">
+      <UniqueIdentifier>{982b8329-34fe-4e9d-a1cb-158577936db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Wind">
+      <UniqueIdentifier>{6abf096e-5b14-4bf4-9355-dd6ef2f7f8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Wind\E">
+      <UniqueIdentifier>{d555ff7a-0ccc-40f3-a1d3-7dfad8fee3bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Wind\Z">
+      <UniqueIdentifier>{9f7fd0c5-04b0-4bda-9f47-5a663f9be813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Fire">
+      <UniqueIdentifier>{bdf8754d-9cf3-4410-b113-c4880a521d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Fire\E">
+      <UniqueIdentifier>{520899a4-79c6-43ce-aad7-b088a817080c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Skill\Fire\Z">
+      <UniqueIdentifier>{6ba0ba75-5084-425f-8008-002dc8c87c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component\SKILL">
+      <UniqueIdentifier>{70655f66-41d3-4604-a571-57304fa57458}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

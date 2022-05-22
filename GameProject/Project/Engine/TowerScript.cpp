@@ -163,8 +163,13 @@ void CTowerScript::FinalUpdate()
 
 void CTowerScript::OnDetectionEnter(CGameObject* _pOther)
 {
-	m_arrEnemy.push_back(_pOther);
-	m_bFindNear = true;
+	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
+		m_arrEnemy.push_back(_pOther);
+		m_bFindNear = true;
+	}
+	else {
+	
+	}
 }
 
 void CTowerScript::OnDetection(CGameObject* _pOther)

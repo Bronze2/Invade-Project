@@ -180,6 +180,10 @@ call EngineCopy.bat</Command>
     <ClInclude Include="BowScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
+    <ClInclude Include="DarkSkill0Script.h" />
+    <ClInclude Include="DarkSkill1Script.h" />
+    <ClInclude Include="FireSkill0Script.h" />
+    <ClInclude Include="FireSkill1Script.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="EmptyPlayerScript.h" />
@@ -211,7 +215,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="MeshRender.h" />
-    <ClInclude Include="MonsterScript.h" />
     <ClInclude Include="MRT.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PathMgr.h" />
@@ -229,16 +232,24 @@ call EngineCopy.bat</Command>
     <ClInclude Include="SensorMgr.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="ThunderSkill0Script.h" />
+    <ClInclude Include="ThunderSkill1Script.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="WaterSkill0Script.h" />
+    <ClInclude Include="WaterSkill1Script.h" />
+    <ClInclude Include="WindSkill0Script.h" />
+    <ClInclude Include="WindSkill1Script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator3D.cpp" />
@@ -246,6 +257,10 @@ call EngineCopy.bat</Command>
     <ClCompile Include="BowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
+    <ClCompile Include="DarkSkill0Script.cpp" />
+    <ClCompile Include="DarkSkill1Script.cpp" />
+    <ClCompile Include="FireSkill0Script.cpp" />
+    <ClCompile Include="FireSkill1Script.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="EmptyPlayerScript.cpp" />
@@ -274,7 +289,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshData.cpp" />
     <ClCompile Include="MeshRender.cpp" />
-    <ClCompile Include="MonsterScript.cpp" />
     <ClCompile Include="MRT.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PathMgr.cpp" />
@@ -295,15 +309,23 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ThunderSkill0Script.cpp" />
+    <ClCompile Include="ThunderSkill1Script.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="WaterSkill0Script.cpp" />
+    <ClCompile Include="WaterSkill1Script.cpp" />
+    <ClCompile Include="WindSkill0Script.cpp" />
+    <ClCompile Include="WindSkill1Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl" />

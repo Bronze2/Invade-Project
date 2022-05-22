@@ -17,7 +17,7 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <Windows.h>
 #include "global.h"
-#include "d3dUtil.h";
+
 #include <WS2tcpip.h>
 #include <thread>
 #include <mutex>

@@ -30,6 +30,7 @@
 #include "RenderMgr.h"
 #include "Device.h"
 #include "SensorMgr.h"
+#include "SkillMgr.h"
 
 #include "GridScript.h"
 #include "CameraScript.h"
@@ -116,6 +117,11 @@ void CSceneMgr::Init()
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
 	CResMgr::GetInst()->Load<CTexture>(L"Snow", L"Texture\\Particle\\Snow50px.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Bubble50", L"Texture\\Particle\\Bubbles50px.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Bubble99", L"Texture\\Particle\\Bubbles99px.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Sparks", L"Texture\\Particle\\Sparks.png");
+	CResMgr::GetInst()->Load<CTexture>(L"HardRain", L"Texture\\Particle\\HardRain.png");
+	CResMgr::GetInst()->Load<CTexture>(L"HardRain2", L"Texture\\Particle\\HardRain2.png");
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"particle_00", L"Texture\\Particle\\particle_00.png");
@@ -145,6 +151,122 @@ void CSceneMgr::Init()
 //	Ptr<CMaterial> pMtrl = new CMaterial;
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
+
+
+	SKILL* Skill= new SKILL;
+	Skill->Name = L"물의 축복";
+	Skill->Code =0;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WATER;
+	Skill->fCoolTime = 10;
+	Skill->fDuration = 3;
+	Skill->DotDamage = -16.4f;
+	Skill->fDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(0, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"성수";
+	Skill->Code = 1;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WATER;
+	Skill->fCoolTime = 20;
+	Skill->fDuration = 5;
+	Skill->DotDamage = -20.f;
+	Skill->fDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"나아가는 바람";
+	Skill->Code = 2;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WIND;
+	Skill->fCoolTime = 12;
+	Skill->fDuration = 5;
+	Skill->fDamage = 20.f;
+	Skill->DotDamage =0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"꿰뚫는 화살";
+	Skill->Code = 3;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WIND;
+	Skill->fCoolTime = 12;
+	Skill->fDuration = 0;
+	Skill->fDamage = 32.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"드리우는 어둠";
+	Skill->Code = 4;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::DARK;
+	Skill->fCoolTime = 15;
+	Skill->fDuration = 3;
+	Skill->fDamage = 20.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+	Skill->Name = L"피해망상";
+	Skill->Code = 5;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::DARK;
+	Skill->fCoolTime = 30;
+	Skill->fDuration = 5;
+	Skill->fDamage = 0.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+	Skill = new SKILL;
+	Skill->Name = L"감전";
+	Skill->Code = 6;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::THUNDER;
+	Skill->fCoolTime = 20;
+	Skill->fDuration = 5;
+	Skill->fDamage = 15.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+	Skill->Name = L"낙뢰";
+	Skill->Code = 7;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::THUNDER;
+	Skill->fCoolTime = 20;
+	Skill->fDuration = 3;
+	Skill->fDamage = 0.f;
+	Skill->bUse = false;
+	Skill->DotDamage = 12.f;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"불화살";
+	Skill->Code = 8;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::FIRE;
+	Skill->fCoolTime = 8;
+	Skill->fDuration = 5;
+	Skill->fDamage = 15.f;
+	Skill->DotDamage = 5.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+	Skill->Name = L"대폭발";
+	Skill->Code = 9;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::FIRE;
+	Skill->fCoolTime = 25;
+	Skill->fDuration = 3;
+	Skill->fDamage = 15.f;
+	Skill->DotDamage = 10.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+
 	m_arrScene[(UINT)SCENE_TYPE::LOBBY]= new CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 

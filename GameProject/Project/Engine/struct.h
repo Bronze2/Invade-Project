@@ -276,3 +276,20 @@ struct tRay {
 	Vec3 vOrigin;
 	Vec3 vDir;
 };
+struct SKILL {
+	wstring Name;
+	UINT Code;
+	SKILL_TYPE eSkillType;
+	ELEMENT_TYPE eElementType;
+
+
+	float fDuration;
+	float fDamage;
+	clock_t StartTime;
+	clock_t CurTime;
+	clock_t IntervalTime;
+	float DotDamage;
+	float fCoolTime;
+	bool bUse;
+
+};

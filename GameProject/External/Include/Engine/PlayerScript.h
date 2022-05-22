@@ -55,7 +55,9 @@ public:
     virtual void OnCollision3D(CCollider3D* _pOther);
     virtual void OnCollision3DExit(CCollider3D* _pOther);
 
-
+    virtual void OnDetectionEnter(CGameObject* _pOther);
+    virtual void OnDetection(CGameObject* _pOther);
+    virtual void OnDetectionExit(CGameObject* _pOther);
     CPlayerScript();
     virtual ~CPlayerScript();
 

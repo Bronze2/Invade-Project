@@ -129,11 +129,12 @@ void CInGameScene::Init()
 	pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1500.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+	pObject->Sensor()->SetRadius(500.f);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 	pMainCam->GetScript<CCameraScript>()->SetDistanceOffset(pObject);
 
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
@@ -1133,6 +1134,25 @@ void CInGameScene::Init()
 
 
 
+	CGameObject* m_pArrow = new CGameObject;
+	m_pArrow->SetName(L"Arrow");
+
+
+	m_pArrow->AddComponent(new CTransform);
+	m_pArrow->Transform()->SetLocalPos(Vec3(10.f, 100.f, 10.f));
+	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
+	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
+	m_pArrow->AddComponent(new CMeshRender);
+	m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+
+	m_pArrow->AddComponent(new CCollider3D);
+	m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+
+	m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::WATER));
+	m_pArrow->GetScript<CArrowScript>()->SetMove(false);
+	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
@@ -1144,6 +1164,8 @@ void CInGameScene::Init()
 
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Blue");
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Red");
 	Awake();
 	Start();
 }

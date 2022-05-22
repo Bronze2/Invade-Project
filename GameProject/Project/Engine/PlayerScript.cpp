@@ -9,6 +9,7 @@
 #include "ProjectileScript.h"
 
 #include "BowScript.h"
+#include "SkillMgr.h"
 
 void CPlayerScript::m_FAnimation()
 {
@@ -238,6 +239,8 @@ void CPlayerScript::Awake()
 
 	m_iCurArrow = 0;
 	m_iPower = 1;
+	m_iMaxHp = 200;
+	m_iCurHp = m_iMaxHp;
 
 	m_fMoveSpeed = 300.f;
 
@@ -245,7 +248,7 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-	// Z-up To Y-up
+	SkillCoolTimeCheck();
 	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 	Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
@@ -412,24 +415,7 @@ void CPlayerScript::Update()
 
 	}
 
-	/*Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-	if (!m_bCheckStartMousePoint) {
-		m_bCheckStartMousePoint = true;
-	}
-	else {
-		if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-			vRot.y += vDrag.x * DT * 1.f;
-			float fDegree = XMConvertToDegrees(vRot.y);
-			if (fDegree < -360) {
-				fDegree += 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
-			else if (fDegree > 360) {
-				fDegree -= 360.f;
-				vRot.y = XMConvertToRadians(fDegree);
-			}
-		}
-	}*/
+	
 	if (m_bMoveCheck) {
 		vPos = vPos2;
 		m_bMoveCheck = false;
@@ -445,11 +431,104 @@ void CPlayerScript::Update()
 		m_eState = PLAYER_STATE::DIE;
 	}
 
+	UseSkill();
+	StatusCheck();
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
 
 	m_FAnimation();
 
+}
+void CPlayerScript::SetType(ELEMENT_TYPE _iType)
+{
+	m_iType = _iType;
+	switch (m_iType)
+	{
+	case ELEMENT_TYPE::WATER:
+	{
+		m_tESkill =CSkillMgr::GetInst()->FindSkill(0);
+		m_tZSkill = CSkillMgr::GetInst()->FindSkill(1);
+		
+	}
+		break;
+	case ELEMENT_TYPE::DARK:
+	{
+		m_tESkill = CSkillMgr::GetInst()->FindSkill(4);
+		m_tZSkill = CSkillMgr::GetInst()->FindSkill(5);
+	}
+	break;
+	case ELEMENT_TYPE::WIND:
+	{
+		m_tESkill = CSkillMgr::GetInst()->FindSkill(2);
+		m_tZSkill = CSkillMgr::GetInst()->FindSkill(3);
+	}
+	break;
+	case ELEMENT_TYPE::THUNDER:
+	{
+		m_tESkill = CSkillMgr::GetInst()->FindSkill(6);
+		m_tZSkill = CSkillMgr::GetInst()->FindSkill(7);
+	}
+	break;
+	case ELEMENT_TYPE::FIRE:
+	{
+		m_tESkill = CSkillMgr::GetInst()->FindSkill(8);
+		m_tZSkill = CSkillMgr::GetInst()->FindSkill(9);
+	}
+	break;
+
+	default:
+		break;
+	}
+	
+		
+		
+}
+void CPlayerScript::SkillCoolTimeCheck()
+{
+	if (m_tESkill->bUse) {
+		m_tESkill->CurTime = clock();
+		m_tESkill->IntervalTime = (m_tESkill->CurTime - m_tESkill->StartTime) / CLOCKS_PER_SEC;
+		if (m_tESkill->IntervalTime >= m_tESkill->fCoolTime) {
+			m_tESkill->bUse = false;
+			m_tESkill->CurTime = 0.f;
+		}
+	}
+	if (m_tZSkill->bUse) {
+		m_tZSkill->CurTime = clock();
+		m_tZSkill->IntervalTime = (m_tZSkill->CurTime - m_tZSkill->StartTime) / CLOCKS_PER_SEC;
+		if (m_tZSkill->IntervalTime >= m_tZSkill->fCoolTime) {
+			m_tZSkill->bUse = false;
+			m_tZSkill->CurTime = 0.f;
+		}
+	}
+
+
+}
+void CPlayerScript::StatusCheck()
+{
+
+}
+void CPlayerScript::UseSkill()
+{
+	if (KEY_TAB(KEY_TYPE::KEY_E)) {
+		if (!m_tESkill->bUse)
+		{
+			m_tESkill->bUse = true;
+			m_tESkill->StartTime = clock();
+		}
+	}
+
+	if (KEY_TAB(KEY_TYPE::KEY_Z)) {
+		if (!m_tZSkill->bUse)
+		{
+			m_tZSkill->bUse = true;
+			m_tZSkill->StartTime = clock();
+			
+		
+
+		}
+
+	}
 }
 #include "Collider3D.h"
 void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
@@ -505,6 +584,33 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 
 }
 
+void CPlayerScript::OnDetectionEnter(CGameObject* _pOther)
+{
+	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
+	}
+	else {
+		m_arrAlliance.push_back(_pOther);
+	}
+
+}
+
+void CPlayerScript::OnDetection(CGameObject* _pOther)
+{
+
+}
+
+void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
+{
+	vector<CGameObject*>::iterator iter = m_arrAlliance.begin();
+	for (int i = 0; iter != m_arrAlliance.end(); ++iter, ++i) {
+		if (m_arrAlliance[i] == _pOther) {
+			m_arrAlliance.erase(iter);
+		}
+
+	}
+
+}
+
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
 , m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f)
 {
@@ -512,4 +618,14 @@ CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bChe
 
 CPlayerScript::~CPlayerScript()
 {
+}
+
+void CPlayerScript::SetDamage(int _Damage)
+{
+	m_iCurHp -= _Damage;
+	if (m_iCurHp < 0) {
+		m_iCurHp = 0;
+	}
+	if (m_iCurHp > m_iMaxHp)
+		m_iCurHp = m_iMaxHp;
 }

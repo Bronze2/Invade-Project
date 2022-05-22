@@ -146,6 +146,8 @@ void CCamera::SortGameObject()
 				if (!vecObj[j]->GetFrustumCheck()
 					|| m_frustum.CheckFrustumSphere(vecObj[j]->Transform()->GetWorldPos(), vecObj[j]->Transform()->GetMaxScale()))
 				{
+					
+						
 					if (vecObj[j]->MeshRender() && vecObj[j]->MeshRender()->GetMesh() != nullptr)
 					{
 						UINT iMtrlCount = vecObj[j]->MeshRender()->GetMtrlCount();
@@ -159,17 +161,10 @@ void CCamera::SortGameObject()
 									break;
 								}
 							}
+						
 							if (bIntersect)
 								continue;
-							if (vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl) == nullptr
-								|| vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl)->GetShader() == nullptr)
-							{
-								if (vecObj[j]->ParticleSystem())
-								{
-									m_vecParticle.push_back(vecObj[i]);
-								}
-								continue;
-							}
+							
 
 
 							Ptr<CMaterial> pMtrl = vecObj[j]->MeshRender()->GetSharedMaterial(iMtrl);
@@ -202,6 +197,12 @@ void CCamera::SortGameObject()
 								iter->second.push_back(tInstObj{ vecObj[j], iMtrl });
 							}
 						}
+					}
+					else {
+							if (vecObj[j]->ParticleSystem())
+							{
+								m_vecParticle.push_back(vecObj[j]);
+							}								
 					}
 				}
 			}
@@ -484,7 +485,8 @@ void CCamera::Render_Forward()
 	// Particle Rendering
 	for (size_t i = 0; i < m_vecParticle.size(); ++i)
 	{
-		m_vecParticle[i]->ParticleSystem()->Render();
+		if(nullptr!=m_vecParticle[i]->ParticleSystem())
+			m_vecParticle[i]->ParticleSystem()->Render();
 	}
 
 	// Deferred Collider rendering

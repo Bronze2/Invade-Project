@@ -192,8 +192,10 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 {
-	m_arrEnemy.push_back(_pOther);
-	m_bFindNear = true;
+	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
+		m_arrEnemy.push_back(_pOther);
+		m_bFindNear = true;
+	}
 }
 
 void CMinionScript::OnDetection(CGameObject* _pOther)
