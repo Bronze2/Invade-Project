@@ -149,8 +149,9 @@ enum class COMPONENT_TYPE
 	PARTICLESYSTEM,
 	TERRAIN,
 	SENSOR,
-	END,
 	SCRIPT,
+	STATIC_UI,
+	END,
 };
 
 enum class COLLIDER2D_TYPE
@@ -352,6 +353,7 @@ enum class CAMP_STATE {
 	RED,
 	BLUE,
 };
+
 
 enum class CAMERA_EFFECT_TYPE {
 	NONE,

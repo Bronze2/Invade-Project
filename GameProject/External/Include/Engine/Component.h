@@ -35,6 +35,7 @@ public:
     CLight3D* Light3D() { return m_pObject->Light3D(); }
     CCamera* Camera() { return m_pObject->Camera(); }
     CSensor* Sensor() { return m_pObject->Sensor(); }
+    CStaticUI* StaticUI() { return m_pObject->StaticUI(); }
 
 private:
     void SetGameObject(CGameObject* _pObject) { m_pObject = _pObject; }

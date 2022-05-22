@@ -44,6 +44,7 @@
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
 #include "EmptyCameraScript.h"
+#include "StaticUI.h"
 
 void CInGameScene::Init()
 {
@@ -58,6 +59,7 @@ void CInGameScene::Init()
 	GetLayer(5)->SetName(L"Cover");
 	GetLayer(6)->SetName(L"Arrow");
 	GetLayer(7)->SetName(L"Terrain");
+	GetLayer(30)->SetName(L"UI");
 	GetLayer(31)->SetName(L"Tool");
 
 	CGameObject* pMainCam = nullptr;
@@ -84,7 +86,6 @@ void CInGameScene::Init()
 	pEmptyCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
 	//m_pCurScene->FindLayer(L"Camera")->AddGameObject(pMainCam);
-
 
 	CGameObject* pObject = nullptr;
 
@@ -953,7 +954,47 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 
+	// UI
 
+	// UI Camera
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICam");
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+	pUICam->AddComponent(new CCameraScript);
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHGRAPHIC);
+
+	pUICam->Camera()->SetFar(1000.f);
+	pUICam->Camera()->SetLayerCheck(30, true);
+
+	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
+	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
+	FindLayer(L"Default")->AddGameObject(pUICam, false);
+
+
+	CGameObject* pUICrossHair = new CGameObject;
+	pUICrossHair->SetName(L"UICrossHair");
+	pUICrossHair->FrustumCheck(false);
+	pUICrossHair->AddComponent(new CTransform);
+	pUICrossHair->AddComponent(new CMeshRender);
+	pUICrossHair->AddComponent(new CStaticUI);
+
+	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+	//pUICrossHair->Transform()->SetLocalPos(Vec3((res.fWidth / 2), (res.fHeight/2), 1.f));
+	pUICrossHair->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	pUICrossHair->Transform()->SetLocalScale(vScale);
+	pUICrossHair->StaticUI()->SetCamera(pUICam->Camera());
+
+	pUICrossHair->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pUICrossHair->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pUICrossHair->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pCrossHairTex.GetPointer());
+
+	//pMainCam->AddChild(pUICrossHair);
+	//FindLayer(L"UI")->AddGameObject(pMainCam, false);
+	FindLayer(L"UI")->AddGameObject(pUICrossHair);
 
 
 

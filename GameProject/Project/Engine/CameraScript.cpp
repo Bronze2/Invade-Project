@@ -11,58 +11,60 @@ void CCameraScript::Update()
 	float fSpeed = m_fSpeed;
 	Vec3 vRot = Transform()->GetLocalRot();
 
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-
-	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
-		Init();
-		m_tEffectType = CAMERA_EFFECT_TYPE::SHAKING;
-	}
-
-	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		Init();
-		m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
-	}
-
-	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		vPos = m_vRestorePos;
-		m_tEffectType = CAMERA_EFFECT_TYPE::NONE;
-	}
-
-	switch (m_tEffectType)
+	if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE)
 	{
-	case CAMERA_EFFECT_TYPE::NONE:
-		if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-			if (!m_bCheckStartMousePoint) {
-				m_bCheckStartMousePoint = true;
-			}
-			else {				
-				Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
-				vRot.x -= vDrag.y * DT;
-				m_fDegree = XMConvertToDegrees(vRot.x);
-				if (m_fDegree < -15) {
-					m_fDegree = -15.f;
-					vRot.x = XMConvertToRadians(m_fDegree);
-				}
-				else if (m_fDegree > 15) {
-					m_fDegree = 15.f;
-					vRot.x = XMConvertToRadians(m_fDegree);
-				}
-			}
-		}
-		break;
-	case CAMERA_EFFECT_TYPE::ZOOMIN:
-		vRot.x = 0.f;
-		vPos = CameraZoom(vPos);	
-		break;
-	case CAMERA_EFFECT_TYPE::SHAKING:
-		vPos = CameraShake(vPos, 6.0f, 3.f);
-		break;
-	case CAMERA_EFFECT_TYPE::DAMAGED:
-		break;
-	case CAMERA_EFFECT_TYPE::LIGHTNING:
-		break;
-	}
+		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
+		if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
+			Init();
+			m_tEffectType = CAMERA_EFFECT_TYPE::SHAKING;
+		}
+
+		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+			Init();
+			m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
+		}
+
+		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+			vPos = m_vRestorePos;
+			m_tEffectType = CAMERA_EFFECT_TYPE::NONE;
+		}
+
+		switch (m_tEffectType)
+		{
+		case CAMERA_EFFECT_TYPE::NONE:
+			if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+				if (!m_bCheckStartMousePoint) {
+					m_bCheckStartMousePoint = true;
+				}
+				else {
+					Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
+					vRot.x -= vDrag.y * DT;
+					m_fDegree = XMConvertToDegrees(vRot.x);
+					if (m_fDegree < -15) {
+						m_fDegree = -15.f;
+						vRot.x = XMConvertToRadians(m_fDegree);
+					}
+					else if (m_fDegree > 15) {
+						m_fDegree = 15.f;
+						vRot.x = XMConvertToRadians(m_fDegree);
+					}
+				}
+			}
+			break;
+		case CAMERA_EFFECT_TYPE::ZOOMIN:
+			vRot.x = 0.f;
+			vPos = CameraZoom(vPos);
+			break;
+		case CAMERA_EFFECT_TYPE::SHAKING:
+			vPos = CameraShake(vPos, 6.0f, 3.f);
+			break;
+		case CAMERA_EFFECT_TYPE::DAMAGED:
+			break;
+		case CAMERA_EFFECT_TYPE::LIGHTNING:
+			break;
+		}
+	}
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
 }
@@ -92,7 +94,7 @@ Vec3& CCameraScript::CameraZoom(Vec3 _vPos)
 	if (m_fZoomElapsedTime < 20.0f * DT)
 	{
 		Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		//Vec3 vDir = Vec3::Right;
+		//Vec3 vDir = m_vZoomRestoreFront;
 
 		_vPos += vDir * m_fZoomSpeed * DT;
 		m_fZoomElapsedTime += DT;

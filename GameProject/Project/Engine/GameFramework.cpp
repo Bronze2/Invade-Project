@@ -86,7 +86,7 @@ void CGameFramework::ProcessInput()
 	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rt);
 	LONG CursorPosy = ptCursorPos2.y;
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
-	if (rt.right < ptCursorPos.x) {
+	if (rt2.right < ptCursorPos.x) {
 		int left=rt2.left+13;
 		ptCursorPos.x = left;
 		

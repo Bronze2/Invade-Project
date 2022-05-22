@@ -54,7 +54,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 640, 480 }, true)))       //1982, 1080
+    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1982, 1080 }, true)))       //1982, 1080
     {
         return 0;
     }

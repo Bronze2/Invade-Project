@@ -372,24 +372,6 @@ void CPlayerScript::Update()
 		
 		// 180도 이상 회전하는 경우 없도록
 		if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
-			cout << fRotDegree << "                  " << m_fTurnDegree << endl;
-			//if (m_fTurnDegree > 0.f) {		// 0, 270 || -90, 180 -> -90, -180
-			//	m_fTurnDegree -= 360.f;
-			//}
-			//else {								// -135, 90
-			//	m_fTurnDegree += 360.f;
-			//}
-			//if (/*abs(m_fTurnDegree) > abs(fRotDegree)) &&*/ m_fTurnDegree > 0.f) {		// 0, 270 || -90, 180 -> -90, -180 
-			//	m_fTurnDegree -= 360.f;
-			//	//if (m_fTurnDegree > 0.f) {		// 0, 270 || -90, 180 -> -90, -180 
-			//	//	m_fTurnDegree -= 360.f;
-			//	//}
-			//}
-			//else {								// -135, 90
-			//	m_fTurnDegree += 360.f;
-			//}
-
-
 			if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
 				m_fTurnDegree -= 360.f;
 			}
