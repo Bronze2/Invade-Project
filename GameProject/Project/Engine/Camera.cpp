@@ -146,7 +146,7 @@ void CCamera::SortGameObject()
 				if (!vecObj[j]->GetFrustumCheck()
 					|| m_frustum.CheckFrustumSphere(vecObj[j]->Transform()->GetWorldPos(), vecObj[j]->Transform()->GetMaxScale()))
 				{
-					
+					if (!vecObj[j]->IsActive())continue;
 						
 					if (vecObj[j]->MeshRender() && vecObj[j]->MeshRender()->GetMesh() != nullptr)
 					{
@@ -199,6 +199,8 @@ void CCamera::SortGameObject()
 						}
 					}
 					else {
+						
+
 							if (vecObj[j]->ParticleSystem())
 							{
 								m_vecParticle.push_back(vecObj[j]);

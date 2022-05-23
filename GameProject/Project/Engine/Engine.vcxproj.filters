@@ -246,9 +246,6 @@
     <ClCompile Include="ThunderSkill0Script.cpp">
       <Filter>Script\Skill\Thunder\E</Filter>
     </ClCompile>
-    <ClCompile Include="Skill.cpp">
-      <Filter>Object\Component\SKILL</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BowScript.h">
@@ -473,9 +470,6 @@
     <ClInclude Include="ThunderSkill0Script.h">
       <Filter>Script\Skill\Thunder\E</Filter>
     </ClInclude>
-    <ClInclude Include="Skill.h">
-      <Filter>Object\Component\SKILL</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="FX">
@@ -618,9 +612,6 @@
     </Filter>
     <Filter Include="Script\Skill\Fire\Z">
       <UniqueIdentifier>{6ba0ba75-5084-425f-8008-002dc8c87c50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object\Component\SKILL">
-      <UniqueIdentifier>{70655f66-41d3-4604-a571-57304fa57458}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ private:
 
 public:
 	void AddSkill(int Code,SKILL* _pSkill);
-	SKILL* FindSkill(int _strName);
+	SKILL* FindSkill(int Code);
 	
 
 	SINGLE(CSkillMgr)

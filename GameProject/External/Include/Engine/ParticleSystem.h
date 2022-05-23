@@ -33,8 +33,10 @@ private:
 	Vec4				m_vDir;
 
 	Vec2 m_vTime;
-
+	int m_iCount;
+	UINT m_iAdd;
 public:
+	void SetCount(const int& _Count) { m_iAdd = _Count; }
 	virtual void FinalUpdate();
 	virtual void Render();
 	void Init( Ptr<CTexture> _pTexture, const wstring& _MtrlName= L"ParticleUpdateMtrl");

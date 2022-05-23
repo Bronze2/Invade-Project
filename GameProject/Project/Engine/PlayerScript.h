@@ -33,8 +33,10 @@ private:
     PLAYER_STATE m_eState;
     
     UINT m_iMaxHp;
-    int m_iCurHp;
-
+    float m_iCurHp;
+    CGameObject* m_pHealParticle;
+    CGameObject* m_pDotDamage;
+    bool m_bHealCheck;
 
 #ifdef CAMERA_TEST
     float m_fTurnDegree;
@@ -59,6 +61,7 @@ private:
     CGameObject* m_pZSkillObject;
 
     vector<SKILL*> m_arrSkill;
+  
 
 public:
     void m_FAnimation();
@@ -73,9 +76,10 @@ public:
     void StatusCheck();
 
     void UseSkill();
-    void DamageBySkill(SKILL* _pSkill) { m_arrSkill.push_back(_pSkill); }
+    void DamageBySkill(SKILL* _pSkill);
+    void GetDamage();
 
-
+    void SetCurHp(int _hp) { m_iCurHp = _hp; }
     void m_FColCheck(Vec3 _vBeforePos,Vec3 _vAfterPos);
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);

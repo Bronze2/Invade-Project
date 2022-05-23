@@ -15,6 +15,7 @@ class CAnimation
 private:
 	vector<tAnimation*> m_tAnimation;
 	vector<tMTAnimClip> m_pVecAnimClip;
+	vector<tMTAnimClip*> m_pThrash;
 
 private:
 

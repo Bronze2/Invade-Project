@@ -4,25 +4,32 @@ class CWindSkill0Script :
 	public CScript
 {
 private:
-	SKILL* m_pSkill;
-
 	CGameObject* m_pTarget;
 	bool m_bStart;
-	clock_t m_tStart;
-	clock_t m_tTickStart;
-	clock_t m_tEnd;
-	clock_t m_tInterval;
-	clock_t m_tTickInterval;
-	bool m_bTickCheck;
+	CGameObject* m_pParticle;
+
+
+	float m_fSpeed;
+	Vec3 m_vDir;
+	Vec3 m_vStartPos;
+	float m_fLength;
+	ELEMENT_TYPE m_iType;
+
+
+	SKILL* m_tSkill;
+	CGameObject* m_pPlayer;
+
 public:
-	void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }
+
+
 	CWindSkill0Script();
 	virtual ~CWindSkill0Script();
 
 	virtual void Update();
-
-
+	virtual void OnCollision3DEnter(CCollider3D* _pColldier);
+	
 	CLONE(CWindSkill0Script)
+
 
 
 };

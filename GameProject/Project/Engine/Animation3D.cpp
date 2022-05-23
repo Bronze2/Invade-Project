@@ -28,6 +28,7 @@ void CAnimation::InsertAnimClip(const wstring& _Name, const UINT& _StartFrame, c
 		tNewAnimClip->dTimeLength = tNewAnimClip->dEndTime - tNewAnimClip->dStartTime;
 
 		m_pVecAnimClip.push_back(*tNewAnimClip);
+		m_pThrash.push_back(tNewAnimClip);
 	}
 }
 
@@ -84,4 +85,6 @@ CAnimation::CAnimation()
 CAnimation::~CAnimation()
 {
 	Safe_Delete_Vector(m_tAnimation);
+
+	Safe_Delete_Vector(m_pThrash);
 }

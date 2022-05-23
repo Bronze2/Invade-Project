@@ -31,7 +31,6 @@
 #include "GridScript.h"
 #include "CameraScript.h"
 #include "PlayerScript.h"
-#include "MonsterScript.h"
 #include "ParticleSystem.h"
 #include "ArrowScript.h"
 #include "MinionScript.h"
@@ -43,6 +42,8 @@
 #include "TowerScript.h"
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
+#include "WaterSkill0Script.h"
+#include "SkillMgr.h"
 void CInGameScene::Init()
 {
 	ShowCursor(false);
@@ -50,13 +51,12 @@ void CInGameScene::Init()
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->FindRes<CTexture>(L"Tile_n");
 
 	GetLayer(0)->SetName(L"Default");
-	GetLayer(1)->SetName(L"Player");
-	GetLayer(2)->SetName(L"Monster");
 	GetLayer(3)->SetName(L"Blue");
 	GetLayer(4)->SetName(L"Red");
 	GetLayer(5)->SetName(L"Cover");
 	GetLayer(6)->SetName(L"Arrow");
 	GetLayer(7)->SetName(L"Terrain");
+	GetLayer(8)->SetName(L"Tile");
 	GetLayer(31)->SetName(L"Tool");
 
 	CGameObject* pMainCam = nullptr;
@@ -114,14 +114,13 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 
 	// AddGameObject
-	FindLayer(L"Player")->AddGameObject(pObject);
+	FindLayer(L"Tile")->AddGameObject(pObject);
 
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
 
-	pObject = new CGameObject;
+
 	pObject = pMeshData->Instantiate();
 	pObject->SetName(L"Monster");
-	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CSensor);
 	pObject->AddComponent(new CPlayerScript);
@@ -136,7 +135,7 @@ void CInGameScene::Init()
 	pObject->Sensor()->SetRadius(500.f);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 	pMainCam->GetScript<CCameraScript>()->SetDistanceOffset(pObject);
-
+	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 	pMainCam->Camera()->SetPlayer(pObject);
 	pMainCam->Camera()->SetbPlay(true);
@@ -171,7 +170,6 @@ void CInGameScene::Init()
 	CGameObject* pBow;
 	pBow = pMeshData->Instantiate();
 	pBow->SetName(L"Bow");
-	pBow->AddComponent(new CTransform);
 	pBow->AddComponent(new CBowScript);
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
@@ -200,7 +198,6 @@ void CInGameScene::Init()
 	CGameObject* pRedFirstTower;
 	pRedFirstTower = pMeshData->Instantiate();
 	pRedFirstTower->SetName(L"FirstTower");
-	pRedFirstTower->AddComponent(new CTransform);
 	pRedFirstTower->AddComponent(new CCollider3D);
 	pRedFirstTower->AddComponent(new CSensor);
 	pRedFirstTower->AddComponent(new CTowerScript);
@@ -231,7 +228,6 @@ void CInGameScene::Init()
 	CGameObject* pRedSecondTower;
 	pRedSecondTower = pMeshData->Instantiate();
 	pRedSecondTower->SetName(L"SecondTower");
-	pRedSecondTower->AddComponent(new CTransform);
 	pRedSecondTower->AddComponent(new CCollider3D);
 	pRedSecondTower->AddComponent(new CSensor);
 	pRedSecondTower->AddComponent(new CTowerScript);
@@ -255,7 +251,6 @@ void CInGameScene::Init()
 	//	pMeshData->Save(pMeshData->GetPath());
 	CGameObject* pBlueFirstTower;
 	pBlueFirstTower = pMeshData->Instantiate();
-	pBlueFirstTower->AddComponent(new CTransform);
 	pBlueFirstTower->AddComponent(new CCollider3D);
 	pBlueFirstTower->AddComponent(new CSensor);
 	pBlueFirstTower->AddComponent(new CTowerScript);
@@ -284,7 +279,6 @@ void CInGameScene::Init()
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower01.mdat", L"MeshData\\SecondTower01.mdat");
 	CGameObject* pBlueSecondTower;
 	pBlueSecondTower = pMeshData->Instantiate();
-	pBlueSecondTower->AddComponent(new CTransform);
 	pBlueSecondTower->AddComponent(new CCollider3D);
 	pBlueSecondTower->AddComponent(new CSensor);
 	pBlueSecondTower->AddComponent(new CTowerScript);
@@ -307,7 +301,6 @@ void CInGameScene::Init()
 	//pMeshData->Save(pMeshData->GetPath());
 
 	pObject = pMeshData->Instantiate();
-	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
@@ -328,7 +321,6 @@ void CInGameScene::Init()
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
-	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
@@ -363,7 +355,6 @@ void CInGameScene::Init()
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
-	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
@@ -1155,14 +1146,40 @@ void CInGameScene::Init()
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
 
+	m_pArrow = new CGameObject;
+	m_pArrow->SetName(L"Arrow");
+
+	m_pArrow->AddComponent(new CTransform);
+	m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 50.f, -10.f));
+	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
+	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
+	m_pArrow->AddComponent(new CMeshRender);
+	m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+
+	m_pArrow->AddComponent(new CCollider3D);
+	m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+
+	m_pArrow->AddComponent(new CWaterSkill0Script);
+	m_pArrow->GetScript<CWaterSkill0Script>()->SetMove(false);
+
+
+
+	//m_pArrow->GetScript<CWaterSkill0Script>()->SetPlayer(m_pPlayer);
+	m_pArrow->GetScript<CWaterSkill0Script>()->SetSkill(CSkillMgr::GetInst()->FindSkill(0));
+	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
+
+
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Cover");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
 
-
-	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");
+	
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Red");

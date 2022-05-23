@@ -32,6 +32,15 @@ void Safe_Delete_Vector(vector<T*> _vec)
 	}
 }
 
+template<typename T>
+void Safe_Delete_Vector2(vector<T> _vec)
+{
+	for (UINT i = 0; i < _vec.size(); ++i)
+	{
+		SAFE_DELETE(_vec[i]);
+	}
+}
+
 void SaveWString(FILE* _pFile, const wstring& _str);
 
 wchar_t* LoadWString(FILE* _pFile);

@@ -10,10 +10,10 @@
 void CParticleSystem::FinalUpdate()
 {
 	m_fAccTime += DT;
-	int iAdd = 0;
+	m_iCount = 0;
 	if (m_fFrequency < m_fAccTime) {
 		m_fAccTime = m_fAccTime - m_fFrequency;
-		iAdd = 5;
+		m_iCount = m_iAdd;
 
 	}
 	std::random_device rd;
@@ -29,7 +29,7 @@ void CParticleSystem::FinalUpdate()
 	m_pParticleBuffer->UpdateRWData(UAV_REGISTER::u0);
 	m_pSharedBuffer->UpdateRWData(UAV_REGISTER::u1);
 	m_pUpdateMtrl->SetData(SHADER_PARAM::INT_0, &m_iMaxParticle);
-	m_pUpdateMtrl->SetData(SHADER_PARAM::INT_1, &iAdd);
+	m_pUpdateMtrl->SetData(SHADER_PARAM::INT_1, &m_iCount);
 	m_pUpdateMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fMinLifeTime);
 	m_pUpdateMtrl->SetData(SHADER_PARAM::FLOAT_1, &m_fMaxLifeTime);
 	m_pUpdateMtrl->SetData(SHADER_PARAM::FLOAT_2, &m_fMinSpeed);
@@ -79,6 +79,7 @@ void CParticleSystem::LoadFromScene(FILE* _pFile)
 
 CParticleSystem::CParticleSystem():CComponent(COMPONENT_TYPE::PARTICLESYSTEM),m_pParticleBuffer(nullptr),m_pSharedBuffer(nullptr),m_iMaxParticle(100),m_fFrequency(0.1f),m_fAccTime(0.4f),m_fMinLifeTime(0.5f),
 m_fMaxLifeTime(0.75f),m_fMinSpeed(150),m_fMaxSpeed(150.f),m_fStartScale(1.f),m_fEndScale(2.f),m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+,m_iAdd(5)
 {
 
 
@@ -88,4 +89,6 @@ CParticleSystem::~CParticleSystem()
 {
 	SAFE_DELETE(m_pParticleBuffer);
 	SAFE_DELETE(m_pSharedBuffer);
+	delete m_pMtrl.GetPointer();
+	
 }

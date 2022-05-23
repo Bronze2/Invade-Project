@@ -232,7 +232,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="SensorMgr.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
-    <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpawnScript.h" />
@@ -309,7 +308,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
-    <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SpawnScript.cpp" />

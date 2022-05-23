@@ -103,7 +103,9 @@ CSceneMgr::CSceneMgr()
 
 CSceneMgr::~CSceneMgr()
 {
-	SAFE_DELETE(m_pCurScene);
+	for (int i = 0; i < (UINT)SCENE_TYPE::END; ++i) {
+		SAFE_DELETE(m_arrScene[i]);
+	}
 }
 
 void CSceneMgr::Init()
@@ -154,19 +156,20 @@ void CSceneMgr::Init()
 
 
 	SKILL* Skill= new SKILL;
-	Skill->Name = L"물의 축복";
+	Skill->Name = L"Water0";
 	Skill->Code =0;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::WATER;
 	Skill->fCoolTime = 10;
 	Skill->fDuration = 3;
-	Skill->DotDamage = -16.4f;
+	Skill->DotDamage = -16.40000000000f;
 	Skill->fDamage = 0.f;
 	Skill->bUse = false;
+	Skill->Sum = 50.f;
 	CSkillMgr::GetInst()->AddSkill(0, Skill);
 
 	Skill = new SKILL;
-	Skill->Name = L"성수";
+	Skill->Name = L"Water1";
 	Skill->Code = 1;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::WATER;
@@ -175,10 +178,11 @@ void CSceneMgr::Init()
 	Skill->DotDamage = -20.f;
 	Skill->fDamage = 0.f;
 	Skill->bUse = false;
+	Skill->Sum = 100.f;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
-	Skill->Name = L"나아가는 바람";
+	Skill->Name = L"Wind0";
 	Skill->Code = 2;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::WIND;
@@ -190,7 +194,7 @@ void CSceneMgr::Init()
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
-	Skill->Name = L"꿰뚫는 화살";
+	Skill->Name = L"Wind1";
 	Skill->Code = 3;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::WIND;
@@ -202,7 +206,7 @@ void CSceneMgr::Init()
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
-	Skill->Name = L"드리우는 어둠";
+	Skill->Name = L"Dark0";
 	Skill->Code = 4;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::DARK;
@@ -212,7 +216,7 @@ void CSceneMgr::Init()
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
-	Skill->Name = L"피해망상";
+	Skill->Name = L"Dark1";
 	Skill->Code = 5;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::DARK;
@@ -223,7 +227,7 @@ void CSceneMgr::Init()
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 	Skill = new SKILL;
-	Skill->Name = L"감전";
+	Skill->Name = L"Thunder0";
 	Skill->Code = 6;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::THUNDER;
@@ -232,8 +236,9 @@ void CSceneMgr::Init()
 	Skill->fDamage = 15.f;
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
-	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
-	Skill->Name = L"낙뢰";
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+	Skill = new SKILL;
+	Skill->Name = L"Thunder1";
 	Skill->Code = 7;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::THUNDER;
@@ -241,11 +246,12 @@ void CSceneMgr::Init()
 	Skill->fDuration = 3;
 	Skill->fDamage = 0.f;
 	Skill->bUse = false;
-	Skill->DotDamage = 12.f;
+	Skill->DotDamage = 24.f;
+	Skill->Sum = -72.f;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
-	Skill->Name = L"불화살";
+	Skill->Name = L"Fire0";
 	Skill->Code = 8;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::FIRE;
@@ -253,16 +259,18 @@ void CSceneMgr::Init()
 	Skill->fDuration = 5;
 	Skill->fDamage = 15.f;
 	Skill->DotDamage = 5.f;
+	Skill->Sum = -25.f;
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
-	Skill->Name = L"대폭발";
+	Skill->Name = L"Fire1";
 	Skill->Code = 9;
 	Skill->eSkillType = SKILL_TYPE::ACT;
 	Skill->eElementType = ELEMENT_TYPE::FIRE;
 	Skill->fCoolTime = 25;
 	Skill->fDuration = 3;
-	Skill->fDamage = 15.f;
+	Skill->fDamage = 20.f;
 	Skill->DotDamage = 10.f;
+	Skill->Sum = -40.f;
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 

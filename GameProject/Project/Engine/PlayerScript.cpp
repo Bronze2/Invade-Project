@@ -9,7 +9,17 @@
 #include "ProjectileScript.h"
 
 #include "BowScript.h"
+#include "ParticleSystem.h"
 #include "SkillMgr.h"
+#include "WaterSkill0Script.h"
+#include "WindSkill0Script.h"
+#include "WindSkill1Script.h"
+#include "ThunderSkill0Script.h"
+#include "ThunderSkill1Script.h"
+#include"DarkSkill0Script.h"
+#include "FireSkill0Script.h"
+#include "FireSkill1Script.h"
+#include "Collider3D.h"
 
 void CPlayerScript::m_FAnimation()
 {
@@ -240,10 +250,26 @@ void CPlayerScript::Awake()
 	m_iCurArrow = 0;
 	m_iPower = 1;
 	m_iMaxHp = 200;
-	m_iCurHp = m_iMaxHp;
+	m_iCurHp = 50;
 
 	m_fMoveSpeed = 300.f;
 
+	m_pHealParticle = new CGameObject;
+	m_pHealParticle->AddComponent(new CTransform);
+	m_pHealParticle->AddComponent(new CParticleSystem);
+	m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
+	m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.5f, 0.8f, 1.f, 1.0f));
+	m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
+	m_pHealParticle->ParticleSystem()->SetEndScale(15.f);
+	m_pHealParticle->FrustumCheck(false);
+	m_pHealParticle->SetActive(false);
+	
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
+	GetObj()->AddChild(m_pHealParticle);
+
+
+	
 }
 
 void CPlayerScript::Update()
@@ -273,10 +299,6 @@ void CPlayerScript::Update()
 	else {
 		m_bCheckDegree = false;
 	}
-	
-
-
-
 	
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
@@ -408,6 +430,7 @@ void CPlayerScript::Update()
 		
 		m_iCurArrow++;
 		m_iPower = 1;
+
 		if (m_iCurArrow > 19) { 
 			m_iCurArrow = 0;
 		
@@ -433,6 +456,7 @@ void CPlayerScript::Update()
 
 	UseSkill();
 	StatusCheck();
+	GetDamage();
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
 
@@ -448,7 +472,31 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 	{
 		m_tESkill =CSkillMgr::GetInst()->FindSkill(0);
 		m_tZSkill = CSkillMgr::GetInst()->FindSkill(1);
-		
+
+		m_pESkillObject= new CGameObject;
+		m_pESkillObject->SetName(L"Arrow");
+
+		m_pESkillObject->AddComponent(new CTransform);
+		m_pESkillObject->Transform()->SetLocalPos(Vec3(-10.f, 50.f, -10.f));
+		m_pESkillObject->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
+		m_pESkillObject->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
+		m_pESkillObject->AddComponent(new CMeshRender);
+		m_pESkillObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+		m_pESkillObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	
+
+		m_pESkillObject->AddComponent(new CCollider3D);
+		m_pESkillObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+
+		m_pESkillObject->AddComponent(new CWaterSkill0Script);
+		m_pESkillObject->GetScript<CWaterSkill0Script>()->SetMove(false);
+
+
+
+		//m_pArrow->GetScript<CWaterSkill0Script>()->SetPlayer(m_pPlayer);
+		m_pESkillObject->GetScript<CWaterSkill0Script>()->SetSkill(CSkillMgr::GetInst()->FindSkill(0));
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Arrow")->AddGameObject(m_pESkillObject);
+		m_pESkillObject->SetActive(false);
 	}
 		break;
 	case ELEMENT_TYPE::DARK:
@@ -506,11 +554,25 @@ void CPlayerScript::SkillCoolTimeCheck()
 }
 void CPlayerScript::StatusCheck()
 {
+	m_bHealCheck = false;
+	if (m_pHealParticle->IsActive()) {
+		for (int i = 0; i < m_arrSkill.size(); ++i) {
+			if (m_arrSkill[i]->eElementType == ELEMENT_TYPE::WATER) {
+				m_bHealCheck = true;
+				break;
+			}
+		}
+		if (!m_bHealCheck) {
+			m_pHealParticle->SetActive(false);
+		}
+
+
+	}
 
 }
 void CPlayerScript::UseSkill()
 {
-	if (KEY_TAB(KEY_TYPE::KEY_E)) {
+	if (KEY_AWAY(KEY_TYPE::KEY_E)) {
 		if (!m_tESkill->bUse)
 		{
 			m_tESkill->bUse = true;
@@ -518,19 +580,105 @@ void CPlayerScript::UseSkill()
 		}
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_Z)) {
+	if (KEY_AWAY(KEY_TYPE::KEY_Z)) {
 		if (!m_tZSkill->bUse)
 		{
 			m_tZSkill->bUse = true;
 			m_tZSkill->StartTime = clock();
+			switch (m_tZSkill->eElementType)
+			{
+			case ELEMENT_TYPE::WATER:
+				for (int i = 0; i < m_arrAlliance.size(); ++i) {
+					if (nullptr != m_arrAlliance[i]->GetScript<CPlayerScript>()) {
+						m_arrAlliance[i]->GetScript<CPlayerScript>()->DamageBySkill(m_tZSkill);
+					}
+				}
+
+				DamageBySkill(m_tZSkill);
+
+				break;
+			default:
+				break;
+			}
 			
-		
 
 		}
 
 	}
 }
-#include "Collider3D.h"
+void CPlayerScript::DamageBySkill(SKILL* _pSkill)
+{
+	SKILL* pSkill = new SKILL;
+	pSkill->DotDamage = _pSkill->DotDamage;
+	pSkill->Code = _pSkill->Code;
+	pSkill->Name = _pSkill->Name;
+	pSkill->eSkillType = _pSkill->eSkillType;
+	pSkill->eElementType = _pSkill->eElementType;
+
+	pSkill->fCoolTime = _pSkill->fCoolTime;
+	pSkill->fDuration = _pSkill->fDuration;
+	pSkill->fDamage = _pSkill->fDamage;
+	pSkill->bUse = false;
+	pSkill->bTick = false;
+	pSkill->bFinal = false;
+	pSkill->Count = 0;
+	pSkill->Sum = _pSkill->Sum;
+	m_arrSkill.push_back(pSkill);
+
+
+}
+void CPlayerScript::GetDamage()
+{
+	for (int i = 0; i < m_arrSkill.size(); ++i) {
+
+		if (m_arrSkill[i]->bFinal)continue;
+		if (m_arrSkill[i]->bUse == false) {
+			
+			m_arrSkill[i]->StartTime = clock();
+			m_arrSkill[i]->bUse = true;
+			switch (m_arrSkill[i]->eElementType)
+			{
+			case ELEMENT_TYPE::WATER:
+				m_pHealParticle->SetActive(true);
+				break;
+			default:
+				break;
+			}
+		}
+		else {
+			m_arrSkill[i]->CurTime = clock();
+			if (!m_arrSkill[i]->bTick) {
+				m_arrSkill[i]->TickInterval = (m_arrSkill[i]->CurTime - m_arrSkill[i]->StartTime) / CLOCKS_PER_SEC;
+			}
+			else {
+				m_arrSkill[i]->TickInterval = (m_arrSkill[i]->CurTime - m_arrSkill[i]->TickTime) / CLOCKS_PER_SEC;
+			}
+			if (m_arrSkill[i]->TickInterval > 1.f) {
+				m_iCurHp -= m_arrSkill[i]->DotDamage;
+				m_arrSkill[i]->Sum+=m_arrSkill[i]->DotDamage;
+				m_arrSkill[i]->TickTime = clock();
+				m_arrSkill[i]->bTick = true;
+				m_arrSkill[i]->Count += 1;
+			}
+			if (m_arrSkill[i]->Count >= (int)m_arrSkill[i]->fDuration) {
+				m_arrSkill[i]->bFinal = true;
+				m_iCurHp += m_arrSkill[i]->Sum;
+				
+				//m_iCurHp -= 0.01f;
+			}
+		}
+	}
+	vector<SKILL*>::iterator iter = m_arrSkill.begin();
+	for (int i = 0; iter != m_arrSkill.end(); ++iter, ++i) {
+		if (m_arrSkill[i]->bFinal) {
+			delete m_arrSkill[i];
+			m_arrSkill.erase(iter);
+			return;
+		}
+
+	}
+}
+
 void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 {
 	if (m_bColCheck) {
@@ -571,14 +719,9 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 
 	}
 	else {
-		vector<CGameObject*>::iterator iter = m_arrColObject.begin();
-		for (int i = 0; iter != m_arrColObject.end(); ++iter, ++i) {
-			if (m_arrColObject[i] == _pOther->GetObj()) {
-				m_arrColObject.erase(iter);
-				return;
-			}
-
-		}
+		
+		m_arrColObject.erase(std::remove(m_arrColObject.begin(), m_arrColObject.end(), _pOther->GetObj()), m_arrColObject.end());
+		int a = 0;
 	}
 	
 
@@ -589,7 +732,8 @@ void CPlayerScript::OnDetectionEnter(CGameObject* _pOther)
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
 	}
 	else {
-		m_arrAlliance.push_back(_pOther);
+		if(nullptr!=_pOther->GetScript<CPlayerScript>())
+			m_arrAlliance.push_back(_pOther);
 	}
 
 }
@@ -602,17 +746,12 @@ void CPlayerScript::OnDetection(CGameObject* _pOther)
 void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
 {
 	vector<CGameObject*>::iterator iter = m_arrAlliance.begin();
-	for (int i = 0; iter != m_arrAlliance.end(); ++iter, ++i) {
-		if (m_arrAlliance[i] == _pOther) {
-			m_arrAlliance.erase(iter);
-		}
-
-	}
-
+	m_arrAlliance.erase(std::remove(m_arrAlliance.begin(), m_arrAlliance.end(),_pOther), m_arrAlliance.end());
+	
 }
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
-, m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f)
+, m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f),m_bHealCheck(false)
 {
 }
 

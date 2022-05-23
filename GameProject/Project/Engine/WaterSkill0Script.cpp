@@ -4,6 +4,7 @@
 #include "PlayerScript.h"
 #include"ParticleSystem.h"
 CWaterSkill0Script::CWaterSkill0Script():CScript((UINT)SCRIPT_TYPE::WATERSKILL0),m_bStart(false),m_bTickCheck(false)
+,m_iCount(0)
 {
 }
 
@@ -14,6 +15,18 @@ CWaterSkill0Script::~CWaterSkill0Script()
 void CWaterSkill0Script::Update()
 {
 	if (nullptr == m_pSkill)return;
+	if (!m_bMove) {
+		Vec3 vWorldDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+		int a = 0;
+		Vec4 vDir = Vec4(vWorldDir, 1.f);
+		m_pParticle->ParticleSystem()->SetDir(vDir);
+
+
+		return;
+
+	}
+
+
 	/*	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
 		if (!m_bStart) {
 			m_bStart = true;
@@ -114,6 +127,11 @@ void CWaterSkill0Script::Init()
 
 }
 
+void CWaterSkill0Script::SetSkill(SKILL* _pSkill)
+{
+	m_pSkill = _pSkill;
+}
+
 void CWaterSkill0Script::Awake()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
@@ -121,7 +139,7 @@ void CWaterSkill0Script::Awake()
 	m_pParticle->SetName(L"Particle");
 	m_pParticle->AddComponent(new CTransform);
 	m_pParticle->AddComponent(new CParticleSystem);
-	m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain"), L"ParticleUpdateMtrl");
+	m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Bubble99"), L"ParticleUpdateMtrl");
 	m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.4f, 0.4f, 0.8f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 	m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
 	m_pParticle->ParticleSystem()->SetStartScale(2.f);
@@ -132,4 +150,19 @@ void CWaterSkill0Script::Awake()
 
 
 
+}
+#include "Collider3D.h"
+#include "SkillMgr.h"
+
+void CWaterSkill0Script::OnCollision3DEnter(CCollider3D* _pColldier)
+{
+	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>()) {
+		if (_pColldier->GetObj()->GetLayerIdx() == 3) {
+		
+			_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		
+			Transform()->SetLocalPos(Vec3(-10000.f,-10000.f,-10000.f));
+
+		}
+	}
 }
