@@ -88,3 +88,7 @@ void CThunderSkill1Script::Update()
 	}
 
 }
+
+void CThunderSkill1Script::OnCollision3DEnter(CCollider3D* _pColldier)
+{
+}

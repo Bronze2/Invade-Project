@@ -659,6 +659,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->Create(SHADER_POV::DEFERRED);
 	AddRes(L"Std3DShader", pShader);
 
+
 	// =============
 	// Skybox Shader
 	// =============
@@ -880,6 +881,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
 	AddRes(L"Std3DMtrl", pMtrl);
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"Std3D2Shader"));
+	AddRes(L"Std3D2Mtrl", pMtrl);
+
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();

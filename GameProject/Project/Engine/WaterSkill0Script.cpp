@@ -160,8 +160,7 @@ void CWaterSkill0Script::OnCollision3DEnter(CCollider3D* _pColldier)
 		if (_pColldier->GetObj()->GetLayerIdx() == 3) {
 		
 			_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
-		
-			Transform()->SetLocalPos(Vec3(-10000.f,-10000.f,-10000.f));
+			Transform()->SetLocalPos(Vec3(-10000.f, -10000.f, -10000.f));
 
 		}
 	}

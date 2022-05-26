@@ -61,7 +61,7 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _In)
     }
     
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;
-    output.vSpecular = tCurCol.vSpec;
+  //  output.vSpecular = tCurCol.vSpec;
     return output;
 
 }

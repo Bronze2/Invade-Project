@@ -20,6 +20,7 @@ public:
 	virtual ~CThunderSkill0Script();
 
 	virtual void Update();
+	virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 
 
 	CLONE(CThunderSkill0Script)

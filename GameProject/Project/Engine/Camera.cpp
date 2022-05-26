@@ -177,7 +177,8 @@ void CCamera::SortGameObject()
 							// 인스턴싱 그룹을 분류한다.
 							map<ULONG64, vector<tInstObj>>* pMap = NULL;
 							if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::DEFERRED) {
-								pMap = &m_mapInstGroup_D;
+								
+									pMap = &m_mapInstGroup_D;
 							}
 							else if (pMtrl->GetShader()->GetShaderPov() == SHADER_POV::FORWARD) {
 								pMap = &m_mapInstGroup_F;

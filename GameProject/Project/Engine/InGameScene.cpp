@@ -96,6 +96,8 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1500.f));
 	FindLayer(L"Default")->AddGameObject(pObject);
 
+
+
 	pObject = new CGameObject;
 	pObject->SetName(L"Tile");
 	pObject->AddComponent(new CTransform);
@@ -299,8 +301,11 @@ void CInGameScene::Init()
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
-
+	
 	pObject = pMeshData->Instantiate();
+
+	pObject->SetName(L"Obje");
+
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));

@@ -19,6 +19,7 @@ public:
 	void UpdateData(bool _bInstancing=false);
 	void UpdateData_CS();
 
+	tMtrlParam* GetParam(){ return &m_tParam; }
 	void Dispatch(UINT _x, UINT _y, UINT _z);
 
 

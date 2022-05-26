@@ -150,6 +150,7 @@ CGameObject* CMeshData::Instantiate()
 	for (UINT i = 0; i < m_vecMtrl.size(); ++i)
 	{
 		pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
+		
 	}
 
 	if (false == m_pMesh->IsAnimMesh())
