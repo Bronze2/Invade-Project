@@ -534,19 +534,13 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 void CPlayerScript::SkillCoolTimeCheck()
 {
 	if (m_tESkill->bUse) {
-		m_tESkill->CurTime = clock();
-		m_tESkill->IntervalTime = (m_tESkill->CurTime - m_tESkill->StartTime) / CLOCKS_PER_SEC;
-		if (m_tESkill->IntervalTime >= m_tESkill->fCoolTime) {
+		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
 			m_tESkill->bUse = false;
-			m_tESkill->CurTime = 0.f;
 		}
 	}
 	if (m_tZSkill->bUse) {
-		m_tZSkill->CurTime = clock();
-		m_tZSkill->IntervalTime = (m_tZSkill->CurTime - m_tZSkill->StartTime) / CLOCKS_PER_SEC;
-		if (m_tZSkill->IntervalTime >= m_tZSkill->fCoolTime) {
+		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;
-			m_tZSkill->CurTime = 0.f;
 		}
 	}
 
@@ -576,7 +570,7 @@ void CPlayerScript::UseSkill()
 		if (!m_tESkill->bUse)
 		{
 			m_tESkill->bUse = true;
-			m_tESkill->StartTime = clock();
+			m_tESkill->StartTime = chrono::system_clock::now();
 		}
 	}
 
@@ -584,7 +578,7 @@ void CPlayerScript::UseSkill()
 		if (!m_tZSkill->bUse)
 		{
 			m_tZSkill->bUse = true;
-			m_tZSkill->StartTime = clock();
+			m_tZSkill->StartTime = chrono::system_clock::now();
 			switch (m_tZSkill->eElementType)
 			{
 			case ELEMENT_TYPE::WATER:
@@ -619,7 +613,6 @@ void CPlayerScript::DamageBySkill(SKILL* _pSkill)
 	pSkill->fDuration = _pSkill->fDuration;
 	pSkill->fDamage = _pSkill->fDamage;
 	pSkill->bUse = false;
-	pSkill->bTick = false;
 	pSkill->bFinal = false;
 	pSkill->Count = 0;
 	pSkill->Sum = _pSkill->Sum;
@@ -633,8 +626,7 @@ void CPlayerScript::GetDamage()
 
 		if (m_arrSkill[i]->bFinal)continue;
 		if (m_arrSkill[i]->bUse == false) {
-			
-			m_arrSkill[i]->StartTime = clock();
+			m_arrSkill[i]->StartTime = std::chrono::system_clock::now();
 			m_arrSkill[i]->bUse = true;
 			switch (m_arrSkill[i]->eElementType)
 			{
@@ -646,20 +638,13 @@ void CPlayerScript::GetDamage()
 			}
 		}
 		else {
-			m_arrSkill[i]->CurTime = clock();
-			if (!m_arrSkill[i]->bTick) {
-				m_arrSkill[i]->TickInterval = (m_arrSkill[i]->CurTime - m_arrSkill[i]->StartTime) / CLOCKS_PER_SEC;
-			}
-			else {
-				m_arrSkill[i]->TickInterval = (m_arrSkill[i]->CurTime - m_arrSkill[i]->TickTime) / CLOCKS_PER_SEC;
-			}
-			if (m_arrSkill[i]->TickInterval > 1.f) {
+			if (TickCheck(m_arrSkill[i]->StartTime, m_arrSkill[i]->Count) != m_arrSkill[i]->Count) {
 				m_iCurHp -= m_arrSkill[i]->DotDamage;
-				m_arrSkill[i]->Sum+=m_arrSkill[i]->DotDamage;
-				m_arrSkill[i]->TickTime = clock();
-				m_arrSkill[i]->bTick = true;
+				m_arrSkill[i]->Sum += m_arrSkill[i]->DotDamage;
+				
 				m_arrSkill[i]->Count += 1;
 			}
+			
 			if (m_arrSkill[i]->Count >= (int)m_arrSkill[i]->fDuration) {
 				m_arrSkill[i]->bFinal = true;
 				m_iCurHp += m_arrSkill[i]->Sum;
@@ -668,15 +653,7 @@ void CPlayerScript::GetDamage()
 			}
 		}
 	}
-	vector<SKILL*>::iterator iter = m_arrSkill.begin();
-	for (int i = 0; iter != m_arrSkill.end(); ++iter, ++i) {
-		if (m_arrSkill[i]->bFinal) {
-			delete m_arrSkill[i];
-			m_arrSkill.erase(iter);
-			return;
-		}
-
-	}
+	m_arrSkill.erase(std::remove_if(m_arrSkill.begin(), m_arrSkill.end(), SkillFinalCheck), m_arrSkill.end());
 }
 
 void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
@@ -721,7 +698,7 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 	else {
 		
 		m_arrColObject.erase(std::remove(m_arrColObject.begin(), m_arrColObject.end(), _pOther->GetObj()), m_arrColObject.end());
-		int a = 0;
+		
 	}
 	
 

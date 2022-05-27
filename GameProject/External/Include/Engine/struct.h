@@ -286,16 +286,10 @@ struct SKILL {
 
 	float fDuration;
 	float fDamage;
-	clock_t StartTime;
-	clock_t CurTime;
-	clock_t TickTime;
-	clock_t TickInterval;
-	
-	clock_t IntervalTime;
+	std::chrono::system_clock::time_point StartTime;
 	float DotDamage;
 	float fCoolTime;
 	bool bUse;
-	bool bTick;
 	bool bFinal;
 	UINT Count;
 	float Sum;

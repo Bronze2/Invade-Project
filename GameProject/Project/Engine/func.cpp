@@ -294,3 +294,30 @@ Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _f
 	return Vec2(x,z);
 }
 
+int TickCheck(std::chrono::system_clock::time_point start, int _Time)
+{
+	std::chrono::duration<double>sec = std::chrono::system_clock::now() - start;
+	if (_Time <= sec.count()) {
+		_Time += 1;
+	}
+	return _Time;
+}
+
+bool CoolTimeCheck(std::chrono::system_clock::time_point start, int _Time)
+{
+	std::chrono::duration<double>sec = std::chrono::system_clock::now() - start;
+	if (_Time <= sec.count()) {
+		return true;
+	}
+	return false;
+}
+
+bool SkillFinalCheck(SKILL* _pSkill)
+{
+	if (_pSkill->bFinal) {
+		delete _pSkill;
+		return true;
+	}
+	return false;
+}
+

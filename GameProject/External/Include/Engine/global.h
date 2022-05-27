@@ -49,12 +49,14 @@ using namespace Microsoft::WRL;
 #else
 #pragma comment(lib, "FBXLoader/x64/release/libfbxsdk-md.lib")
 #endif
+#include <chrono>
 
 using std::vector;
 using std::list;
 using std::map;
 using std::string;
 using std::wstring;
+using namespace std::chrono;
 using std::make_pair;
 
 #include "d3dx12.h"
