@@ -268,7 +268,7 @@ void CPlayerScript::Awake()
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
 	GetObj()->AddChild(m_pHealParticle);
 
-
+	
 	
 }
 
@@ -671,16 +671,22 @@ void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	int a = 0;
-	if (_pOther->GetObj()->GetScript<CArrowScript>() != nullptr) {
-
-	}
-	else {
+	if (_pOther->GetObj()->GetScript<CArrowScript>() == nullptr) {
 		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
 
 		}
 		else {
 			m_arrColObject.push_back(_pOther->GetObj());
 			m_bColCheck = true;
+		}
+	}
+	else {
+		if (nullptr != _pOther->GetObj()->GetScript<CWaterSkill0Script>())
+		{
+
+		}
+		else {
+			CreateHitParticleObject(_pOther->GetObj()->GetChild()[0]->Transform()->GetWorldPos(),L"HardCircle");
 		}
 	}
 }

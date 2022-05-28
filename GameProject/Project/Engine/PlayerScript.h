@@ -35,7 +35,7 @@ private:
     UINT m_iMaxHp;
     float m_iCurHp;
     CGameObject* m_pHealParticle;
-    CGameObject* m_pDotDamage;
+
     bool m_bHealCheck;
 
 #ifdef CAMERA_TEST

@@ -35,6 +35,8 @@ enum class SCRIPT_TYPE {
     FIRESKILL1,
     WINDSKILL0,
     WINDSKILL1,
+
+    PARTICLE,
     END,
 };
 

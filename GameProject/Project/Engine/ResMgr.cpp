@@ -881,10 +881,7 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
 	AddRes(L"Std3DMtrl", pMtrl);
-	pMtrl = new CMaterial;
-	pMtrl->DisableFileSave();
-	pMtrl->SetShader(FindRes<CShader>(L"Std3D2Shader"));
-	AddRes(L"Std3D2Mtrl", pMtrl);
+
 
 
 	pMtrl = new CMaterial;

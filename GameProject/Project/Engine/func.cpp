@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "func.h"
 #include "Material.h"
+#include"ParticleScript.h"
 
 
 namespace RES_TYPE_STR
@@ -319,5 +320,27 @@ bool SkillFinalCheck(SKILL* _pSkill)
 		return true;
 	}
 	return false;
+}
+#include "ParticleSystem.h"
+#include "ResMgr.h"
+void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey)
+{
+	CGameObject* pHitParticle = new CGameObject;
+	pHitParticle->AddComponent(new CTransform);
+	pHitParticle->AddComponent(new CParticleSystem);
+	pHitParticle->AddComponent(new CParticleScript);
+	pHitParticle->Transform()->SetLocalPos(_Pos);
+	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
+	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.8f, 1.f, 0.f, 1.0f));
+	pHitParticle->ParticleSystem()->SetStartScale(1.f);
+	pHitParticle->ParticleSystem()->SetEndScale(2.f);
+	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.f);
+	pHitParticle->GetScript<CParticleScript>()->SetTime();
+	pHitParticle->FrustumCheck(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
+
+
 }
 

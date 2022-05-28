@@ -1135,7 +1135,7 @@ void CInGameScene::Init()
 
 
 	m_pArrow->AddComponent(new CTransform);
-	m_pArrow->Transform()->SetLocalPos(Vec3(10.f, 100.f, 10.f));
+	m_pArrow->Transform()->SetLocalPos(Vec3(50.f, 50.f, 50.f));
 	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
 	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	m_pArrow->AddComponent(new CMeshRender);

@@ -10,9 +10,6 @@
     <FxCompile Include="compute.fx">
       <Filter>FX</Filter>
     </FxCompile>
-    <FxCompile Include="func.fx">
-      <Filter>default</Filter>
-    </FxCompile>
     <FxCompile Include="light.fx">
       <Filter>FX</Filter>
     </FxCompile>
@@ -32,6 +29,9 @@
       <Filter>FX</Filter>
     </FxCompile>
     <FxCompile Include="value.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>
@@ -245,6 +245,9 @@
     </ClCompile>
     <ClCompile Include="ThunderSkill0Script.cpp">
       <Filter>Script\Skill\Thunder\E</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleScript.cpp">
+      <Filter>Script\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +473,9 @@
     <ClInclude Include="ThunderSkill0Script.h">
       <Filter>Script\Skill\Thunder\E</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleScript.h">
+      <Filter>Script\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="FX">
@@ -612,6 +618,9 @@
     </Filter>
     <Filter Include="Script\Skill\Fire\Z">
       <UniqueIdentifier>{6ba0ba75-5084-425f-8008-002dc8c87c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Particle">
+      <UniqueIdentifier>{6dd9fc05-28ac-4f5f-9032-3788f7628051}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
