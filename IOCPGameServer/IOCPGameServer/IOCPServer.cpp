@@ -4,6 +4,7 @@
 #include "Server.h"
 #include "Service.h"
 #include "SceneMgr.h"
+#include "DataBase.h"
 //
 namespace SHARED_DATA {
 	HANDLE g_iocp;					
@@ -23,8 +24,15 @@ namespace SHARED_DATA {
 
 void main()
 {
+	std::cout << "Run DB" << std::endl;
+	CDataBase::GetInst()->Init();
 	std::cout << "Run Server" << std::endl;
-	//CSceneMgr::GetInst()->Init();
+	//CDataBase::GetInst()->CreateAdmin(L"extest", L"ext11");
+	//CDataBase::GetInst()->DoubleCheckAdmin(L"extes1t");
+	//CDataBase::GetInst()->CheckAdminLogin(L"sangjun", L"sjpw");
+
+
+
 	CServer::GetInst()->Init();
 	CService::GetInst()->Init();
 

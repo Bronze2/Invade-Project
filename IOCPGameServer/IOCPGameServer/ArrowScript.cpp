@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "ArrowScript.h"
 #include "PlayerScript.h"
+#include "TowerScript.h"
 #include "Server.h"
 #include <math.h>
 void CArrowScript::Awake()
@@ -101,7 +102,7 @@ void CArrowScript::Update()
 		vPos += m_vDir * m_fSpeed * DT;
 		m_fVelocityY -= (GRAVITY * DT);
 		m_fFallSpeed += m_fVelocityY ;
-		vPos.y += m_fFallSpeed * DT;
+		vPos.y += m_fFallSpeed * 7*  DT;
 
 		m_vDeltaPos = vPos - m_vRestorePos;
 		float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
@@ -171,6 +172,16 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 				Init();
 				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,1, _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId(),500);
 			}
+		}
+
+	}
+
+	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr) {
+		if (nullptr != _pOther->GetObj()) {
+			GetObj()->SetActive(false);
+			Init();
+			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id, 3, 0, 500);
+
 		}
 
 	}

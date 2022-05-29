@@ -98,7 +98,9 @@ void CServer::send_lobby_login_ok_packet(int user_id)
 }
 void CServer::send_login_fail_packet()
 {
-
+	sc_packet_login_false packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_LOGIN_FALSE;
 }
 //아이디에게, 누가 이동했는지 알려줘라
 void CServer::send_move_packet(int user_id, int mover)

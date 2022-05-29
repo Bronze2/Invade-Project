@@ -186,11 +186,10 @@ void CThread::worker_Thread()
 					SHARED_DATA::g_clients[user_id].Pos = Vec3(0, 0, 5800);
 					SHARED_DATA::g_clients[user_id].m_camp = BLUE;
 				}
-				SHARED_DATA::g_clients[user_id].view_list.clear();
+				//SHARED_DATA::g_clients[user_id].view_list.clear();
 
 				DWORD flags = 0;
 				WSARecv(clientSocket, &SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_DATA::g_clients[user_id].m_recv_over.over, NULL);
-				cout << user_id << endl;
 				SHARED_DATA::current_user++;
 
 
@@ -227,16 +226,28 @@ void CThread::worker_Thread()
 }
 
 
-
+#include "Database.h";
 void CThread::process_packet(int user_id, char* buf)
 {
 	switch (buf[1]) //[0]Àº size
 	{
 	case C2S_LOGIN:
 	{
-		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(buf);
+		sc_packet_check_login* packet = reinterpret_cast<sc_packet_check_login*>(buf);
 		cout << "Recv Login Packet Client " << endl;
-		CService::GetInst()->enter_lobby(user_id, packet->name);
+		wstring t_userid;
+		wstring t_userpw;
+		t_userid.assign(packet->loginid.begin(), packet->loginid.end());
+		t_userpw.assign(packet->loginpw.begin(), packet->loginpw.end());
+
+		if (CDataBase::GetInst()->CheckAdminLogin(t_userid, t_userpw))
+		{
+			CService::GetInst()->enter_lobby(user_id);
+		}
+		else {
+			CServer::GetInst()->send_login_fail_packet();
+		}
+		
 	}
 	break;
 	case C2S_KEY_DOWN:

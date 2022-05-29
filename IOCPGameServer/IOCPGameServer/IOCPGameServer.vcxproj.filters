@@ -135,6 +135,9 @@
     <ClInclude Include="ArrowScript.h">
       <Filter>소스 파일\GameLogic\Script</Filter>
     </ClInclude>
+    <ClInclude Include="DataBase.h">
+      <Filter>소스 파일\Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -223,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="ArrowScript.cpp">
       <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="DataBase.cpp">
+      <Filter>소스 파일\Server</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

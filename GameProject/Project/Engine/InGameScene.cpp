@@ -347,16 +347,31 @@ void CInGameScene::Init()
 
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
 
+	Ptr<CTexture>pFloorRed = CResMgr::GetInst()->FindRes<CTexture>(L"FloorRed");
+	Ptr<CTexture>pFloorBlue = CResMgr::GetInst()->FindRes<CTexture>(L"FloorBlue");
+	Ptr<CTexture>pFloorWater = CResMgr::GetInst()->FindRes<CTexture>(L"FloorWater");
+
+
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\testc.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\tower1.mdat", L"MeshData\\tower1.mdat");
+	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFloorWater.GetPointer());
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pFloorWater.GetPointer());
+	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_2, pFloorWater.GetPointer());
+
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 100.f, 400.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+	pObject->Transform()->SetLocalScale(Vec3(1, 1, 1));
+
+
 	pObject->MeshRender()->SetDynamicShadow(false);
 
 
@@ -1145,7 +1160,7 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 
 

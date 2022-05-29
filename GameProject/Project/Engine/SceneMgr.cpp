@@ -110,6 +110,10 @@ void CSceneMgr::Init()
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
+	Ptr<CTexture> pFloorRed = CResMgr::GetInst()->Load<CTexture>(L"FloorRed", L"Texture\\FloorTextures\\ColorPaletteBLUE.png");
+	Ptr<CTexture> pFloorBlue = CResMgr::GetInst()->Load<CTexture>(L"FloorBlue", L"Texture\\FloorTextures\\ColorPaletteRED.png");
+	Ptr<CTexture> pFloorWater = CResMgr::GetInst()->Load<CTexture>(L"FloorWater", L"Texture\\FloorTextures\\Water.png");
+
 	Ptr<CTexture> pPlayerRed = CResMgr::GetInst()->Load<CTexture>(L"Player_Red", L"Texture\\ArchersTextureRed.png");
 	Ptr<CTexture> pPlayerBlue = CResMgr::GetInst()->Load<CTexture>(L"Player_Blue", L"Texture\\ArchersTextureBlue.png");
 	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
@@ -128,6 +132,8 @@ void CSceneMgr::Init()
 	Ptr<CTexture> pDiffuseTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex");
 	Ptr<CTexture> pNormalTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"NormalTargetTex");
 	Ptr<CTexture> pPositionTargetTex = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
+
+
 
 	Ptr<CTexture> pTestUAVTexture = CResMgr::GetInst()->CreateTexture(L"UAVTexture", 1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 

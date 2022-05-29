@@ -79,7 +79,7 @@ void CService::enter_game(int user_id)
 	}
 }
 
-void CService::enter_lobby(int user_id, char name[])
+void CService::enter_lobby(int user_id)
 {
 	SHARED_DATA::g_clients[user_id].m_cLock.lock();
 	CServer::GetInst()->send_lobby_login_ok_packet(user_id);

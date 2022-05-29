@@ -78,5 +78,9 @@ private:
 	CLIENT m_Client;
 	unordered_map<int, OTHER_CLINET> m_otherClients;
 	int m_OtherClientCount = 0;
+
+	//로그인 아이디 비번 임시
+	string m_loginid;
+	string m_loginpw;
 };
 

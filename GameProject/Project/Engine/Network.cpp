@@ -10,9 +10,17 @@ Network::~Network() {}
 
 void Network::Init()
 {
+
+	//임시 로그인
+	cout << "LoginID :";
+	cin >> m_loginid;
+	cout << "LoginPW :";
+	cin >> m_loginpw;
+
+
 	WSADATA wsadata;
 	if (WSAStartup(MAKEWORD(2, 2), &wsadata) != 0) {
-
+		 
 	//에러코드 삽입하기
 	}
 	BOOL optval = TRUE;
@@ -26,8 +34,10 @@ void Network::Init()
 
 	ServerAddr.sin_port = htons(SERVER_PORT);
 	//과방 192.168.207.150
-	//127.0.0.1
-	ServerAddr.sin_addr.s_addr = inet_addr("192.168.207.150");
+	//수민 192.168.203.24
+	//E320 실습실 10.30.2.115
+	//긱사 포트포워딩 121.190.132.143 : 8012
+	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
@@ -37,7 +47,7 @@ void Network::Init()
 	ioctlsocket(m_Client.socket_info.m_socket, FIONBIO, &on);
 	
 	m_Client.socket_info.connect = true;
-	std::cout << "Server Connect Sucsess" << std::endl;
+	//std::cout << "Server Connect Sucsess" << std::endl;
 
 
 }
@@ -93,9 +103,16 @@ void Network::ProcessPacket(char* ptr)
 		m_Client.id = my_packet->id;
 		m_Client.camp = my_packet->camp;
 		m_Client.isHost = my_packet->isHost;
+		cout << "로그인 성공" << endl;
 		cout << "My Client ID :" << m_Client.id <<
 			"	Camp :" << (int)m_Client.camp << 
 			"	isHost:"<< boolalpha << m_Client.isHost <<endl;
+	}
+	break;
+	case S2C_LOGIN_FALSE:
+	{
+		sc_packet_login_false* my_packet = reinterpret_cast<sc_packet_login_false*>(ptr);
+		cout << "로그인 실패" << endl;
 	}
 	break;
 	case S2C_LOBBY_ENTER:
@@ -322,11 +339,15 @@ void Network::send_packet(void* buffer)
 
 }
 
+
+
 void Network::send_login_packet()
 {
-	sc_packet_login_ok m_packet;
+	sc_packet_check_login m_packet;
 	m_packet.type = C2S_LOGIN;
 	m_packet.size = sizeof(m_packet);
+	m_packet.loginid = m_loginid;
+	m_packet.loginpw = m_loginpw;
 	send_packet(&m_packet);
 	cout << "Send Login Packet" << endl;
 }

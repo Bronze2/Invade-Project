@@ -1,5 +1,4 @@
 #pragma once
-
 constexpr int MAX_ID_LEN = 50;
 constexpr int MAX_STR_LEN = 255;
 constexpr int MAX_PACKET_SIZE = 255;
@@ -10,7 +9,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define WORLD_WIDTH		400
 #define WORLD_HEIGHT	400
 
-#define SERVER_PORT		9100
+#define SERVER_PORT		8012
 
 //받는 입장에서는 패킷 type이 날아온다. 보내는 입장에서는 이걸 담아 보내야 알려줄 수 있다.
 #define C2S_LOGIN		1
@@ -43,6 +42,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_DELETE_MINION	17
 #define S2C_DELETE_ARROW	18
 #define S2C_DELETE_PROJECTILE	19
+#define S2C_LOGIN_FALSE 20
 
 
 struct p_Vec3 {
@@ -56,6 +56,17 @@ struct p_Vec3 {
 #pragma pack(push ,1)
 
 
+struct sc_packet_check_login {
+	char size;
+	char type;
+	std::string loginid;
+	std::string loginpw;
+
+	//char loginid[MAX_ID_LEN];
+	//char loginpw[MAX_ID_LEN];
+};
+
+
  
 struct sc_packet_login_ok {
 	char size;
@@ -66,6 +77,11 @@ struct sc_packet_login_ok {
 	short level;
 	int	exp;
 };
+struct sc_packet_login_false {
+	char size;
+	char type;
+};
+
 
 struct sc_packet_move {
 	char size;

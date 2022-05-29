@@ -67,9 +67,9 @@ void CLobbyScene::Init()
 	cout << "!" << endl;
 
 	
-	Network::GetInst()->send_login_packet();
 	Awake();
 	Start();
+	Network::GetInst()->send_login_packet();
 }
 
 void CLobbyScene::Update()

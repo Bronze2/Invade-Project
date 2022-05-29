@@ -28,6 +28,8 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	if (FAILED(CDevice::GetInst()->Init(_hWnd, _resolution, _bWindow)))
 		return E_FAIL;
 
+
+	//임시 로그인 Network Init() 안에서 추후 수정
 	Network::GetInst()->Init();
 
 
