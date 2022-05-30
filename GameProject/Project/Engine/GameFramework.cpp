@@ -74,52 +74,34 @@ void CGameFramework::Progress()
 
 void CGameFramework::ProcessInput()
 {
-
 	POINT ptCursorPos;
-	SetCursor(NULL);
+	//SetCursor(NULL);
+	ShowCursor(TRUE);
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);
-	RECT rt;
-	RECT rt2;
-	GetWindowRect(CRenderMgr::GetInst()->GethWnd(),&rt2);
-	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rt);
+	RECT rtWindow;
+	RECT rtClient;
+	GetWindowRect(CRenderMgr::GetInst()->GethWnd(), &rtWindow);
+	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rtClient);
 	LONG CursorPosy = ptCursorPos2.y;
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
-	if (rt2.right < ptCursorPos.x) {
-		int left=rt2.left+13;
-		ptCursorPos.x = left;
-		
-		m_ptOldCursorPos.x = rt2.left+10;
+	if (rtWindow.right - 3 <= ptCursorPos.x) {
+		ptCursorPos.x = rtWindow.left + 3;
+		m_ptOldCursorPos.x = rtWindow.left;
 		SetCursorPos(ptCursorPos.x, CursorPosy);
 	}
-	if (2 >= ptCursorPos.x) {
-		ptCursorPos.x = rt2.right-13	 ;
-		m_ptOldCursorPos.x = rt2.right-10;
-
+	if (3 >= ptCursorPos.x) {
+		ptCursorPos.x = rtWindow.right - 3;
+		m_ptOldCursorPos.x = rtWindow.right;
 		SetCursorPos(ptCursorPos.x, CursorPosy);
 	}
-//	if (rt.bottom < ptCursorPos.y) {
-//		ptCursorPos.y = rt.bottom;
-//		m_ptOldCursorPos.y = rt.bottom;
-//		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
-//	}
-//	if (rt.top >= ptCursorPos.y) {
-//		ptCursorPos.y = rt.top+5;
-//		m_ptOldCursorPos.y = rt.top+5;
-//		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
-//	}
-
-
-
 
 	m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
 	m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
 	m_vMouseMove.y *= -1.f;
 
-	m_ptOldCursorPos = ptCursorPos;
-	//	SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
-	
+	m_ptOldCursorPos = ptCursorPos;	
 }
 
 void CGameFramework::OnProcessingMouseMessage(HWND _hWnd, UINT _uMessageID, WPARAM _wParam, LPARAM _lParam)

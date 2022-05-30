@@ -18,6 +18,7 @@ public:
     virtual void Save(const wstring& _strFilePath);
 
     Ptr<CMesh> GetMesh() { return m_pMesh; }
+    vector<Ptr<CMaterial>> GetMaterial() { return m_vecMtrl; }
 
     CGameObject* Instantiate();
 

@@ -69,6 +69,8 @@ void CArrowScript::Update()
 	//CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	//CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 
+	Vec3 vRestorePos;
+
 	switch (m_eState)
 	{
 	case ARROW_STATE::IDLE:
@@ -78,7 +80,7 @@ void CArrowScript::Update()
 	case ARROW_STATE::ATTACK_READY:
 	{
 		if (!m_bMaxCharged) {
-			Vec3 vRestorePos = vPos;
+			vRestorePos = vPos;
 			vPos.x += 30.f * DT;			// 15.f
 		}
 		Transform()->SetLocalPos(vPos);
@@ -88,12 +90,15 @@ void CArrowScript::Update()
 	{
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
-			GetObj()->SetActive(false);
 			Init();
+			GetObj()->SetActive(false);
 			m_eState = ARROW_STATE::IDLE;
 		}
 
 		m_vRestorePos = vPos;
+
+		/// TargetPos 받아와서 Normalize해서 방향벡터 만들어줄까,,
+
 
 		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 		vPos += m_vDir * m_fSpeed * DT;
@@ -101,15 +106,15 @@ void CArrowScript::Update()
 		m_fFallSpeed += m_fVelocityY;
 		vPos.y += m_fFallSpeed * DT;
 
-		m_vDeltaPos = vPos - m_vRestorePos;
-		float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
+		//m_vDeltaPos = vPos - m_vRestorePos;
+		//float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
 		//vRot.y += fAngle;
 		
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
-		m_vTargetDir = vPos - m_vRestorePos;
-		m_vTargetDir.Normalize();
+		//m_vTargetDir = vPos - m_vRestorePos;
+		//m_vTargetDir.Normalize();
 
 		//float value = XMConvertToRadians(90.f * DT * 10);
 
@@ -134,10 +139,15 @@ void CArrowScript::Init()
 	m_bMaxCharged = false;
 	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
+	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
 
 	m_pBow->AddChild(GetObj());
+
+	//if (nullptr == GetObj()->GetParent()) {
+	//	m_pBow->AddChild(GetObj());
+	//}
 }
+
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {

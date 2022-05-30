@@ -20,6 +20,7 @@
 #include "Material.h"
 #include "Mesh.h"
 #include "Collider3D.h"
+
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
 	, m_frustum(this)
@@ -35,6 +36,10 @@ CCamera::CCamera()
 
 CCamera::~CCamera()
 {
+	if (nullptr != m_pRay)
+	{
+		delete m_pRay;
+	}
 }
 
 void CCamera::FinalUpdate()
@@ -482,6 +487,14 @@ void CCamera::Render_ShadowMap()
 	for (UINT i = 0; i < m_vecShadowObj.size(); ++i) {
 		m_vecShadowObj[i]->MeshRender()->Render_ShadowMap();
 	}
+}
+
+void CCamera::SetRay(Vec3 _vPos, Vec3 _vDir)
+{
+	m_pRay = new SimpleMath::Ray;
+
+	m_pRay->position = _vPos;
+	m_pRay->direction = _vDir;
 }
 
 void CCamera::SaveToScene(FILE* _pFile)

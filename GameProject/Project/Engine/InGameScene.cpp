@@ -45,6 +45,7 @@
 #include "BowScript.h"
 #include "EmptyCameraScript.h"
 #include "StaticUI.h"
+#include "CrossHairScript.h"
 
 void CInGameScene::Init()
 {
@@ -123,6 +124,10 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
+	// Specular
+	/*int isSpecular = 1;
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &isSpecular);*/
+	
 	//pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 
 	CAnimation* pNewAnimation = new CAnimation;
@@ -300,17 +305,66 @@ void CInGameScene::Init()
 	pBlueSecondTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\map_01.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
+	/*pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));*/
+	pObject->Transform()->SetLocalPos(Vec3(0.f, -50.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Red"));
+	Ptr<CTexture> pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Blue"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"RedTransparent"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BlueTransparent"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"MetalSheetRoofRed"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"AsphaltStoneRedBaseTrim"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"AsphaltStoneBlueBaseTrim"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow"); 
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Lighy_Gray"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Dark_Gray"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"MetalSheetRoofBlue"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Gray"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
+
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Black"));
+	pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTex.GetPointer());
 
 
 	FindLayer(L"Default")->AddGameObject(pObject);
@@ -978,12 +1032,14 @@ void CInGameScene::Init()
 	pUICrossHair->AddComponent(new CTransform);
 	pUICrossHair->AddComponent(new CMeshRender);
 	pUICrossHair->AddComponent(new CStaticUI);
+	pUICrossHair->AddComponent(new CCrossHairScript);
 
 	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 
-	//pUICrossHair->Transform()->SetLocalPos(Vec3((res.fWidth / 2), (res.fHeight/2), 1.f));
-	pUICrossHair->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	//Vec3((-res.fWidth / 2, res.fHeight/2, 1.f) -> ÁÂ»ó´Ü, vScale/2 ¸¸Å­ ´õÇØÁà¾ßÇÔ
+	//pUICrossHair->Transform()->SetLocalPos(Vec3((-res.fWidth / 2 + vScale.x/2), (res.fHeight/2 -vScale.y/2), 1.f));
+	pUICrossHair->Transform()->SetLocalPos(Vec3((-vScale.x / 2), (vScale.y / 2), 1.f));
 	pUICrossHair->Transform()->SetLocalScale(vScale);
 	pUICrossHair->StaticUI()->SetCamera(pUICam->Camera());
 
@@ -991,6 +1047,11 @@ void CInGameScene::Init()
 	pUICrossHair->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
 	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
 	pUICrossHair->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pCrossHairTex.GetPointer());
+
+	//pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
+	pUICrossHair->GetScript<CCrossHairScript>()->SetMainCam(pEmptyCam);
+
+	//pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
 
 	//pMainCam->AddChild(pUICrossHair);
 	//FindLayer(L"UI")->AddGameObject(pMainCam, false);

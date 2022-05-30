@@ -61,7 +61,7 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _In)
     }
     
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;
-    output.vSpecular = tCurCol.vSpec;
+    //output.vSpecular = tCurCol.vSpec;
     return output;
 
 }
@@ -117,7 +117,7 @@ float4 PS_MergeLight(VS_OUTPUT _in) : SV_Target
    
     float4 vColor = g_tex_0.Sample(g_sam_0, _in.vUV);
     float4 vSpec = g_tex_2.Sample(g_sam_0, _in.vUV);
-    
+
     return (vColor * vLightPow) + vSpec;
 }
 

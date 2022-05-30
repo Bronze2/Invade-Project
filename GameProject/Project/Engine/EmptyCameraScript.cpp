@@ -30,7 +30,6 @@ void CEmptyCameraScript::Update()
 	}
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
-
 }
 
 void CEmptyCameraScript::Init()

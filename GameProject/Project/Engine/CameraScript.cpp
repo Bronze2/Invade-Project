@@ -22,7 +22,7 @@ void CCameraScript::Update()
 
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 			Init();
-			m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
+			//m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {

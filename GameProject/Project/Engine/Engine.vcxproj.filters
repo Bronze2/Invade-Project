@@ -126,6 +126,9 @@
       <Filter>Script\Camera</Filter>
     </ClCompile>
     <ClCompile Include="StaticUI.cpp" />
+    <ClCompile Include="CrossHairScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InGameScene.h" />
@@ -238,6 +241,9 @@
       <Filter>Script\Camera</Filter>
     </ClInclude>
     <ClInclude Include="StaticUI.h" />
+    <ClInclude Include="CrossHairScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl" />

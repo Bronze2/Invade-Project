@@ -88,6 +88,7 @@ struct PS_STD3D_OUTPUT
     float4 vTarget0 : SV_Target0; // Diffuse
     float4 vTarget1 : SV_Target1; // Normal
     float4 vTarget2 : SV_Target2; // Position
+    float4 vTarget3 : SV_Target3; // Specular
 };
 
 PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
@@ -108,6 +109,13 @@ PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
         float3x3 matTBN = { _in.vViewTangent, _in.vViewBinormal, _in.vViewNormal };
         vViewNormal = normalize(mul(vTSNormal, matTBN));
     }
+
+    if (tex_2)
+    {
+        output.vTarget3 = g_tex_2.Sample(g_sam_0, _in.vUV);
+    }
+    else
+        output.vTarget3 = float4(0.f, 0.f, 0.f, 1.f);
 
     output.vTarget1.xyz = vViewNormal;
     output.vTarget2.xyz = _in.vViewPos;

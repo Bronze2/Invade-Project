@@ -380,7 +380,6 @@ void CPlayerScript::Update()
 			}
 		}
 
-		// 0 -> 270보다는 0 -> -90되는게 이쁘니까
 		vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
 
 		if (m_fFactor < 1.f) {
@@ -406,7 +405,7 @@ void CPlayerScript::Update()
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 		// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
-		vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f 더 회전시킬건지?
+		vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
 
 		m_eState = PLAYER_STATE::ATTACK_READY;
 	}

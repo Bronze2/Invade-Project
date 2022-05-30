@@ -617,6 +617,16 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"Collider2DShader", pShader);
 
 	// =================
+	// LINE 2D Shader
+	// =================
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_LINE2D", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_LINE2D", "ps_5_0");
+
+	pShader->Create(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	AddRes(L"Line2DShader", pShader);
+
+	// =================
 	// STD2D Shader
 	// =================
 	pShader = new CShader;
@@ -655,8 +665,8 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexShader(L"Shader\\std3d.fx", "VS_Std3D", "vs_5_0");
 	pShader->CreateVertexInstShader(L"Shader\\std3d.fx", "VS_Std3D_Inst", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std3d.fx", "PS_Std3D", "ps_5_0");
-
-	pShader->Create(SHADER_POV::DEFERRED);
+	
+	pShader->Create(SHADER_POV::FORWARD);		//DEFERRED
 	AddRes(L"Std3DShader", pShader);
 
 	// =============
@@ -701,6 +711,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->AddShaderParam(tShaderParam{ L"Light Index", SHADER_PARAM::INT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Normal Target Texture", SHADER_PARAM::TEX_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Position Target Texture", SHADER_PARAM::TEX_1 });
+	pShader->AddShaderParam(tShaderParam{ L"Specular Target Texture", SHADER_PARAM::TEX_2 });
 	pShader->Create(SHADER_POV::LIGHTING);
 
 	AddRes(L"DirLightShader", pShader);
@@ -852,6 +863,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetData(SHADER_PARAM::INT_0, &a);
 	AddRes(L"Collider2DMtrl_1", pMtrl);
 
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"Line2DShader"));
+	AddRes(L"Line2DMtrl", pMtrl);
 
 
 	pMtrl = new CMaterial;

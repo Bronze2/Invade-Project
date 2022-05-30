@@ -24,13 +24,27 @@ void CCollider3D::FinalUpdate()
 	Matrix matScale = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
+
+	Matrix bWorld = XMLoadFloat4x4(&m_matColWorld);
+	m_bBound = {};
+	m_bBound.Transform(m_bBound, m_matColWorld);
+	XMFLOAT3 corners[8] = {};
+	m_bBound.GetCorners(corners);
 }
 
 void CCollider3D::Render()
 {
-	//return;
+	static bool bRender = true;
+	if (KEY_HOLD(KEY_TYPE::KEY_8)) {
+		bRender = !bRender;
+	}
+
+	if (!bRender)
+		return;
+
 	if (!IsActive())
 		return;
+
 	static CConstantBuffer* pCB = CDevice::GetInst()->GetCB(CONST_REGISTER::b0);
 	g_transform.matWorld = m_matColWorld;
 	CDevice::GetInst()->SetConstBufferToRegister(pCB, pCB->AddData(&g_transform));

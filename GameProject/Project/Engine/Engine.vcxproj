@@ -180,6 +180,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="BowScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
+    <ClInclude Include="CrossHairScript.h" />
     <ClInclude Include="EmptyCameraScript.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="LobbyScene.h" />
@@ -248,6 +249,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="BowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
+    <ClCompile Include="CrossHairScript.cpp" />
     <ClCompile Include="EmptyCameraScript.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
