@@ -304,8 +304,6 @@ void CInGameScene::Init()
 	
 	pObject = pMeshData->Instantiate();
 
-	pObject->SetName(L"Obje");
-
 	pObject->FrustumCheck(false);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
@@ -316,7 +314,7 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 
-
+	
 
 
 	CGameObject* pNexus = nullptr;
@@ -1130,6 +1128,9 @@ void CInGameScene::Init()
 
 
 
+
+
+
 	CGameObject* m_pArrow = new CGameObject;
 	m_pArrow->SetName(L"Arrow");
 
@@ -1149,6 +1150,8 @@ void CInGameScene::Init()
 	m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::WATER));
 	m_pArrow->GetScript<CArrowScript>()->SetMove(false);
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
+
+
 
 
 	m_pArrow = new CGameObject;
@@ -1172,7 +1175,7 @@ void CInGameScene::Init()
 
 
 	//m_pArrow->GetScript<CWaterSkill0Script>()->SetPlayer(m_pPlayer);
-	m_pArrow->GetScript<CWaterSkill0Script>()->SetSkill(CSkillMgr::GetInst()->FindSkill(0));
+	m_pArrow->GetScript<CWaterSkill0Script>()->SetSkill(CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::WATER_0));
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
 

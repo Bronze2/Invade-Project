@@ -35,8 +35,12 @@ private:
     UINT m_iMaxHp;
     float m_iCurHp;
     CGameObject* m_pHealParticle;
+    CGameObject* m_pFlameParticle;
+    CGameObject* m_pThunderParticle;
+
 
     bool m_bHealCheck;
+    bool m_bFlameCheck;
 
 #ifdef CAMERA_TEST
     float m_fTurnDegree;

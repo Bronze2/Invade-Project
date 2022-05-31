@@ -249,6 +249,12 @@
     <ClCompile Include="ParticleScript.cpp">
       <Filter>Script\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Scene\InnerScene</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginScene.cpp">
+      <Filter>Scene\InnerScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BowScript.h">
@@ -475,6 +481,12 @@
     </ClInclude>
     <ClInclude Include="ParticleScript.h">
       <Filter>Script\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Scene\InnerScene</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginScene.h">
+      <Filter>Scene\InnerScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

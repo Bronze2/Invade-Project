@@ -333,8 +333,8 @@ void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
 	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.8f, 1.f, 0.f, 1.0f));
-	pHitParticle->ParticleSystem()->SetStartScale(1.f);
-	pHitParticle->ParticleSystem()->SetEndScale(2.f);
+	pHitParticle->ParticleSystem()->SetStartScale(5.f);
+	pHitParticle->ParticleSystem()->SetEndScale(10.f);
 	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.f);
 	pHitParticle->GetScript<CParticleScript>()->SetTime();
 	pHitParticle->FrustumCheck(false);

@@ -49,7 +49,8 @@
 #include "InGameScene.h"
 #include "BowScript.h"
 #include "EmptyPlayerScript.h"
-
+#include "LoginScene.h"
+#include "TitleScene.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -75,6 +76,10 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 	switch (_Type)
 	{
 	case SCENE_TYPE::TITLE:
+		m_pCurScene = new CTitleScene;
+		break;
+	case SCENE_TYPE::LOGIN:
+		m_pCurScene = new CLoginScene;
 		break;
 	case SCENE_TYPE::LOBBY:
 		m_pCurScene =new CLobbyScene;
@@ -127,6 +132,8 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"particle_00", L"Texture\\Particle\\particle_00.png");
+
+	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pWhite = CResMgr::GetInst()->Load<CTexture>(L"white", L"Texture\\Tile\\1234.png");
 

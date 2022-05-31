@@ -259,7 +259,7 @@ void CPlayerScript::Awake()
 	m_pHealParticle->AddComponent(new CParticleSystem);
 	m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
 	m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.5f, 0.8f, 1.f, 1.0f));
+	m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.8f, 1.f, 1.0f));
 	m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
 	m_pHealParticle->ParticleSystem()->SetEndScale(15.f);
 	m_pHealParticle->FrustumCheck(false);
@@ -268,7 +268,35 @@ void CPlayerScript::Awake()
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
 	GetObj()->AddChild(m_pHealParticle);
 
+
+	m_pFlameParticle = new CGameObject;
+	m_pFlameParticle->AddComponent(new CTransform);
+	m_pFlameParticle->AddComponent(new CParticleSystem);
+	m_pFlameParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Flame"), L"ParticleUpdate4Mtrl");
+	m_pFlameParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	m_pFlameParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+	m_pFlameParticle->ParticleSystem()->SetStartScale(10.f);
+	m_pFlameParticle->ParticleSystem()->SetEndScale(0.1f);
+	m_pFlameParticle->FrustumCheck(false);
+	m_pFlameParticle->SetActive(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pFlameParticle);
+	GetObj()->AddChild(m_pFlameParticle);
 	
+
+	m_pThunderParticle = new CGameObject;
+	m_pThunderParticle->AddComponent(new CTransform);
+	m_pThunderParticle->AddComponent(new CParticleSystem);
+	m_pThunderParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate3Mtrl");
+	m_pThunderParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+	m_pThunderParticle->ParticleSystem()->SetStartScale(10.f);
+	m_pThunderParticle->ParticleSystem()->SetEndScale(0.1f);
+	m_pThunderParticle->FrustumCheck(false);
+	m_pThunderParticle->SetActive(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
+	GetObj()->AddChild(m_pThunderParticle);
 	
 }
 
@@ -549,6 +577,7 @@ void CPlayerScript::SkillCoolTimeCheck()
 void CPlayerScript::StatusCheck()
 {
 	m_bHealCheck = false;
+	m_bFlameCheck = false;
 	if (m_pHealParticle->IsActive()) {
 		for (int i = 0; i < m_arrSkill.size(); ++i) {
 			if (m_arrSkill[i]->eElementType == ELEMENT_TYPE::WATER) {
@@ -562,7 +591,19 @@ void CPlayerScript::StatusCheck()
 
 
 	}
+	if (m_pFlameParticle->IsActive()) {
+		for (int i = 0; i < m_arrSkill.size(); ++i) {
+			if (m_arrSkill[i]->eElementType == ELEMENT_TYPE::FIRE) {
+				m_bFlameCheck = true;
+				break;
+			}
+		}
+		if (!m_bFlameCheck ) {
+			m_pFlameParticle->SetActive(false);
+		}
 
+
+	}
 }
 void CPlayerScript::UseSkill()
 {
@@ -633,6 +674,9 @@ void CPlayerScript::GetDamage()
 			case ELEMENT_TYPE::WATER:
 				m_pHealParticle->SetActive(true);
 				break;
+			case ELEMENT_TYPE::FIRE:
+				m_pFlameParticle->SetActive(true);
+				break;
 			default:
 				break;
 			}
@@ -686,7 +730,7 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 		}
 		else {
-			CreateHitParticleObject(_pOther->GetObj()->GetChild()[0]->Transform()->GetWorldPos(),L"HardCircle");
+			CreateHitParticleObject(_pOther->GetObj()->GetChild()[0]->Transform()->GetWorldPos(),L"particle_00");
 		}
 	}
 }
@@ -735,6 +779,7 @@ void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
 , m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f),m_bHealCheck(false)
+,m_bFlameCheck(false)
 {
 }
 

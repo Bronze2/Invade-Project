@@ -187,6 +187,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="EmptyPlayerScript.h" />
+    <ClInclude Include="LoginScene.h" />
     <ClInclude Include="MinionScript.h" />
     <ClInclude Include="Collider3D.h" />
     <ClInclude Include="InstancingBuffer.h" />
@@ -244,6 +245,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="ThunderSkill1Script.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="CameraScript.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="WaterSkill0Script.h" />
@@ -264,6 +266,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="EmptyPlayerScript.cpp" />
+    <ClCompile Include="LoginScene.cpp" />
     <ClCompile Include="MinionScript.cpp" />
     <ClCompile Include="Collider3D.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
@@ -320,6 +323,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="ThunderSkill1Script.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="CameraScript.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WaterSkill0Script.cpp" />
