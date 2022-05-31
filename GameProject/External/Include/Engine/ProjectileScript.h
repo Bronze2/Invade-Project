@@ -50,6 +50,7 @@ public:
 
     void SetBone(const UINT& _iBone) { m_iBone = _iBone; }
     void SetStartFrame(const UINT& _iStartFrame) { m_iStartFrame = _iStartFrame; }
+    void SetDir(const Vec3& _Dir) { m_vDir = _Dir; }
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
 

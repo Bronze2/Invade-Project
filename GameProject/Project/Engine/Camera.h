@@ -42,9 +42,13 @@ private:
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D; // Deferred
     map<INT_PTR, vector<tInstObj>>		m_mapSingleObj; // Single Object
 
+    SimpleMath::Ray* m_pRay;
+
+public:
+
+
 
     CGameObject* m_pPlayer;
-    SimpleMath::Ray* m_pRay;
     Vec3 m_vLook;
     bool m_bPlayer = false;
     Vec3 m_vFront;
@@ -76,6 +80,8 @@ public:
     void SetScale(float _fScale) { m_fScale = _fScale; if (m_fScale < 0.01f)m_fScale = 0.01f; Changed(); }
     void SetFov(float _fAngle) { m_fFOV = _fAngle; Changed(); }
     void SetNear(float _fNear) { m_fNear = _fNear; Changed(); }
+
+    void SetRay(Vec3 _vPos, Vec3 _vDir);
 
     float GetFar() { return m_fFar; }
     float GetScale() { return m_fScale; }

@@ -59,7 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1920, 1080 }, true)))
+    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1980, 1080 }, true)))       //1982, 1080
     {
         return 0;
     }
@@ -119,7 +119,9 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+
     wcex.lpszMenuName = nullptr;// MAKEINTRESOURCEW(IDC_CLIENT);
+
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 

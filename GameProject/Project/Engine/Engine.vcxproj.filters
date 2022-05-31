@@ -90,6 +90,7 @@
     <ClCompile Include="func.cpp">
       <Filter>default</Filter>
     </ClCompile>
+
     <ClCompile Include="GameFramework.cpp">
       <Filter>FrameWork</Filter>
     </ClCompile>
@@ -254,6 +255,12 @@
     </ClCompile>
     <ClCompile Include="LoginScene.cpp">
       <Filter>Scene\InnerScene</Filter>
+    <ClCompile Include="EmptyCameraScript.cpp">
+      <Filter>Script\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticUI.cpp" />
+    <ClCompile Include="CrossHairScript.cpp">
+      <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -317,6 +324,7 @@
     <ClInclude Include="extern.h">
       <Filter>default</Filter>
     </ClInclude>
+
     <ClInclude Include="GameFramework.h">
       <Filter>FrameWork</Filter>
     </ClInclude>
@@ -488,6 +496,16 @@
     <ClInclude Include="LoginScene.h">
       <Filter>Scene\InnerScene</Filter>
     </ClInclude>
+    <ClInclude Include="EmptyCameraScript.h">
+      <Filter>Script\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticUI.h" />
+    <ClInclude Include="CrossHairScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="FX">

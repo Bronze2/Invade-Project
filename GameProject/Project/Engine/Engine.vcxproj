@@ -184,6 +184,8 @@ call EngineCopy.bat</Command>
     <ClInclude Include="DarkSkill1Script.h" />
     <ClInclude Include="FireSkill0Script.h" />
     <ClInclude Include="FireSkill1Script.h" />
+    <ClInclude Include="CrossHairScript.h" />
+    <ClInclude Include="EmptyCameraScript.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="EmptyPlayerScript.h" />
@@ -237,6 +239,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpawnScript.h" />
+    <ClInclude Include="StaticUI.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
@@ -263,6 +266,8 @@ call EngineCopy.bat</Command>
     <ClCompile Include="DarkSkill1Script.cpp" />
     <ClCompile Include="FireSkill0Script.cpp" />
     <ClCompile Include="FireSkill1Script.cpp" />
+    <ClCompile Include="CrossHairScript.cpp" />
+    <ClCompile Include="EmptyCameraScript.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="EmptyPlayerScript.cpp" />
@@ -316,6 +321,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
+    <ClCompile Include="StaticUI.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />

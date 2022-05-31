@@ -14,18 +14,16 @@ private:
     bool m_bCheckStartMousePoint;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
-    CGameObject* m_pArrow[20];
-    UINT m_iCurArrow;
-    Ptr<CTexture>pBlackTex;
-    int m_iPower;
-    ELEMENT_TYPE m_iType;
-    float m_fArrowSpeed;
+    Vec3 m_vRestoreRot;
 
-    float m_fArcherLocation;
+    ELEMENT_TYPE m_iType;
 
     float m_fRotateDegree;
     float m_fMoveSpeed;
-
+    float m_fTurnDegree;
+    float m_fCurDegree;
+    float m_fFactor;
+    
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
 
@@ -42,18 +40,16 @@ private:
     bool m_bHealCheck;
     bool m_bFlameCheck;
 
-#ifdef CAMERA_TEST
-    float m_fTurnDegree;
-    float m_fTurnSpeed;
-    bool m_bTurnBack;
-#endif
-
     float m_fLerpTime;
     float m_fMaxLerpTime;
 
     bool m_bCheckDegree;
     bool m_bColCheck;
     bool m_bMoveCheck;
+
+    bool m_bTurn;
+    int m_iKeyHoldCnt;
+
     vector<CGameObject*>m_arrColObject;
 
     vector<CGameObject*> m_arrEnemy;

@@ -20,6 +20,7 @@ public:
     UINT Size() { return m_vecMtrl.size(); }
 
     Ptr<CMesh> GetMesh() { return m_pMesh; }
+    vector<Ptr<CMaterial>> GetMaterial() { return m_vecMtrl; }
 
     CGameObject* Instantiate();
 

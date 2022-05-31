@@ -36,8 +36,12 @@ void CProjectileScript::Update()
 	}
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
+
 	Vec3 vRot = Transform()->GetLocalRot();
 	Vec3 vPos = Transform()->GetWorldPos();
+
+	Vec3 vRestoreLocalPos = vLocalPos;
+
 	if (m_pObject != nullptr) {
 		if (m_pObject->GetScript<CMinionScript>() != nullptr) {
 			if (m_pObject->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
@@ -57,54 +61,6 @@ void CProjectileScript::Update()
 	case PROJECTILE_TYPE::MINION:
 	{
 
-		tMTBone* p = const_cast<tMTBone*>(m_pObject->MeshRender()->GetMesh()->GetBone(m_iBone));
-		int d = m_pObject->Animator3D()->GetFrameIdx();
-		if (p->vecKeyFrame.size() < d) {
-			return;
-		}
-		Transform()->SetLocalPos(p->vecKeyFrame[m_pObject->Animator3D()->GetFrameIdx()].vTranslate);
-		// 손에들고있는코드
-		if (0 == m_bLaunch)
-			return;
-		else if (1 == m_bLaunch) {
-			if (m_pTarget->IsDead())
-			{
-				DeleteObject(GetObj());
-				return;
-			}
-			if (nullptr == m_pTarget) {
-				DeleteObject(GetObj());
-				return;
-			}
-
-			Vec3 vObjPos = m_pObject->Transform()->GetLocalPos();
-			Vec3 vObjRot = m_pObject->Transform()->GetLocalRot();
-			Matrix matTranslation = XMMatrixTranslation(vObjPos.x, vObjPos.y, vObjPos.z);
-			Vec3 vObjScale = m_pObject->Transform()->GetLocalScale();
-			Matrix matScale = XMMatrixScaling(vObjScale.x, vObjScale.y, vObjScale.z);
-			vObjRot =m_pObject->Transform()->GetLocalRot();
-			vObjRot.y -= m_fRoty;
-			Matrix matRot = XMMatrixRotationX(vObjRot.x);
-			matRot *= XMMatrixRotationY(vObjRot.y);
-			matRot *= XMMatrixRotationZ(vObjRot.z);
-
-			m_matObjectWorldMatrix = matScale * matRot * matTranslation;
-
-			Transform()->SetObjectMatrix(m_matObjectWorldMatrix);
-
-			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-			float rotate = angle * 0.0174532925f;
-			vRot.y = rotate;
-			Transform()->SetLocalRot(vRot);
-			++m_bLaunch;
-			return;
-		}
-		else {
-
-		}
-
-	
 	}
 
 	break;
@@ -117,17 +73,10 @@ void CProjectileScript::Update()
 		break;
 	}
 
-	
 
-	Vec3 vvalue;
-	if (m_bUpdate) {
-		if (M_FLengthCheck(vPos)) {
-			DeleteObject(GetObj());
-			return;
-		}
-	}
-
-	Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 vPos = Transform()->GetWorldPos();
+	Vec3 vWorldDir = m_pObject->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	Vec3 vLocalDir = GetObj()->Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
 
 	
@@ -176,7 +125,12 @@ void CProjectileScript::Update()
 		}
 		vLocalPos.z += value * m_fSpeed * DT;
 	}
-	
+
+	int a = 0;
+	float xvalue = m_vDir.x * 100.f * DT;
+
+	vLocalPos -= m_vDir * 500.f * DT;
+	vLocalPos.y = vRestoreLocalPos.y;
 
 
 	Transform()->SetLocalPos(vLocalPos);
@@ -220,23 +174,6 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 void CProjectileScript::Init()
 {
-	Vec3 vLocalPos = Transform()->GetLocalPos();
-	Vec3 vLocalRot = Transform()->GetLocalRot();
-	Vec3 vLocalScale = Transform()->GetLocalScale();
-
-	Matrix matTranslation = XMMatrixTranslation(vLocalPos.x, vLocalPos.y, vLocalPos.z);
-	Matrix matScale = XMMatrixScaling(vLocalScale.x, vLocalScale.y, vLocalScale.z);
-
-
-	Matrix matRot = XMMatrixRotationX(vLocalRot.x);
-	matRot *= XMMatrixRotationY(vLocalRot.y);
-	matRot *= XMMatrixRotationZ(vLocalRot.z);
-	Matrix matWorld = matScale * matRot  * matTranslation;
-	matWorld *= m_matObjectWorldMatrix;
-	Vec3 vPos = matWorld.Translation();
-	Vec3 vTest = m_vTargetPos  - vPos;
-	vTest.Normalize();
-	m_vDir = vTest;
 
 }
 

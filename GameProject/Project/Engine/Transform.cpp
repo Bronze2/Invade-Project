@@ -45,7 +45,7 @@ void CTransform::FinalUpdate()
 			m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
 		}
 
-		// ·ÎÄÃ x (Å©±â x È¸Àü x ÀÌµ¿)(¿ùµåÇà·Ä)
+		// ï¿½ï¿½ï¿½ï¿½ x (Å©ï¿½ï¿½ x È¸ï¿½ï¿½ x ï¿½Ìµï¿½)(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 		m_matWorld = matScale * matRot * matTranslation;
 
 		
@@ -65,7 +65,7 @@ void CTransform::FinalUpdate()
 			memcpy(m_vWorldDir, m_vLocalDir, sizeof(Vec3) * 3);
 		}
 
-		// ¿ªÇà·Ä °è»ê
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
 		
 		return;
@@ -90,9 +90,10 @@ void CTransform::FinalUpdate()
 		m_vLocalDir[i] = XMVector3TransformNormal(arrDefault[i], matRot);
 	}
 
-	// ·ÎÄÃ x (Å©±â x È¸Àü x ÀÌµ¿)(¿ùµåÇà·Ä)
+	// ï¿½ï¿½ï¿½ï¿½ x (Å©ï¿½ï¿½ x È¸ï¿½ï¿½ x ï¿½Ìµï¿½)(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	m_matWorld = matScale * matRot*rotMat * matTranslation;
 	m_matLocal = m_matWorld;
+
 	if (m_bNotParent) {
 		m_matWorld *= m_matObjectWorldMatrix;
 		for (UINT i = 0; i < (UINT)DIR_TYPE::END; ++i)
@@ -131,7 +132,7 @@ void CTransform::FinalUpdate()
 
 
 
-	// ¿ªÇà·Ä °è»ê
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
 }
 
@@ -180,7 +181,7 @@ void CTransform::LookAt(const Vec3& _vLook)
 
 	m_vLocalRot = DeComposeRotMat(matRot);
 
-	// ¹æÇâº¤ÅÍ(¿ì, »ó, Àü) °»½ÅÇÏ±â	
+	// ï¿½ï¿½ï¿½âº¤ï¿½ï¿½(ï¿½ï¿½, ï¿½ï¿½, ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½	
 	Matrix matRotate = XMMatrixRotationX(m_vLocalRot.x);
 	matRotate *= XMMatrixRotationY(m_vLocalRot.y);
 	matRotate *= XMMatrixRotationZ(m_vLocalRot.z);
@@ -242,7 +243,7 @@ void CTransform::LookAt(const Vec3& _vLook, const Vec3& _vRot)
 
 	m_vLocalRot.x = _vRot.x;
 
-	// ¹æÇâº¤ÅÍ(¿ì, »ó, Àü) °»½ÅÇÏ±â	
+	// ï¿½ï¿½ï¿½âº¤ï¿½ï¿½(ï¿½ï¿½, ï¿½ï¿½, ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½	
 	Matrix matRotate = XMMatrixRotationX(m_vLocalRot.x);
 	matRotate *= XMMatrixRotationY(m_vLocalRot.y);
 	matRotate *= XMMatrixRotationZ(m_vLocalRot.z);

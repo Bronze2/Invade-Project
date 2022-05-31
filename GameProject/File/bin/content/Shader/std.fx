@@ -209,9 +209,7 @@ TEX_OUTPUT VS_LINE2D(TEX_INPUT _input)
 
 float4 PS_LINE2D(TEX_OUTPUT _input) : SV_Target
 {
-    if (g_int_0)
-        return float4(1.f, 0.2f, 0.f, 1.f);
-
+    return float4(1.f, 1.f, 0.f, 1.f);
 }
 
 

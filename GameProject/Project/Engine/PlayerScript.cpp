@@ -53,6 +53,19 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::RUN;
+			}
+		}
+		break;
 		case PLAYER_STATE::JUMP:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
@@ -91,6 +104,19 @@ void CPlayerScript::m_FAnimation()
 				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::ATTACK;
 				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK);
+			}
+		}
+		break;
+		case PLAYER_STATE::DEMAGED:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DEMAGED);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DEMAGED, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::DEMAGED;
 			}
 		}
 		break;
@@ -149,6 +175,23 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
+
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::RUN);
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+						GetObj()->Animator3D()->SetCurTime(0.f);
+						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+					}
+				}
+
+			}
+		}
+		break;
 		case PLAYER_STATE::JUMP:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
@@ -187,6 +230,19 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::DEMAGED:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED");
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						m_eState = PLAYER_STATE::IDLE;
+					}
+				}
+
+			}
+		}
+		break;
 		case PLAYER_STATE::DIE:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
@@ -222,30 +278,6 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
-	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
-	CScene* pCurScene=CSceneMgr::GetInst()->GetCurScene();
-	for (int i = 0; i < 20; ++i) {
-		m_pArrow[i] = new CGameObject;
-		m_pArrow[i]->SetName(L"Arrow");
-	
-	
-		m_pArrow[i]->AddComponent(new CTransform());
-		Vec3 vPos = m_pArrow[i]->Transform()->GetLocalPos();
-		m_pArrow[i]->Transform()->SetLocalPos(vPos);
-		m_pArrow[i]->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-
-		m_pArrow[i]->AddComponent(new CMeshRender);
-		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		m_pArrow[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-
-		m_pArrow[i]->AddComponent(new CCollider2D);
-		m_pArrow[i]->Collider2D()->SetCollider2DType(COLLIDER2D_TYPE::RECT);
-
-		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
-		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
-		m_pArrow[i]->SetActive(false);
-	}
 
 	m_iCurArrow = 0;
 	m_iPower = 1;
@@ -298,6 +330,9 @@ void CPlayerScript::Awake()
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
 	GetObj()->AddChild(m_pThunderParticle);
 	
+
+	m_fMoveSpeed = 300.f;
+
 }
 
 void CPlayerScript::Update()
@@ -312,6 +347,7 @@ void CPlayerScript::Update()
 	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+	CGameObject* pBow = GetObj()->GetChild()[0];
 
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
@@ -327,157 +363,139 @@ void CPlayerScript::Update()
 	else {
 		m_bCheckDegree = false;
 	}
-	
 
-	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		
-		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT); 
-		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-
-		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			vRot.y = 0.f;
-			
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			vRot.y = XMConvertToRadians(180.f);
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			vRot.y = XMConvertToRadians(-90.f);
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			vRot.y = XMConvertToRadians(90.f);
-		}
-
-		vPos += vFront * m_fMoveSpeed * DT;
-		vPos.y = 0.f;
-		vRot.y += XMConvertToRadians(m_fRotateDegree);
-		m_FColCheck(vPos3, vPos);
-		m_eState = PLAYER_STATE::WALK;
+	if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
+		int a = 0;
 	}
 
-	if (KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) {
+	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+		m_fFactor = 0.f;
+		m_fTurnDegree = 0.f;
+		m_bTurn = true;
+
+		m_vRestoreRot = vRot;
+
+	}
+
+
+	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::IDLE;
+		m_fTurnDegree = 0.f;
+		m_fFactor = 0.f;
+		m_bTurn = true;
+		m_vRestoreRot = vRot;
+	}
+
+	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+		m_eState = PLAYER_STATE::WALK;
+		if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
+		{
+			m_eState = PLAYER_STATE::RUN;
+		}
+
+
+		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
+		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+
+		m_fCurDegree = 0.f;
+		m_iKeyHoldCnt = 0;
+
+		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+			m_fCurDegree += 0.f;
+			m_iKeyHoldCnt++;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+			m_fCurDegree += 180.f;
+			m_iKeyHoldCnt++;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+				m_fCurDegree += 270.f;
+			}
+			else {
+				m_fCurDegree -= 90.f;
+			}
+			m_iKeyHoldCnt++;
+		}
+		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+			m_fCurDegree += 90.f;
+			m_iKeyHoldCnt++;
+		}
+
+		m_fCurDegree /= (float)m_iKeyHoldCnt;
+
+		if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+			m_fCurDegree = 0.f;
+		}
+
+		m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
+		
+		float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
+		if (fRotDegree > 360.f) {
+			fRotDegree -= 360.f;
+		}
+		
+		// 180도 이상 회전하는 경우 없도록
+		if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
+			if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
+				m_fTurnDegree -= 360.f;
+			}
+			else {
+				m_fTurnDegree += 360.f;
+			}
+		}
+
+		vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
+
+		if (m_fFactor < 1.f) {
+			// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
+			m_fFactor += 5.f * DT;
+		}
+		else {
+			if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+				m_bTurn = true;
+			}
+			else {
+				m_bTurn = false;
+			}
+		}
+		
+		if (!m_bTurn) {
+			vPos += vFront * m_fMoveSpeed * DT;
+		}
+
+		m_FColCheck(vPos3, vPos);
 	}
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		//vRot.y = XMConvertToRadians(m_fRotateDegree + 5.f); 
-		m_fArrowSpeed = 200.f;
+		// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
+		vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
+
 		m_eState = PLAYER_STATE::ATTACK_READY;
-	}
-	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 1000.f*DT;
-		if (m_fArrowSpeed > 2000.f) {
-			m_fArrowSpeed = 2000.f;
-		}
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		m_eState = PLAYER_STATE::ATTACK;
-
-		Vec3 vPos4 = Transform()->GetLocalPos();
-		Vec3 vRight = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		Vec3 vFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		m_vRestorePos = vPos4;
-			m_pArrow[m_iCurArrow]->SetActive(true);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
-		vRight = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vRight);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityX();
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetVelocityZ();
-
-
-		Vec2 xzValue = GetDiagnal(m_fArcherLocation, vRight.x, vRight.z);
-
-		CCameraScript* p=dynamic_cast<CCameraScript*>(pCamera->GetScripts()[0]);
-		float fDegree= p->GetDegree();
-		float fDegree2 = fDegree;
-
-		fDegree *= -1.f;
-	
-	
-		float yValue = sin(XMConvertToRadians(fDegree)) * m_fArcherLocation;
-
-		Vec3 vArrowPos = Vec3(GetObj()->Transform()->GetLocalPos().x+xzValue.x, GetObj()->Transform()->GetLocalPos().y + 70+yValue, GetObj()->Transform()->GetLocalPos().z+xzValue.y);
-
-		
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
-		fDegree *= -1.f;
-		
-
-
-		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(Vec3(GetObj()->Transform()->GetLocalRot().x, GetObj()->Transform()->GetLocalRot().y, GetObj()->Transform()->GetLocalRot().z));
-		if (m_iCurArrow == 0) {
-			int a = 0;
-		}
-		
-		Vec3 vFront2 = vArrowPos;
-		Vec3 vRight2 = Vec3(1, 0, 0);
-		auto k = XMLoadFloat3(&vRight2);
-		auto m = XMLoadFloat4x4(&m_pArrow[m_iCurArrow]->Transform()->GetWorldMat());
-		auto r = XMVector3TransformNormal(k, m);
-		XMFLOAT3 result;
-		XMStoreFloat3(&result, XMVector3Normalize(r));
-	
-		float flength = sqrt(pow(result.x, 2) + pow(result.z, 2));
-	
-	
-		vArrowPos.x += result.x;
-		vArrowPos.z += result.z;
-		float xValue = sqrt(pow(m_fArcherLocation, 2) - pow(yValue, 2));
-		float xValue2 = xValue + flength;
-		float fyValue2 = yValue * xValue2 / xValue;
-	
-		float SubeyValue2Value = fyValue2 - yValue;
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetFallSpeen(SubeyValue2Value);
-
-		vArrowPos.y += SubeyValue2Value;
-		Vec3 vTarget = vArrowPos - vFront2;
-	
-		vTarget.Normalize();
-		float vDotValue = Dot(vTarget, result);
-		Vec3 vCrossValue;
-		if (vTarget.y > 0.f) {
-			vCrossValue = Cross(vTarget, result);
-		}
-		else {
-			vCrossValue = Cross(result, vTarget);
-		}
-
-		if (vCrossValue != Vec3(0.f, 0.f, 0.f)) {
-			float value= XMConvertToRadians(fDegree2);
-
-			if (!m_bCheckDegree) {
-				value *= -1.f;
-			}
-			XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-			m_pArrow[m_iCurArrow]->Transform()->SetQuaternion(XMQuaternionMultiply(m_pArrow[m_iCurArrow]->Transform()->GetQuaternion(), xmmatrix));
-	
-		}
-		
-		m_iCurArrow++;
-		m_iPower = 1;
-
-		if (m_iCurArrow > 19) { 
-			m_iCurArrow = 0;
-		
-		}
-
 	}
-
-	
 	if (m_bMoveCheck) {
 		vPos = vPos2;
 		m_bMoveCheck = false;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_NUM4))
+	if (KEY_TAB(KEY_TYPE::KEY_3))
+	{
+		m_eState = PLAYER_STATE::DEMAGED;
+	}
+
+	if (KEY_TAB(KEY_TYPE::KEY_4))
 	{
 		m_eState = PLAYER_STATE::JUMP;
 	}
 
-	if (KEY_TAB(KEY_TYPE::KEY_NUM5))
+	if (KEY_TAB(KEY_TYPE::KEY_5))
 	{
 		m_eState = PLAYER_STATE::DIE;
 	}
@@ -780,8 +798,7 @@ void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
 , m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f),m_bHealCheck(false)
 ,m_bFlameCheck(false)
-{
-}
+
 
 CPlayerScript::~CPlayerScript()
 {

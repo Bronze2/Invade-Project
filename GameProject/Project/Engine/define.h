@@ -1,7 +1,7 @@
 #pragma once
 #define PI 3.14152
 #define GRAVITY 9.8
-#define INSTANCING_COUNT 2 // ÀÎ½ºÅÏ½Ì Á¦ÇÑÁ¶°Ç( n °³ ÀÌ»ó Áßº¹ ½Ã ÀÎ½ºÅÏ½ÌÀ¸·Î ÀüÈ¯)
+#define INSTANCING_COUNT 2 // ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½( n ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½ßºï¿½ ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯)
 
 #define SINGLE(type) private: type(); ~type();\
 public:\
@@ -37,11 +37,6 @@ static type* GetInst()\
 #define DBG_MSG(pStr) CDebugMgr::GetInst()->AddDbgMsg(DBG_TYPE::DBG_MSG, pStr);
 
 #define MAX_LAYER 32
-
-
-#define _ANIMATION_TEST
-//#define CAMERA_TEST
-//#define EMPTY_CAMERA
 
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
@@ -154,9 +149,11 @@ enum class COMPONENT_TYPE
 	PARTICLESYSTEM,
 	TERRAIN,
 	SENSOR,
-	SKILL,
+	STATIC_UI,
 	END,
 	SCRIPT,
+
+
 };
 
 enum class COLLIDER2D_TYPE
@@ -304,7 +301,7 @@ enum class RT_TYPE
 
 enum class MRT_TYPE
 {
-	// MRT			RT Á¶ÇÕ
+	// MRT			RT ï¿½ï¿½ï¿½ï¿½
 	SWAPCHAIN,  // SWAPCHAIN
 	DEFERRED,	// DIFFUSE, NORMAL, POSITION
 	LIGHT,		// LIGHT, SPECULAR
@@ -330,6 +327,7 @@ enum class SHADER_POV
 //MINION STATE
 
 enum class MINION_STATE {
+	IDLE,
 	WALK,
 	ATTACK,
 	DIE,
@@ -358,6 +356,7 @@ enum class CAMP_STATE {
 	BLUE,
 };
 
+
 enum class CAMERA_EFFECT_TYPE {
 	NONE,
 	ZOOMIN,
@@ -378,9 +377,11 @@ enum class ELEMENT_TYPE {
 enum class PLAYER_STATE {
 	IDLE,
 	WALK,
+	RUN,
 	JUMP,
 	ATTACK_READY,
 	ATTACK,
+	DEMAGED,
 	DIE,
 	END,
 };

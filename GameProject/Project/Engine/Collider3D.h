@@ -33,6 +33,8 @@ public:
     void SetOffsetPos(const Vec3& _vPos) { m_vOffsetPos = _vPos; }
     void SetOffsetScale(const Vec3& _vScale) { m_vOffsetScale = _vScale; }
 
+    BoundingBox GetBox() { return m_bBound; }
+
     const Vec3& GetOffsetPos() { return m_vOffsetPos; }
     const Vec3& GetOffsetScale() { return m_vOffsetScale; }
     COLLIDER3D_TYPE GetColliderType() { return m_eType; }

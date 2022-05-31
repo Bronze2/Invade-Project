@@ -141,7 +141,6 @@ void CAnimator3D::FinalUpdate()
 		m_vecClipUpdateTime[m_iCurClip] += (DT * m_fAnimationSpeed);
 		if (nullptr == m_pAnimation) {
 			m_dCurTime = 0.f;
-			// ���� ������� Clip �� �ð��� �����Ѵ�.
 
 			if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
 			{
