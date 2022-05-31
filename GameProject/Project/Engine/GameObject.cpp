@@ -41,8 +41,12 @@ CGameObject::CGameObject(const CGameObject& _origin)
 CGameObject::~CGameObject()
 {
 	Safe_Delete_Array(m_arrCom);
-	Safe_Delete_Vector(m_vecChild);
-	Safe_Delete_Vector(m_vecScript);
+	if (0 != m_vecChild.size()) {
+		Safe_Delete_Vector(m_vecChild);
+	}
+	if (0 != m_vecScript.size()) {
+		Safe_Delete_Vector(m_vecScript);
+	}
 }
 
 void CGameObject::AddChild(CGameObject* _pChildObj)

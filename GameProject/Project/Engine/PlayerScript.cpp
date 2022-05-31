@@ -279,8 +279,6 @@ void CPlayerScript::Init()
 void CPlayerScript::Awake()
 {
 
-	m_iCurArrow = 0;
-	m_iPower = 1;
 	m_iMaxHp = 200;
 	m_iCurHp = 50;
 
@@ -732,7 +730,6 @@ void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 }
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
-	int a = 0;
 	if (_pOther->GetObj()->GetScript<CArrowScript>() == nullptr) {
 		if (_pOther->GetObj()->GetScript<CProjectileScript>() != nullptr) {
 
@@ -795,9 +792,10 @@ void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
 	
 }
 
-CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false), m_fArcherLocation(20.f)
-, m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f),m_bHealCheck(false)
-,m_bFlameCheck(false)
+CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false)
+, m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f), m_bHealCheck(false)
+, m_bFlameCheck(false)
+{}
 
 
 CPlayerScript::~CPlayerScript()

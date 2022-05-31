@@ -24,7 +24,6 @@ public:
     virtual void Update();
     virtual void FinalUpdate();
 
-    BoundingBox GetBox() { return m_bBound; }
     void Render();
 
     void OnCollisionEnter(CCollider3D* _pOther);

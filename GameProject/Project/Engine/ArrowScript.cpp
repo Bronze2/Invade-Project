@@ -101,7 +101,7 @@ void CArrowScript::Update()
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
 			GetObj()->SetActive(false);
-			Init();
+			//Init();
 			m_eState = ARROW_STATE::IDLE;
 		}
 
@@ -163,11 +163,7 @@ void CArrowScript::Init()
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-	if (L"Monster" == _pColldier->GetObj()->GetName())
-	{
-		GetObj()->SetActive(false);
-		Init();
-	}
+	
 }
 
 CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROWSCRIPT),m_iType(_iType),m_bMove(true)

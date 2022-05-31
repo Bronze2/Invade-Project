@@ -19,7 +19,7 @@ void CEmptyCameraScript::Update()
 			vRot.x -= vDrag.y * DT;
 			m_fDegree = XMConvertToDegrees(vRot.x);
 			if (m_fDegree < -5.f) {
-				m_fDegree = 5.f;
+				m_fDegree = -5.f;
 				vRot.x = XMConvertToRadians(m_fDegree);
 			}
 			else if (m_fDegree > 5) {

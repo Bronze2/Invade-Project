@@ -43,7 +43,7 @@ void CCrossHairScript::Update()
 
 	m_vPos = Vec3(matViewInv._41, matViewInv._42, matViewInv._43);
 
-	m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
+	//m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
 
 	Vec3 vPos = vTargetPos;
 	vPos.x -= vScale.x / 2;

@@ -42,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
- //  _CrtSetBreakAlloc(3115);
+  // _CrtSetBreakAlloc(7790);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -84,7 +84,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         // Game Running
         CGameFramework::GetInst()->Progress();
-        CIMGUIMgr::GetInst()->Progress();
+   //     CIMGUIMgr::GetInst()->Progress();
         CDevice::GetInst()->Render_Present();
     }
 

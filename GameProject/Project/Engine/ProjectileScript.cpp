@@ -38,7 +38,6 @@ void CProjectileScript::Update()
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 
 	Vec3 vRot = Transform()->GetLocalRot();
-	Vec3 vPos = Transform()->GetWorldPos();
 
 	Vec3 vRestoreLocalPos = vLocalPos;
 

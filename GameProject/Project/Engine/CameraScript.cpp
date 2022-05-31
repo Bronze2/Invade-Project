@@ -8,7 +8,6 @@ void CCameraScript::Update()
 {
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vWorldPos = Transform()->GetWorldPos();
-	m_vCameraDistanceOffset = sqrt(pow(GetObj()->Transform()->GetWorldPos().x - m_pPlayer->Transform()->GetWorldPos().x, 2) + pow(GetObj()->Transform()->GetWorldPos().y - m_pPlayer->Transform()->GetWorldPos().y, 2) + pow(GetObj()->Transform()->GetWorldPos().z - m_pPlayer->Transform()->GetWorldPos().z, 2));
 	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 	float fScale = Camera()->GetScale();

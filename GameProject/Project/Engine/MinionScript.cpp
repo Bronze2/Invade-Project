@@ -475,14 +475,7 @@ void CMinionScript::m_FAnimation()
 			}
 		}
 
-
-				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1 )|| m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
-					DeleteObject(GetObj());
-            }
-         }
-      }
-
-      break;
+		break;
 		default:
 			break;
 		}

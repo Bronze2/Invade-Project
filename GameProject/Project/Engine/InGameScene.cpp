@@ -150,7 +150,6 @@ void CInGameScene::Init()
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 	pMainCam->Camera()->SetPlayer(pObject);
 	pMainCam->Camera()->SetbPlay(true);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
 
 	// Specular
 	/*int isSpecular = 1;
@@ -195,10 +194,6 @@ void CInGameScene::Init()
 	CGameObject* pBow;
 	pBow = pMeshData->Instantiate();
 	pBow->SetName(L"Bow");
-
-	pBow->AddComponent(new CTransform);
-	pBow->AddComponent(new CCollider3D);
-	pBow->AddComponent(new CSensor);
 	pBow->AddComponent(new CBowScript);
 	pBow->FrustumCheck(false);
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
@@ -220,9 +215,6 @@ void CInGameScene::Init()
 	pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 	pBow->GetScript<CBowScript>()->Init();
 	pObject->AddChild(pBow);
-
-	FindLayer(L"Blue")->AddGameObject(pBow);
-
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
@@ -1304,8 +1296,7 @@ void CInGameScene::Init()
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Cover");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
+//	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
 
@@ -1313,6 +1304,4 @@ void CInGameScene::Init()
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Red");
-	Awake();
-	Start();
 }

@@ -51,14 +51,15 @@ void CRenderMgr::Render()
 
 	Merge_Light();
 
-	//m_vecCam[0]->Render_Forward(); // skybox, grid, ui
-	for (auto i = 0; i < m_vecCam.size(); i++) {
+
+	m_vecCam[0]->Render_Forward(); // skybox, grid, ui
+	for (auto i = 1; i < m_vecCam.size(); i++) {
 		m_vecCam[i]->SortGameObject();
 		m_vecCam[i]->Render_Forward();
 	}
 
 	// Ãâ·Â
-	CDevice::GetInst()->Render_Present();
+	//CDevice::GetInst()->Render_Present();
 	m_vecCam[0]->ClearInterSectObject();
 }
 

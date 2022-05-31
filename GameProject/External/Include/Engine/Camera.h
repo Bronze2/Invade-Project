@@ -49,7 +49,6 @@ public:
 
 
     CGameObject* m_pPlayer;
-    SimpleMath::Ray* m_pRay;
     Vec3 m_vLook;
     bool m_bPlayer = false;
     Vec3 m_vFront;

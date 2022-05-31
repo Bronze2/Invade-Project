@@ -553,8 +553,6 @@ void CCamera::Render_ShadowMap()
 
 void CCamera::SetRay(Vec3 _vPos, Vec3 _vDir)
 {
-	m_pRay = new SimpleMath::Ray;
-
 	m_pRay->position = _vPos;
 	m_pRay->direction = _vDir;
 }
