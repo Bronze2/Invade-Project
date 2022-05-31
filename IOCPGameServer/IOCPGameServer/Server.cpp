@@ -47,7 +47,7 @@ void CServer::Init()
 	accept_over.op = OP_ACCEPT;
 	accept_over.c_socket = clientSocket;
 	AcceptEx(SHARED_DATA::listenSocket, clientSocket, accept_over.io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.over);
-	
+
 	
 	CThread::GetInst()->Init();
 
@@ -211,6 +211,7 @@ void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z,
 	packet.pos = pos;
 	std::cout << packet.id << endl;
 	packet.mtype = (int)type;
+	
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 

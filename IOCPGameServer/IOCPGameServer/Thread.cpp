@@ -16,6 +16,8 @@ void CThread::Init()
 		thread.join();
 	timer_thread.join();
 }
+
+
 void CThread::packet_construct(int user_id, int io_byte)
 {
 	CLIENT& curr_user = SHARED_DATA::g_clients[user_id];
@@ -113,9 +115,13 @@ void CThread::worker_Thread()
 
 		EXOVER* exover = reinterpret_cast<EXOVER*>(over);
 		int user_id = static_cast<int>(key);
-
+		if (user_id == 999)
+		{
+			cout << "check" << endl;
+		}
+		
 		CLIENT& cl = SHARED_DATA::g_clients[user_id]; //타이핑 줄이기 위해
-
+		 
 		switch (exover->op)
 		{
 		case OP_RECV:			//받은 패킷 처리 -> overlapped구조체 초기화 -> recv
@@ -156,6 +162,15 @@ void CThread::worker_Thread()
 				}
 			}
 
+			//for (auto& cl : SHARED_DATA::g_clients) {
+			//	lock_guard<mutex> gl{ cl.second.m_cLock };
+			//	if (ST_FREE == cl.second.m_status)
+			//	{
+			//		cl.second.m_status = ST_ALLOCATED;
+			//		user_id = cl.second;
+			//		break;
+			//	}
+			//}
 			//main에서 소켓을 worker스레드로 옮겨오기 위해 listen소켓은 전역변수로, client소켓은 멤버로 가져왔다.
 			SOCKET clientSocket = exover->c_socket;
 
@@ -174,6 +189,7 @@ void CThread::worker_Thread()
 				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.buf = SHARED_DATA::g_clients[user_id].m_recv_over.io_buf;
 				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
+				SHARED_DATA::g_clients[user_id].m_id = user_id;
 				if (user_id == 0)
 					SHARED_DATA::g_clients[user_id].m_isHost = true;
 
@@ -191,8 +207,13 @@ void CThread::worker_Thread()
 				DWORD flags = 0;
 				WSARecv(clientSocket, &SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_DATA::g_clients[user_id].m_recv_over.over, NULL);
 				SHARED_DATA::current_user++;
-
-
+				cout << " USERINDEX" << endl;
+				SHARED_DATA::g_clients.erase(999);
+				for (auto& cl : SHARED_DATA::g_clients)
+				{
+					cout << "["<<cl.first<< "]--";
+				}
+				cout << endl;
 			}
 
 			//소켓 초기화 후 다시 accept
@@ -200,6 +221,7 @@ void CThread::worker_Thread()
 			exover->c_socket = clientSocket; //새로 받는 소켓을 넣어준다. 안그러면 클라들이 같은 소켓을 공유한다.
 			ZeroMemory(&exover->over, sizeof(exover->over)); //accept_over를 exover라는 이름으로 받았으니 exover를 재사용
 			AcceptEx(SHARED_DATA::listenSocket, clientSocket, exover->io_buf, NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &exover->over);
+			cout << "Client Accept Clear" << endl;
 		}
 		break;
 		case OP_MOVE:
@@ -290,9 +312,12 @@ void CThread::process_packet(int user_id, char* buf)
 				SHARED_DATA::g_clients[0].Pos = Vec3(0, 0, 1125);
 				SHARED_DATA::g_clients[1].Pos = Vec3(0, 0, 5800);
 
-				for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-					CService::GetInst()->enter_game(i);
+				for (auto& cl : SHARED_DATA::g_clients) {
+					CService::GetInst()->enter_game(cl.second.m_id);
 				}
+				//for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+				//	CService::GetInst()->enter_game(i);
+				//}
 				
 				//플레이어 진입 후 미니언 생성 시작
 				CSceneMgr::GetInst()->Init();

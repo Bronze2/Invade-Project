@@ -48,21 +48,29 @@ void CService::do_move(int user_id, int direction)
 	SHARED_DATA::g_clients[user_id].Pos += SHARED_DATA::g_clients[user_id].dir * 30.f;
 	SHARED_DATA::g_clients[user_id].Pos.y = 0;
 	//CServer::GetInst()->send_move_packet(user_id, user_id);
-	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		//if (i == user_id) continue;
-		//else
-			CServer::GetInst()->send_move_packet(i, user_id);
+
+	for (auto &cl : SHARED_DATA::g_clients){
+		CServer::GetInst()->send_move_packet(cl.second.m_id, user_id);
 	}
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+	//	CServer::GetInst()->send_move_packet(i, user_id);
+	//}
 }
 
 void CService::do_move_stop(int user_id, int direction)
 {
 	Vec3 vPos;
 	CServer::GetInst()->send_move_stop_packet(user_id, user_id);
-	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		if (i == user_id) continue;
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+	//	if (i == user_id) continue;
+	//	else
+	//		CServer::GetInst()->send_move_stop_packet(i, user_id);
+	//}
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == user_id) continue;
 		else
-			CServer::GetInst()->send_move_stop_packet(i, user_id);
+			CServer::GetInst()->send_move_stop_packet(cl.second.m_id, user_id);
 	}
 }
 
@@ -73,9 +81,15 @@ void CService::enter_game(int user_id)
 	//g_clients[user_id].m_cLock.unlock();
 
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		if (i != user_id)
-			CServer::GetInst()->send_enter_packet(i, user_id);
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+	//	if (i != user_id)
+	//		CServer::GetInst()->send_enter_packet(i, user_id);
+	//}
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id != user_id)
+			CServer::GetInst()->send_enter_packet(cl.second.m_id, user_id);
+
 	}
 }
 
@@ -86,28 +100,49 @@ void CService::enter_lobby(int user_id)
 	SHARED_DATA::g_clients[user_id].m_status = ST_ACTIVE;
 	SHARED_DATA::g_clients[user_id].m_cLock.unlock();
 
-	for (int i = 0; i < user_id + 1; i++)
-	{
-		if (user_id == i) continue;
+	
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (user_id == cl.second.m_id) continue;
 
-		else if (i != user_id)		//나에게는 보내지 않는다.
+		else if (cl.second.m_id != user_id)		//나에게는 보내지 않는다.
 		{
-			cout << "Enter Other Client" << endl;
-
-			CServer::GetInst()->send_enter_lobby_packet(user_id, i);
-			CServer::GetInst()->send_enter_lobby_packet(i, user_id); //니가 나를 보면 나도 너를 본다
 		}
+		cout << "Enter Other Client" << endl;
+		//for (int i = 0; i < user_id + 1; i++)
+		CServer::GetInst()->send_enter_lobby_packet(user_id, cl.second.m_id);	//{
+		CServer::GetInst()->send_enter_lobby_packet(cl.second.m_id, user_id); //니가 나를 보면 나도 너를 본다	//	if (user_id == i) continue;
 	}
+	//	else if (i != user_id)		//나에게는 보내지 않는다.
+	//	{
+	//		cout << "Enter Other Client" << endl;
+
+	//		CServer::GetInst()->send_enter_lobby_packet(user_id, i);
+	//		CServer::GetInst()->send_enter_lobby_packet(i, user_id); //니가 나를 보면 나도 너를 본다
+	//	}
+	//}
 	cout << "Enter	" << endl;
+
+	cout << " Current User " << SHARED_DATA::g_clients.size() << endl;
+	for (auto& cl : SHARED_DATA::g_clients) {
+		cout << " UserID :" << cl.second.m_id<<"--" <<cl.first << endl;
+	}
+
 }
 
 void CService::do_Rotation(int user_id)
 {
 	CServer::GetInst()->send_mouse_packet(user_id, user_id);
-	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		if (i == user_id) continue;
-		else
-			CServer::GetInst()->send_mouse_packet(i, user_id);
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i) {
+	//	if (i == user_id) continue;
+	//	else
+	//		CServer::GetInst()->send_mouse_packet(i, user_id);
+	//}
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == user_id) continue;
+		else			
+			CServer::GetInst()->send_mouse_packet(cl.second.m_id, user_id);
+
 	}
 
 }
@@ -120,6 +155,13 @@ void CService::initialize_clients()
 		SHARED_DATA::g_clients[i].m_status = ST_FREE;
 		SHARED_DATA::g_clients[i].m_id = i;
 	}
+	//for (auto& cl : SHARED_DATA::g_clients) {
+	//	if (cl.second.m_id == user_id) continue;
+	//	else
+	//		CServer::GetInst()->send_mouse_packet(cl.second.m_id, user_id);
+
+	//}
+
 }
 
 
@@ -134,10 +176,10 @@ void CService::disconnect(int user_id)
 
 	for (auto& cl : SHARED_DATA::g_clients)
 	{
-		if (cl.m_id == user_id) continue;
+		if (cl.second.m_id == user_id) continue;
 		//cl.m_cLock.lock();
-		if (ST_ACTIVE == cl.m_status)
-			CServer::GetInst()->send_leave_packet(cl.m_id, user_id);
+		if (ST_ACTIVE == cl.second.m_status)
+			CServer::GetInst()->send_leave_packet(cl.second.m_id, user_id);
 		//cl.m_cLock.unlock();
 	}
 	SHARED_DATA::g_clients[user_id].m_status = ST_FREE;	//다 처리했으면 FREE

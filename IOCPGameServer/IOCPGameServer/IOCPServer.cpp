@@ -8,7 +8,9 @@
 //
 namespace SHARED_DATA {
 	HANDLE g_iocp;					
-	CLIENT g_clients[MAX_USER];		
+	//CLIENT g_clients[MAX_USER];		
+	unordered_map <int, CLIENT> g_clients;
+	
 	unordered_map<int, MINION> g_minion;
 	priority_queue<event_type> timer_queue;
 	mutex timer_lock;
@@ -34,6 +36,7 @@ void main()
 
 
 	CServer::GetInst()->Init();
+
 	CService::GetInst()->Init();
 
 }

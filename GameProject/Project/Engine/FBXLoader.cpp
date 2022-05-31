@@ -199,6 +199,8 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 	tFbxMaterial tMtrlInfo{};
 
 	string str = _pMtrlSur->GetName();
+	std::cout << str << std::endl;
+	
 	tMtrlInfo.strMtrlName = wstring(str.begin(), str.end());
 
 	// Diff

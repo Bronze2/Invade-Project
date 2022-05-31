@@ -15,8 +15,7 @@
 void CLobbyScene::Init()
 {
 	ShowCursor(true);
-
-
+	//D2D1_RECT_F
 	GetLayer(0)->SetName(L"Default");
 
 	CGameObject* pMainCam = nullptr;
