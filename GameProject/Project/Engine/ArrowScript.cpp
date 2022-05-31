@@ -69,8 +69,6 @@ void CArrowScript::Update()
 	//CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	//CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 
-	Vec3 vRestorePos;
-
 	switch (m_eState)
 	{
 	case ARROW_STATE::IDLE:
@@ -80,8 +78,7 @@ void CArrowScript::Update()
 	case ARROW_STATE::ATTACK_READY:
 	{
 		if (!m_bMaxCharged) {
-			vRestorePos = vPos;
-			vPos.x += 30.f * DT;			// 15.f
+			vPos.x += 15.f * DT;			// 15.f
 		}
 		Transform()->SetLocalPos(vPos);
 	}
@@ -90,18 +87,17 @@ void CArrowScript::Update()
 	{
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
-			Init();
 			GetObj()->SetActive(false);
+			Init();
 			m_eState = ARROW_STATE::IDLE;
 		}
 
 		m_vRestorePos = vPos;
 
-		/// TargetPos 받아와서 Normalize해서 방향벡터 만들어줄까,,
+		vPos.x += m_vDir.x * m_fSpeed * DT;
+		vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
+		vPos.z += m_vDir.z * m_fSpeed * DT;
 
-
-		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
-		vPos += m_vDir * m_fSpeed * DT;
 		m_fVelocityY -= (GRAVITY * DT) / 10;
 		m_fFallSpeed += m_fVelocityY;
 		vPos.y += m_fFallSpeed * DT;
@@ -133,19 +129,24 @@ void CArrowScript::Update()
 
 void CArrowScript::Init()
 {
+	//m_pBow->AddChild(GetObj());
+	if (nullptr == GetObj()->GetParent()) {
+		m_pBow->AddChild(GetObj());
+	}
+
+
 	m_bSetDotValue = false;
 	m_fVelocityY = 0.f;
 	m_fFallSpeed = 0.f;
 	m_bMaxCharged = false;
 	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
-
-	m_pBow->AddChild(GetObj());
+	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
 
 	//if (nullptr == GetObj()->GetParent()) {
 	//	m_pBow->AddChild(GetObj());
 	//}
+
 }
 
 #include "Collider3D.h"

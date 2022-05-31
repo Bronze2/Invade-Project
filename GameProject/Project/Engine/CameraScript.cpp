@@ -93,10 +93,11 @@ Vec3& CCameraScript::CameraZoom(Vec3 _vPos)
 {
 	if (m_fZoomElapsedTime < 20.0f * DT)
 	{
-		Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		//Vec3 vDir = m_vZoomRestoreFront;
+		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		Vec3 vDir = m_vZoomRestoreFront;
 
 		_vPos += vDir * m_fZoomSpeed * DT;
+		_vPos.y = m_vRestorePos.y;
 		m_fZoomElapsedTime += DT;
 	}
 	else
@@ -113,7 +114,7 @@ void CCameraScript::Init()
 	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
 
 	m_vRestorePos = Transform()->GetLocalPos();
-	m_vZoomRestoreFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+	m_vZoomRestoreFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 	m_fShakeNum = 1.0f;
 	m_fZoomSpeed = 200.0f;

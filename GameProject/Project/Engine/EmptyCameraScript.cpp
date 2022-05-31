@@ -18,8 +18,8 @@ void CEmptyCameraScript::Update()
 			Vec2 vDrag = CKeyMgr::GetInst()->GetDragDir();
 			vRot.x -= vDrag.y * DT;
 			m_fDegree = XMConvertToDegrees(vRot.x);
-			if (m_fDegree < -5) {
-				m_fDegree = -5.f;
+			if (m_fDegree < -5.f) {
+				m_fDegree = 5.f;
 				vRot.x = XMConvertToRadians(m_fDegree);
 			}
 			else if (m_fDegree > 5) {

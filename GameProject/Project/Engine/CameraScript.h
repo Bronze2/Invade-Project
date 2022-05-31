@@ -34,6 +34,8 @@ public:
     Vec3& CameraShake(Vec3 _vPos, float _fDamageTime, float _fDamageSize);
     Vec3& CameraZoom(Vec3 _vPos);
 
+    void SetZoomDir(Vec3 _vDir) { m_vZoomRestoreFront = _vDir; }
+
     void Init();
 
     CLONE(CCameraScript);

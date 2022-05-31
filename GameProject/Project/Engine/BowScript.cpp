@@ -38,18 +38,15 @@ void CBowScript::Update()
 	Vec3 vBowFront = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 	Vec3 vArrowDir;
 
-	//Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
-	//Vec3 vArrowRot = GetObj()->GetParent()->Transform()->GetLocalRot() + Vec3(0.f, XMConvertToRadians(90.f), 0.f);
-
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed = 200.f;
-		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
+		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 400.f * DT;
+		m_fArrowSpeed += 2000.f * DT;
 		if (m_fArrowSpeed > 700.f) {
 			m_fArrowSpeed = 700.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
@@ -60,20 +57,15 @@ void CBowScript::Update()
 		CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
 		Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
 		Vec3 vStartPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
-		//Vec3 vTargetPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
-		//Vec3 vTargetDir = vTargetPos - m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
-		//vTargetDir.Normalize();
-		//Vec3 vTargetDir = pEmptyCamera->GetScript<CEmptyCameraScript>()->GetShootDir();
 		
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
-		// 원래 ArrowPos에서 시작하고 SetTargetPos 넘겨주자
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
 		Vec3 vBowRot = GetObj()->GetParent()->Transform()->GetLocalRot();
 		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
-		Vec3 vArrowRot = Vec3(vBowRot.x, XMConvertToRadians(XMConvertToDegrees(vBowRot.y) + 90.f), vBowRot.z);
+		Vec3 vArrowRot = Vec3(vBowRot.x, XMConvertToRadians(XMConvertToDegrees(vBowRot.y) + 80.f), vBowRot.z);
 
 		m_pArrow[m_iCurArrow]->ClearParent();
 

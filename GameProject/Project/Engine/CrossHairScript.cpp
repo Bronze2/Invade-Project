@@ -13,48 +13,21 @@ void CCrossHairScript::Init()
 
 void CCrossHairScript::Update()
 {
-	/*CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
-	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-	CGameObject* pEmptyCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
-
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
-
-	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
-	Vec3 vMousePos = Vec3(-res.fWidth / 2 + pMousePos.x, res.fHeight / 2 - pMousePos.y, 1);
-	Transform()->SetLocalPos(vMousePos);*/
-
-	// CrossHair의 3D상 좌표를 구해볼까..
-
 	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
 	Matrix matProj = m_pMainCam->Camera()->GetProjMat();
-
 
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	RECT rtWindow;
 	GetWindowRect(CRenderMgr::GetInst()->GethWnd(), &rtWindow);
+	Vec3 vTargetPos;
 
+	Vec3 vCrossHairPos = Vec3(rtWindow.left + res.fWidth/2, rtWindow.top - res.fHeight/2, 1.f);
 
-	POINT ptCursorPos;
-	GetCursorPos(&ptCursorPos);
-	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
-	Vec3 vMousePos;
-	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+	vTargetPos.x = (((2.f * vCrossHairPos.x) / res.fWidth) - 1.f);
+	vTargetPos.y = (((-2.f * vCrossHairPos.y) / res.fHeight) + 1.f);
+	vTargetPos.z = 1.f;
 
-	Vec3 vCrossHairPos = Vec3(rtWindow.left + res.fWidth/2 /*+ vScale.x / 2*/, rtWindow.top - res.fHeight/2/* - vScale.y / 2*/, 1.f);
-
-	vMousePos.x = (((2.f * vCrossHairPos.x) / res.fWidth) - 1.f);// -matProj._31;
-	vMousePos.y = (((-2.f * vCrossHairPos.y) / res.fHeight) + 1.f);// -matProj._32;
-	//vMousePos.x = (((2.0f * ptCursorPos.x - 2.0f * rtWindow.left) / rtWindow.right) - 1.f);// -matProj._31;
-	//vMousePos.y = (-((2.0f * ptCursorPos.y - 2.0f * rtWindow.top) / rtWindow.bottom) - 1.f);// -matProj._32;
-	vMousePos.z = 1.f;
-
-	//vMousePos.x = ((vScale.x / 2 - res.fWidth / 2));
-	//vMousePos.y = -((vScale.y / 2 - res.fHeight / 2));
-	//vMousePos.z = 1.f;
-
-	//Vec3 vProj = Transform()->GetLocalPos();
-	Vec3 vProj = vMousePos;
+	Vec3 vProj = vTargetPos;
 
 	Vec3 vView;
 	vView.x = vProj.x / matProj._11;
@@ -72,7 +45,7 @@ void CCrossHairScript::Update()
 
 	m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
 
-	Vec3 vPos = vMousePos;
+	Vec3 vPos = vTargetPos;
 	vPos.x -= vScale.x / 2;
 	vPos.y += vScale.y / 2;
 
@@ -81,13 +54,9 @@ void CCrossHairScript::Update()
 
 CCrossHairScript::CCrossHairScript() :CScript(0)
 {
-	//m_pRay = new SimpleMath::Ray;
+
 }
 
 CCrossHairScript::~CCrossHairScript()
 {
-	//if (nullptr != m_pRay)
-	//{
-	//	delete m_pRay;
-	//}
 }
