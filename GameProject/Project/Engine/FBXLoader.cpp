@@ -440,6 +440,80 @@ void CFBXLoader::CreateMaterial()
 		{
 			CMaterial* pMaterial = new CMaterial;
 
+			// Material ÀÌ¸§Áþ±â
+			//switch (j)
+			//{
+			//case 0:
+			//	strKey = L"Stone_Panel";
+			//	break;
+			//case 1:
+			//	strKey = L"MetalSheetRoofRed";
+			//	break;
+			//case 2:
+			//	strKey = L"BrickRetro";
+			//	break;
+			//case 3:
+			//	strKey = L"AsphaltStoneRedBaseTrim";
+			//	break;
+			//case 4:
+			//	strKey = L"AsphaltStoneBlueBaseTrim";
+			//	break;
+			//case 5:
+			//	strKey = L"MetalSheetRoof";
+			//	break;
+			//case 6:
+			//	strKey = L"Gray";
+			//	break;
+			//case 7:
+			//	strKey = L"Light Gray";
+			//	break;
+			//case 8:
+			//	strKey = L"MetalSheetRoof";
+			//	break;
+			//case 9:
+			//	strKey = L"MetalSheetWall";
+			//	break;
+			//case 10:
+			//	strKey = L"Red";
+			//	break;
+			//case 11:
+			//	strKey = L"MetalSheetRoof";
+			//	break;
+			//case 12:
+			//	strKey = L"Blue";
+			//	break;
+			//case 13:
+			//	strKey = L"AsphaltStone";
+			//	break;
+			//case 14:
+			//	strKey = L"Stone_Panel";
+			//	break;
+			//case 15:
+			//	strKey = L"MetalSheetRoofBlue";
+			//	break;
+			//case 16:
+			//	strKey = L"Dark_Gray";
+			//	break;
+			//case 17:
+			//	strKey = L"Black";
+			//	break;
+			//case 18:
+			//	strKey = L"Stone_Double";
+			//	break;
+			//case 19:
+			//	strKey = L"BlueTransparent"; 
+			//	break;
+			//case 20:
+			//	strKey = L"RedTransparent";
+			//	break;
+			//case 21:
+			//	strKey = L"Stone_Double";
+			//	break;
+			//case 22:
+			//	strKey = L"BrickRetro";
+			//	break;
+			//}
+
 			strKey = m_vecContainer[i].vecMtrl[j].strMtrlName;
 			if (strKey.empty())
 				strKey = CPathMgr::GetFileName(m_vecContainer[i].vecMtrl[j].strDiff.c_str());

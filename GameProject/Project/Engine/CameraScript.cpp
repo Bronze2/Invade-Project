@@ -13,11 +13,10 @@ void CCameraScript::Update()
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
 	Vec3 vRot = Transform()->GetLocalRot();
-	
+
 	if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE)
 	{
 		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-
 
 		if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
 			Init();

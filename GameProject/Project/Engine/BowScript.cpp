@@ -46,9 +46,9 @@ void CBowScript::Update()
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 2000.f * DT;
-		if (m_fArrowSpeed > 700.f) {
-			m_fArrowSpeed = 700.f;
+		m_fArrowSpeed += 3000.f * DT;
+		if (m_fArrowSpeed > 1000.f) {
+			m_fArrowSpeed = 1000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
 	}

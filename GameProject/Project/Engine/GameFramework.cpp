@@ -76,7 +76,7 @@ void CGameFramework::ProcessInput()
 {
 	POINT ptCursorPos;
 	SetCursor(NULL);
-	// ShowCursor(TRUE);
+	//ShowCursor(TRUE);
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);
