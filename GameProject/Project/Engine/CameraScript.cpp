@@ -13,26 +13,7 @@ void CCameraScript::Update()
 	float fScale = Camera()->GetScale();
 	float fSpeed = m_fSpeed;
 	Vec3 vRot = Transform()->GetLocalRot();
-
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	
-	if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
-		Init();
-		m_tEffectType = CAMERA_EFFECT_TYPE::SHAKING;
-	}
-
-	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		Init();
-		m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
-	}
-
-	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		vPos = m_vRestorePos;
-		m_tEffectType = CAMERA_EFFECT_TYPE::NONE;
-	}
-
-	switch (m_tEffectType)
-
 	if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE)
 	{
 		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
@@ -88,6 +69,7 @@ void CCameraScript::Update()
 			break;
 		}
 	}
+	
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
 }
