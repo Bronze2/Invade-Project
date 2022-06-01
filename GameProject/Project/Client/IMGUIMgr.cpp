@@ -73,4 +73,5 @@ CIMGUIMgr::CIMGUIMgr() {
 
 CIMGUIMgr::~CIMGUIMgr() {
 	m_pHeap->Release();
+
 }

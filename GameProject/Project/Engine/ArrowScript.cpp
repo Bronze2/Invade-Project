@@ -3,7 +3,25 @@
 #include "MeshRender.h"
 #include "PlayerScript.h"
 #include "ParticleSystem.h"
+#include "SkillMgr.h"
 #include <math.h>
+void CArrowScript::SetSkill(SKILL* _pSkill)
+{
+	SKILL* pSkill = new SKILL;
+	pSkill->DotDamage = _pSkill->DotDamage;
+	pSkill->Code = _pSkill->Code;
+	pSkill->Name = _pSkill->Name;
+	pSkill->eSkillType = _pSkill->eSkillType;
+	pSkill->eElementType = _pSkill->eElementType;
+
+	pSkill->fCoolTime = _pSkill->fCoolTime;
+	pSkill->fDuration = _pSkill->fDuration;
+	pSkill->fDamage = _pSkill->fDamage;
+	pSkill->bUse = false;
+	pSkill->bFinal = false;
+	pSkill->Count = 0;
+	pSkill->Sum = _pSkill->Sum;
+}
 void CArrowScript::Awake()
 {
 	
@@ -15,11 +33,12 @@ void CArrowScript::Awake()
 	{
 	case ELEMENT_TYPE::WATER:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain"), L"ParticleUpdateMtrl");
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Bubble99"), L"ParticleUpdateMtrl");
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.4f, 0.4f, 0.8f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
 		m_pParticle->ParticleSystem()->SetEndScale(5.f);
+	
 
 		break;
 	case ELEMENT_TYPE::FIRE:
@@ -62,7 +81,7 @@ void CArrowScript::Awake()
 void CArrowScript::Update()
 {
 	// 화살 충돌 테스트
-	
+	SkillCheck();
 	if (!m_bMove) { 
 		Vec3 vWorldDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		int a = 0;
@@ -101,7 +120,11 @@ void CArrowScript::Update()
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
 			GetObj()->SetActive(false);
-			//Init();
+			if (nullptr != m_pSkill)
+			{
+				delete m_pSkill;
+				m_pSkill = nullptr;
+			}
 			m_eState = ARROW_STATE::IDLE;
 		}
 
@@ -159,14 +182,90 @@ void CArrowScript::Init()
 
 
 }
-
+void CArrowScript::SkillCheck()
+{
+	if (nullptr != m_pSkill) {
+		m_pParticle->SetActive(true);
+	}
+	else {
+		m_pParticle->SetActive(false);
+	}
+}
+#include "TowerScript.h"
+#include "MinionScript.h"
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-	
+	if (nullptr == m_pSkill) {
+		if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+			if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>()) {
+				_pColldier->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
+			}
+			else if (nullptr != _pColldier->GetObj()->GetScript<CTowerScript>()) {
+				_pColldier->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+			}
+			else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>()) {
+				_pColldier->GetObj()->GetScript<CMinionScript>()->SetDamage(m_iDamage);
+			}
+		}
+	}
+	else {
+		switch (m_pSkill->eElementType)
+		{
+		case ELEMENT_TYPE::WATER:
+		{
+			if (_pColldier->GetObj()->GetLayerIdx() == m_iLayerIdx) {
+				if(_pColldier->GetObj()!=m_pPlayer)
+					WaterSkill0(_pColldier);
+			}
+		}
+			break;
+		case ELEMENT_TYPE::DARK:
+		{
+			
+		}
+		break;
+		case ELEMENT_TYPE::THUNDER:
+		{
+			if (m_pSkill->Code == (UINT)SKILL_CODE::THUNDER_0) {
+
+			}
+			else {
+
+			}
+		}
+		break;
+		case ELEMENT_TYPE::FIRE:
+		{
+			if (m_pSkill->Code == (UINT)SKILL_CODE::FIRE_0) {
+
+			}
+			else {
+
+			}
+		}
+			break;
+		case ELEMENT_TYPE::WIND:
+		{
+			if (m_pSkill->Code == (UINT)SKILL_CODE::WIND_0) 
+			{
+
+			}
+			else {
+
+			}
+		}
+		break;
+		default:
+			break;
+		}
+	}
+
+
 }
 
 CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROWSCRIPT),m_iType(_iType),m_bMove(true)
+,m_iDamage(20)
 {
 }
 
@@ -174,3 +273,9 @@ CArrowScript::~CArrowScript()
 {
 }
  
+void CArrowScript::WaterSkill0(CCollider3D* _pColldier) {
+
+	_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+	Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+
+}

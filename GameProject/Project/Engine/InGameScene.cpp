@@ -145,7 +145,7 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
-	pMainCam->GetScript<CCameraScript>()->SetDistanceOffset(pObject);
+
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 	pMainCam->Camera()->SetPlayer(pObject);
@@ -215,6 +215,8 @@ void CInGameScene::Init()
 	pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 	pBow->GetScript<CBowScript>()->Init();
 	pObject->AddChild(pBow);
+	pBow->GetScript<CBowScript>()->SetPlayer(pObject);
+	pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
@@ -1261,42 +1263,20 @@ void CInGameScene::Init()
 
 	m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::WATER));
 	m_pArrow->GetScript<CArrowScript>()->SetMove(false);
+	m_pArrow->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::WATER_0));
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
 
 
 
-	m_pArrow = new CGameObject;
-	m_pArrow->SetName(L"Arrow");
-
-	m_pArrow->AddComponent(new CTransform);
-	m_pArrow->Transform()->SetLocalPos(Vec3(-10.f, 50.f, -10.f));
-	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-	m_pArrow->AddComponent(new CMeshRender);
-	m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-
-	m_pArrow->AddComponent(new CCollider3D);
-	m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-
-	m_pArrow->AddComponent(new CWaterSkill0Script);
-	m_pArrow->GetScript<CWaterSkill0Script>()->SetMove(false);
-
-
-
-	//m_pArrow->GetScript<CWaterSkill0Script>()->SetPlayer(m_pPlayer);
-	m_pArrow->GetScript<CWaterSkill0Script>()->SetSkill(CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::WATER_0));
-	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
-
+	
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Cover");
-//	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
 

@@ -129,6 +129,7 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"Bubble99", L"Texture\\Particle\\Bubbles99px.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Sparks", L"Texture\\Particle\\Sparks.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardRain", L"Texture\\Particle\\HardRain.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Thunder", L"Texture\\Particle\\Thunder.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardRain2", L"Texture\\Particle\\HardRain2.png");
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");

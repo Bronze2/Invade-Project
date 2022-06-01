@@ -39,7 +39,15 @@ private:
     bool m_bCheckDegree;
 
 
+    
+
+    CGameObject* m_pPlayer;
 public:
+
+    CGameObject* GetCurArrow() { return m_pArrow[m_iCurArrow]; }
+    void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
+    
+
     void m_FAnimation();
 
     void Init();

@@ -501,6 +501,16 @@ CMinionScript::~CMinionScript()
 {
 }
 
+void CMinionScript::SetDamage(const int& _Damage)
+{
+	m_iCurHp -= _Damage;
+	if (m_iCurHp < 0) {
+		m_iCurHp = 0;
+	}
+	if (m_iCurHp > m_uiMaxHp)
+		m_iCurHp = m_uiMaxHp;
+}
+
 #include "Collider3D.h"
 
 static bool iSeparate=true;

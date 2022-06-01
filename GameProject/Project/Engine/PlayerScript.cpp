@@ -262,6 +262,7 @@ void CPlayerScript::m_FAnimation()
 	}
 }
 
+
 void CPlayerScript::Init()
 {
 	m_eState = PLAYER_STATE::IDLE;
@@ -317,11 +318,12 @@ void CPlayerScript::Awake()
 	m_pThunderParticle = new CGameObject;
 	m_pThunderParticle->AddComponent(new CTransform);
 	m_pThunderParticle->AddComponent(new CParticleSystem);
+	m_pThunderParticle->Transform()->SetLocalPos(Vec3(0.f, 0.f,150.f));
 	m_pThunderParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate3Mtrl");
 	m_pThunderParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+	m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 0.f, 1.0f));
 	m_pThunderParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pThunderParticle->ParticleSystem()->SetEndScale(0.1f);
+	m_pThunderParticle->ParticleSystem()->SetEndScale(10.f);
 	m_pThunderParticle->FrustumCheck(false);
 	m_pThunderParticle->SetActive(false);
 
@@ -335,6 +337,7 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
+	
 	SkillCoolTimeCheck();
 	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -362,9 +365,7 @@ void CPlayerScript::Update()
 		m_bCheckDegree = false;
 	}
 
-	if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
-		int a = 0;
-	}
+
 
 	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
 		m_fFactor = 0.f;
@@ -516,31 +517,6 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 	{
 		m_tESkill =CSkillMgr::GetInst()->FindSkill(0);
 		m_tZSkill = CSkillMgr::GetInst()->FindSkill(1);
-
-		m_pESkillObject= new CGameObject;
-		m_pESkillObject->SetName(L"Arrow");
-
-		m_pESkillObject->AddComponent(new CTransform);
-		m_pESkillObject->Transform()->SetLocalPos(Vec3(-10.f, 50.f, -10.f));
-		m_pESkillObject->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-		m_pESkillObject->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-		m_pESkillObject->AddComponent(new CMeshRender);
-		m_pESkillObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		m_pESkillObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	
-
-		m_pESkillObject->AddComponent(new CCollider3D);
-		m_pESkillObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-
-		m_pESkillObject->AddComponent(new CWaterSkill0Script);
-		m_pESkillObject->GetScript<CWaterSkill0Script>()->SetMove(false);
-
-
-
-		//m_pArrow->GetScript<CWaterSkill0Script>()->SetPlayer(m_pPlayer);
-		m_pESkillObject->GetScript<CWaterSkill0Script>()->SetSkill(CSkillMgr::GetInst()->FindSkill(0));
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Arrow")->AddGameObject(m_pESkillObject);
-		m_pESkillObject->SetActive(false);
 	}
 		break;
 	case ELEMENT_TYPE::DARK:
@@ -594,6 +570,8 @@ void CPlayerScript::StatusCheck()
 {
 	m_bHealCheck = false;
 	m_bFlameCheck = false;
+	m_bThunderCheck = false;
+
 	if (m_pHealParticle->IsActive()) {
 		for (int i = 0; i < m_arrSkill.size(); ++i) {
 			if (m_arrSkill[i]->eElementType == ELEMENT_TYPE::WATER) {
@@ -620,14 +598,31 @@ void CPlayerScript::StatusCheck()
 
 
 	}
+	if (m_pThunderParticle->IsActive()) {
+		for (int i = 0; i < m_arrSkill.size(); ++i) {
+			if (m_arrSkill[i]->eElementType == ELEMENT_TYPE::THUNDER) {
+				m_bThunderCheck = true;
+				break;
+			}
+		}
+		if (!m_bThunderCheck) {
+			m_pThunderParticle->SetActive(false);
+		}
+
+
+	}
 }
 void CPlayerScript::UseSkill()
 {
 	if (KEY_AWAY(KEY_TYPE::KEY_E)) {
-		if (!m_tESkill->bUse)
-		{
-			m_tESkill->bUse = true;
-			m_tESkill->StartTime = chrono::system_clock::now();
+		if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
+			if (!m_tESkill->bUse)
+			{
+
+				m_tESkill->bUse = true;
+				m_tESkill->StartTime = chrono::system_clock::now();
+				m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tESkill);
+			}
 		}
 	}
 
@@ -646,9 +641,19 @@ void CPlayerScript::UseSkill()
 				}
 
 				DamageBySkill(m_tZSkill);
+				break;
+			case ELEMENT_TYPE::DARK:
+			{
 
+			}
 				break;
 			default:
+			{	
+				if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
+					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tZSkill);
+				}
+			}
+				
 				break;
 			}
 			
@@ -691,7 +696,7 @@ void CPlayerScript::GetDamage()
 				m_pHealParticle->SetActive(true);
 				break;
 			case ELEMENT_TYPE::FIRE:
-				m_pFlameParticle->SetActive(true);
+				m_pThunderParticle->SetActive(true);
 				break;
 			default:
 				break;
@@ -745,7 +750,14 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 		}
 		else {
-			CreateHitParticleObject(_pOther->GetObj()->GetChild()[0]->Transform()->GetWorldPos(),L"particle_00");
+			if (nullptr != _pOther->GetObj()->GetScript<CArrowScript>())
+			{
+				if (_pOther->GetObj()->GetScript<CArrowScript>()->GetLayerIdx() != GetObj()->GetLayerIdx()) {
+					CreateHitParticleObject(_pOther->GetObj()->GetChild()[0]->Transform()->GetWorldPos(), L"particle_00");
+				}
+			}
+
+			
 		}
 	}
 }
@@ -794,7 +806,7 @@ void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false)
 , m_bColCheck(false), m_bMoveCheck(false), m_bCheckDegree(false), m_fLerpTime(0.f), m_fMaxLerpTime(10.f), m_bHealCheck(false)
-, m_bFlameCheck(false)
+, m_bFlameCheck(false), m_bThunderCheck(false)
 {}
 
 
@@ -802,7 +814,7 @@ CPlayerScript::~CPlayerScript()
 {
 }
 
-void CPlayerScript::SetDamage(int _Damage)
+void CPlayerScript::SetDamage(const int& _Damage)
 {
 	m_iCurHp -= _Damage;
 	if (m_iCurHp < 0) {

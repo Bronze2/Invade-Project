@@ -43,8 +43,17 @@ private:
 
     CGameObject* m_pBow;
 
+    UINT m_iLayerIdx;
 
+    UINT m_iDamage;
+    SKILL* m_pSkill;
+    CGameObject* m_pPlayer;
 public:
+    void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
+    bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }
+    void SetSkill(SKILL* _pSkill); 
+    void SetLayerIdx(UINT _Idx) { m_iLayerIdx = _Idx; }
+    UINT GetLayerIdx() { return m_iLayerIdx; }
     virtual void Awake();
     virtual void Update();
 
@@ -57,7 +66,8 @@ public:
     void SetVelocityY(float _fVelocityY) { m_fVelocityY = _fVelocityY; }
     void SetVelocityX() { m_fVelocityX = m_vDir.x * m_fSpeed  * DT; }
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
-    void SetType(UINT _iType) { m_iType = (ELEMENT_TYPE)_iType; }
+    void SkillCheck();
+    void SetType(const UINT& _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }
     void Init();
 
@@ -69,6 +79,8 @@ public:
     void SetBow(CGameObject* _Obj) { m_pBow = _Obj; }
 
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
+
+    void WaterSkill0(CCollider3D* _pColldier);
 private:
   
 public:

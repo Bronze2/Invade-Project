@@ -39,6 +39,8 @@ private:
 
     bool m_bHealCheck;
     bool m_bFlameCheck;
+    bool m_bThunderCheck;
+    bool m_bDarkCheck;
 
     float m_fLerpTime;
     float m_fMaxLerpTime;
@@ -46,6 +48,7 @@ private:
     bool m_bCheckDegree;
     bool m_bColCheck;
     bool m_bMoveCheck;
+   
 
     bool m_bTurn;
     int m_iKeyHoldCnt;
@@ -61,15 +64,21 @@ private:
     CGameObject* m_pZSkillObject;
 
     vector<SKILL*> m_arrSkill;
+   
   
 
+    CGameObject* m_pBowObject;
 public:
     void m_FAnimation();
 
+
+
+    void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
     void Init();
     virtual void Awake();
     virtual void Update();
     void SetType(ELEMENT_TYPE _iType);
+    UINT GetType() { return (UINT)m_iType; }
   
     void SkillCoolTimeCheck();
 
@@ -93,7 +102,7 @@ public:
     CPlayerScript();
     virtual ~CPlayerScript();
 
-    void SetDamage(int _Damage); 
+    void SetDamage(const int& _Damage);
 
 
     CLONE(CPlayerScript);

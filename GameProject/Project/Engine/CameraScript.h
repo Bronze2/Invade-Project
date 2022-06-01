@@ -50,12 +50,4 @@ private:
     CGameObject* m_pPlayer;
     
 
-public:
-    void SetDistanceOffset(CGameObject* _pObject);
-  
-
-
-
-  
-
 };
