@@ -24,7 +24,6 @@ void CArrowScript::SetSkill(SKILL* _pSkill)
 }
 void CArrowScript::Awake()
 {
-	
 	CScene* pCurScene=CSceneMgr::GetInst()->GetCurScene();
 	m_pParticle = new CGameObject;
 	m_pParticle->SetName(L"Particle");
@@ -130,10 +129,10 @@ void CArrowScript::Update()
 		m_vRestorePos = vPos;
 
 		vPos.x += m_vDir.x * m_fSpeed * DT;
-		vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
+		vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
 		vPos.z += m_vDir.z * m_fSpeed * DT;
 
-		m_fVelocityY -= (GRAVITY * DT) / 10;
+		m_fVelocityY -= (GRAVITY * DT) * 4;
 		m_fFallSpeed += m_fVelocityY;
 		vPos.y += m_fFallSpeed * DT;
 
@@ -187,6 +186,7 @@ void CArrowScript::SkillCheck()
 		m_pParticle->SetActive(true);
 	}
 	else {
+		return;
 		m_pParticle->SetActive(false);
 	}
 }
