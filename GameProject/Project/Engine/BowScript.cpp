@@ -215,6 +215,7 @@ void CBowScript::Awake()
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
 		GetObj()->AddChild(m_pArrow[i]);
+		m_pArrow[i]->GetScript<CArrowScript>()->Awake();
 	}
 
 	m_iCurArrow = 0;

@@ -1223,9 +1223,7 @@ void CInGameScene::Init()
 	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 
-	//Vec3((-res.fWidth / 2, res.fHeight/2, 1.f) -> �»��, vScale/2 ��ŭ ���������
-	//pUICrossHair->Transform()->SetLocalPos(Vec3((-res.fWidth / 2 + vScale.x/2), (res.fHeight/2 -vScale.y/2), 1.f));
-	pUICrossHair->Transform()->SetLocalPos(Vec3((-vScale.x / 2), (vScale.y / 2), 1.f));
+	pUICrossHair->Transform()->SetLocalPos(Vec3((-vScale.x / 2), (vScale.y / 2 - res.fHeight/5), 1.f));
 	pUICrossHair->Transform()->SetLocalScale(vScale);
 	pUICrossHair->StaticUI()->SetCamera(pUICam->Camera());
 
@@ -1234,13 +1232,8 @@ void CInGameScene::Init()
 	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"BaseLine");
 	pUICrossHair->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pCrossHairTex.GetPointer());
 
-	//pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
 	pUICrossHair->GetScript<CCrossHairScript>()->SetMainCam(pEmptyCam);
 
-	//pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
-
-	//pMainCam->AddChild(pUICrossHair);
-	//FindLayer(L"UI")->AddGameObject(pMainCam, false);
 	FindLayer(L"UI")->AddGameObject(pUICrossHair);
 
 
