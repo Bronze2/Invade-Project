@@ -7,20 +7,20 @@
 #include <math.h>
 void CArrowScript::SetSkill(SKILL* _pSkill)
 {
-	SKILL* pSkill = new SKILL;
-	pSkill->DotDamage = _pSkill->DotDamage;
-	pSkill->Code = _pSkill->Code;
-	pSkill->Name = _pSkill->Name;
-	pSkill->eSkillType = _pSkill->eSkillType;
-	pSkill->eElementType = _pSkill->eElementType;
+	m_pSkill = new SKILL;
+	m_pSkill->DotDamage = _pSkill->DotDamage;
+	m_pSkill->Code = _pSkill->Code;
+	m_pSkill->Name = _pSkill->Name;
+	m_pSkill->eSkillType = _pSkill->eSkillType;
+	m_pSkill->eElementType = _pSkill->eElementType;
 
-	pSkill->fCoolTime = _pSkill->fCoolTime;
-	pSkill->fDuration = _pSkill->fDuration;
-	pSkill->fDamage = _pSkill->fDamage;
-	pSkill->bUse = false;
-	pSkill->bFinal = false;
-	pSkill->Count = 0;
-	pSkill->Sum = _pSkill->Sum;
+	m_pSkill->fCoolTime = _pSkill->fCoolTime;
+	m_pSkill->fDuration = _pSkill->fDuration;
+	m_pSkill->fDamage = _pSkill->fDamage;
+	m_pSkill->bUse = false;
+	m_pSkill->bFinal = false;
+	m_pSkill->Count = 0;
+	m_pSkill->Sum = _pSkill->Sum;
 }
 void CArrowScript::Awake()
 {
@@ -66,8 +66,7 @@ void CArrowScript::Awake()
 
 
 	}
-	
-
+	m_pParticle->SetActive(true);
 	m_pParticle->FrustumCheck(false);
 	m_pParticle->Transform()->SetLocalPos(Vec3(0.5f, 0.f, 0.f));
 	GetObj()->AddChild(m_pParticle);
@@ -276,6 +275,6 @@ CArrowScript::~CArrowScript()
 void CArrowScript::WaterSkill0(CCollider3D* _pColldier) {
 
 	_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
-	Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 
 }

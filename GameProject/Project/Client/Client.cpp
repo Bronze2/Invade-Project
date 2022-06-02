@@ -9,9 +9,7 @@
 #include <Engine/GameFramework.h>
 #include <Engine/Device.h>
 
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx12.h"
-#include "IMGUIMgr.h"
+
 
 #ifdef _DEBUG
 #pragma comment(lib, "Engine/Engine_debug.lib")
@@ -64,7 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return 0;
     }
 
-    CIMGUIMgr::GetInst()->Init();
+  
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
     MSG msg;
 
@@ -84,16 +82,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         // Game Running
         CGameFramework::GetInst()->Progress();
-    //    CIMGUIMgr::GetInst()->Progress();
-        CDevice::GetInst()->Render_Present();
     }
 
-    ImGui_ImplDX12_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
 
-    DestroyWindow(g_hWnd);
-    UnregisterClass(szWindowClass, hInstance);
 
     return (int) msg.wParam;
 }

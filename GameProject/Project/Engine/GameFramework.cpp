@@ -15,6 +15,9 @@ CGameFramework::CGameFramework():m_hMainhWnd(nullptr) {
 
 }
 CGameFramework::~CGameFramework() {
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 }
 
@@ -52,10 +55,10 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	
 
 	CEventMgr::GetInst()->Init();
+	CIMGUIMgr::GetInst()->Init();
 	return S_OK;
 
 }
-
 void CGameFramework::Progress()
 {
 	CKeyMgr::GetInst()->Update();

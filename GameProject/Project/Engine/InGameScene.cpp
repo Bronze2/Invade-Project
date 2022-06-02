@@ -146,6 +146,7 @@ void CInGameScene::Init()
 	pObject->Sensor()->SetRadius(500.f);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 
+	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
 	pMainCam->Camera()->SetPlayer(pObject);
@@ -1264,6 +1265,9 @@ void CInGameScene::Init()
 	m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::WATER));
 	m_pArrow->GetScript<CArrowScript>()->SetMove(false);
 	m_pArrow->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::WATER_0));
+	m_pArrow->GetScript<CArrowScript>()->SetLayerIdx(3);
+	//m_pArrow->GetScript<CArrowScript>()->SetPlayer(pPlayer);
+	//pPlayer
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
 
