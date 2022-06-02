@@ -353,8 +353,8 @@ void CInGameScene::Init()
 	Ptr<CTexture>pFloorWater = CResMgr::GetInst()->FindRes<CTexture>(L"FloorWater");
 
 
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\fencet.fbx");
-	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\tower1.mdat", L"MeshData\\tower1.mdat");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\fencet.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFloorRed.GetPointer());
@@ -363,13 +363,13 @@ void CInGameScene::Init()
 
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	//pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
-	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
-
-	pObject->Transform()->SetLocalPos(Vec3(0.f, -50.f, 400.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(1, 1, 1));
+	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, -50.f, 400.f));
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(1, 1, 1));
 
 
 	pObject->MeshRender()->SetDynamicShadow(false);
