@@ -66,7 +66,7 @@ void CArrowScript::Awake()
 
 
 	}
-	m_pParticle->SetActive(true);
+	m_pParticle->SetActive(false);
 	m_pParticle->FrustumCheck(false);
 	m_pParticle->Transform()->SetLocalPos(Vec3(0.5f, 0.f, 0.f));
 	GetObj()->AddChild(m_pParticle);
@@ -92,7 +92,7 @@ void CArrowScript::Update()
 	
 	}
 
-
+	
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
 
@@ -128,7 +128,9 @@ void CArrowScript::Update()
 		}
 
 		m_vRestorePos = vPos;
-
+	
+		Vec4 vDir = Vec4(m_vDir, 1.f);
+		m_pParticle->ParticleSystem()->SetDir(vDir);
 		vPos.x += m_vDir.x * m_fSpeed * DT;
 		vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
 		vPos.z += m_vDir.z * m_fSpeed * DT;
@@ -183,6 +185,7 @@ void CArrowScript::Init()
 }
 void CArrowScript::SkillCheck()
 {
+	if (nullptr == m_pParticle)return;
 	if (nullptr != m_pSkill) {
 		m_pParticle->SetActive(true);
 	}
@@ -221,26 +224,36 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 			break;
 		case ELEMENT_TYPE::DARK:
 		{
-			
+			if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					DarkSkill0(_pColldier);
+			}
 		}
 		break;
 		case ELEMENT_TYPE::THUNDER:
 		{
 			if (m_pSkill->Code == (UINT)SKILL_CODE::THUNDER_0) {
-
+				if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					ThunderSkill0(_pColldier);
+				}
 			}
 			else {
-
+				if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					ThunderSkill1(_pColldier);
+				}
 			}
 		}
 		break;
 		case ELEMENT_TYPE::FIRE:
 		{
 			if (m_pSkill->Code == (UINT)SKILL_CODE::FIRE_0) {
-
+				if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					FireSkill0(_pColldier);
+				}
 			}
 			else {
-
+				if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					FireSkill1(_pColldier);
+				}
 			}
 		}
 			break;
@@ -248,10 +261,14 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 		{
 			if (m_pSkill->Code == (UINT)SKILL_CODE::WIND_0) 
 			{
-
+				if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					WindSkill0(_pColldier);
+				}
 			}
 			else {
-
+				if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+					WindSkill1(_pColldier);
+				}
 			}
 		}
 		break;
@@ -277,4 +294,32 @@ void CArrowScript::WaterSkill0(CCollider3D* _pColldier) {
 	_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
 	//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 
+}
+
+void CArrowScript::DarkSkill0(CCollider3D* _pCollider)
+{
+}
+
+void CArrowScript::ThunderSkill0(CCollider3D* _pCollider)
+{
+}
+
+void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
+{
+}
+
+void CArrowScript::FireSkill0(CCollider3D* _pCollider)
+{
+}
+
+void CArrowScript::FireSkill1(CCollider3D* _pCollider)
+{
+}
+
+void CArrowScript::WindSkill0(CCollider3D* _pCollider)
+{
+}
+
+void CArrowScript::WindSkill1(CCollider3D* _pCollider)
+{
 }

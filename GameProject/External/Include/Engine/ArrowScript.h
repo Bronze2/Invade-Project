@@ -80,7 +80,16 @@ public:
 
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 
+
+    //½ºÅ³
     void WaterSkill0(CCollider3D* _pColldier);
+    void DarkSkill0(CCollider3D* _pCollider);
+    void ThunderSkill0(CCollider3D* _pCollider);
+    void ThunderSkill1(CCollider3D* _pCollider);
+    void FireSkill0(CCollider3D* _pCollider);
+    void FireSkill1(CCollider3D* _pCollider);
+    void WindSkill0(CCollider3D* _pCollider);
+    void WindSkill1(CCollider3D* _pCollider);
 private:
   
 public:

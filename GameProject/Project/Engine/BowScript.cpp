@@ -187,7 +187,10 @@ void CBowScript::Awake()
 {
 	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-
+	Ptr<CMaterial> pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std3DShader"));
+	CResMgr::GetInst()->AddRes(L"ArrowMtrl", pMtrl);
 	for (int i = 0; i < 20; ++i) {
 		m_pArrow[i] = new CGameObject;
 		m_pArrow[i]->SetName(L"Arrow");
@@ -199,7 +202,8 @@ void CBowScript::Awake()
 
 		m_pArrow[i]->AddComponent(new CMeshRender);
 		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		m_pArrow[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+		
+		m_pArrow[i]->MeshRender()->SetMaterial(pMtrl);
 		m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
 
 		m_pArrow[i]->AddComponent(new CCollider3D);
@@ -215,6 +219,7 @@ void CBowScript::Awake()
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
 		GetObj()->AddChild(m_pArrow[i]);
+		m_pArrow[i]->Awake();
 	}
 
 	m_iCurArrow = 0;

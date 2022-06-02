@@ -119,10 +119,20 @@ void CInGameScene::Init()
 
 	// MeshRender ����
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
+	;
+	Ptr<CMaterial> pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std3DShader"));
+	CResMgr::GetInst()->AddRes(L"TileMtrl", pMtrl);
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TileMtrl"));
+
+
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
+
+
 	pObject->MeshRender()->SetDynamicShadow(true);
+
 
 	// AddGameObject
 	FindLayer(L"Tile")->AddGameObject(pObject);
@@ -538,7 +548,7 @@ void CInGameScene::Init()
 
 	}*/
 
-	Ptr<CMaterial>pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TransparencyMtrl");
+	pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TransparencyMtrl");
 	Ptr<CTexture> pTransparency = CResMgr::GetInst()->FindRes<CTexture>(L"Transparency");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->FindRes<CTexture>(L"Sky01");
 	{
