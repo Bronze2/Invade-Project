@@ -294,3 +294,4 @@ struct SKILL {
 	UINT Count;
 	float Sum;
 };
+

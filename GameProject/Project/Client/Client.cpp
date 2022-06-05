@@ -18,6 +18,9 @@
 #endif
 
 
+#include <Engine/imgui_impl_win32.h>
+#include <Engine/imgui.h>
+#include <Engine/imgui_impl_dx12.h>
 
 #define MAX_LOADSTRING 100
 
@@ -40,7 +43,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
- //  _CrtSetBreakAlloc(220);
+  // _CrtSetBreakAlloc(7001);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -78,12 +81,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
+            continue;
         }
 
         // Game Running
         CGameFramework::GetInst()->Progress();
     }
 
+    CGameFramework::GetInst()->CleanUp();
+
+    ::DestroyWindow(g_hWnd);
+    ::UnregisterClass(szWindowClass, hInstance);
 
 
     return (int) msg.wParam;
@@ -159,9 +167,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
     switch (message)
     {
     case WM_LBUTTONDOWN:
@@ -199,11 +209,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return 0;
+  
+       
     }
-    return 0;
+    return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.

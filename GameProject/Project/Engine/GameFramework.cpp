@@ -15,9 +15,7 @@ CGameFramework::CGameFramework():m_hMainhWnd(nullptr) {
 
 }
 CGameFramework::~CGameFramework() {
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	
 
 }
 
@@ -148,6 +146,13 @@ LRESULT CGameFramework::OnProcessingWindowMessage(HWND _hWnd, UINT _uMessageID, 
 		break;
 	}
 	return (0);
+}
+
+void CGameFramework::CleanUp()
+{
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void CGameFramework::ChangeWindowSize(HWND _hWnd, const tResolution _resolution)

@@ -557,6 +557,9 @@
     <ClInclude Include="IMGUIMgr.h">
       <Filter>IMGUI\Mgr</Filter>
     </ClInclude>
+    <ClInclude Include="UserStruct.h">
+      <Filter>Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">

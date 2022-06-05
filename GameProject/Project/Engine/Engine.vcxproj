@@ -260,6 +260,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UserStruct.h" />
     <ClInclude Include="WaterSkill0Script.h" />
     <ClInclude Include="WaterSkill1Script.h" />
     <ClInclude Include="WindSkill0Script.h" />

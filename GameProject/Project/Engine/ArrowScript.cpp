@@ -287,6 +287,11 @@ CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROW
 
 CArrowScript::~CArrowScript()
 {
+	if (nullptr != m_pSkill)
+	{
+		delete m_pSkill;
+		m_pSkill = nullptr;
+	}
 }
  
 void CArrowScript::WaterSkill0(CCollider3D* _pColldier) {

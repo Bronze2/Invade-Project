@@ -5,8 +5,9 @@ class CLoginScene :
 {
 private:
     UINT m_uiLoginAttempt;
-    wstring m_ID;
-    wstring m_Password;
+    char user_name[255] = "Enter ID";
+    char password[255] = "Enter Password";
+
 
 public:
     virtual void Update();

@@ -17,6 +17,9 @@ public:
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND _hWnd, UINT _uMessageID, WPARAM _wParam, LPARAM _lParam);
 
 	const Vec2& GetMouseMove() { return m_vMouseMove; }
+
+
+	void CleanUp();
 	
 	HWND GetMainHwnd() { return m_hMainhWnd; }
 private:
