@@ -147,7 +147,7 @@ void CIMGUIMgr::Progress()
                     if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                     {
                         //로그인 버튼  클릭시
-
+                      
 
                     }
                     ImGui::PopStyleVar();
@@ -162,7 +162,7 @@ void CIMGUIMgr::Progress()
                     if (m_bOpen) {
                         SUserInformation user;
                         ImGui::Begin("Register", &m_bOpen, ImGuiWindowFlags_AlwaysAutoResize);
-                        ImGui::Separator();
+                     //   ImGui::Separator();
                         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.054, 0.054, 0.054, 255));
                         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.082, 0.078, 0.078, 255));
                         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.f);
