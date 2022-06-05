@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "IMGUIMgr.h"
+
 #include <Engine/GameFramework.h>
 #include <Engine/Device.h>
+
 
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
@@ -43,6 +45,8 @@ void CIMGUIMgr::Init()
 
     // Setup Platform/Renderer backends
     HWND hWnd = CGameFramework::GetInst()->GetMainHwnd();
+    m_tResloution = CGameFramework::GetInst()->Resolution();
+
 
     bool bSuccess = ImGui_ImplWin32_Init(hWnd);
     bSuccess = ImGui_ImplDX12_Init(DEVICE.Get(), 3, DXGI_FORMAT_R8G8B8A8_UNORM
@@ -53,14 +57,14 @@ void CIMGUIMgr::load_styles()
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
     {
-        colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+        colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);  //À©µµ¿ì ¹è°æ »ö±ò
 
-        colors[ImGuiCol_FrameBg] = ImColor(11, 11, 11, 255);
+        colors[ImGuiCol_FrameBg] = ImColor(11, 11, 11, 255);    //Frame ¹è°æ »ö±ò
         colors[ImGuiCol_FrameBgHovered] = ImColor(11, 11, 11, 255);
 
-        colors[ImGuiCol_Button] = ImColor(255, 0, 46, UserInformations.button_opacity);
-        colors[ImGuiCol_ButtonActive] = ImColor(255, 0, 46, UserInformations.button_opacity);
-        colors[ImGuiCol_ButtonHovered] = ImColor(255, 0, 46, UserInformations.button_opacity);
+        colors[ImGuiCol_Button] = ImColor(46, 0, 255, UserInformations.button_opacity);                    //¹öÆ° »ö±ò 
+        colors[ImGuiCol_ButtonActive] = ImColor(46, 0, 255, UserInformations.button_opacity);              //¹öÆ° »ö±ò 
+        colors[ImGuiCol_ButtonHovered] = ImColor(46, 0, 255, UserInformations.button_opacity);             //¹öÆ° »ö±ò 
 
 
         //    colors[ImGuiCol_Button] = ImColor(255, 0, 46, SUserInformaions.button_opacity);
@@ -94,7 +98,8 @@ void CIMGUIMgr::Progress()
         doOnce = true;
     }
 
-    ImGui::SetNextWindowSize(ImVec2(1920, 1080));
+    ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight));
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
     bool bOpen = true;
     ImGui::Begin("Login Scene", &bOpen, iw.window_flags);
     {
@@ -105,40 +110,39 @@ void CIMGUIMgr::Progress()
         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.f);
         {
             ImGui::SetCursorPos(ImVec2(0, 0));
-            ImGui::BeginChild("##MainPanel", ImVec2(600, 276), true);
+            ImGui::BeginChild("##MainPanel", ImVec2(m_tResloution.fWidth, m_tResloution.fHeight), true);
             {
                 if (show_login)
                 {
-                    ImGui::SetCursorPos(ImVec2(118, 20));
-                    ImGui::TextDisabled("Welcome Back");
 
-                    ImGui::SetCursorPos(ImVec2(97, 35));
+                    ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth/2-100, m_tResloution.fHeight/2-200));//35
                     ImGui::Text("Log into your account");
 
                     ImGui::PushItemWidth(260.f);
                     {
-                        ImGui::SetCursorPos(ImVec2(22, 79));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 175, m_tResloution.fHeight / 2 - 156));
                         ImGui::TextDisabled("Username");
 
-                        ImGui::SetCursorPos(ImVec2(20, 95));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 173,  m_tResloution.fHeight / 2-140));//95
                         ImGui::InputText("##Username", UserInformations.m_cUserName, IM_ARRAYSIZE(UserInformations.m_cUserName));
                     }
                     ImGui::PopItemWidth();
 
                     ImGui::PushItemWidth(260.f);
                     {
-                        ImGui::SetCursorPos(ImVec2(22, 130));
+                       ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 175, m_tResloution.fHeight / 2 - 95));//130
                         ImGui::TextDisabled("Password");
 
-                        ImGui::SetCursorPos(ImVec2(188, 130));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 9, m_tResloution.fHeight / 2 - 95));//130
+                       
                         ImGui::TextDisabled("Forgot password?");
-
-                        ImGui::SetCursorPos(ImVec2(20, 146));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 173, m_tResloution.fHeight / 2 - 79));
+                        //ImGui::SetCursorPos(ImVec2(20, 146));
                         ImGui::InputText("##Passowrd", UserInformations.m_cUserPassWord, IM_ARRAYSIZE(UserInformations.m_cUserPassWord));
                     }
                     ImGui::PopItemWidth();
-
-                    ImGui::SetCursorPos(ImVec2(22, 190));
+                    ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 175, m_tResloution.fHeight / 2 - 35));//130
+           //         ImGui::SetCursorPos(ImVec2(22, 190));
                     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                     if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                     {
@@ -147,7 +151,8 @@ void CIMGUIMgr::Progress()
 
                     }
                     ImGui::PopStyleVar();
-                    ImGui::SetCursorPos(ImVec2(22, 220));
+                    ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 175, m_tResloution.fHeight / 2 - 5));
+                    //ImGui::SetCursorPos(ImVec2(22, 220));
                     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                     if (ImGui::Button("Register", ImVec2(260.f, 30.f)))
                     {

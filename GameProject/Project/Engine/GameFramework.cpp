@@ -24,6 +24,8 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 {
 	m_hMainhWnd = _hWnd;
 	ChangeWindowSize(m_hMainhWnd, _resolution);
+
+	m_tResolution = _resolution;
 	ShowWindow(_hWnd, true);
 	if (FAILED(CDevice::GetInst()->Init(_hWnd, _resolution, _bWindow)))
 		return E_FAIL;
