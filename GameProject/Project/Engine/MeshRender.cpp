@@ -43,6 +43,7 @@ void CMeshRender::Render()
 		if (Animator3D())
 		{
 			Animator3D()->UpdateData();
+			Animator3D()->GetFinalBoneMat()->UpdateData(TEXTURE_REGISTER::t7); // t7 레지스터에 최종행렬 데이터(구조버퍼) 바인
 			
 			a = 1;
 			m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh 알리기

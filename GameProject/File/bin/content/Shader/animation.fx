@@ -174,15 +174,6 @@ float4 QuternionSlerp(in float4 _vQ1, in float4 _vQ2, float _fRatio)
 }
 
 
-struct tFrameTrans
-{
-    float4 vTranslate;
-    float4 vScale;
-    float4 qRot;
-};
-StructuredBuffer<tFrameTrans> g_arrFrameTrans:register(t10);
-StructuredBuffer<matrix> g_arrOffset:register(t11);
-RWStructuredBuffer<matrix> g_arrFinalMat : register(u0);
 
 
 

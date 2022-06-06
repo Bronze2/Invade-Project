@@ -36,7 +36,6 @@ private:
     CGameObject* m_pFlameParticle;
     CGameObject* m_pThunderParticle;
 
-
     bool m_bHealCheck;
     bool m_bFlameCheck;
     bool m_bThunderCheck;
@@ -65,18 +64,17 @@ private:
 
     vector<SKILL*> m_arrSkill;
    
-  
+    vector<tMTBone> m_vecNewBones;
 
     CGameObject* m_pBowObject;
 public:
     void m_FAnimation();
 
-
-
     void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
     void Init();
     virtual void Awake();
     virtual void Update();
+    virtual void LateUpdate();
     void SetType(ELEMENT_TYPE _iType);
     UINT GetType() { return (UINT)m_iType; }
   

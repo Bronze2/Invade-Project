@@ -137,7 +137,8 @@ void CInGameScene::Init()
 	// AddGameObject
 	FindLayer(L"Tile")->AddGameObject(pObject);
 
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_without_bow01.fbx");
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
 
 
 	pObject = pMeshData->Instantiate();
