@@ -70,7 +70,7 @@ public:
 	void SetUAVToRegister_CS(CTexture* _pTex, UAV_REGISTER _eRegister);
 	void SetTextureToRegister_CS(CTexture* _pTex, TEXTURE_REGISTER _eRegister);
 
-
+	ID3D12DescriptorHeap* GetDscriptorHeap() { return m_vecDummyDescriptor[m_iCurDummyIdx].Get(); }
 
 	void SetConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset);
 	void SetGlobalConstBufferToRegister(CConstantBuffer* _pCB, UINT _iOffset);

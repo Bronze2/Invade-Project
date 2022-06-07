@@ -560,6 +560,9 @@
     <ClInclude Include="UserStruct.h">
       <Filter>Default</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">

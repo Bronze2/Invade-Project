@@ -599,7 +599,7 @@ void CMesh::Render(UINT _iSubset)
 {
 	assert(_iSubset < m_vecIdxInfo.size());
 	CDevice::GetInst()->UpdateTable();
-
+	//m_pCurDescriptorHeap = CDevice::GetInst()->GetDscriptorHeap();
 
 	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
 	CMDLIST->IASetIndexBuffer(&m_vecIdxInfo[_iSubset].tIdxView);
@@ -610,6 +610,8 @@ void CMesh::Render_Particle(UINT _iInstanceCount, UINT _iSubset)
 {
 	assert(_iSubset < m_vecIdxInfo.size());
 	CDevice::GetInst()->UpdateTable();
+	
+
 	CMDLIST->IASetVertexBuffers(0, 1, &m_tVtxView);
 	CMDLIST->IASetIndexBuffer(&m_vecIdxInfo[_iSubset].tIdxView);
 	CMDLIST->DrawIndexedInstanced(m_vecIdxInfo[_iSubset].iIdxCount, _iInstanceCount, 0, 0, 0);

@@ -249,6 +249,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="StaticUI.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />

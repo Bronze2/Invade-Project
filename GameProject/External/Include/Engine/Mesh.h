@@ -29,6 +29,7 @@ private:
 	vector<tMTAnimClip> m_vecAnimClip;
 	vector<tMTBone> m_vecBones;
 
+	ID3D12DescriptorHeap* m_pCurDescriptorHeap;
 
 	CStructuredBuffer* m_pBoneFrameData;
 	CStructuredBuffer* m_pBoneOffset;

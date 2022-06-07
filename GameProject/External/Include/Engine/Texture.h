@@ -29,7 +29,7 @@ public:
 		, D3D12_RESOURCE_FLAGS _eResFlag, Vec4 _vClearColor = Vec4());
 
 	void CreateFromResource(ComPtr<ID3D12Resource> _pTex2D);
-
+	void Load(const wstring& _strFullPath, D3D12_CPU_DESCRIPTOR_HANDLE _CpuHandle);
 	ComPtr<ID3D12Resource> GetTex2D() { return m_pTex2D; }
 	ComPtr<ID3D12DescriptorHeap> GetSRV() { return m_pSRV; }
 	ComPtr<ID3D12DescriptorHeap> GetRTV() { return m_pRTV; }

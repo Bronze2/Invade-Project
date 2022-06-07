@@ -78,8 +78,8 @@ void CGameFramework::Progress()
 void CGameFramework::ProcessInput()
 {
 	POINT ptCursorPos;
-	SetCursor(NULL);
-	//ShowCursor(TRUE);
+//	SetCursor(NULL);
+	ShowCursor(TRUE);
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);
@@ -152,9 +152,7 @@ LRESULT CGameFramework::OnProcessingWindowMessage(HWND _hWnd, UINT _uMessageID, 
 
 void CGameFramework::CleanUp()
 {
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+
 }
 
 void CGameFramework::ChangeWindowSize(HWND _hWnd, const tResolution _resolution)
