@@ -12,5 +12,6 @@ private:
 public:
     virtual void Update();
     virtual void Awake();
+    virtual void Init();
 };
 

@@ -21,6 +21,7 @@ void CCollisionMgr::Init()
 void CCollisionMgr::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	if(nullptr!=m_pCameraObject)
 	m_pCameraObject->SetFront(Vec3(0, 0, 0));
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{

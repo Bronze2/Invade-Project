@@ -67,7 +67,7 @@ void CIMGUIMgr::Init()
     GPU_Handle = m_pHeap->GetGPUDescriptorHandleForHeapStart();
     GPU_Handle.ptr += (handleIncrement * descriptor_index);
 
-    m_pTexture->Load(L"Texture\\asd.png", cpu_handle);
+    m_pTexture->Load(L"Texture\\BackGround.png", cpu_handle);
 
 
 }
@@ -75,10 +75,10 @@ void CIMGUIMgr::load_styles()
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
     {
-        colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);  //윈도우 배경 색깔
+        colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f,0.50f);  //윈도우 배경 색깔
 
-        colors[ImGuiCol_FrameBg] = ImColor(11, 11, 11, 255);    //Frame 배경 색깔
-        colors[ImGuiCol_FrameBgHovered] = ImColor(11, 11, 11, 255);
+        colors[ImGuiCol_FrameBg] = ImColor(11, 11, 11, 123);    //Frame 배경 색깔
+        colors[ImGuiCol_FrameBgHovered] = ImColor(11, 11, 11, 123);
 
         colors[ImGuiCol_Button] = ImColor(46, 0, 255, UserInformations.button_opacity);                    //버튼 색깔 
         colors[ImGuiCol_ButtonActive] = ImColor(46, 40, 255, UserInformations.button_opacity);              //버튼 색깔 
@@ -88,7 +88,8 @@ void CIMGUIMgr::load_styles()
         //    colors[ImGuiCol_Button] = ImColor(255, 0, 46, SUserInformaions.button_opacity);
         //    colors[ImGuiCol_ButtonActive] = ImColor(255, 0, 46, SUserInformaions.button_opacity);
         //    colors[ImGuiCol_ButtonHovered] = ImColor(255, 0, 46, SUserInformaions.button_opacity);
-        colors[ImGuiCol_TextDisabled] = ImVec4(0.37f, 0.37f, 0.37f, 1.00f);
+        colors[ImGuiCol_TextDisabled] = ImVec4(1.f, 1.f, 1.f, 1.00f);
+        colors[ImGuiCol_Text] = ImVec4(0.f, 0.f, 0.f, 1.00f);
     }
 
     ImGuiStyle* style = &ImGui::GetStyle();
@@ -111,7 +112,8 @@ void CIMGUIMgr::Progress()
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    if (SCENE_TYPE::LOGIN == CSceneMgr::GetInst()->GetCurScene()->GetCurScene())
+    if (SCENE_TYPE::LOGIN
+        == CSceneMgr::GetInst()->GetCurScene()->GetCurScene())
     {
 
         if (!doOnce)
@@ -132,8 +134,10 @@ void CIMGUIMgr::Progress()
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.f);
             {
                 ImGui::SetCursorPos(ImVec2(0, 0));
+               
                 ImGui::BeginChild("##MainPanel", ImVec2(m_tResloution.fWidth, m_tResloution.fHeight), true);
                 {
+                    ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
                     if (show_login)
                     {
 
@@ -262,7 +266,9 @@ void CIMGUIMgr::Progress()
             ImGui::BeginChild("Chat", ImVec2(300, 300));
   // 채팅치면 위에 그려주는듯?          ImGui::Text(chatItems);
           //  Ptr<CTexture> Images = CResMgr::GetInst()->FindRes<CTexture>(L"TestTex");
-            ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
+           // ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
+
+
             ImGui::EndChild();
             ImGui::InputText("", buffer, sizeof(buffer));
             ImGui::SameLine();

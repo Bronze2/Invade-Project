@@ -96,6 +96,7 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		break;
 	}
 
+	m_pCurScene->SetType(_Type);
 	m_pCurScene->Init();
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
@@ -108,9 +109,7 @@ CSceneMgr::CSceneMgr()
 
 CSceneMgr::~CSceneMgr()
 {
-	for (int i = 0; i < (UINT)SCENE_TYPE::END; ++i) {
-		SAFE_DELETE(m_arrScene[i]);
-	}
+	
 }
 
 void CSceneMgr::Init()
@@ -284,14 +283,12 @@ void CSceneMgr::Init()
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 
-	m_arrScene[(UINT)SCENE_TYPE::LOBBY]= new CLobbyScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 
 
 
-	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::INGAME];
+	m_pCurScene =new CLoginScene;
 	m_pCurScene->Init();
-	m_pCurScene->SetType(SCENE_TYPE::INGAME);
+	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
 
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
