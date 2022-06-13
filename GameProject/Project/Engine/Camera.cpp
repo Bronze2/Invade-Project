@@ -158,8 +158,12 @@ void CCamera::SortGameObject()
 							bool bIntersect = false;
 							for (int k = 0; k < m_arrInterSectObject.size(); ++k) {
 								if (m_arrInterSectObject[k] == vecObj[j]) {
-									bIntersect = true;
-									break;
+									
+										bIntersect = true;
+										break;
+
+									
+									
 								}
 							}
 						

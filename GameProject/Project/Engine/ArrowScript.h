@@ -80,6 +80,7 @@ public:
 
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 
+    void Collision();
 
     //½ºÅ³
     void WaterSkill0(CCollider3D* _pColldier);

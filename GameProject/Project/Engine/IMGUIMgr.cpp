@@ -299,7 +299,10 @@ CIMGUIMgr::CIMGUIMgr() {
 
 CIMGUIMgr::~CIMGUIMgr() {
 	m_pHeap->Release();
+    delete m_pTexture;
+    m_pTexture = nullptr;
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+
 }

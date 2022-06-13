@@ -11,14 +11,8 @@
 #include "BowScript.h"
 #include "ParticleSystem.h"
 #include "SkillMgr.h"
-#include "WaterSkill0Script.h"
-#include "WindSkill0Script.h"
-#include "WindSkill1Script.h"
-#include "ThunderSkill0Script.h"
 #include "ThunderSkill1Script.h"
-#include"DarkSkill0Script.h"
-#include "FireSkill0Script.h"
-#include "FireSkill1Script.h"
+
 #include "Collider3D.h"
 
 void CPlayerScript::m_FAnimation()
@@ -614,6 +608,11 @@ void CPlayerScript::StatusCheck()
 }
 void CPlayerScript::UseSkill()
 {
+
+	if (m_bThunderCheck)
+		return;
+
+
 	if (KEY_AWAY(KEY_TYPE::KEY_E)) {
 		if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
 			if (!m_tESkill->bUse)
@@ -745,11 +744,7 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 		}
 	}
 	else {
-		if (nullptr != _pOther->GetObj()->GetScript<CWaterSkill0Script>())
-		{
-
-		}
-		else {
+	
 			if (nullptr != _pOther->GetObj()->GetScript<CArrowScript>())
 			{
 				if (_pOther->GetObj()->GetScript<CArrowScript>()->GetLayerIdx() != GetObj()->GetLayerIdx()) {
@@ -758,7 +753,7 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 			}
 
 			
-		}
+		
 	}
 }
 

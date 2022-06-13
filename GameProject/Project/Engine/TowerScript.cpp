@@ -63,18 +63,18 @@ void CTowerScript::Init()
 	{
 	case TOWER_TYPE::FIRST:
 		m_iMaxHp = 1500;
-		m_uiCurHp = m_iMaxHp;
+		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 150;
 		break;
 	case TOWER_TYPE::SECOND:
 		m_iMaxHp = 2000;
-		m_uiCurHp = m_iMaxHp;
+		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 150;
 		break;
 	case TOWER_TYPE::NEXUS:
 
 		m_iMaxHp = 5000;
-		m_uiCurHp = m_iMaxHp;
+		m_iCurHp = m_iMaxHp;
 		break;
 	default:
 		break;
@@ -148,7 +148,7 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
-	if (m_uiCurHp <= 0) {
+	if (m_iCurHp <= 0) {
 		DeleteObject(GetObj());
 		return;
 	}

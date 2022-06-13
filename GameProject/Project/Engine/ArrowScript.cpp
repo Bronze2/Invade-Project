@@ -54,13 +54,18 @@ void CArrowScript::Awake()
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
+m_pParticle->ParticleSystem()->SetEndScale(5.f);
+break;
+	case ELEMENT_TYPE::THUNDER:
+		m_pParticle->AddComponent(new CParticleSystem);
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"), L"ParticleUpdateMtrl");
+		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
+		m_pParticle->ParticleSystem()->SetStartScale(2.f);
 		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 		break;
-	case ELEMENT_TYPE::THUNDER:
-
-		break;
 	case ELEMENT_TYPE::WIND:
-
+		m_pParticle->AddComponent(new CParticleSystem);
 		break;
 
 
@@ -80,24 +85,20 @@ void CArrowScript::Update()
 {
 	// 화살 충돌 테스트
 	SkillCheck();
-	if (!m_bMove) { 
+	if (!m_bMove) {
 		Vec3 vWorldDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		int a = 0;
 		Vec4 vDir = Vec4(vWorldDir, 1.f);
 		m_pParticle->ParticleSystem()->SetDir(vDir);
-	
+
 
 		return;
-	
+
 	}
 
-	
+
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
 
-	// ���Ŀ� ī�޶� ���Ʒ� �����ӿ� ���� �߻� ���� �ٲ� �� �ʿ�
-	//CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	//CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 
 	switch (m_eState)
 	{
@@ -118,6 +119,7 @@ void CArrowScript::Update()
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
 			GetObj()->SetActive(false);
+			m_pParticle->SetActive(false);
 			if (nullptr != m_pSkill)
 			{
 				delete m_pSkill;
@@ -127,40 +129,55 @@ void CArrowScript::Update()
 		}
 
 		m_vRestorePos = vPos;
+
 	
 		Vec4 vDir = Vec4(m_vDir, 1.f);
+		float a = vDir.x;
+		vDir.x = vDir.z;
+		vDir.z = a;
+
 		m_pParticle->ParticleSystem()->SetDir(vDir);
-		vPos.x += m_vDir.x * m_fSpeed * DT;
-		vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
-		vPos.z += m_vDir.z * m_fSpeed * DT;
+	//	vPos.x += m_vDir.x * m_fSpeed * DT;
+	//
+	//	vPos.z += m_vDir.z * m_fSpeed * DT;
 
 		m_fVelocityY -= (GRAVITY * DT) * 4;
 		m_fFallSpeed += m_fVelocityY;
-		vPos.y += m_fFallSpeed * DT;
+		if (nullptr == m_pSkill || ELEMENT_TYPE::WIND != m_pSkill->eElementType) {
+	//		vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
+	//		vPos.y += m_fFallSpeed * DT;
+		}
 
-		//m_vDeltaPos = vPos - m_vRestorePos;
-		//float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
-		//vRot.y += fAngle;
+		if (nullptr != m_pSkill) {
+			if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+				if (vPos.y <= 1.f) {
+
+					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+					vPos3.y = 1.f;
+					CreateThunderObject(vPos3);
+					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+				}
+			}
+			else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code){
+				if (vPos.y <= 1.f) {
+					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+					vPos3.y = 1.f;
+					CreateBoomParticleObject(vPos3, L"smokeparticle");
+					Collision();
+					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+				}
+			}
+		}
 		
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
-		//m_vTargetDir = vPos - m_vRestorePos;
-		//m_vTargetDir.Normalize();
-
-		//float value = XMConvertToRadians(90.f * DT * 10);
-
-		//float vDotValue = Dot(vDir, m_vTargetDir);
-		//Vec3 vCrossValue = Cross(m_vTargetDir, m_vDir);
-
-		//Vec3 vCrossValue = Cross(m_vDir, vDir);
-
-		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-		//Transform()->SetQuaternion(Vec4(fAngle, 0.f, 0.f, 1.f));
+	
 	}
 	break;
 	}
+
+
 }
 
 void CArrowScript::Init()
@@ -285,6 +302,46 @@ CArrowScript::CArrowScript(ELEMENT_TYPE _iType):CScript((UINT)SCRIPT_TYPE::ARROW
 {
 }
 
+void CArrowScript::Collision()
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CLayer* pLayer = nullptr;
+	if (L"Red" == pCurScene->GetLayer(m_iLayerIdx)->GetName())
+	{
+		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue");
+	}
+	else if (L"Blue" == pCurScene->GetLayer(m_iLayerIdx)->GetName()) {
+		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Red");
+	}
+	if (nullptr == pLayer)
+		return;
+
+	const vector<CGameObject*>& vecObj = pLayer->GetObjects();
+	for (int i = 0; i < vecObj.size(); ++i) {
+		CGameObject* pObject1 = vecObj[i];
+		CGameObject* pObject2 = GetObj();
+		Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+		Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+		float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+
+
+		if (Radius < 400.f)
+		{
+			
+			if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
+			{
+				vecObj[i]->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+
+			}
+			
+			
+		}
+
+
+
+	}
+}
+
 CArrowScript::~CArrowScript()
 {
 	if (nullptr != m_pSkill)
@@ -294,37 +351,90 @@ CArrowScript::~CArrowScript()
 	}
 }
  
-void CArrowScript::WaterSkill0(CCollider3D* _pColldier) {
-
-	_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
-	//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+void CArrowScript::WaterSkill0(CCollider3D* _pCollider) {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
 
 }
 
 void CArrowScript::DarkSkill0(CCollider3D* _pCollider)
 {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
 }
 
 void CArrowScript::ThunderSkill0(CCollider3D* _pCollider)
 {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
 }
 
 void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
 {
+	Vec3 vPos = GetObj()->Transform()->GetWorldPos();
+	vPos.y = 1.f;
+	CreateThunderObject(vPos);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+	else if(nullptr!=_pCollider->GetObj()->GetScript<CMinionScript>()) {
+		_pCollider->GetObj()->GetScript<CMinionScript>()->SetDamage(m_iDamage);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+	else if (nullptr != _pCollider->GetObj()->GetScript<CTowerScript>()) {
+		_pCollider->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
 }
 
 void CArrowScript::FireSkill0(CCollider3D* _pCollider)
 {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
 }
 
 void CArrowScript::FireSkill1(CCollider3D* _pCollider)
 {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+		CreateBoomParticleObject(vPos3, L"smokeparticle");
+		Collision();
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+	
 }
 
 void CArrowScript::WindSkill0(CCollider3D* _pCollider)
 {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>())
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+	else {
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+
 }
 
 void CArrowScript::WindSkill1(CCollider3D* _pCollider)
 {
+		if (nullptr != _pCollider->GetObj()->GetScript<CMinionScript>()) {
+			_pCollider->GetObj()->GetScript<CMinionScript>()->SetDamage(m_pSkill->fDamage);
+		}
+		else if (nullptr != _pCollider->GetObj()->GetScript<CTowerScript>()) {
+			_pCollider->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+	
+		}
+		else if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+			_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+
+		}
+	
 }

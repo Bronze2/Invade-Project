@@ -180,10 +180,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="BowScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
-    <ClInclude Include="DarkSkill0Script.h" />
-    <ClInclude Include="DarkSkill1Script.h" />
-    <ClInclude Include="FireSkill0Script.h" />
-    <ClInclude Include="FireSkill1Script.h" />
     <ClInclude Include="CrossHairScript.h" />
     <ClInclude Include="EmptyCameraScript.h" />
     <ClInclude Include="imconfig.h" />
@@ -254,7 +250,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="ThunderSkill0Script.h" />
     <ClInclude Include="ThunderSkill1Script.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="CameraScript.h" />
@@ -262,10 +257,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UserStruct.h" />
-    <ClInclude Include="WaterSkill0Script.h" />
-    <ClInclude Include="WaterSkill1Script.h" />
-    <ClInclude Include="WindSkill0Script.h" />
-    <ClInclude Include="WindSkill1Script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator3D.cpp" />
@@ -273,10 +264,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="BowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
-    <ClCompile Include="DarkSkill0Script.cpp" />
-    <ClCompile Include="DarkSkill1Script.cpp" />
-    <ClCompile Include="FireSkill0Script.cpp" />
-    <ClCompile Include="FireSkill1Script.cpp" />
     <ClCompile Include="CrossHairScript.cpp" />
     <ClCompile Include="EmptyCameraScript.cpp" />
     <ClCompile Include="imgui.cpp" />
@@ -344,17 +331,12 @@ call EngineCopy.bat</Command>
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="ThunderSkill0Script.cpp" />
     <ClCompile Include="ThunderSkill1Script.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="WaterSkill0Script.cpp" />
-    <ClCompile Include="WaterSkill1Script.cpp" />
-    <ClCompile Include="WindSkill0Script.cpp" />
-    <ClCompile Include="WindSkill1Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl" />

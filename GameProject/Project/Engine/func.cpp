@@ -335,12 +335,66 @@ void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.8f, 1.f, 0.f, 1.0f));
 	pHitParticle->ParticleSystem()->SetStartScale(5.f);
 	pHitParticle->ParticleSystem()->SetEndScale(10.f);
-	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.f);
+	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(0.5f);
 	pHitParticle->GetScript<CParticleScript>()->SetTime();
 	pHitParticle->FrustumCheck(false);
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
 
 
+}
+void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
+{
+	CGameObject* pHitParticle = new CGameObject;
+	pHitParticle->AddComponent(new CTransform);
+	pHitParticle->AddComponent(new CParticleSystem);
+	pHitParticle->AddComponent(new CParticleScript);
+	pHitParticle->Transform()->SetLocalPos(_Pos);
+	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
+	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.3f, 0.3f, 0.4f, 0.5f));
+	pHitParticle->ParticleSystem()->SetStartScale(100.f);
+	pHitParticle->ParticleSystem()->SetEndScale(10.f);
+	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.5f);
+	pHitParticle->GetScript<CParticleScript>()->SetTime();
+	pHitParticle->ParticleSystem()->SetMinLifeTime(1.f);
+	pHitParticle->ParticleSystem()->SetMaxLifeTime(1.5f);
+	pHitParticle->FrustumCheck(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
+
+}
+#include "ThunderSkill1Script.h"
+
+#include "MeshRender.h"
+void CreateThunderObject(const Vec3& _Pos)
+{
+	CGameObject* pThunderObject = new CGameObject;
+	pThunderObject->AddComponent(new CTransform);
+	pThunderObject->AddComponent(new CParticleSystem);
+	pThunderObject->AddComponent(new CThunderSkill1Script);
+	pThunderObject->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate5Mtrl");
+	pThunderObject->ParticleSystem()->SetStartColor(Vec4(0.8f, 0.8f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pThunderObject->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
+	pThunderObject->ParticleSystem()->SetStartScale(10.f);
+	pThunderObject->ParticleSystem()->SetEndScale(10.f);
+	pThunderObject->ParticleSystem()->SetMinLifeTime(1.f);
+	pThunderObject->ParticleSystem()->SetMaxLifeTime(3.f);
+	pThunderObject->FrustumCheck(false);
+	pThunderObject->SetActive(true);
+
+	
+	
+	pThunderObject->Transform()->SetLocalPos(_Pos);
+	CGameObject* pRangeObject = new CGameObject;
+	pRangeObject->AddComponent(new CTransform);
+	pRangeObject->AddComponent(new CMeshRender);
+	pRangeObject->SetName(L"Range");
+	pRangeObject->Transform()->SetLocalPos(Vec3(0.f, 5.f, 0.f));
+	pRangeObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"ColCircleMesh2"));
+	pRangeObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"RangeMtrl"));
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
+
+	pThunderObject->AddChild(pRangeObject);
 }
 

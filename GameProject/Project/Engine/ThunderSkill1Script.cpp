@@ -2,90 +2,103 @@
 #include "ThunderSkill1Script.h"
 
 #include "PlayerScript.h"
+#include "SceneMgr.h"
+#include "Scene.h"
+#include "Layer.h"
+#include "MinionScript.h"
+#include "SkillMgr.h"
+void CThunderSkill1Script::Collision()
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CLayer* pLayer = nullptr;
+	if (L"Red" == pCurScene->GetLayer(m_iLayerIdx)->GetName())
+	{
+		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue");
+	}
+	else if (L"Blue" == pCurScene->GetLayer(m_iLayerIdx)->GetName()) {
+		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Red");
+	}
+	if (nullptr == pLayer)
+		return;
+
+	const vector<CGameObject*>& vecObj = pLayer->GetObjects();
+	for (int i = 0; i < vecObj.size(); ++i) {
+		CGameObject* pObject1 = vecObj[i];
+		CGameObject* pObject2 = GetObj();
+		Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+		Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+		float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+		
+
+		if (Radius < 400.f)
+		{
+			if (TickCheck(m_pSkill->StartTime, m_pSkill->Count) != m_pSkill->Count) {
+				if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
+				{
+					vecObj[i]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
+
+				}
+				else if (nullptr != vecObj[i]->GetScript<CMinionScript>()) {
+					vecObj[i]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+				}
+			}
+		}
+				
+
+		
+	}
+	
+
+	
+	
+
+}
 CThunderSkill1Script::CThunderSkill1Script() :CScript((UINT)SCRIPT_TYPE::THUNDERSKILL1), m_bStart(false), m_bTickCheck(false)
 {
+	m_pSkill = new SKILL;
+	m_pSkill->DotDamage = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->DotDamage;
+	m_pSkill->Code = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->Code;
+	m_pSkill->Name = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->Name;
+	m_pSkill->eSkillType = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->eSkillType;
+	m_pSkill->eElementType = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->eElementType;
+
+	m_pSkill->fCoolTime = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->fCoolTime;
+	m_pSkill->fDuration = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->fDuration;
+	m_pSkill->fDamage = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->fDamage;
+	m_pSkill->bUse = false;
+	m_pSkill->bFinal = false;
+	m_pSkill->Count = 0;
+	m_pSkill->Sum = CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::THUNDER_1)->Sum;
+
 }
 
 CThunderSkill1Script::~CThunderSkill1Script()
 {
-}
-#include "pch.h"
-#include "WaterSkill0Script.h"
-
-#include "PlayerScript.h"
-CWaterSkill0Script::CWaterSkill0Script() :CScript((UINT)SCRIPT_TYPE::WATERSKILL0), m_bStart(false), m_bTickCheck(false)
-{
-}
-
-CWaterSkill0Script::~CWaterSkill0Script()
-{
-}
-
-void CWaterSkill0Script::Update()
-{
-	if (nullptr == m_pSkill)return;
-	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
-		if (!m_bStart) {
-			m_bStart = true;
-			m_tStart = clock();
-
-		}
-		else {
-			m_tEnd = clock();
-			m_tInterval = m_tEnd - m_tStart / CLOCKS_PER_SEC;
-			if (!m_bTickCheck) {
-				m_tTickInterval = m_tEnd - m_tStart / CLOCKS_PER_SEC;
-
-			}
-			else {
-				m_tTickInterval = m_tEnd - m_tTickStart / CLOCKS_PER_SEC;
-			}
-			if (m_tTickInterval >= 1.f) {
-				m_pTarget->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
-				m_tTickStart = clock();
-				m_bTickCheck = true;
-			}
-			if (m_tInterval >= m_pSkill->fCoolTime) {
-				m_bStart = false;
-				m_bTickCheck = false;
-				DeleteObject(GetObj());
-			}
-		}
+	if (nullptr != m_pSkill) {
+		delete m_pSkill;
+		m_pSkill = nullptr;
 	}
 
 }
+
+
 
 void CThunderSkill1Script::Update()
 {
 	if (nullptr == m_pSkill)return;
-	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
-		if (!m_bStart) {
-			m_bStart = true;
-			m_tStart = clock();
 
-		}
-		else {
-			m_tEnd = clock();
-			m_tInterval = m_tEnd - m_tStart / CLOCKS_PER_SEC;
-			if (!m_bTickCheck) {
-				m_tTickInterval = m_tEnd - m_tStart / CLOCKS_PER_SEC;
-
-			}
-			else {
-				m_tTickInterval = m_tEnd - m_tTickStart / CLOCKS_PER_SEC;
-			}
-			if (m_tTickInterval >= 1.f) {
-				m_pTarget->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
-				m_tTickStart = clock();
-				m_bTickCheck = true;
-			}
-			if (m_tInterval >= m_pSkill->fCoolTime) {
-				m_bStart = false;
-				m_bTickCheck = false;
-				DeleteObject(GetObj());
-			}
+	if (!m_bStart) {
+		m_bStart = true;
+		m_pSkill->StartTime = std::chrono::system_clock::now();
+	}
+	else {
+		Collision();
+		if (CoolTimeCheck(m_pSkill->StartTime, m_pSkill->fDuration)) {
+			DeleteObject(GetObj()->GetChild()[0]);
+			DeleteObject(GetObj());
 		}
 	}
+	
 
 }
 

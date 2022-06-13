@@ -12,7 +12,7 @@ class CTowerScript :
 {
 private:
     UINT m_iMaxHp;
-    int m_uiCurHp;
+    int m_iCurHp;
     float m_fAttackRange;
 
     UINT m_uiDef;
@@ -65,7 +65,14 @@ public:
     virtual void Update();
     virtual void FinalUpdate();
 
-    void GetDamage(const UINT& _Dmg) { m_uiCurHp -= _Dmg; }
+    void GetDamage(const UINT& _Dmg) {
+        m_iCurHp -= _Dmg;
+        if (m_iCurHp < 0) {
+            m_iCurHp = 0;
+        }
+        if (m_iCurHp > m_iMaxHp)
+            m_iCurHp = m_iMaxHp;
+    }
    
 
     virtual void OnDetectionEnter(CGameObject* _pOther);

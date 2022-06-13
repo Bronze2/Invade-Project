@@ -64,3 +64,7 @@ bool CoolTimeCheck(std::chrono::system_clock::time_point start, int _Time);
 bool SkillFinalCheck(SKILL* _pSkill);
 
 void CreateHitParticleObject(const Vec3& _Pos,const wstring& _strKey);
+void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey);
+
+
+void CreateThunderObject(const Vec3& _Pos);

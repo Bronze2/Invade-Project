@@ -174,9 +174,6 @@
     <ClCompile Include="ThunderSkill1Script.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="ThunderSkill0Script.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="TimeMgr.cpp">
       <Filter>Mgr</Filter>
     </ClCompile>
@@ -237,33 +234,6 @@
     <ClCompile Include="TowerScript.cpp">
       <Filter>Script\Tower</Filter>
     </ClCompile>
-    <ClCompile Include="DarkSkill1Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="FireSkill0Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="FireSkill1Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="WaterSkill0Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="WaterSkill1Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="WindSkill0Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="WindSkill1Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
-    <ClCompile Include="DarkSkill0Script.cpp">
-      <Filter>Thrash</Filter>
-    </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
@@ -287,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="IMGUIMgr.cpp">
       <Filter>IMGUI\Mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="StructuredBuffer.cpp">
+      <Filter>Device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -440,9 +413,6 @@
     <ClInclude Include="ThunderSkill1Script.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="ThunderSkill0Script.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="TimeMgr.h">
       <Filter>Mgr</Filter>
     </ClInclude>
@@ -500,33 +470,6 @@
     <ClInclude Include="TowerScript.h">
       <Filter>Script\Tower</Filter>
     </ClInclude>
-    <ClInclude Include="WindSkill1Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="DarkSkill0Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="DarkSkill1Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="FireSkill0Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="FireSkill1Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="WaterSkill0Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="WaterSkill1Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
-    <ClInclude Include="WindSkill0Script.h">
-      <Filter>Thrash</Filter>
-    </ClInclude>
     <ClInclude Include="struct.h">
       <Filter>Default</Filter>
     </ClInclude>
@@ -562,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -669,9 +615,6 @@
     </Filter>
     <Filter Include="Script\Tower">
       <UniqueIdentifier>{8084ae00-8f8d-4d77-bf21-add6ece1c4cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Thrash">
-      <UniqueIdentifier>{1caabe63-1902-4d58-b14e-b02aba15f63d}</UniqueIdentifier>
     </Filter>
     <Filter Include="IMGUI">
       <UniqueIdentifier>{95f2c02b-8b1a-4346-81d1-9271c75b9fbd}</UniqueIdentifier>

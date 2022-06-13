@@ -109,7 +109,8 @@ CSceneMgr::CSceneMgr()
 
 CSceneMgr::~CSceneMgr()
 {
-	
+	delete m_pCurScene;
+	m_pCurScene = nullptr;
 }
 
 void CSceneMgr::Init()
@@ -133,7 +134,7 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"particle_00", L"Texture\\Particle\\particle_00.png");
-
+	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle", L"Texture\\MagicCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pWhite = CResMgr::GetInst()->Load<CTexture>(L"white", L"Texture\\Tile\\1234.png");
@@ -286,9 +287,9 @@ void CSceneMgr::Init()
 
 
 
-	m_pCurScene =new CLoginScene;
+	m_pCurScene =new CInGameScene;
 	m_pCurScene->Init();
-	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
+	m_pCurScene->SetType(SCENE_TYPE::INGAME);
 
 	m_pCurScene->Awake();
 	m_pCurScene->Start();

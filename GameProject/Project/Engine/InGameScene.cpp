@@ -42,7 +42,6 @@
 #include "TowerScript.h"
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
-#include "WaterSkill0Script.h"
 #include "SkillMgr.h"
 #include "EmptyCameraScript.h"
 #include "StaticUI.h"
@@ -154,7 +153,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -1249,6 +1248,7 @@ void CInGameScene::Init()
 
 
 
+
 	CGameObject* m_pArrow = new CGameObject;
 	m_pArrow->SetName(L"Arrow");
 
@@ -1256,7 +1256,7 @@ void CInGameScene::Init()
 	m_pArrow->AddComponent(new CTransform);
 	m_pArrow->Transform()->SetLocalPos(Vec3(50.f, 50.f, 50.f));
 	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
+	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 1.57f, 0.f));
 	m_pArrow->AddComponent(new CMeshRender);
 	m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
