@@ -5,6 +5,10 @@
 #include "Material.h"
 #include "ResMgr.h"
 #include "StructuredBuffer.h"
+#include "SceneMgr.h"
+#include "PlayerScript.h"
+#include "CameraScript.h"
+#include "CrossHairScript.h"
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
 {
@@ -32,6 +36,18 @@ void CAnimator3D::UpdateData()
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_2, &m_iNextFrameIdx);
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &iRow);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
+		
+		float fDegree = 0;
+		float fIsPlayer = 0.f;
+		if (GetObj()->GetScript<CPlayerScript>() != nullptr) { 
+			fIsPlayer = 1.f;
+			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
+			Vec3 vRot = pMainCam->Transform()->GetLocalRot();
+			fDegree = XMConvertToDegrees(vRot.x);
+		}
+		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_1, &fDegree);
+		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_2, &fIsPlayer);
+
 
 		UINT iGrounX = (iBoneCount / 256) + 1;
 		m_pBoneMtrl->Dispatch(iGrounX, 1, 1);
@@ -60,6 +76,8 @@ void CAnimator3D::UpdateData_Inst(CStructuredBuffer* _pBoneBuffer, UINT _iRow)
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_2, &m_iNextFrameIdx);
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &_iRow);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
+
+
 
 		UINT iGrounX = (iBoneCount / 256) + 1;
 		m_pBoneMtrl->Dispatch(iGrounX, 1, 1);

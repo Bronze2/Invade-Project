@@ -334,7 +334,6 @@ void CPlayerScript::Awake()
 	
 
 	m_fMoveSpeed = 300.f;
-
 }
 
 void CPlayerScript::Update()
@@ -501,13 +500,11 @@ void CPlayerScript::Update()
 		m_eState = PLAYER_STATE::DIE;
 	}
 
-
-
 	UseSkill();
 	StatusCheck();
 	GetDamage();
 	Transform()->SetLocalRot(vRot);
-	Transform()->SetLocalPos(vPos);
+	Transform()->SetLocalPos(vPos);  
 
 	m_FAnimation();
 
@@ -519,19 +516,19 @@ void CPlayerScript::LateUpdate()
 {
 	// animation.fx에서 if로 vecKeyFrame 변경해주면 어떨까
 
-	for (int i = 0; i < 29; i++) {
-		tMTBone* pSpineBone = &m_vecNewBones[i];
+	//for (int i = 0; i < 29; i++) {
+	//	tMTBone* pSpineBone = &m_vecNewBones[i];
 
-		Vec3 vTrans = pSpineBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
-		//cout << qRot1.x << ", " << qRot1.y << ", " << qRot1.z << ", " << qRot1.w << endl;
-		Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vTrans = Vec3(0.f, 0.f, 0.f);
+	//	Vec3 vTrans = pSpineBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+	//	//cout << qRot1.x << ", " << qRot1.y << ", " << qRot1.z << ", " << qRot1.w << endl;
+	//	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	//	vTrans = Vec3(0.f, 0.f, 0.f);
 
-		pSpineBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate = vTrans;
+	//	pSpineBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate = vTrans;
 
-		m_vecNewBones[i] = *pSpineBone;
-	}
-	MeshRender()->GetMesh()->SetBone(m_vecNewBones);
+	//	m_vecNewBones[i] = *pSpineBone;
+	//}
+	//MeshRender()->GetMesh()->SetBone(m_vecNewBones);
 }
 
 void CPlayerScript::SetType(ELEMENT_TYPE _iType)

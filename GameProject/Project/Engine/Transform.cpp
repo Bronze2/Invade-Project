@@ -69,7 +69,7 @@ void CTransform::FinalUpdate()
 		m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
 		
 		return;
-	}
+	}  
 
 	Matrix matTranslation = XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
 	Matrix matScale = XMMatrixScaling(m_vLocalScale.x, m_vLocalScale.y, m_vLocalScale.z);

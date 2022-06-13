@@ -125,18 +125,6 @@ Texture2D g_tex_6 : register(t6);
 
 StructuredBuffer<Matrix> g_arrFinalBoneMat : register(t7);
 
-
-struct tFrameTrans
-{
-    float4 vTranslate;
-    float4 vScale;
-    float4 qRot;
-};
-
-StructuredBuffer<tFrameTrans> g_arrFrameTrans:register(t10);
-StructuredBuffer<matrix> g_arrOffset:register(t11);
-RWStructuredBuffer<matrix> g_arrFinalMat : register(u0);
-
 Texture2D g_tex_anim2D : register(t12);
 
 // Sampler

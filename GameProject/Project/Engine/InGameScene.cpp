@@ -156,7 +156,7 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
 	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
-
+	
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
 	pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
@@ -183,7 +183,7 @@ void CInGameScene::Init()
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 	pObject->GetScript<CPlayerScript>()->Init();
-
+	
 	FindLayer(L"Blue")->AddGameObject(pObject, false);
 
 	CGameObject* pEmptyPlayer = new CGameObject;
@@ -191,8 +191,8 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
+	pMainCam->Transform()->SetLocalPos(Vec3(-250, 100, -50));		// -300, 130, -50
+	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-0.f)));		// -15.f
 
 	pEmptyCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
 	pEmptyCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
@@ -229,6 +229,7 @@ void CInGameScene::Init()
 	pObject->AddChild(pBow);
 	pBow->GetScript<CBowScript>()->SetPlayer(pObject);
 	pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
+
 
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;

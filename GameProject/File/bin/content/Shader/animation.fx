@@ -66,7 +66,35 @@ void MatrixRotationQuaternion(in float4 Quaternion, out matrix _outMat)
     _outMat = M;
     
 }
-void MatrixAffineTransformation(in float4 Scaling, in float4 RotationOrigin, in float4 RotationQuaternion, in float4 Translation, out matrix _outMat)
+
+void MatrixRotationAxis(in float rad, out matrix _OutMatrix)
+{
+    matrix mRotate = (matrix)0.f;
+    mRotate[0][0] = 1.f;
+    mRotate[0][0] = 1.0f;
+    mRotate[0][1] = 0.0f;
+    mRotate[0][2] = 0.0f;
+    mRotate[0][3] = 0.0f;
+
+    mRotate[1][0] = 0.0f;
+    mRotate[1][1] = cos(rad);
+    mRotate[1][2] = sin(rad);
+    mRotate[1][3] = 0.0f;
+
+    mRotate[2][0] = 0.0f;
+    mRotate[2][1] = -sin(rad);
+    mRotate[2][2] = cos(rad);
+    mRotate[2][3] = 0.0f;
+
+    mRotate[3][0] = 0.0f;
+    mRotate[3][1] = 0.0f;
+    mRotate[3][2] = 0.0f;
+    mRotate[3][3] = 1.0f;
+    
+    _OutMatrix = mRotate;
+}
+
+void MatrixAffineTransformation(in float4 Scaling, in float rad, in float4 RotationOrigin, in float4 RotationQuaternion, in float4 Translation, out matrix _outMat)
 {
     matrix MScaling = (matrix) 0.f;
     MScaling._11_22_33 = Scaling.xyz;
@@ -74,6 +102,11 @@ void MatrixAffineTransformation(in float4 Scaling, in float4 RotationOrigin, in 
     float4 vRotationOrigin = float4(RotationOrigin.xyz, 0.f);
     float4 vTranslation = float4(Translation.xyz, 0.f);
     
+    matrix mRotateAxis = (matrix)0.f;
+    MatrixRotationAxis(rad, mRotateAxis);
+    // 여기서 matRot 곱해주자
+    MScaling = mul(MScaling, mRotateAxis);
+
     matrix mRotation = (matrix) 0.f;
     MatrixRotationQuaternion(RotationQuaternion, mRotation);
     matrix M = MScaling;
@@ -174,29 +207,46 @@ float4 QuternionSlerp(in float4 _vQ1, in float4 _vQ2, float _fRatio)
 }
 
 
+struct tFrameTrans
+{
+    float4 vTranslate;
+    float4 vScale;
+    float4 qRot;
+};
+
+StructuredBuffer<tFrameTrans> g_arrFrameTrans:register(t10);
+StructuredBuffer<matrix> g_arrOffset:register(t11);
+RWStructuredBuffer<matrix> g_arrFinalMat : register(u0);
 
 
 
 [numthreads(256,1,1)]
 void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 {
-    if( g_int_0 <=_iThreadIdx.x)
+    if (g_int_0 <= _iThreadIdx.x)
         return;
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
-    
+
     matrix matBone = (matrix) 0.f;
-    
+
     uint iFrameDataIndex = g_int_0 * g_int_1 + _iThreadIdx.x;
-    uint iFrameDataNextIndex = (g_int_0 * (g_int_2)) + _iThreadIdx.x;
+    uint iFrameDataNextIndex = (g_int_0 *  (g_int_2)) + _iThreadIdx.x;
+
+
     float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iFrameDataNextIndex].vScale, g_float_0);
     float4 vTranslate = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iFrameDataNextIndex].vTranslate, g_float_0);
-    float4 qRot= QuternionSlerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataNextIndex].qRot, g_float_0);
-    
-    MatrixAffineTransformation(vScale, vQZero, qRot, vTranslate, matBone);
-    
+    float4 qRot = QuternionSlerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataNextIndex].qRot, g_float_0);
+
+    float rad = 0.f;
+    if (g_float_2 > 0.f) {
+        if ((g_int_0 * g_int_3 + _iThreadIdx.x >= 5 && g_int_0 * g_int_3 + _iThreadIdx.x <= 7)) {
+            rad = radians(-g_float_1 * 10);
+        }
+    }
+
+    MatrixAffineTransformation(vScale, rad, vQZero, qRot, vTranslate, matBone);
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
-    g_arrFinalMat[g_int_0*g_int_3+_iThreadIdx.x] = mul(matOffset, matBone);
+
+    g_arrFinalMat[g_int_0 * g_int_3 + _iThreadIdx.x] = mul(matOffset, matBone);
 }
-
-
 #endif

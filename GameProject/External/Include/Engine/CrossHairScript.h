@@ -11,6 +11,8 @@ private:
 	Vec3 m_vDir;
 	Vec3 m_vPos;
 
+	Vec3 m_vMouseDir;
+
 	CGameObject* m_pMainCam;
 
 public:
@@ -19,6 +21,8 @@ public:
 
 	const Vec3& GetDir() { return m_vDir; }
 	const Vec3& GetPos() { return m_vPos; }
+
+	const Vec3& GetMouseDir() { return m_vMouseDir; }
 
 	void SetMainCam(CGameObject* _cam) { m_pMainCam = _cam; }
 

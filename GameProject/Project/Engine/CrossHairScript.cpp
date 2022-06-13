@@ -50,6 +50,24 @@ void CCrossHairScript::Update()
 	vPos.y += vScale.y / 2;
 
 	Transform()->SetLocalPos(vPos);
+
+	// MousePos 
+	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
+	Vec3 vMousePos = Vec3(-res.fWidth / 2 + pMousePos.x, res.fHeight / 2 - pMousePos.y, 1);
+	
+	vProj = vTargetPos;
+
+	vView;
+	vView.x = vProj.x / matProj._11;
+	vView.y = vProj.y / matProj._22;
+	vView.z = vProj.z;
+
+	matViewInv = m_pMainCam->Camera()->GetViewInvMat();
+
+	m_vMouseDir.x = vView.x * matViewInv._11 + vView.y * matViewInv._21 + vView.z * matViewInv._31;
+	m_vMouseDir.y = vView.x * matViewInv._12 + vView.y * matViewInv._22 + vView.z * matViewInv._32;
+	m_vMouseDir.z = vView.x * matViewInv._13 + vView.y * matViewInv._23 + vView.z * matViewInv._33;
+	m_vMouseDir.Normalize();
 }
 
 CCrossHairScript::CCrossHairScript() :CScript(0)

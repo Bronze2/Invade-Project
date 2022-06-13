@@ -815,7 +815,6 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
 	AddRes(L"Animation3DUpdateShader", pShader);
 
-
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\BillBoard.fx", "VS_BillBoard", "vs_5_0");
 	pShader->CreateGeometryShader(L"Shader\\BillBoard.fx", "GS_BillBoard", "gs_5_0");

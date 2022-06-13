@@ -37,9 +37,7 @@ private:
 
     bool m_bMaxCharged;
     bool m_bCheckDegree;
-
-
-    
+      
 
     CGameObject* m_pPlayer;
 public:
