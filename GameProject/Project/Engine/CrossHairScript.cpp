@@ -6,14 +6,16 @@
 #include "ConstantBuffer.h"
 #include "RenderMgr.h"
 #include "Camera.h"
+#include "BowScript.h"
 
 void CCrossHairScript::Init()
 {
+	m_vRestoreScale = Transform()->GetLocalScale();
 }
 
 void CCrossHairScript::Update()
 {
-	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
+	Vec3 vScale = Transform()->GetLocalScale();
 	Matrix matProj = m_pMainCam->Camera()->GetProjMat();
 
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
@@ -45,29 +47,24 @@ void CCrossHairScript::Update()
 
 	//m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
 
+	CGameObject* pBow = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0])->GetChild()[1];
+	float fSpeed = pBow->GetScript<CBowScript>()->GetArrowSpeed();
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
+		if (vScale.x >= 30.f && vScale.y >= 30.f) {
+			vScale.x -= 170.f * DT;
+			vScale.y -= 170.f * DT;
+		}
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+		vScale = m_vRestoreScale;
+	}
+
 	Vec3 vPos = vTargetPos;
-	vPos.x -= vScale.x / 2;
-	vPos.y += vScale.y / 2;
+	vPos.x -= m_vRestoreScale.x / 2.f;
+	vPos.y += m_vRestoreScale.y / 2.f;
 
 	Transform()->SetLocalPos(vPos);
-
-	// MousePos 
-	POINT pMousePos = CKeyMgr::GetInst()->GetMousePos();
-	Vec3 vMousePos = Vec3(-res.fWidth / 2 + pMousePos.x, res.fHeight / 2 - pMousePos.y, 1);
-	
-	vProj = vTargetPos;
-
-	vView;
-	vView.x = vProj.x / matProj._11;
-	vView.y = vProj.y / matProj._22;
-	vView.z = vProj.z;
-
-	matViewInv = m_pMainCam->Camera()->GetViewInvMat();
-
-	m_vMouseDir.x = vView.x * matViewInv._11 + vView.y * matViewInv._21 + vView.z * matViewInv._31;
-	m_vMouseDir.y = vView.x * matViewInv._12 + vView.y * matViewInv._22 + vView.z * matViewInv._32;
-	m_vMouseDir.z = vView.x * matViewInv._13 + vView.y * matViewInv._23 + vView.z * matViewInv._33;
-	m_vMouseDir.Normalize();
+	Transform()->SetLocalScale(vScale);
 }
 
 CCrossHairScript::CCrossHairScript() :CScript(0)

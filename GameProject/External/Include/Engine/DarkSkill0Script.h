@@ -19,6 +19,7 @@ public:
 	CDarkSkill0Script();
 	virtual ~CDarkSkill0Script();
 
+	virtual void Awake();
 	virtual void Update();
 
 

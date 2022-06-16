@@ -130,11 +130,27 @@ void CArrowScript::Update()
 	
 		Vec4 vDir = Vec4(m_vDir, 1.f);
 		m_pParticle->ParticleSystem()->SetDir(vDir);
+
+		CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
+		Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
+		float fDegree = XMConvertToDegrees(vCamRot.x);
+		
 		vPos.x += m_vDir.x * m_fSpeed * DT;
-		vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
 		vPos.z += m_vDir.z * m_fSpeed * DT;
 
-		m_fVelocityY -= (GRAVITY * DT) * 4;
+		if (fDegree <= -3.f) {
+			vPos.y += m_vDir.y * m_fSpeed * DT;
+			m_fVelocityY -= (GRAVITY * DT) * 6;
+		}
+		else if (fDegree >= 5.f) {
+			vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
+			m_fVelocityY -= (GRAVITY * DT) * 6;
+		}
+		else {
+			vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
+			m_fVelocityY -= (GRAVITY * DT) * 4;
+		}
+
 		m_fFallSpeed += m_fVelocityY;
 		vPos.y += m_fFallSpeed * DT;
 

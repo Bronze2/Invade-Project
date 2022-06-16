@@ -831,7 +831,6 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"BillBoardShader", pShader);
 
-
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\terrain.fx", "VS_Terrain", "vs_5_0");
 	pShader->CreateHullShader(L"Shader\\terrain.fx", "HS_Terrain", "hs_5_0");

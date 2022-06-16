@@ -26,7 +26,7 @@ void CCameraScript::Update()
 
         if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
             Init();
-            //m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
+            m_tEffectType = CAMERA_EFFECT_TYPE::ZOOMIN;
         }
 
         if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
@@ -49,15 +49,15 @@ void CCameraScript::Update()
                         m_fDegree = -5.f;
                         vRot.x = XMConvertToRadians(m_fDegree);
                     }
-                    else if (m_fDegree > 15) {
-                        m_fDegree = 15.f;
+                    else if (m_fDegree > 10) {
+                        m_fDegree = 10.f;
                         vRot.x = XMConvertToRadians(m_fDegree);
                     }
                 }
             }
             break;
         case CAMERA_EFFECT_TYPE::ZOOMIN:
-            vRot.x = 0.f;
+            //vRot.x = 0.f;
             vPos = CameraZoom(vPos);
             break;
         case CAMERA_EFFECT_TYPE::SHAKING:
@@ -120,7 +120,7 @@ void CCameraScript::Init()
     CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
 
     m_vRestorePos = Transform()->GetLocalPos();
-    m_vZoomRestoreFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+    m_vZoomRestoreFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
     m_fShakeNum = 1.0f;
     m_fZoomSpeed = 200.0f;

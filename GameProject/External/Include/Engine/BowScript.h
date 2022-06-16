@@ -56,6 +56,8 @@ public:
     void SetBoneIdx(int _boneIdx) { m_iTargetBoneIdx = _boneIdx; }
 
     void SetState(BOW_STATE _eState) { m_eState = _eState; }
+
+    float GetArrowSpeed() { return m_fArrowSpeed; }
     
     CBowScript();
     virtual ~CBowScript();

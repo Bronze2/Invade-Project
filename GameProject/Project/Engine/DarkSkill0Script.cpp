@@ -10,6 +10,10 @@ CDarkSkill0Script::~CDarkSkill0Script()
 {
 }
 
+void CDarkSkill0Script::Awake() 
+{
+}
+
 void CDarkSkill0Script::Update()
 {
 	if (nullptr == m_pSkill)return;

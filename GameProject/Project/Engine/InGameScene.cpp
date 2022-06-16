@@ -1232,7 +1232,7 @@ void CInGameScene::Init()
 	pUICrossHair->AddComponent(new CStaticUI);
 	pUICrossHair->AddComponent(new CCrossHairScript);
 
-	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
+	Vec3 vScale = Vec3(150.f, 150.f, 1.f);
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 
 	pUICrossHair->Transform()->SetLocalPos(Vec3((-vScale.x / 2), (vScale.y / 2 - res.fHeight/5), 1.f));
@@ -1244,11 +1244,29 @@ void CInGameScene::Init()
 	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"BaseLine");
 	pUICrossHair->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pCrossHairTex.GetPointer());
 
-	pUICrossHair->GetScript<CCrossHairScript>()->SetMainCam(pEmptyCam);
+	pUICrossHair->GetScript<CCrossHairScript>()->SetMainCam(pMainCam);
+	pUICrossHair->GetScript<CCrossHairScript>()->Init();
 
 	FindLayer(L"UI")->AddGameObject(pUICrossHair);
 
 
+	//CGameObject* pDarkUI = new CGameObject;
+	//pDarkUI->SetName(L"UIDark");
+	//pDarkUI->FrustumCheck(false);
+	//pDarkUI->AddComponent(new CTransform);
+	//pDarkUI->AddComponent(new CMeshRender);
+	//pDarkUI->AddComponent(new CStaticUI);
+
+	//pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	//pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth / 2, res.fHeight / 2, 1.f));
+	//pDarkUI->StaticUI()->SetCamera(pUICam->Camera());
+
+	//pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pDarkUI->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	//Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle");
+	//pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
+
+	//FindLayer(L"UI")->AddGameObject(pDarkUI);
 
 
 	CGameObject* m_pArrow = new CGameObject;
