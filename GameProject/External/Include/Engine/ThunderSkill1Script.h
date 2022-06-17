@@ -17,6 +17,7 @@ private:
 	UINT m_iLayerIdx;
 	bool m_bStart = false;
 
+
 public:
 	void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }
 	void Collision();

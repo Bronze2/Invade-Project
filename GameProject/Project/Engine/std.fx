@@ -209,7 +209,8 @@ TEX_OUTPUT VS_Range2D(TEX_INPUT _input)
 
 float4 PS_Range2D(TEX_OUTPUT _input) : SV_Target
 {
-    if (g_int_0)
+    int value = g_int_0;
+    if (value == 2)
         return float4(0.9f, 0.2f, 0.f, 1.f);
     else
         return float4(0.f, 0.2f, 0.9f, 1.f);

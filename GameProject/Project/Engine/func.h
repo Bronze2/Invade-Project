@@ -67,4 +67,4 @@ void CreateHitParticleObject(const Vec3& _Pos,const wstring& _strKey);
 void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey);
 
 
-void CreateThunderObject(const Vec3& _Pos);
+void CreateThunderObject(const Vec3& _Pos,const UINT& _iLayerIdx);

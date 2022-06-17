@@ -153,7 +153,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -182,7 +182,7 @@ void CInGameScene::Init()
 	pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 	pObject->GetScript<CPlayerScript>()->Init();
 
-	FindLayer(L"Blue")->AddGameObject(pObject, false);
+	FindLayer(L"Red")->AddGameObject(pObject, false);
 
 	CGameObject* pEmptyPlayer = new CGameObject;
 	pEmptyPlayer->AddComponent(new CTransform);		
@@ -1273,9 +1273,14 @@ void CInGameScene::Init()
 	//pPlayer
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
-
-
-
+	Ptr<CMaterial> m_pMtrl = new CMaterial;
+	m_pMtrl->SetName(L"Texture00");
+	m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
+	m_pMtrl = new CMaterial;
+	m_pMtrl->SetName(L"Texture01");
+	m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
 	
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");

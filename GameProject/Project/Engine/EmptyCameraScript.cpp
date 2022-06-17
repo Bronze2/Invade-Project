@@ -35,7 +35,7 @@ void CEmptyCameraScript::Update()
 void CEmptyCameraScript::Init()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
+	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Red")->GetParentObj()[0]);
 
 	m_vShootPos = (pPlayer->Transform()->GetLocalPos() + Vec3(0.f, 0.f, 130.f)) + Transform()->GetWorldDir(DIR_TYPE::FRONT) * 500.f;
 	m_vShootDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);

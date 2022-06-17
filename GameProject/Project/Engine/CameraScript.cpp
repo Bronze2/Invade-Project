@@ -117,7 +117,7 @@ Vec3& CCameraScript::CameraZoom(Vec3 _vPos)
 void CCameraScript::Init()
 {
     CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-    CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
+    CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Red")->GetParentObj()[0]);
 
     m_vRestorePos = Transform()->GetLocalPos();
     m_vZoomRestoreFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);

@@ -137,15 +137,15 @@ void CArrowScript::Update()
 		vDir.z = a;
 
 		m_pParticle->ParticleSystem()->SetDir(vDir);
-	//	vPos.x += m_vDir.x * m_fSpeed * DT;
+		vPos.x += m_vDir.x * m_fSpeed * DT;
 	//
-	//	vPos.z += m_vDir.z * m_fSpeed * DT;
+		vPos.z += m_vDir.z * m_fSpeed * DT;
 
 		m_fVelocityY -= (GRAVITY * DT) * 4;
 		m_fFallSpeed += m_fVelocityY;
 		if (nullptr == m_pSkill || ELEMENT_TYPE::WIND != m_pSkill->eElementType) {
-	//		vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
-	//		vPos.y += m_fFallSpeed * DT;
+			vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
+			vPos.y += m_fFallSpeed * DT;
 		}
 
 		if (nullptr != m_pSkill) {
@@ -154,7 +154,7 @@ void CArrowScript::Update()
 
 					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
 					vPos3.y = 1.f;
-					CreateThunderObject(vPos3);
+					CreateThunderObject(vPos3, m_iLayerIdx);
 					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 				}
 			}
@@ -379,7 +379,7 @@ void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
 {
 	Vec3 vPos = GetObj()->Transform()->GetWorldPos();
 	vPos.y = 1.f;
-	CreateThunderObject(vPos);
+	CreateThunderObject(vPos, m_iLayerIdx);
 	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
 		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));

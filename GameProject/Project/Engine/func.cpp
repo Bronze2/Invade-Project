@@ -367,7 +367,7 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
 #include "ThunderSkill1Script.h"
 
 #include "MeshRender.h"
-void CreateThunderObject(const Vec3& _Pos)
+void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 {
 	CGameObject* pThunderObject = new CGameObject;
 	pThunderObject->AddComponent(new CTransform);
@@ -382,19 +382,36 @@ void CreateThunderObject(const Vec3& _Pos)
 	pThunderObject->ParticleSystem()->SetMaxLifeTime(3.f);
 	pThunderObject->FrustumCheck(false);
 	pThunderObject->SetActive(true);
+	Ptr<CTexture> pMagicTexture = nullptr;
+	if (3==_iLayerIdx) {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle");
+	}
+	else {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle2");
+	}
 
 	
-	
+
+	CGameObject* pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetLocalPos(Vec3(_Pos.x, 2.f, _Pos.z));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
+	if (3 == _iLayerIdx) {
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+	}
+	else {
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture01"));
+	}
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pMagicTexture.GetPointer());
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetTarget(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetLayer(_iLayerIdx);
 	pThunderObject->Transform()->SetLocalPos(_Pos);
-	CGameObject* pRangeObject = new CGameObject;
-	pRangeObject->AddComponent(new CTransform);
-	pRangeObject->AddComponent(new CMeshRender);
-	pRangeObject->SetName(L"Range");
-	pRangeObject->Transform()->SetLocalPos(Vec3(0.f, 5.f, 0.f));
-	pRangeObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"ColCircleMesh2"));
-	pRangeObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"RangeMtrl"));
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
-
-	pThunderObject->AddChild(pRangeObject);
+	
 }
 

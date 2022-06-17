@@ -4,7 +4,7 @@
 void CEmptyPlayerScript::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject * pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
+	CGameObject * pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Red")->GetParentObj()[0]);
 
 	Vec3 vPos = pPlayer->Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
