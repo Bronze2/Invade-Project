@@ -379,14 +379,31 @@ void CIMGUIMgr::Progress()
             bool reclaim_focus = false;
             ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
             if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
-                ImGui::SetKeyboardFocusHere(0);
+              
+                if (!bChat) {
+                    ImGui::SetKeyboardFocusHere(0);
+                    bChat = true;
+                  
+                }
+                else {
+                    bChat = false;
+           
+                  
+                  
+                }
+               
             }
 
-            if (ImGui::InputText("Input", buffer, IM_ARRAYSIZE(buffer), input_text_flags, &TextEditCallbackStub, (void*)this))
-            {
-                ImGui::SetKeyboardFocusHere(-1);
+            if (bChat) {
+                if (ImGui::InputText("", buffer, IM_ARRAYSIZE(buffer)))
+                {
+                    //          ImGui::SetKeyboardFocusHere(-1);
+                }
+
             }
 
+            ImGui::SetKeyboardFocusHere(-1);
+           
 
         }
         ImGui::End();
