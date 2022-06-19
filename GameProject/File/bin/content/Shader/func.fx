@@ -106,6 +106,7 @@ struct tSkinningInfo
     float3 vBinormal;
     float3 vNormal;
 };
+
 matrix GetBoneMat(int _iBoneIdx, int _iRowIdx)
 {
     return g_arrFinalBoneMat[(g_int_1 * _iRowIdx) + _iBoneIdx];

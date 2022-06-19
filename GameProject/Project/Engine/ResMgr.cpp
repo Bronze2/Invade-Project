@@ -603,6 +603,26 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"TexShader", pShader);
 
+	// ==============
+	// Texture Shader
+	// ==============
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Tex", "ps_5_0");
+
+	// BlendState 설정
+	pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
+
+	// DSState
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"DarkTexShader", pShader);
+
 	// =================
 	// Collider2D Shader
 	// =================
@@ -668,7 +688,6 @@ void CResMgr::CreateDefaultShader()
 	
 	pShader->Create(SHADER_POV::FORWARD);		//DEFERRED
 	AddRes(L"Std3DShader", pShader);
-
 
 	// =============
 	// Skybox Shader

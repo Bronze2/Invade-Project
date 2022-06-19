@@ -74,7 +74,6 @@ public:
     void Init();
     virtual void Awake();
     virtual void Update();
-    virtual void LateUpdate();
     void SetType(ELEMENT_TYPE _iType);
     UINT GetType() { return (UINT)m_iType; }
   

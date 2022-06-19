@@ -133,7 +133,7 @@ void CArrowScript::Update()
 
 		CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
 		Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
-		float fDegree = XMConvertToDegrees(vCamRot.x);
+		float fDegree = XMConvertToDegrees(vRot.x);
 		
 		vPos.x += m_vDir.x * m_fSpeed * DT;
 		vPos.z += m_vDir.z * m_fSpeed * DT;

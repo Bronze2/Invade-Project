@@ -239,14 +239,13 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 
     float rad = 0.f;
     if (g_float_2 > 0.f) {
-        if ((g_int_0 * g_int_3 + _iThreadIdx.x >= 5 && g_int_0 * g_int_3 + _iThreadIdx.x <= 7)) {
+        if ((g_int_0 * g_int_3 + _iThreadIdx.x >= 5 && g_int_0 * g_int_3 + _iThreadIdx.x <= 7)) {   
             rad = radians(-g_float_1 * 5);
         }
     }
 
     MatrixAffineTransformation(vScale, rad, vQZero, qRot, vTranslate, matBone);
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
-
     g_arrFinalMat[g_int_0 * g_int_3 + _iThreadIdx.x] = mul(matOffset, matBone);
 }
 #endif

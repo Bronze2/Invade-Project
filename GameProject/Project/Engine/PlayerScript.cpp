@@ -107,6 +107,34 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_HIGH:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_HIGH);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_HIGH, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_HIGH;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK);
+			}
+		}
+		break;
 		case PLAYER_STATE::DEMAGED:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
@@ -222,6 +250,31 @@ void CPlayerScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+						m_eState = PLAYER_STATE::IDLE;
+						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
+					}
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH");
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+					}
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_HIGH:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
 						m_eState = PLAYER_STATE::IDLE;
 						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
@@ -387,10 +440,13 @@ void CPlayerScript::Update()
 	}
 
 	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		m_eState = PLAYER_STATE::WALK;
-		if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
+		if (KEY_TAB(KEY_TYPE::KEY_LSHIFT))
 		{
 			m_eState = PLAYER_STATE::RUN;
+		}
+		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN) || KEY_NONE(KEY_TYPE::KEY_LBTN))
+		{
+			m_eState = PLAYER_STATE::WALK;
 		}
 
 
@@ -468,17 +524,30 @@ void CPlayerScript::Update()
 
 		m_FColCheck(vPos3, vPos);
 	}
+		
+	Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
+	float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 		// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
 		vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
 
-		m_eState = PLAYER_STATE::ATTACK_READY;
+		if (fCamRotDegree <= -3.f) {
+			m_eState = PLAYER_STATE::ATTACK_READY_HIGH;
+		}
+		else {
+			m_eState = PLAYER_STATE::ATTACK_READY;
+		}
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		m_eState = PLAYER_STATE::ATTACK;
+		if (fCamRotDegree <= -3.f) {
+			m_eState = PLAYER_STATE::ATTACK_HIGH;
+		}
+		else {
+			m_eState = PLAYER_STATE::ATTACK;
+		}
 	}
 	if (m_bMoveCheck) {
 		vPos = vPos2;
@@ -510,25 +579,6 @@ void CPlayerScript::Update()
 
 	
 
-}
-
-void CPlayerScript::LateUpdate()
-{
-	// animation.fx에서 if로 vecKeyFrame 변경해주면 어떨까
-
-	//for (int i = 0; i < 29; i++) {
-	//	tMTBone* pSpineBone = &m_vecNewBones[i];
-
-	//	Vec3 vTrans = pSpineBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
-	//	//cout << qRot1.x << ", " << qRot1.y << ", " << qRot1.z << ", " << qRot1.w << endl;
-	//	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	//	vTrans = Vec3(0.f, 0.f, 0.f);
-
-	//	pSpineBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate = vTrans;
-
-	//	m_vecNewBones[i] = *pSpineBone;
-	//}
-	//MeshRender()->GetMesh()->SetBone(m_vecNewBones);
 }
 
 void CPlayerScript::SetType(ELEMENT_TYPE _iType)

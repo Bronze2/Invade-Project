@@ -116,8 +116,8 @@ CSceneMgr::~CSceneMgr()
 void CSceneMgr::Init()
 {
 	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
-
 	Ptr<CTexture> pBaseLine = CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
+	Ptr<CTexture> pDarkUI = CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\darkUI.png");
 
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
@@ -224,7 +224,9 @@ void CSceneMgr::Init()
 	Skill->fDamage = 20.f;
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
-	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); 
+	
+	Skill = new SKILL;
 	Skill->Name = L"Dark1";
 	Skill->Code = 5;
 	Skill->eSkillType = SKILL_TYPE::ACT;
@@ -235,6 +237,7 @@ void CSceneMgr::Init()
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
 	Skill = new SKILL;
 	Skill->Name = L"Thunder0";
 	Skill->Code = 6;
@@ -246,6 +249,7 @@ void CSceneMgr::Init()
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
 	Skill = new SKILL;
 	Skill->Name = L"Thunder1";
 	Skill->Code = 7;
@@ -271,6 +275,7 @@ void CSceneMgr::Init()
 	Skill->Sum = -25.f;
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+
 	Skill->Name = L"Fire1";
 	Skill->Code = 9;
 	Skill->eSkillType = SKILL_TYPE::ACT;

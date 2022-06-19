@@ -36,7 +36,7 @@ void CAnimator3D::UpdateData()
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_2, &m_iNextFrameIdx);
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &iRow);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
-		
+
 		float fDegree = 0;
 		float fIsPlayer = 0.f;
 		if (GetObj()->GetScript<CPlayerScript>() != nullptr) { 
@@ -47,7 +47,6 @@ void CAnimator3D::UpdateData()
 		}
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_1, &fDegree);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_2, &fIsPlayer);
-
 
 		UINT iGrounX = (iBoneCount / 256) + 1;
 		m_pBoneMtrl->Dispatch(iGrounX, 1, 1);

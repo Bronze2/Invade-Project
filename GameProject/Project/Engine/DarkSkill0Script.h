@@ -5,6 +5,7 @@ class CDarkSkill0Script :
 {
 private:
 	SKILL* m_pSkill;
+	CGameObject* m_pDarkUI;
 
 	CGameObject* m_pTarget;
 	bool m_bStart;

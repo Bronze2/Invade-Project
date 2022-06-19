@@ -155,7 +155,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
 	
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -172,12 +172,14 @@ void CInGameScene::Init()
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
 	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
-	pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // ���� �� �ȹ����� 81, 125
+	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100); // ���� �� �ȹ����� 81, 125
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 204, 226);
+	pNewAnimation->InsertAnimClip(L"ATTACK_HIGH", 226, 230);
 	pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
-	pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // ������ �� 240, 261
-	pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      // ������ �� 240, 261
+	pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -215,6 +217,10 @@ void CInGameScene::Init()
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
 	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
 
+	//Ptr<CMaterial> pBowMtrl = new CMaterial;
+	//pBowMtrl->DisableFileSave();
+	//pBowMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"BowStd3DShader"));
+	//pBow->MeshRender()->SetMaterial(pBowMtrl);
 	Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
 	pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
 
@@ -1250,23 +1256,26 @@ void CInGameScene::Init()
 	FindLayer(L"UI")->AddGameObject(pUICrossHair);
 
 
-	//CGameObject* pDarkUI = new CGameObject;
-	//pDarkUI->SetName(L"UIDark");
-	//pDarkUI->FrustumCheck(false);
-	//pDarkUI->AddComponent(new CTransform);
-	//pDarkUI->AddComponent(new CMeshRender);
-	//pDarkUI->AddComponent(new CStaticUI);
+	CGameObject* pDarkUI = new CGameObject;
+	pDarkUI->SetName(L"UIDark");
+	pDarkUI->FrustumCheck(false);
+	pDarkUI->AddComponent(new CTransform);
+	pDarkUI->AddComponent(new CMeshRender);
+	pDarkUI->AddComponent(new CStaticUI);
 
-	//pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
-	//pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth / 2, res.fHeight / 2, 1.f));
-	//pDarkUI->StaticUI()->SetCamera(pUICam->Camera());
+	pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
+	pDarkUI->StaticUI()->SetCamera(pUICam->Camera());
 
-	//pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//pDarkUI->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
-	//Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle");
-	//pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
+	pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
+	pDarkUIMtrl->DisableFileSave();
+	pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
+	Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
+	pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
 
-	//FindLayer(L"UI")->AddGameObject(pDarkUI);
+	FindLayer(L"UI")->AddGameObject(pDarkUI);
 
 
 	CGameObject* m_pArrow = new CGameObject;
