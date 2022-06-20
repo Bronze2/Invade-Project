@@ -117,7 +117,7 @@ void CSceneMgr::Init()
 {
 	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
 	Ptr<CTexture> pBaseLine = CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
-	Ptr<CTexture> pDarkUI = CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\darkUI.png");
+	Ptr<CTexture> pDarkUI = CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\darkUI01.png");
 
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");

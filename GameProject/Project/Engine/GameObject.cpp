@@ -344,7 +344,7 @@ void CGameObject::SetActive(bool _bTrue)
 			event.wParam = (DWORD_PTR)this;
 
 			CEventMgr::GetInst()->AddEvent(event);
-			
+			m_bActive = _bTrue;
 		}
 	}
 	else
@@ -358,6 +358,7 @@ void CGameObject::SetActive(bool _bTrue)
 			event.wParam = (DWORD_PTR)this;
 
 			CEventMgr::GetInst()->AddEvent(event);
+			m_bActive = _bTrue;
 		}
 	}
 }

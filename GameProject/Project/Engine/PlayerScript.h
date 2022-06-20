@@ -35,6 +35,7 @@ private:
     CGameObject* m_pHealParticle;
     CGameObject* m_pFlameParticle;
     CGameObject* m_pThunderParticle;
+    CGameObject* m_pDarkUI;
 
     bool m_bHealCheck;
     bool m_bFlameCheck;
@@ -63,8 +64,6 @@ private:
     CGameObject* m_pZSkillObject;
 
     vector<SKILL*> m_arrSkill;
-   
-    vector<tMTBone> m_vecNewBones;
 
     CGameObject* m_pBowObject;
 public:

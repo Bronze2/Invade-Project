@@ -8,6 +8,7 @@
 
 #include "ProjectileScript.h"
 
+#include "StaticUI.h"
 #include "BowScript.h"
 #include "ParticleSystem.h"
 #include "SkillMgr.h"
@@ -20,6 +21,7 @@
 #include "FireSkill0Script.h"
 #include "FireSkill1Script.h"
 #include "Collider3D.h"
+#include "RenderMgr.h"
 
 void CPlayerScript::m_FAnimation()
 {
@@ -328,8 +330,6 @@ void CPlayerScript::Init()
 		m_eState = PLAYER_STATE::IDLE;
 		m_ePrevState = PLAYER_STATE::IDLE;
 	}
-
-	m_vecNewBones = *MeshRender()->GetMesh()->GetBones();
 }
 
 void CPlayerScript::Awake()
@@ -384,6 +384,28 @@ void CPlayerScript::Awake()
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
 	GetObj()->AddChild(m_pThunderParticle);
+
+	m_pDarkUI = new CGameObject;
+	m_pDarkUI->SetName(L"UIDark");
+	m_pDarkUI->FrustumCheck(false);
+	m_pDarkUI->AddComponent(new CTransform);
+	m_pDarkUI->AddComponent(new CMeshRender);
+	m_pDarkUI->AddComponent(new CStaticUI);
+	
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
+
+	m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
+	pDarkUIMtrl->DisableFileSave();
+	pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	m_pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
+	Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
+	m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
+
+	m_pDarkUI->SetActive(false);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
 	
 
 	m_fMoveSpeed = 300.f;
@@ -644,6 +666,7 @@ void CPlayerScript::StatusCheck()
 	m_bHealCheck = false;
 	m_bFlameCheck = false;
 	m_bThunderCheck = false;
+	m_bDarkCheck = false;
 
 	if (m_pHealParticle->IsActive()) {
 		for (int i = 0; i < m_arrSkill.size(); ++i) {
@@ -684,6 +707,20 @@ void CPlayerScript::StatusCheck()
 
 
 	}
+
+	if (m_pDarkUI->IsActive()) {
+		for (int i = 0; i < m_arrSkill.size(); ++i) {
+			if (m_arrSkill[i]->eElementType == ELEMENT_TYPE::DARK) {
+				m_bDarkCheck = true;
+				break;
+			}
+		}
+		if (!m_bDarkCheck) {
+			m_pDarkUI->SetActive(false);
+		}
+
+
+	}
 }
 void CPlayerScript::UseSkill()
 {
@@ -716,9 +753,13 @@ void CPlayerScript::UseSkill()
 				DamageBySkill(m_tZSkill);
 				break;
 			case ELEMENT_TYPE::DARK:
-			{
+				for (int i = 0; i < m_arrEnemy.size(); ++i) {
+					if (nullptr != m_arrEnemy[i]->GetScript<CPlayerScript>()) {
+						m_arrEnemy[i]->GetScript<CPlayerScript>()->DamageBySkill(m_tZSkill);
+					}
+				}
 
-			}
+				DamageBySkill(m_tZSkill);
 				break;
 			default:
 			{	
@@ -768,6 +809,8 @@ void CPlayerScript::GetDamage()
 			case ELEMENT_TYPE::WATER:
 				m_pHealParticle->SetActive(true);
 				break;
+			case ELEMENT_TYPE::DARK:
+				m_pDarkUI->SetActive(true);
 			case ELEMENT_TYPE::FIRE:
 				m_pThunderParticle->SetActive(true);
 				break;

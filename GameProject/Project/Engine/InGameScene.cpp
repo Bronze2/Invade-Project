@@ -1243,9 +1243,12 @@ void CInGameScene::Init()
 
 	pUICrossHair->Transform()->SetLocalPos(Vec3((-vScale.x / 2), (vScale.y / 2 - res.fHeight/5), 1.f));
 	pUICrossHair->Transform()->SetLocalScale(vScale);
-	pUICrossHair->StaticUI()->SetCamera(pUICam->Camera());
 
 	pUICrossHair->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pCrossHairMtrl = new CMaterial;
+	pCrossHairMtrl->DisableFileSave();
+	pCrossHairMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pUICrossHair->MeshRender()->SetMaterial(pCrossHairMtrl);
 	pUICrossHair->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
 	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"BaseLine");
 	pUICrossHair->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pCrossHairTex.GetPointer());
@@ -1266,6 +1269,7 @@ void CInGameScene::Init()
 	pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
 	pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
 	pDarkUI->StaticUI()->SetCamera(pUICam->Camera());
+	pDarkUI->SetActive(false);
 
 	pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
