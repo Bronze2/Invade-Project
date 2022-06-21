@@ -598,11 +598,10 @@ void CPlayerScript::Update()
 	Vec3 vTrans = vHeadTrans + vTransDir * 30.f;
 	Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
 
-	Vec3 vHatRot = Vec3(XMConvertToRadians(-fCamRotDegree), 0.f, 0.f);
-	 
 	m_pHatObject->Transform()->SetLocalPos(vTrans);
 	m_pHatObject->Transform()->SetQuaternion(qHatRot);
-	m_pHatObject->Transform()->SetRevolutionRot(vHatRot);
+	m_pHatObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3), 0.f, 0.f));
+	m_pHatObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
 
 }
 
