@@ -10,6 +10,7 @@ private:
     Vec3 m_vLocalPos;
     Vec3 m_vLocalScale;
     Vec3 m_vLocalRot;
+    Vec3 m_vRevolutionRot;
 
     Vec3 m_vLocalDir[(UINT)DIR_TYPE::END];
     Vec3 m_vWorldDir[(UINT)DIR_TYPE::END];
@@ -48,7 +49,8 @@ public:
     void SetLocalRot(const Vec3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
     void LookAt(const Vec3& _vLook);
     void LookAt(const Vec3& _vLook, const Vec3& _vRot);
-
+    void SetRevolutionRot(const Vec3& _vRevRot) { m_vRevolutionRot = _vRevRot; }
+ 
    // const Vec3 GetLocalDir() { return m_vLocalDir; }
    
     Matrix LookAt(const Vec3& Eye, const Vec3& target, const Vec3& _Up);

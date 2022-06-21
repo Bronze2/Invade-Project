@@ -107,9 +107,9 @@ void CAnimator3D::FinalUpdate()
 
 	if (m_bBlendAnimation) 
 	{
-		m_fBlendFrame += 0.2f;
-		m_vecClipUpdateTime[m_iCurClip] += DT;
-		m_vecClipUpdateTime[m_iNextClip] += DT;
+		m_fBlendFrame += 0.3f;
+		m_vecClipUpdateTime[m_iCurClip] += (DT * m_fAnimationSpeed);
+		m_vecClipUpdateTime[m_iNextClip] += (DT * m_fAnimationSpeed);
 		if (nullptr == m_pAnimation) {
 			m_dCurTime = 0.f;
 		

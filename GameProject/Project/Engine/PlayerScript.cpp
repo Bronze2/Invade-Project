@@ -123,20 +123,6 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::ATTACK_HIGH:
-		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH")) {
-				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH");
-				GetObj()->Animator3D()->SetBlendState(true);
-				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_HIGH);
-				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_HIGH, 0.f);
-				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-				m_ePrevState = PLAYER_STATE::ATTACK_HIGH;
-				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK);
-			}
-		}
-		break;
 		case PLAYER_STATE::DEMAGED:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
@@ -272,19 +258,6 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::ATTACK_HIGH:
-		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_HIGH");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-						m_eState = PLAYER_STATE::IDLE;
-						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
-					}
-				}
-			}
-		}
-		break;
 		case PLAYER_STATE::DEMAGED:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
@@ -391,11 +364,9 @@ void CPlayerScript::Awake()
 	m_pDarkUI->AddComponent(new CTransform);
 	m_pDarkUI->AddComponent(new CMeshRender);
 	m_pDarkUI->AddComponent(new CStaticUI);
-	
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
 	m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
-
 	m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
 	pDarkUIMtrl->DisableFileSave();
@@ -403,17 +374,23 @@ void CPlayerScript::Awake()
 	m_pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
 	Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
 	m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
-
 	m_pDarkUI->SetActive(false);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
 	
+	Ptr<CMeshData> pHatMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\ggong.fbx");
+	m_pHatObject = pHatMesh->Instantiate();
+	m_pHatObject->MeshRender()->SetDynamicShadow(false);
+	m_pHatObject->FrustumCheck(false);
+	m_pHatObject->SetName(L"Hat");
+	m_pHatObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
+	GetObj()->AddChild(m_pHatObject);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->AddGameObject(m_pHatObject);
 
 	m_fMoveSpeed = 300.f;
 }
 
 void CPlayerScript::Update()
 {
-	
 	SkillCoolTimeCheck();
 	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -564,12 +541,13 @@ void CPlayerScript::Update()
 	}
 
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		if (fCamRotDegree <= -3.f) {
-			m_eState = PLAYER_STATE::ATTACK_HIGH;
-		}
-		else {
-			m_eState = PLAYER_STATE::ATTACK;
-		}
+		//if (fCamRotDegree <= -3.f) {
+		//	m_eState = PLAYER_STATE::ATTACK_HIGH;
+		//}
+		//else {
+		//	m_eState = PLAYER_STATE::ATTACK;
+		//}
+		m_eState = PLAYER_STATE::ATTACK;
 	}
 	if (m_bMoveCheck) {
 		vPos = vPos2;
@@ -599,7 +577,32 @@ void CPlayerScript::Update()
 
 	m_FAnimation();
 
-	
+	tMTBone* pHeadBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(7));
+	tMTBone* pChestBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(6));
+
+	Vec3 vChestTrans1 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+	Vec3 vChestTrans2 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+	Vec3 vTrans1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+	Vec3 vTrans2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+	Vec4 qRot1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].qRot;
+	Vec4 qRot2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
+
+	float fFactor = GetObj()->Animator3D()->GetRatio();
+
+	Vec3 vHeadTrans = Vec3::Lerp(vTrans1, vTrans2, fFactor);
+	Vec3 vChestTrans = Vec3::Lerp(vChestTrans1, vChestTrans2, fFactor);
+	Vec3 vTransDir = vHeadTrans - vChestTrans;
+	vTransDir.Normalize();
+	Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
+	vRotDir.Normalize();
+	Vec3 vTrans = vHeadTrans + vTransDir * 30.f;
+	Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
+
+	Vec3 vHatRot = Vec3(XMConvertToRadians(-fCamRotDegree), 0.f, 0.f);
+	 
+	m_pHatObject->Transform()->SetLocalPos(vTrans);
+	m_pHatObject->Transform()->SetQuaternion(qHatRot);
+	m_pHatObject->Transform()->SetRevolutionRot(vHatRot);
 
 }
 

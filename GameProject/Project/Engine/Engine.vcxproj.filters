@@ -34,6 +34,9 @@
     <FxCompile Include="std.fx">
       <Filter>FX</Filter>
     </FxCompile>
+    <FxCompile Include="trail.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation3D.cpp">
@@ -288,6 +291,7 @@
     <ClCompile Include="IMGUIMgr.cpp">
       <Filter>IMGUI\Mgr</Filter>
     </ClCompile>
+    <ClCompile Include="Trail.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -557,6 +561,7 @@
     <ClInclude Include="IMGUIMgr.h">
       <Filter>IMGUI\Mgr</Filter>
     </ClInclude>
+    <ClInclude Include="Trail.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">

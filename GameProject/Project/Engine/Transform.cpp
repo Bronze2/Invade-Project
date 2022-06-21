@@ -15,7 +15,8 @@ CTransform::CTransform()
 	, m_vLocalPos(Vec3(0.f, 0.f, 0.f))
 	, m_vLocalRot(Vec3(0.f, 0.f, 0.f))
 	, m_vLocalScale(Vec3(1.f, 1.f, 1.f))
-	, m_vQuaternion(Vec4(0.f,0.f,0.f,1.f))
+	, m_vQuaternion(Vec4(0.f, 0.f, 0.f, 1.f))
+	, m_vRevolutionRot(Vec3(0.f, 0.f, 0.f))
 	, m_bNotParent(false)
 {
 }
@@ -81,6 +82,10 @@ void CTransform::FinalUpdate()
 
 	auto rotMat = XMMatrixRotationQuaternion(XMLoadFloat4(&this->m_vQuaternion));
 
+
+	Matrix matRevRot = XMMatrixRotationX(m_vRevolutionRot.x);
+	matRevRot *= XMMatrixRotationY(m_vRevolutionRot.y);
+	matRevRot *= XMMatrixRotationZ(m_vRevolutionRot.z);
 	
 
 	static Vec3 arrDefault[(UINT)DIR_TYPE::END] = { Vec3::Right, Vec3::Up, Vec3::Front };
@@ -91,7 +96,7 @@ void CTransform::FinalUpdate()
 	}
 
 	// ���� x (ũ�� x ȸ�� x �̵�)(�������)
-	m_matWorld = matScale * matRot*rotMat * matTranslation;
+	m_matWorld = matScale * matRot*rotMat * matTranslation * matRevRot;
 	m_matLocal = m_matWorld;
 
 	if (m_bNotParent) {

@@ -66,6 +66,8 @@ private:
     vector<SKILL*> m_arrSkill;
 
     CGameObject* m_pBowObject;
+
+    CGameObject* m_pHatObject;
 public:
     void m_FAnimation();
 

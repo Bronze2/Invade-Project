@@ -104,7 +104,6 @@ void MatrixAffineTransformation(in float4 Scaling, in float rad, in float4 Rotat
     
     matrix mRotateAxis = (matrix)0.f;
     MatrixRotationAxis(rad, mRotateAxis);
-    // 여기서 matRot 곱해주자
     MScaling = mul(MScaling, mRotateAxis);
 
     matrix mRotation = (matrix) 0.f;

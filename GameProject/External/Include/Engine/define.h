@@ -320,6 +320,7 @@ enum class SHADER_POV
 	PARTICLE,
 	COMPUTE, // GPGPU
 	SHADOWMAP,
+	TRAIL,
 };
 // State Description
 
@@ -383,7 +384,6 @@ enum class PLAYER_STATE {
 	ATTACK_READY,
 	ATTACK,
 	ATTACK_READY_HIGH,
-	ATTACK_HIGH,
 	DEMAGED,
 	DIE,
 	END,

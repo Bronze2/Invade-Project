@@ -809,6 +809,20 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"ParticleShader", pShader);
 
+	//pShader = new CShader;
+	//pShader->CreateVertexShader(L"Shader\\trail.fx", "VS_Trail", "vs_5_0");
+	//pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
+	//pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
+
+	//pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
+
+	//pShader->Create(SHADER_POV::TRAIL, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
+
+	//pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
+
+	//AddRes(L"TrailShader", pShader);
+
 
 
 	// ======================

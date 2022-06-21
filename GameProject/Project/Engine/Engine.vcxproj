@@ -259,6 +259,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TowerScript.h" />
+    <ClInclude Include="Trail.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Transform.h" />
     <ClInclude Include="WaterSkill0Script.h" />
     <ClInclude Include="WaterSkill1Script.h" />
@@ -348,6 +351,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TowerScript.cpp" />
+    <ClCompile Include="Trail.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WaterSkill0Script.cpp" />
     <ClCompile Include="WaterSkill1Script.cpp" />
@@ -429,6 +435,7 @@ call EngineCopy.bat</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="trail.fx" />
     <FxCompile Include="value.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

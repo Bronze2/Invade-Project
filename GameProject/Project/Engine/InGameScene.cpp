@@ -163,22 +163,15 @@ void CInGameScene::Init()
 	pMainCam->Camera()->SetPlayer(pObject);
 	pMainCam->Camera()->SetbPlay(true);
 
-	// Specular
-	/*int isSpecular = 1;
-	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &isSpecular);*/
-	
-	//pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
-
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
-	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
-	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100); // ���� �� �ȹ����� 81, 125
-	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
-	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
-	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 204, 226);
-	pNewAnimation->InsertAnimClip(L"ATTACK_HIGH", 226, 230);
-	pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
-	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      // ������ �� 240, 261
+	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);   
+	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
+	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 220, 235);
+	pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      // ������ �� 240, 261		
 	pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
@@ -217,10 +210,6 @@ void CInGameScene::Init()
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
 	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
 
-	//Ptr<CMaterial> pBowMtrl = new CMaterial;
-	//pBowMtrl->DisableFileSave();
-	//pBowMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"BowStd3DShader"));
-	//pBow->MeshRender()->SetMaterial(pBowMtrl);
 	Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
 	pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
 
