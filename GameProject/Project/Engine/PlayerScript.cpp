@@ -359,6 +359,11 @@ void CPlayerScript::Update()
 		m_bCheckDegree = false;
 	}
 
+	if (bChat) {
+		return;
+	}
+
+
 
 
 	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
@@ -505,6 +510,8 @@ void CPlayerScript::Update()
 void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 {
 	m_iType = _iType;
+
+	//스킬 설정 
 	switch (m_iType)
 	{
 	case ELEMENT_TYPE::WATER:
@@ -608,6 +615,7 @@ void CPlayerScript::StatusCheck()
 }
 void CPlayerScript::UseSkill()
 {
+	//스킬 사용시
 
 	if (m_bThunderCheck)
 		return;

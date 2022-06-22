@@ -353,19 +353,23 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
 	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.3f, 0.3f, 0.4f, 0.5f));
-	pHitParticle->ParticleSystem()->SetStartScale(100.f);
-	pHitParticle->ParticleSystem()->SetEndScale(10.f);
+	pHitParticle->ParticleSystem()->SetStartScale(500.f);
+	pHitParticle->ParticleSystem()->SetEndScale(100.f);
 	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.5f);
 	pHitParticle->GetScript<CParticleScript>()->SetTime();
-	pHitParticle->ParticleSystem()->SetMinLifeTime(1.f);
-	pHitParticle->ParticleSystem()->SetMaxLifeTime(1.5f);
+	pHitParticle->ParticleSystem()->SetMinLifeTime(3.f);
+	pHitParticle->ParticleSystem()->SetMaxLifeTime(3.f);
 	pHitParticle->FrustumCheck(false);
+
+	//불스킬 터질시
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
 
 }
 #include "ThunderSkill1Script.h"
 
+
+//번개스킬 생성시
 #include "MeshRender.h"
 void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 {
@@ -390,6 +394,7 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle2");
 	}
 
+	//
 	
 
 	CGameObject* pObject = new CGameObject;

@@ -179,6 +179,17 @@ void CArrowScript::Update()
 
 
 }
+bool CArrowScript::M_FLengthCheck()
+{
+	Vec3 vPos = Transform()->GetWorldPos();
+	float value = sqrt(pow(m_vStartPos.x - vPos.x, 2) + pow(m_vStartPos.y - vPos.y, 2) + pow(m_vStartPos.z - vPos.z, 2));
+	if (value > 500.f) {
+		return true;
+	}
+
+	return false;
+}
+
 
 void CArrowScript::Init()
 {

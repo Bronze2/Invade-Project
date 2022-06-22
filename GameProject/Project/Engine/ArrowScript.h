@@ -48,6 +48,8 @@ private:
     UINT m_iDamage;
     SKILL* m_pSkill;
     CGameObject* m_pPlayer;
+
+ 
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }
@@ -57,6 +59,7 @@ public:
     virtual void Awake();
     virtual void Update();
 
+    bool M_FLengthCheck();
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
    
     void SetFallSpeed(float _fSpeed) { m_fFallSpeed = _fSpeed; }

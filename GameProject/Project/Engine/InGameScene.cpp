@@ -153,7 +153,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
