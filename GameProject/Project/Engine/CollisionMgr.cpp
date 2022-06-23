@@ -157,7 +157,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 	}
 
 }
-
+	
 void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 {
 	const vector<CGameObject*>& vecObj1 = _pLayer1->GetObjects();

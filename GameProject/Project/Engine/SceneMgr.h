@@ -46,6 +46,8 @@ private:
 	map<int, map<int,arrowMove>> m_arrow;
 
 public:
+
+	CScene* GetCurScene();
 	void Init();
 	void Update();
 	void Update_Tool();
@@ -98,7 +100,6 @@ public:
 
 	minioninfo get_minioninfo(int id) { return m_minion[id]; };
 	void set_minioninfoState(int id, MINION_STATE state) { m_minion[id].state = state; }
-	CScene* GetCurScene();
 	void ChangeScene(CScene* _pNextScene);
 	void ChangeScene(SCENE_TYPE _Type);
 	void EnterGame();

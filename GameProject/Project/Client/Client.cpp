@@ -14,9 +14,6 @@
 #pragma comment(lib,"Engine/Engine.lib")
 #endif
 
-#include <Engine/imgui_impl_win32.h>
-#include <Engine/imgui.h>
-#include <Engine/imgui_impl_dx12.h>
 
 #define MAX_LOADSTRING 100
 
@@ -56,7 +53,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 800, 600 }, true)))
+    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1920, 1080 }, true)))
     {
         return 0;
     }

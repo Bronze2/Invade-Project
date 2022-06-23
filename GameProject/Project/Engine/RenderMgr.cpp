@@ -53,13 +53,19 @@ void CRenderMgr::Render()
 	Merge_Light();
 
 	m_vecCam[0]->Render_Forward(); // skybox, grid, ui
-
+	for (auto i = 1; i < m_vecCam.size(); i++) {
+		m_vecCam[i]->SortGameObject();
+		m_vecCam[i]->Render_Forward();
+	}
 
 	// Ãâ·Â
+	CIMGUIMgr::GetInst()->Progress();
 	CDevice::GetInst()->Render_Present();
+	m_vecCam[0]->ClearInterSectObject();
 
-	if(CCollisionMgr::GetInst()->GetCamera()!=nullptr)
-	CCollisionMgr::GetInst()->GetCamera()->ClearInterSectObject();
+
+	//if(CCollisionMgr::GetInst()->GetCamera()!=nullptr)
+	//CCollisionMgr::GetInst()->GetCamera()->ClearInterSectObject();
 }
 
 void CRenderMgr::Render_Tool()

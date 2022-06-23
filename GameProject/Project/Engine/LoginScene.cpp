@@ -55,9 +55,6 @@ void CLoginScene::Init()
 	FindLayer(L"Default")->AddGameObject(pMainCam);
 
 
-
-
-
 	CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
 
 
@@ -66,11 +63,10 @@ void CLoginScene::Init()
 	pObject->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
-	pObject->AddComponent(new CTowerScript);
 	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 500.f));
 	// Transform 설정
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
-
+	
 	Ptr<CTexture> pLobbyTex = CResMgr::GetInst()->FindRes<CTexture>(L"LobbyTex");
 	// MeshRender 설정
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

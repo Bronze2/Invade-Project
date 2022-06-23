@@ -45,11 +45,14 @@
 #include "TowerScript.h"
 #include "LobbyScene.h"
 #include "InGameScene.h"
+#include "LoginScene.h"
+#include "TitleScene.h"
 #include "ProjectileScript.h"
 #include "BowScript.h"
 #include "LobbyScene.h"
 #include "TitleScene.h"
 #include "Network.h";
+
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -74,7 +77,12 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 	SAFE_DELETE(m_pCurScene);
 	switch (_Type)
 	{
+
 	case SCENE_TYPE::TITLE:
+		break;
+	case SCENE_TYPE::LOGIN:
+		m_pCurScene = new CLoginScene;
+
 		break;
 	case SCENE_TYPE::LOBBY:
 		m_pCurScene = new CLobbyScene;
@@ -90,7 +98,7 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 	default:
 		break;
 	}
-
+	m_pCurScene->SetType(_Type);
 	m_pCurScene->Init();
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
@@ -153,10 +161,12 @@ void CSceneMgr::Init()
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
 
-	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLobbyScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
+	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
+	//m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOGIN];
+	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
 	m_pCurScene->Init();
 
 
@@ -180,18 +190,18 @@ void CSceneMgr::Update()
 	CCollisionMgr::GetInst()->Update();
 
 
-	Network::GetInst()->RecvData();
+	//Network::GetInst()->RecvData();
 
-	if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
-		if (Network::GetInst()->getHost()) {
-			cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1  << endl;
-			if (Network::GetInst()->getOtherClientSize() % 2 == 1) {
-				Network::GetInst()->send_game_start_packet();			
-				//ChangeScene(SCENE_TYPE::INGAME);
+	//if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
+	//	if (Network::GetInst()->getHost()) {
+	//		cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1  << endl;
+	//		if (Network::GetInst()->getOtherClientSize() % 2 == 1) {
+	//			Network::GetInst()->send_game_start_packet();			
+	//			//ChangeScene(SCENE_TYPE::INGAME);
 
-			}
-		}
-	}
+	//		}
+	//	}
+	//}
 }
 
 void CSceneMgr::EnterGame()

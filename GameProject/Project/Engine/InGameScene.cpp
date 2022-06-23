@@ -49,7 +49,6 @@ void CInGameScene::Init()
 {
 	ShowCursor(false);
 
-
 	GetLayer(0)->SetName(L"Default");
 	GetLayer(1)->SetName(L"Player");
 	GetLayer(2)->SetName(L"Monster");

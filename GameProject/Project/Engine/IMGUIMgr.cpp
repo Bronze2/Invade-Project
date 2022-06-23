@@ -173,8 +173,8 @@ void CIMGUIMgr::Init()
     GPU_Handle = m_pHeap->GetGPUDescriptorHandleForHeapStart();
     GPU_Handle.ptr += (handleIncrement * descriptor_index);
 
-    m_pTexture->Load(L"Texture\\BackGround.png", cpu_handle);
-
+    m_pTexture->Load(L"Texture\\background.png", cpu_handle);
+    show_login = true;
 
 }
 void CIMGUIMgr::load_styles()
@@ -221,7 +221,6 @@ void CIMGUIMgr::Progress()
     if (SCENE_TYPE::LOGIN
         == CSceneMgr::GetInst()->GetCurScene()->GetCurScene())
     {
-
         if (!doOnce)
         {
             load_styles();
@@ -231,7 +230,7 @@ void CIMGUIMgr::Progress()
         ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight));
         ImGui::SetNextWindowPos(ImVec2(0, 0));
         bool bOpen = true;
-        ImGui::Begin("Login Scene", &bOpen, iw.window_flags);
+        ImGui::Begin("IMGUI Login Scene", &bOpen, iw.window_flags);
         {
             
 
@@ -246,7 +245,6 @@ void CIMGUIMgr::Progress()
                     ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
                     if (show_login)
                     {
-
                         ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 170, m_tResloution.fHeight / 2 - 200));//35
                         ImGui::Text("Log into your account");
 

@@ -63,7 +63,6 @@ void CLobbyScene::Init()
 
 	// AddGameObject
 	FindLayer(L"Default")->AddGameObject(pObject);
-	cout << "!" << endl;
 
 	
 	Awake();

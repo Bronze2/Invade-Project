@@ -27,10 +27,10 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	ShowWindow(_hWnd, true);
 	if (FAILED(CDevice::GetInst()->Init(_hWnd, _resolution, _bWindow)))
 		return E_FAIL;
-
+	m_tResolution = _resolution;
 
 	//임시 로그인 Network Init() 안에서 추후 수정
-	Network::GetInst()->Init();
+	//Network::GetInst()->Init();
 
 
 	CRenderMgr::GetInst()->Init(_hWnd, _resolution, _bWindow);
@@ -56,7 +56,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	CResMgr::GetInst()->Init();
 	CSceneMgr::GetInst()->Init();
 	CEventMgr::GetInst()->Init();
-
+	CIMGUIMgr::GetInst()->Init();
 
 	return S_OK;
 
@@ -82,7 +82,8 @@ void CGameFramework::ProcessInput()
 {
 
 	POINT ptCursorPos;
-	SetCursor(NULL);
+	//SetCursor(NULL);
+	ShowCursor(TRUE);
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);
@@ -92,18 +93,29 @@ void CGameFramework::ProcessInput()
 	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rtClient);
 	LONG CursorPosy = ptCursorPos2.y;
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
-	if (rtWindow.right - 10 < ptCursorPos.x) {
-		ptCursorPos.x = rtWindow.left + 13;
-		
-		m_ptOldCursorPos.x = rtWindow.left + 10;
-		SetCursorPos(ptCursorPos.x, CursorPosy);
-	}
-	if (2 >= ptCursorPos.x) {
-		ptCursorPos.x = rtWindow.right - 13;
-		m_ptOldCursorPos.x = rtWindow.right - 10;
+	//if (rtWindow.right - 10 < ptCursorPos.x) {
+	//	ptCursorPos.x = rtWindow.left + 13;
+	//	
+	//	m_ptOldCursorPos.x = rtWindow.left + 10;
+	//	SetCursorPos(ptCursorPos.x, CursorPosy);
+	//}
+	//if (2 >= ptCursorPos.x) {
+	//	ptCursorPos.x = rtWindow.right - 13;
+	//	m_ptOldCursorPos.x = rtWindow.right - 10;
 
+	//	SetCursorPos(ptCursorPos.x, CursorPosy);
+	//}
+	if (rtWindow.right - 3 <= ptCursorPos.x) {
+		ptCursorPos.x = rtWindow.left + 3;
+		m_ptOldCursorPos.x = rtWindow.left;
 		SetCursorPos(ptCursorPos.x, CursorPosy);
 	}
+	if (3 >= ptCursorPos.x) {
+		ptCursorPos.x = rtWindow.right - 3;
+		m_ptOldCursorPos.x = rtWindow.right;
+		SetCursorPos(ptCursorPos.x, CursorPosy);
+	}
+	 
 //	if (rt.bottom < ptCursorPos.y) {
 //		ptCursorPos.y = rt.bottom;
 //		m_ptOldCursorPos.y = rt.bottom;
@@ -168,5 +180,9 @@ void CGameFramework::ChangeWindowSize(HWND _hWnd, const tResolution _resolution)
 
 	AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, false);
 	SetWindowPos(_hWnd, nullptr, -10, 0, rt.right - rt.left, rt.bottom - rt.top, 0);
+
+}
+void CGameFramework::CleanUp()
+{
 
 }
