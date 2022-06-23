@@ -175,6 +175,9 @@ void CIMGUIMgr::Init()
 
     m_pTexture->Load(L"Texture\\BackGround.png", cpu_handle);
 
+    // 로그인 씬 택스처
+    // 
+
 
 }
 void CIMGUIMgr::load_styles()
@@ -287,6 +290,7 @@ void CIMGUIMgr::Progress()
                         if (ImGui::Button("Register", ImVec2(260.f, 30.f)))
                         {
                             m_bOpen = true;
+                            //등록 버튼 클릭시
 
                         }
                         if (m_bOpen) {
