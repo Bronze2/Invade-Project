@@ -47,13 +47,15 @@ private:
 
 public:
 
-	CScene* GetCurScene();
 	void Init();
 	void Update();
 	void Update_Tool();
 	void Init(SCENE_TYPE _eType);
 	
-	
+	CScene* GetCurScene();
+	void ChangeScene(CScene* _pNextScene);
+	void ChangeScene(SCENE_TYPE _Type);
+
 	void net_enterClient(int id, float x, float y, float z);
 	void net_setMainClient(int id, float x, float y, float z);
 	void net_setEnableClient(int id);	//지울가능성 높음
@@ -100,8 +102,7 @@ public:
 
 	minioninfo get_minioninfo(int id) { return m_minion[id]; };
 	void set_minioninfoState(int id, MINION_STATE state) { m_minion[id].state = state; }
-	void ChangeScene(CScene* _pNextScene);
-	void ChangeScene(SCENE_TYPE _Type);
+
 	void EnterGame();
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 

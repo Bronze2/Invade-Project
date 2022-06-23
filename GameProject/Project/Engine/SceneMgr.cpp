@@ -82,7 +82,6 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		break;
 	case SCENE_TYPE::LOGIN:
 		m_pCurScene = new CLoginScene;
-
 		break;
 	case SCENE_TYPE::LOBBY:
 		m_pCurScene = new CLobbyScene;
@@ -162,13 +161,15 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
 
 	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
-	//m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
-	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
-	//m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
+	m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
+
+	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOGIN];
 	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
 	m_pCurScene->Init();
 
+	cout << "Done init" << endl;
 
 
 }

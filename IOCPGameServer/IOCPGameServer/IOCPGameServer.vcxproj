@@ -131,6 +131,7 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="MatchMaking.h" />
     <ClInclude Include="MinionScript.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerScript.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="MatchMaking.cpp" />
     <ClCompile Include="MinionScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

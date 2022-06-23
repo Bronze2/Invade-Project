@@ -14,8 +14,10 @@
 #include "ResMgr.h"
 #include "Texture.h"
 #include "KeyMgr.h"
+#include "Network.h"
 #include <string.h>
 #include <stdint.h>
+
  int TextEditCallbackStub(ImGuiInputTextCallbackData* data)
 {
   
@@ -275,7 +277,7 @@ void CIMGUIMgr::Progress()
                         if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                         {
                             //로그인 버튼  클릭시
-
+                            Network::GetInst()->send_login_packet(UserInformations.m_cUserName, UserInformations.m_cUserPassWord);
 
                         }
                         ImGui::PopStyleVar();

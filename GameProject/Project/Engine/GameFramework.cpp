@@ -30,7 +30,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	m_tResolution = _resolution;
 
 	//임시 로그인 Network Init() 안에서 추후 수정
-	//Network::GetInst()->Init();
+	Network::GetInst()->Init();
 
 
 	CRenderMgr::GetInst()->Init(_hWnd, _resolution, _bWindow);

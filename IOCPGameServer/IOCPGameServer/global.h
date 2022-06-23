@@ -1,6 +1,8 @@
 #pragma once
 using namespace std;
 
+enum MATCH_TYPE { TWO, THREE, FOUR};
+
 enum ENUMOP { OP_UPDATE ,OP_MOVE, OP_RECV, OP_SEND, OP_ACCEPT };
 
 enum C_STATUS { ST_FREE, ST_ALLOCATED, ST_ACTIVE };

@@ -138,6 +138,9 @@
     <ClInclude Include="DataBase.h">
       <Filter>소스 파일\Server</Filter>
     </ClInclude>
+    <ClInclude Include="MatchMaking.h">
+      <Filter>소스 파일\Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -228,6 +231,9 @@
       <Filter>소스 파일\GameLogic\Script</Filter>
     </ClCompile>
     <ClCompile Include="DataBase.cpp">
+      <Filter>소스 파일\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchMaking.cpp">
       <Filter>소스 파일\Server</Filter>
     </ClCompile>
   </ItemGroup>

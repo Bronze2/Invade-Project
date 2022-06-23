@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 
 #include "LoginScene.h"
@@ -15,9 +16,7 @@
 #include "TowerScript.h"
 void CLoginScene::Update()
 {
-	if (KEY_TAB(KEY_TYPE::KEY_A)) {
-		ChangeScene(SCENE_TYPE::INGAME);
-	}
+
 
 }
 
@@ -77,4 +76,5 @@ void CLoginScene::Init()
 
 	// AddGameObject
 	FindLayer(L"Default")->AddGameObject(pObject);
+	cout << "Init Login Secne" << endl;
 }

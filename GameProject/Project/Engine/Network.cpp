@@ -10,14 +10,6 @@ Network::~Network() {}
 
 void Network::Init()
 {
-
-	//임시 로그인
-	cout << "LoginID :";
-	cin >> m_loginid;
-	cout << "LoginPW :";
-	cin >> m_loginpw;
-
-
 	WSADATA wsadata;
 	if (WSAStartup(MAKEWORD(2, 2), &wsadata) != 0) {
 		 
@@ -48,7 +40,6 @@ void Network::Init()
 	
 	m_Client.socket_info.connect = true;
 	//std::cout << "Server Connect Sucsess" << std::endl;
-
 
 }
 
@@ -341,13 +332,13 @@ void Network::send_packet(void* buffer)
 
 
 
-void Network::send_login_packet()
+void Network::send_login_packet(char id[], char password[])
 {
 	sc_packet_check_login m_packet;
 	m_packet.type = C2S_LOGIN;
 	m_packet.size = sizeof(m_packet);
-	m_packet.loginid = m_loginid;
-	m_packet.loginpw = m_loginpw;
+	m_packet.loginid = id;
+	m_packet.loginpw = password;
 	send_packet(&m_packet);
 	cout << "Send Login Packet" << endl;
 }

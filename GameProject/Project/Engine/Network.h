@@ -56,7 +56,7 @@ public:
 	void RecvData();
 
 	void send_packet(void* packet);
-	void send_login_packet();
+	void send_login_packet(char id[], char password[]);
 	void send_key_down_packet(unsigned char dir, float x, float y , float z, int state);
 	void send_key_up_packet(unsigned char dir, float x, float y, float z, int state);
 

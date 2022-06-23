@@ -13,7 +13,7 @@ public:
 	virtual void Init() {}
 	void Awake();
 	void Start();
-	void Update();
+	virtual void Update();
 	void LateUpdate();
 	void FinalUpdate();
 	void SetType(SCENE_TYPE _eType) { m_eSceneType = _eType; }
