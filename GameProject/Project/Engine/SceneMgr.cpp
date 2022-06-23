@@ -47,8 +47,8 @@
 #include "InGameScene.h"
 #include "ProjectileScript.h"
 #include "BowScript.h"
-
-
+#include "LobbyScene.h"
+#include "TitleScene.h"
 #include "Network.h";
 
 CScene* CSceneMgr::GetCurScene()
@@ -152,10 +152,11 @@ void CSceneMgr::Init()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
-	m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
+
+	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
-	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOBBY];
+	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOGIN];
 	m_pCurScene->Init();
 
 

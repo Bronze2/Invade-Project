@@ -14,7 +14,9 @@
 #pragma comment(lib,"Engine/Engine.lib")
 #endif
 
-
+#include <Engine/imgui_impl_win32.h>
+#include <Engine/imgui.h>
+#include <Engine/imgui_impl_dx12.h>
 
 #define MAX_LOADSTRING 100
 

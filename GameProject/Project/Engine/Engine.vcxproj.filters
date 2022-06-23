@@ -238,9 +238,7 @@
       <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="Animation3D.h" />
-    <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TowerScript.h" />
     <ClInclude Include="MinionScript.h">
       <Filter>Script\Minion</Filter>
     </ClInclude>
@@ -261,8 +259,24 @@
     <ClInclude Include="EmptyPlayerScript.h">
       <Filter>Script\EmptyPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectileScript.h" />
-    <ClInclude Include="EmptyCameraScript.h" />
+    <ClInclude Include="EmptyCameraScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginScene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -413,9 +427,7 @@
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="Animation3D.cpp" />
-    <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="MinionScript.cpp">
       <Filter>Script\Minion</Filter>
     </ClCompile>
@@ -436,8 +448,24 @@
     <ClCompile Include="EmptyPlayerScript.cpp">
       <Filter>Script\EmptyPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectileScript.cpp" />
-    <ClCompile Include="EmptyCameraScript.cpp" />
+    <ClCompile Include="EmptyCameraScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="TowerScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginScene.cpp">
+      <Filter>Manager\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

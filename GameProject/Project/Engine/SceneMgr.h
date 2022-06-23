@@ -7,6 +7,7 @@ class CGameObject;
 
 enum class SCENE_TYPE {
 	TITLE,
+	LOGIN,
 	LOBBY,
 	INGAME,
 	RESULT,
