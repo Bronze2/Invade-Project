@@ -15,6 +15,8 @@
 #pragma comment(lib,"dxgi")
 #pragma comment(lib, "dxguid")
 #pragma comment(lib, "d3dcompiler")
+#pragma comment(lib, "dsound.lib")
+#pragma comment(lib, "winmm.lib")
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -38,6 +40,7 @@ using namespace Microsoft::WRL;
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
+
 
 
 // D2D (for Render Text)

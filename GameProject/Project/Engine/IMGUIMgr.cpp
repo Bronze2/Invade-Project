@@ -385,15 +385,16 @@ void CIMGUIMgr::Progress()
             if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
               
                 if (!bChat) {
-                    ImGui::SetKeyboardFocusHere(0);
+                    if (!ImGui::IsAnyItemActive())
+                        ImGui::SetKeyboardFocusHere(0);
                     bChat = true;
                   
                 }
                 else {
                     bChat = false;
-           
+                    ImGui::SetItemDefaultFocus();
                   
-                  
+                    ImGui::SetKeyboardFocusHere(-1);
                 }
                
             }
@@ -403,10 +404,10 @@ void CIMGUIMgr::Progress()
                 {
                 
                 }
-
+           //     ImGui::SetKeyboardFocusHere(-1);
             }
 
-            ImGui::SetKeyboardFocusHere(-1);
+            
            
 
         }

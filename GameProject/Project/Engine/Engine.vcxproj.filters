@@ -261,6 +261,7 @@
     <ClCompile Include="StructuredBuffer.cpp">
       <Filter>Device</Filter>
     </ClCompile>
+    <ClCompile Include="CSoundClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -509,6 +510,7 @@
     <ClInclude Include="StructuredBuffer.h">
       <Filter>Device</Filter>
     </ClInclude>
+    <ClInclude Include="CSoundClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
