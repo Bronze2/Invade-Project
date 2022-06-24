@@ -43,7 +43,7 @@ CGameObject::~CGameObject()
 	//Safe_Delete_Vector(m_vecScript);
 }
 
-void CGameObject::AddChild(CGameObject* _pChildObj)
+void CGameObject::AddChild(int index ,CGameObject* _pChildObj)
 {
 	// 예외 1
 	// 자기자신이 자식이 되는 경우
@@ -55,7 +55,7 @@ void CGameObject::AddChild(CGameObject* _pChildObj)
 
 	// 예외 3.
 	// 자식 오브젝트가 이전에 다른 부모 오브젝트가 있었다면
-	_pChildObj->ClearParent(this);
+	_pChildObj->ClearParent(index ,this);
 
 	// 자식 오브젝트가 Layer 에 포함되어이지 않는 경우
 	// 부모 오브젝트의 Layer로 지정한다.
@@ -80,7 +80,7 @@ bool CGameObject::IsAncestor(CGameObject* _pObj)
 	return false;
 }
 
-void CGameObject::ClearParent(CGameObject* _pNextParent)
+void CGameObject::ClearParent(int index, CGameObject* _pNextParent)
 {
 	// 부모가 없는 경우
 	if (nullptr == m_pParentObj)
@@ -98,7 +98,7 @@ void CGameObject::ClearParent(CGameObject* _pNextParent)
 		// 다음 부모가 지정됨 (Layer ParentList 에서 빠짐)
 		if (-1 != m_iLayerIdx)
 		{
-			CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene()->GetLayer(m_iLayerIdx);
+			CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene(index)->GetLayer(m_iLayerIdx);
 			pCurLayer->CheckParentObj();
 		}
 	}
@@ -127,9 +127,9 @@ void CGameObject::ClearParent(CGameObject* _pNextParent)
 
 			if (!m_bDead)
 			{
-				CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene()->GetLayer(m_iLayerIdx);
+				CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene(index)->GetLayer(m_iLayerIdx);
 				m_iLayerIdx = -1;
-				pCurLayer->AddGameObject(this);
+				pCurLayer->AddGameObject( this);
 			}
 		}
 	}
@@ -267,17 +267,17 @@ void CGameObject::FinalUpdate()
 	}
 }
 
-void CGameObject::RegisterToLayer()
+void CGameObject::RegisterToLayer(int index)
 {
 	// layer 에 등록
 	assert(-1 != m_iLayerIdx);
 
-	CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene()->GetLayer(m_iLayerIdx);
+	CLayer* pCurLayer = CSceneMgr::GetInst()->GetCurScene(index)->GetLayer(m_iLayerIdx);
 	pCurLayer->RegisterObj(this);
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
-		m_vecChild[i]->RegisterToLayer();
+		m_vecChild[i]->RegisterToLayer(index);
 	}
 }
 

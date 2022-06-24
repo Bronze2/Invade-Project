@@ -83,8 +83,20 @@ void CServer::send_my_client_enter_packet(int user_id)
 	p.pos.y =SHARED_DATA::g_clients[user_id].Pos.y;
 	p.pos.z =SHARED_DATA::g_clients[user_id].Pos.z;
 
-	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
+	send_packet(user_id, &p); 
 }
+
+void CServer::send_current_room(int user_id, int room_id, int current_user, int max_user)
+{
+	sc_packet_current_room p;
+	p.size = sizeof(p);
+	p.type = S2C_CURRENT_ROOM;
+	p.room_id = room_id;
+	p.current_user = current_user;
+	p.max_user = max_user;
+	send_packet(user_id, &p);
+}
+
 void CServer::send_lobby_login_ok_packet(int user_id)
 {
 	sc_packet_lobby_enter p;
@@ -131,13 +143,13 @@ void CServer::send_move_stop_packet(int user_id, int mover)
 }
 void CServer::send_mouse_packet(int user_id, int mover)
 {
-	sc_packet_move p;
+	sc_packet_mouse p;
 	p.id = mover;
 	p.size = sizeof(p);
 	p.type = S2C_MOUSE;
-	p.pos.x = SHARED_DATA::g_clients[mover].Rot.x;
-	p.pos.y = SHARED_DATA::g_clients[mover].Rot.y;
-	p.pos.z = SHARED_DATA::g_clients[mover].Rot.z;
+	p.Rot.x = SHARED_DATA::g_clients[mover].Rot.x;
+	p.Rot.y = SHARED_DATA::g_clients[mover].Rot.y;
+	p.Rot.z = SHARED_DATA::g_clients[mover].Rot.z;
 
 	p.move_time = SHARED_DATA::g_clients[mover].m_move_time;
 

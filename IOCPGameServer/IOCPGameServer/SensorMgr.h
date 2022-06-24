@@ -16,9 +16,9 @@ private:
 	map<DWORD_PTR, bool>m_mapSensor;
 public:
 	void Init();
-	void Update();
-	void CheckSensorLayer(const wstring& _strLayerName1, const wstring& _strLayerName2);
-	void CheckSensorLayer(int _strLayer1, int _strLayer2);
+	void Update(int index);
+	void CheckSensorLayer(int index , const wstring& _strLayerName1, const wstring& _strLayerName2);
+	void CheckSensorLayer(int index ,int _strLayer1, int _strLayer2);
 
 private:
 	void DetectionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2);

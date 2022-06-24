@@ -19,7 +19,7 @@ void CLayer::AddGameObject(CGameObject* _pObject, bool _bMoveAll)
 	if (!_pObject->GetParent()) {
 		m_vecParentObj.push_back(_pObject);
 		if (-1 != _pObject->GetLayerIdx()) {
-			CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+			CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);
 			pCurScene->GetLayer(_pObject->GetLayerIdx())->RemoveParentObj(_pObject);
 		}
 	}
@@ -116,7 +116,7 @@ void CLayer::FinalUpdate()
 		if ((*iter)->IsActive()) {
 			(*iter)->FinalUpdate();
 		}
-		(*iter)->RegisterToLayer();
+		(*iter)->RegisterToLayer(index);
 		if ((*iter)->IsDead())
 			iter = m_vecParentObj.erase(iter);
 		else

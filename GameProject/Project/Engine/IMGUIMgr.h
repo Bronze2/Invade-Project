@@ -12,6 +12,8 @@ private:
 	bool doOnce = false;
 	bool show_login = true;
 	bool m_bOpen = false;
+	bool m_MakeRoomOpen = false;
+
 	ImVector<char*>       Items;
 	ImVector<char*>       History;
 	tResolution m_tResloution;
@@ -22,6 +24,11 @@ private:
 	UINT Image_Width;
 	UINT Image_Height;
 	CTexture* m_pTexture;
+	CTexture* m_pTextureLobby;
+	D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle;
+	char RoomName[255];
+
+
 public:
 	 int   Strnicmp(const char* s1, const char* s2, int n) { int d = 0; while (n > 0 && (d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; n--; } return d; }
 	 char* Strdup(const char* s) { IM_ASSERT(s); size_t len = strlen(s) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)s, len); }

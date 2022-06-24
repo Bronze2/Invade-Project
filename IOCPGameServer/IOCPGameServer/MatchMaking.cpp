@@ -4,6 +4,39 @@
 CMatchMaking::CMatchMaking() {};
 CMatchMaking::~CMatchMaking() {};
 
+
+
+
+void CMatchMaking::enterRoom(int room_id , int clinet_id)
+{
+
+	Match2by2[room_id].push_back(clinet_id);
+	for (auto room : Match2by2) {
+		cout << "--------Room Index[" << room.first << "]----------" << endl;
+		for (int i = 0; i < room.second.size(); ++i) {
+			cout << "유저 아이디" << room.second[i] << endl;
+		}
+		cout << "-------------------------------------------" << endl;
+	}
+}
+
+
+
+void CMatchMaking::makeRoom(int room_id, MATCH_TYPE matchType)
+{
+	if (matchType == MATCH_TYPE::TWO) {
+		Match2by2[room_id].push_back(room_id);
+	}
+
+	for (auto room : Match2by2) {
+		cout<<"--------Room Index[" << room.first<<"]----------"<< endl;
+		for (int i = 0; i < room.second.size(); ++i) {
+			cout << "유저 아이디" << room.second[i] <<endl;
+		}
+		cout << "-------------------------------------------" <<endl;
+	}
+}
+
 void CMatchMaking::SetMatching(MATCH_TYPE matchType, int user_id)
 {
 	switch (matchType)

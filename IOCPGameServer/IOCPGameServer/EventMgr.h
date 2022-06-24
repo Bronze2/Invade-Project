@@ -16,15 +16,15 @@ private:
 	vector<CGameObject*>	m_vecDead; // 삭제 예정 오브젝트
 
 public:
-	void Update();
+	void Update(int index);
 	void Clear() { m_vecEvent.clear(); }
 	void AddEvent(tEvent& _event);
 
-	void Init();
+	void Init(int index );
 
 	const vector<tEvent>& GetEventList() { return m_vecEvent; }
 
 private:
-	void Execute(tEvent& _event);
+	void Execute(int index, tEvent& _event);
 };
 

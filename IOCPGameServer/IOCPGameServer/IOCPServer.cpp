@@ -5,6 +5,7 @@
 #include "Service.h"
 #include "SceneMgr.h"
 #include "DataBase.h"
+#include "MatchMaking.h"
 //
 namespace SHARED_DATA {
 	HANDLE g_iocp;					
@@ -34,7 +35,7 @@ void main()
 	//CDataBase::GetInst()->CheckAdminLogin(L"sangjun", L"sjpw");
 
 
-
+	CMatchMaking::GetInst()->Init();
 	CServer::GetInst()->Init();
 
 	CService::GetInst()->Init();

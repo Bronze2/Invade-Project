@@ -6,6 +6,7 @@
 #include "EventMgr.h"
 #include "TimeMgr.h"
 #include "Server.h"
+#include "MatchMaking.h"
 
 void CThread::Init()
 {
@@ -235,7 +236,6 @@ void CThread::worker_Thread()
 			CTimeMgr::GetInst()->Update();
 			CEventMgr::GetInst()->Clear();
 			CSceneMgr::GetInst()->Update();
-			CEventMgr::GetInst()->Update();
 			//CService::GetInst()->update_minion();
 
 			CService::GetInst()->add_timer(user_id, OP_UPDATE, 33);	//30fps
@@ -264,12 +264,46 @@ void CThread::process_packet(int user_id, char* buf)
 
 		if (CDataBase::GetInst()->CheckAdminLogin(t_userid, t_userpw))
 		{
-			CService::GetInst()->enter_lobby(user_id);
+			CServer::GetInst()->send_lobby_login_ok_packet(user_id);
+			if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
+				for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
+					CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4);
+				}
+			}
 		}
 		else {
 			CServer::GetInst()->send_login_fail_packet();
 		}
 		
+	}
+	break;
+
+	case C2S_MAKE_ROOM:
+	{	cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
+		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match);
+		SHARED_DATA::g_clients[user_id].room_id = user_id;
+	}
+	break;
+	case C2S_ENTER_ROOM:
+	{	cs_packet_enter_room* packet = reinterpret_cast<cs_packet_enter_room*>(buf);
+		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
+		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
+		//Room에 들어온 클라이언트들을 서로 알려주기.
+
+
+		//방금 들어온놈이 들어와있는놈들 확인
+		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
+			if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
+			else
+				CServer::GetInst()->send_enter_lobby_packet(user_id, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);	
+		}
+		//들어와 있는 놈들이 방금 들어온놈 확인
+		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
+			if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
+			else
+				CServer::GetInst()->send_enter_lobby_packet(CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i],user_id);
+		}
+
 	}
 	break;
 	case C2S_KEY_DOWN:
@@ -309,19 +343,14 @@ void CThread::process_packet(int user_id, char* buf)
 		cs_packet_lobby_gamestart* packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
 		if (packet->id == user_id) {
 			if (SHARED_DATA::g_clients[user_id].m_isHost) {
-				SHARED_DATA::g_clients[0].Pos = Vec3(0, 0, 1125);
-				SHARED_DATA::g_clients[1].Pos = Vec3(0, 0, 5800);
-
 				for (auto& cl : SHARED_DATA::g_clients) {
-					CService::GetInst()->enter_game(cl.second.m_id);
+					if(cl.second.room_id == user_id)
+						CService::GetInst()->enter_game(cl.second.m_id);
 				}
-				//for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-				//	CService::GetInst()->enter_game(i);
-				//}
-				
 				//플레이어 진입 후 미니언 생성 시작
-				CSceneMgr::GetInst()->Init();
+				CSceneMgr::GetInst()->Init(user_id);
 				CService::GetInst()->add_timer(user_id, OP_UPDATE, 10);
+				
 			}
 
 		}
@@ -336,7 +365,7 @@ void CThread::process_packet(int user_id, char* buf)
 	case C2S_CREATE_ARROW:
 	{
 		cs_packet_arrow* packet = reinterpret_cast<cs_packet_arrow*>(buf);
-		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->Clinet_id, packet->Arrow_id,
+		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->room_id ,packet->Clinet_id, packet->Arrow_id,
 			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
 			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, CAMP_STATE::BLUE);
 	}

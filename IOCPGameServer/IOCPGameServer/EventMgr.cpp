@@ -11,11 +11,11 @@
 CEventMgr::CEventMgr() {}
 CEventMgr::~CEventMgr() {}
 
-void CEventMgr::Update()
+void CEventMgr::Update(int index)
 {
 	for (size_t i = 0; i < m_vecDead.size(); ++i)
 	{
-		m_vecDead[i]->ClearParent();
+		m_vecDead[i]->ClearParent(index);
 		SAFE_DELETE(m_vecDead[i]);
 	}
 	m_vecDead.clear();
@@ -23,7 +23,7 @@ void CEventMgr::Update()
 	// Event Ã³¸®
 	for (size_t i = 0; i < m_vecEvent.size(); ++i)
 	{
-		Execute(m_vecEvent[i]);
+		Execute(index, m_vecEvent[i]);
 	}
 }
 
@@ -32,20 +32,20 @@ void CEventMgr::AddEvent(tEvent& _event)
 	m_vecEvent.push_back(_event);
 }
 
-void CEventMgr::Init()
+void CEventMgr::Init(int index )
 {
 	for (size_t i = 0; i < m_vecEvent.size(); ++i)
 	{
-		Execute(m_vecEvent[i]);
+		Execute(index, m_vecEvent[i]);
 	}
 }
 
-void CEventMgr::Execute(tEvent& _event)
+void CEventMgr::Execute(int index ,tEvent& _event)
 {
 	switch (_event.eType)
 	{
 	case EVENT_TYPE::CREATE_OBJECT:
-		CSceneMgr::GetInst()->GetCurScene()->AddGameObject((int)_event.lParam, (CGameObject*)_event.wParam, true);
+		CSceneMgr::GetInst()->GetCurScene(index)->AddGameObject(index, (int)_event.lParam, (CGameObject*)_event.wParam, true);
 		break;
 
 	case EVENT_TYPE::DELETE_OBJECT:
@@ -57,18 +57,18 @@ void CEventMgr::Execute(tEvent& _event)
 
 		break;
 	case EVENT_TYPE::ADD_CHILD:
-		((CGameObject*)_event.wParam)->AddChild((CGameObject*)_event.lParam);
+		((CGameObject*)_event.wParam)->AddChild(index ,(CGameObject*)_event.lParam);
 		break;
 
 	case EVENT_TYPE::CLEAR_PARENT:
-		((CGameObject*)_event.wParam)->ClearParent();
+		((CGameObject*)_event.wParam)->ClearParent(index);
 		break;
 
 	case EVENT_TYPE::TRANSFER_LAYER:
 	{
 		bool bMoveAll = LOWORD(_event.lParam);
 		int iLayerIdx = HIWORD(_event.lParam);
-		CSceneMgr::GetInst()->GetCurScene()->AddGameObject(iLayerIdx, ((CGameObject*)_event.wParam), bMoveAll);
+		CSceneMgr::GetInst()->GetCurScene(index)->AddGameObject(index ,iLayerIdx, ((CGameObject*)_event.wParam), bMoveAll);
 	}
 	break;
 

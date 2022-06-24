@@ -22,27 +22,27 @@
 //#include "TowerScript.h"
 
 
-CScene* CSceneMgr::GetCurScene()
+CScene* CSceneMgr::GetCurScene(int index)
 {
-	return m_pCurScene;
+	return m_pCurScene[index];
 }
 
-void CSceneMgr::ChangeScene(CScene* _pNextScene)
+void CSceneMgr::ChangeScene(CScene* _pNextScene, int index)
 {
-	if (m_pCurScene == _pNextScene)
+	if (m_pCurScene[index] == _pNextScene)
 		return;
-	SAFE_DELETE(m_pCurScene);
+	SAFE_DELETE(m_pCurScene[index]);
 
-	m_pCurScene = _pNextScene;
-	m_pCurScene->Awake();
-	m_pCurScene->Start();
+	m_pCurScene[index] = _pNextScene;
+	m_pCurScene[index]->Awake();
+	m_pCurScene[index]->Start();
 }
 
-void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
+void CSceneMgr::ChangeScene(SCENE_TYPE _Type, int index)
 {
-	if (m_pCurScene == m_arrScene[(UINT)_Type])
+	if (m_pCurScene[index] == m_arrScene[(UINT)_Type])
 		return;
-	SAFE_DELETE(m_pCurScene);
+	SAFE_DELETE(m_pCurScene[index]);
 	switch (_Type)
 	{
 	case SCENE_TYPE::TITLE:
@@ -51,7 +51,7 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		//m_pCurScene = new CLobbyScene;
 		break;
 	case SCENE_TYPE::INGAME:
-		m_pCurScene = new CInGameScene;
+		m_pCurScene[index] = new CInGameScene;
 		break;
 	case SCENE_TYPE::RESULT:
 		break;
@@ -62,22 +62,22 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		break;
 	}
 
-	m_pCurScene->Init();
-	m_pCurScene->Awake();
-	m_pCurScene->Start();
+	m_pCurScene[index]->Init(index);
+	m_pCurScene[index]->Awake();
+	m_pCurScene[index]->Start();
 }
 
 CSceneMgr::CSceneMgr()
-	: m_pCurScene(nullptr)
 {
 }
 
 CSceneMgr::~CSceneMgr()
 {
-	SAFE_DELETE(m_pCurScene);
+	//for(auto scene : m_pCurScene)
+	//	SAFE_DELETE(scene.first);
 }
 
-void CSceneMgr::Init()
+void CSceneMgr::Init(int index)
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
@@ -86,27 +86,32 @@ void CSceneMgr::Init()
 	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
-	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::INGAME];
-	m_pCurScene->Init();
+	m_pCurScene[index] = m_arrScene[(UINT)SCENE_TYPE::INGAME];
+	m_pCurScene[index]->Init(index);
 
 }
 
 void CSceneMgr::Update()
 {
-	m_pCurScene->Update();
 
-	m_pCurScene->LateUpdate();
+	for (auto scene : m_pCurScene) {
+		scene.second->Update();
 
-	m_pCurScene->FinalUpdate();
-	CSensorMgr::GetInst()->Update();
+		scene.second->LateUpdate();
+
+		scene.second->FinalUpdate();
+		CSensorMgr::GetInst()->Update(scene.first);
+		CCollisionMgr::GetInst()->Update(scene.first);
+		CEventMgr::GetInst()->Update(scene.first);
+
+	}
 	// 충돌 처리
-	CCollisionMgr::GetInst()->Update();
 
 }
 
-void CSceneMgr::EnterGame()
+void CSceneMgr::EnterGame(int index)
 {
-	ChangeScene(SCENE_TYPE::INGAME);
+	ChangeScene(SCENE_TYPE::INGAME , index);
 }
 
 
@@ -117,11 +122,11 @@ void CSceneMgr::Init(SCENE_TYPE _eType)
 
 
 
-void CSceneMgr::FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj)
+void CSceneMgr::FindGameObjectByTag(int index, const wstring& _strTag, vector<CGameObject*>& _vecFindObj )
 {
     for (int i = 0; i < MAX_LAYER; ++i)
     {
-        const vector<CGameObject*>& vecObject = m_pCurScene->GetLayer(i)->GetObjects();
+        const vector<CGameObject*>& vecObject = m_pCurScene[index]->GetLayer(i)->GetObjects();
         for (size_t j = 0; j < vecObject.size(); ++j)
         {
             if (_strTag == vecObject[j]->GetName())
@@ -137,13 +142,13 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
     return (_pLeft->Transform()->GetWorldPos().z < _pRight->Transform()->GetWorldPos().z);
 }
 
-void CSceneMgr::InitArrowByPlayerId(int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
+void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
 {
 	//CGameObject* player = dynamic_cast<CGameObject*>(m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]);
 	if(ClientId == 0)
-		m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+		m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
 	if (ClientId == 1)
-		m_pCurScene->FindLayer(L"Red")->GetParentObj()[ClientId-1]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+		m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()[ClientId-1]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
 }
 
 

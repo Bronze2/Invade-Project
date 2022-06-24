@@ -8,9 +8,9 @@ class CScene :public CEntity
 {
 private:
 	CLayer* m_arrLayer[MAX_LAYER];
-
+	int index;
 public:
-	virtual void Init() {}
+	virtual void Init(int m_index) { index = m_index; }
 	void Awake();
 	void Start();
 	void Update();
@@ -18,8 +18,8 @@ public:
 	void FinalUpdate();
 
 	void SetLayerName(int _iIdx, const wstring& _strName);
-	void AddGameObject(const wstring& _strLayerName, CGameObject* _pObject, bool _bMoveAll);
-	void AddGameObject(int _iLayerIdx, CGameObject* _pObject, bool _bMoveAll);
+	void AddGameObject(int index ,const wstring& _strLayerName, CGameObject* _pObject, bool _bMoveAll);
+	void AddGameObject(int index, int _iLayerIdx, CGameObject* _pObject, bool _bMoveAll);
 	CLayer* FindLayer(const wstring& _strLayerName);
 	CLayer* GetLayer(int _iIdx) { return m_arrLayer[_iIdx]; }
 

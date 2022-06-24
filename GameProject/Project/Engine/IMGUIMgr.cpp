@@ -18,6 +18,13 @@
 #include <string.h>
 #include <stdint.h>
 
+typedef void (*ImGuiDemoMarkerCallback)(const char* file, int line, const char* section, void* user_data);
+extern ImGuiDemoMarkerCallback  GImGuiDemoMarkerCallback;
+extern void* GImGuiDemoMarkerCallbackUserData;
+ImGuiDemoMarkerCallback         GImGuiDemoMarkerCallback = NULL;
+void* GImGuiDemoMarkerCallbackUserData = NULL;
+#define IMGUI_DEMO_MARKER(section)  do { if (GImGuiDemoMarkerCallback != NULL) GImGuiDemoMarkerCallback(__FILE__, __LINE__, section, GImGuiDemoMarkerCallbackUserData); } while (0)
+
  int TextEditCallbackStub(ImGuiInputTextCallbackData* data)
 {
   
@@ -167,15 +174,18 @@ void CIMGUIMgr::Init()
         , m_pHeap, m_pHeap->GetCPUDescriptorHandleForHeapStart()
         , m_pHeap->GetGPUDescriptorHandleForHeapStart());
     m_pTexture = new CTexture;
+    m_pTextureLobby = new CTexture;
+
 
     UINT handleIncrement = DEVICE->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     int descriptor_index = 1;
-    D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle = m_pHeap->GetCPUDescriptorHandleForHeapStart();
+    cpu_handle = m_pHeap->GetCPUDescriptorHandleForHeapStart();
     cpu_handle.ptr += (handleIncrement * descriptor_index);
     GPU_Handle = m_pHeap->GetGPUDescriptorHandleForHeapStart();
     GPU_Handle.ptr += (handleIncrement * descriptor_index);
 
     m_pTexture->Load(L"Texture\\background.png", cpu_handle);
+
     show_login = true;
 
 }
@@ -234,8 +244,7 @@ void CIMGUIMgr::Progress()
         bool bOpen = true;
         ImGui::Begin("IMGUI Login Scene", &bOpen, iw.window_flags);
         {
-            
-
+           
             ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.054, 0.054, 0.054, 255));
             ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.082, 0.078, 0.078, 255));
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.f);
@@ -244,9 +253,9 @@ void CIMGUIMgr::Progress()
                
                 ImGui::BeginChild("##MainPanel", ImVec2(m_tResloution.fWidth, m_tResloution.fHeight), true);
                 {
-                    ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
                     if (show_login)
                     {
+                        ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
                         ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 170, m_tResloution.fHeight / 2 - 200));//35
                         ImGui::Text("Log into your account");
 
@@ -277,8 +286,10 @@ void CIMGUIMgr::Progress()
                         if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                         {
                             //로그인 버튼  클릭시
-                            Network::GetInst()->send_login_packet(UserInformations.m_cUserName, UserInformations.m_cUserPassWord);
+                            show_login = false;
+                            m_pTextureLobby->Load(L"Texture\\bow_big.png", cpu_handle);
 
+                            Network::GetInst()->send_login_packet(UserInformations.m_cUserName, UserInformations.m_cUserPassWord);
                         }
                         ImGui::PopStyleVar();
                         ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, m_tResloution.fHeight / 2 + 50));
@@ -286,8 +297,22 @@ void CIMGUIMgr::Progress()
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Register", ImVec2(260.f, 30.f)))
                         {
-                            m_bOpen = true;
+                          //  m_bOpen = true;
 
+                            if (Network::GetInst()->getHost()) {
+                                cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1 << endl;
+                                if (Network::GetInst()->getOtherClientSize() % 2 == 1) {
+                                    Network::GetInst()->send_game_start_packet();
+                                    //ChangeScene(SCENE_TYPE::INGAME);
+
+                                }
+                                else {
+                                    cout << "otheruser" << endl;
+                                }
+                            }
+                            else {
+                                cout << "host?" << endl;
+                            }
                         }
                         if (m_bOpen) {
                             SUserInformation user;
@@ -342,6 +367,94 @@ void CIMGUIMgr::Progress()
 
 
                         ImGui::PopStyleVar();
+
+                    }
+
+
+
+                    if (!show_login)
+                    {
+                        ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTextureLobby->Width(), m_pTextureLobby->Height()));
+
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 170, m_tResloution.fHeight / 2 - 200));//35
+                        ImGui::Text("Log into your account");
+
+
+                        for (int i = 0; i < Network::GetInst()->roomInfo.size(); ++i) {
+                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, 50 + (i * 40)));//130
+                            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
+                            if (ImGui::Button("Test Room", ImVec2(260.f, 30.f)))
+                            {
+                                if (Network::GetInst()->roomInfo[i].roomMaxUser > Network::GetInst()->roomInfo[i].roomCurrentUser) {
+                                    Network::GetInst()->send_enter_room_packet(Network::GetInst()->roomInfo[i].room_id);
+                                    cout << " Room Enter " << endl;
+                                }
+                            }
+                            ImGui::PopStyleVar();
+                        }
+
+                        ImGui::SetCursorPos(ImVec2( 50, m_tResloution.fHeight - 50));//130
+                        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
+                        if (ImGui::Button("GameStart", ImVec2(260.f, 30.f)))
+                        {
+                            Network::GetInst()->send_game_start_packet();
+                        }
+                        ImGui::PopStyleVar();
+
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 25, m_tResloution.fHeight - 50));//130
+                        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);  
+                        if (ImGui::Button("Create Room", ImVec2(260.f, 30.f)))
+                        {
+                            m_MakeRoomOpen = true;
+                        }
+                        ImGui::PopStyleVar();
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, m_tResloution.fHeight / 2 + 50));
+                        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
+                        ImGui::PopStyleVar();
+
+                        if (m_MakeRoomOpen) {
+                            ImGui::Begin("Register", &m_MakeRoomOpen, ImGuiWindowFlags_AlwaysAutoResize);
+                            //   ImGui::Separator();
+
+                            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.054, 0.054, 0.054, 255));
+                            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.082, 0.078, 0.078, 255));
+                            ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.f);
+
+                            {
+
+                                ImGui::SetCursorPos(ImVec2(0, 0));
+                                ImGui::BeginChild("##ChildPanel", ImVec2(600, 276), true);
+                                ImGui::PushItemWidth(260.f);
+                                {
+                                    ImGui::SetCursorPos(ImVec2(22, 79));
+                                    ImGui::TextDisabled("Set Room Name");
+
+                                    ImGui::SetCursorPos(ImVec2(20, 95));
+                                    ImGui::InputText("##RoomeName", RoomName, IM_ARRAYSIZE(RoomName));
+                                }
+                                ImGui::PopItemWidth();
+                             
+                                ImGui::SetCursorPos(ImVec2(22, 190));
+                                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
+                                if (ImGui::Button("Create", ImVec2(260.f, 30.f)))
+                                {
+                                    Network::GetInst()->send_make_room_packet(MATCH_TYPE::TWO);
+                                    cout << "Make room Send" << endl;
+                                    m_MakeRoomOpen = false;
+
+                                }
+                                ImGui::PopStyleVar();
+
+                                ImGui::EndChild();
+                            }
+                            ImGui::PopStyleColor(2);
+                            ImGui::PopStyleVar(1);
+
+                            ImGui::End();
+                        }
+
+
+
 
                     }
 

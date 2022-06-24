@@ -11,7 +11,7 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);
 	for (int i = 0; i < 20; ++i) {
 		m_pArrow[i] = new CGameObject;
 		m_pArrow[i]->SetName(L"Arrow");
@@ -30,11 +30,13 @@ void CPlayerScript::Awake()
 
 		m_pArrow[i]->AddComponent(new CArrowScript(ELEMENT_TYPE::AllElements));
 		m_pArrow[i]->GetScript<CArrowScript>()->SetCamp(GetCamp());
+		m_pArrow[i]->GetScript<CArrowScript>()->SetIndex(index);
+
 
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);
-		GetObj()->AddChild(m_pArrow[i]);
+		GetObj()->AddChild(index,m_pArrow[i]);
 	}
 }
 
@@ -48,6 +50,7 @@ void CPlayerScript::Update()
 void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
 {
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetIndex(index);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSpeed(Power*2);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetDir(Dir);
@@ -56,7 +59,7 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetCamp(GetCamp());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetAttackDamge(Power/7);
 
-	m_pArrow[ArrowId]->ClearParent();
+	m_pArrow[ArrowId]->ClearParent(index);
 	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
 	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
 	m_pArrow[ArrowId]->SetActive(true);

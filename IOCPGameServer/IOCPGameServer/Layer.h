@@ -7,7 +7,7 @@ private:
 	vector<CGameObject*> m_vecParentObj;
 	vector<CGameObject*> m_vecLayerObj;
 	int m_iLayerIdx;
-
+	int index;
 public:
 	void AddGameObject(CGameObject* _pObject, bool _bMoveAll = false);
 	int GetLayerIdx() { return m_iLayerIdx; }
@@ -16,7 +16,7 @@ public:
 	void RegisterObj(CGameObject* _pObj) { m_vecLayerObj.push_back(_pObj); }
 	void CheckParentObj();
 	void RemoveParentObj(CGameObject* _pObject);
-
+	void SetIndex(int m_index) { index = m_index; }
 	void Awake();
 	void Start();
 	void Update();

@@ -51,9 +51,9 @@ public:
 	template<typename T>
 	T* GetScript();
 
-	void AddChild(CGameObject* _pChildObj);
+	void AddChild(int index ,CGameObject* _pChildObj);
 	bool IsAncestor(CGameObject* _pObj);
-	void ClearParent(CGameObject* _pNextParent = nullptr);
+	void ClearParent(int index ,CGameObject* _pNextParent = nullptr);
 	CGameObject* GetParent() { return m_pParentObj; }
 	int GetLayerIdx() { return m_iLayerIdx; }
 	const vector<CGameObject*>& GetChild() { return m_vecChild; }
@@ -63,7 +63,7 @@ public:
 	bool IsFallDown() { return m_bFallDown; }
 	void SetFallDown();
 
-	void RegisterToLayer();
+	void RegisterToLayer(int index);
 
 	CLONE(CGameObject);
 

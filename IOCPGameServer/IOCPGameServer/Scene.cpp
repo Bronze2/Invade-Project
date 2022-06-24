@@ -64,7 +64,7 @@ void CScene::SetLayerName(int _iIdx, const wstring& _strName)
     m_arrLayer[_iIdx]->SetName(_strName);
 }
 
-void CScene::AddGameObject(const wstring& _strLayerName, CGameObject* _pObject, bool _bMoveAll)
+void CScene::AddGameObject(int index ,const wstring& _strLayerName, CGameObject* _pObject, bool _bMoveAll)
 {
     CLayer* pLayer = FindLayer(_strLayerName);
     assert(pLayer);
@@ -72,11 +72,11 @@ void CScene::AddGameObject(const wstring& _strLayerName, CGameObject* _pObject, 
 
 }
 
-void CScene::AddGameObject(int _iLayerIdx, CGameObject* _pObject, bool _bMoveAll)
+void CScene::AddGameObject(int index,int _iLayerIdx, CGameObject* _pObject, bool _bMoveAll)
 {
     assert(-1 < _iLayerIdx && _iLayerIdx <= 31);
     CLayer* pLayer = GetLayer(_iLayerIdx);
-    pLayer->AddGameObject(_pObject, _bMoveAll);
+    pLayer->AddGameObject( _pObject, _bMoveAll);
 }
 
 CLayer* CScene::FindLayer(const wstring& _strLayerName)

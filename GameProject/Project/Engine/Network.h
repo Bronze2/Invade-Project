@@ -25,6 +25,12 @@ struct ObjectInfo {
 
 };
 
+struct RoomInfo {
+	int room_id;
+	int roomMaxUser;
+	int roomCurrentUser;
+};
+
 struct CLIENT {
 	SocketInfo socket_info;
 	int id = 0;
@@ -66,6 +72,11 @@ public:
 	void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
 	void send_move_block_packet(int Client_id, Vec3 Pos);
 
+	//Room
+	void send_make_room_packet( MATCH_TYPE match_type);
+	void send_enter_room_packet(int room_id);
+
+
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 
 	int getOtherClientCount() {	return m_OtherClientCount; };
@@ -74,6 +85,8 @@ public:
 	int getOtherClientSize() { return m_otherClients.size(); };
 
 	void debug_checkclient();
+	vector<RoomInfo> roomInfo;
+
 private:
 	CLIENT m_Client;
 	unordered_map<int, OTHER_CLINET> m_otherClients;
@@ -82,5 +95,7 @@ private:
 	//로그인 아이디 비번 임시
 	string m_loginid;
 	string m_loginpw;
+	int my_room_id;
+
 };
 

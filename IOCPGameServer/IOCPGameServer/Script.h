@@ -25,21 +25,21 @@ class CScript :
 {
 public:
     UINT m_iScriptType;
-
+    int index;
 public:
     virtual void Update() = 0;
     static void CreateObject(CGameObject* _pNewObject, int _iLayerIdx);
-    static void CreateObject(CGameObject* _pNewObject, const wstring& _strLayerName);
+    static void CreateObject(int index, CGameObject* _pNewObject, const wstring& _strLayerName);
 
     static void DeleteObject(CGameObject* _pDeleteObject);
     void AddChild(CGameObject* _pChildObject);
     static void AddChild(CGameObject* _pParent, CGameObject* _pChild);
     void ClearParent();
     static void ClearParent(CGameObject* _pTarget);
-
-    void TransferLayer(const wstring& _strLayerName, bool _bMoveAll);
+    void SetIndex(int m_index) { index = m_index; };
+    void TransferLayer(int index ,const wstring& _strLayerName, bool _bMoveAll);
     void TransferLayer(int _iLayerIdx, bool _bMoveAll);
-    static void TransferLayer(CGameObject* _pTarget, const wstring& _strLayerName, bool _bMoveAll);
+    static void TransferLayer(int index ,CGameObject* _pTarget, const wstring& _strLayerName, bool _bMoveAll);
     static void TransferLayer(CGameObject* _pTarget, int _iLayerIdx, bool _bMoveAll);
 
     static void EnableObject(CGameObject* _pTarget);

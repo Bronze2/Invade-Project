@@ -1,7 +1,6 @@
 #pragma once
 using namespace std;
 
-enum MATCH_TYPE { TWO, THREE, FOUR};
 
 enum ENUMOP { OP_UPDATE ,OP_MOVE, OP_RECV, OP_SEND, OP_ACCEPT };
 
@@ -65,6 +64,7 @@ struct CLIENT
 	bool m_isHost;
 	bool isMove = false;
 	unordered_set<int> view_list; //순서가 상관없을 땐 unordered 쓰는게 더 속도가 빠르다 
+	int room_id;
 };
 
 struct MINION {

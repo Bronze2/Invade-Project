@@ -20,6 +20,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_CREATE_ARROW  6
 #define C2S_ATTACK_READY 7
 #define C2S_MOVE_BLOCK 8
+#define C2S_MAKE_ROOM 9
+#define C2S_ENTER_ROOM 10
 
 #define S2C_LOGIN_OK		1
 #define S2C_KEY_DOWN		2
@@ -43,7 +45,9 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_DELETE_ARROW	18
 #define S2C_DELETE_PROJECTILE	19
 #define S2C_LOGIN_FALSE 20
+#define S2C_CURRENT_ROOM 21
 
+enum MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
 
 struct p_Vec3 {
 	float x;
@@ -64,6 +68,16 @@ struct sc_packet_check_login {
 
 	//char loginid[MAX_ID_LEN];
 	//char loginpw[MAX_ID_LEN];
+};
+
+
+struct sc_packet_current_room {
+	char size;
+	char type;
+	int room_id;
+	int max_user;
+	int current_user;
+
 };
 
 
@@ -147,6 +161,20 @@ constexpr unsigned char D_DOWN = 1;
 constexpr unsigned char D_LEFT = 2;
 constexpr unsigned char D_RIGHT = 3;
 
+struct cs_packet_make_room {
+	char size;
+	char type;
+	int room_id;
+	MATCH_TYPE match;
+};
+
+struct cs_packet_enter_room {
+	char size;
+	char type;
+	int room_id;
+	int clinet_id;
+};
+
 struct cs_packet_move_block {
 	char	size;
 	char	type;
@@ -194,6 +222,7 @@ struct cs_packet_arrow {
 	p_Vec3 Pos;
 	p_Vec3 Rot;
 	p_Vec3 Dir;
+	int room_id;
 	unsigned move_time;
 };
 

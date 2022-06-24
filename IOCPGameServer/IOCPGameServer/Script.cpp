@@ -20,9 +20,9 @@ void CScript::CreateObject(CGameObject* _pNewObject, int _iLayerIdx)
 	CEventMgr::GetInst()->AddEvent(evt);
 }
 
-void CScript::CreateObject(CGameObject* _pNewObject, const wstring& _strLayerName)
+void CScript::CreateObject(int index ,CGameObject* _pNewObject, const wstring& _strLayerName)
 {
-	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName);
+	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName);
 	if (nullptr == pLayer)
 		assert(nullptr);
 
@@ -79,9 +79,9 @@ void CScript::ClearParent(CGameObject* _pTarget)
 	CEventMgr::GetInst()->AddEvent(evt);
 }
 
-void CScript::TransferLayer(const wstring& _strLayerName, bool _bMoveAll)
+void CScript::TransferLayer(int index ,const wstring& _strLayerName, bool _bMoveAll)
 {
-	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName);
+	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName);
 	assert(nullptr != pLayer);
 
 	if (GetObj()->GetLayerIdx() == pLayer->GetLayerIdx())
@@ -105,9 +105,9 @@ void CScript::TransferLayer(int _iLayerIdx, bool _bMoveAll)
 	CEventMgr::GetInst()->AddEvent(evt);
 }
 
-void CScript::TransferLayer(CGameObject* _pTarget, const wstring& _strLayerName, bool _bMoveAll)
+void CScript::TransferLayer(int index ,CGameObject* _pTarget, const wstring& _strLayerName, bool _bMoveAll)
 {
-	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName);
+	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName);
 	assert(nullptr != pLayer);
 	if (_pTarget->GetLayerIdx() == pLayer->GetLayerIdx())
 		return;

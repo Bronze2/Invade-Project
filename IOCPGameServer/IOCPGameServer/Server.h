@@ -50,7 +50,7 @@ public:
 
 	void send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type,int coll_id ,int damage);
 
-
+	void send_current_room(int user_id, int room_id, int max_user, int current_user);
 
 private:
 

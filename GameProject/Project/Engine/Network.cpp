@@ -282,6 +282,18 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_deletProjectile(my_packet->id);
 	}
 	break;
+	case S2C_CURRENT_ROOM:
+	{
+		sc_packet_current_room* my_packet = reinterpret_cast<sc_packet_current_room*>(ptr);
+		RoomInfo room;
+		room.room_id = my_packet->room_id;
+		room.roomCurrentUser = my_packet->current_user;
+		room.roomMaxUser = my_packet->max_user;
+		cout << "==¹æ Á¤º¸==" << endl;
+		cout << "RoomID : " << room.room_id << "Current :" << room.roomCurrentUser << "Max :" << room.roomMaxUser << endl;
+		roomInfo.push_back(room);
+	}
+	break;
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
@@ -330,6 +342,19 @@ void Network::send_packet(void* buffer)
 
 }
 
+
+void Network::send_enter_room_packet(int room_id)
+{
+	cs_packet_enter_room m_packet;
+	m_packet.type = C2S_ENTER_ROOM;
+	m_packet.size = sizeof(m_packet);
+	m_packet.room_id = room_id;
+	m_packet.clinet_id = m_Client.id;
+
+	my_room_id = room_id;
+	send_packet(&m_packet);
+	cout << "Send Login Packet" << endl;
+}
 
 
 void Network::send_login_packet(char id[], char password[])
@@ -405,6 +430,16 @@ void Network::send_rotation_packet(Vec3 Rot)
 	send_packet(&m_packet);
 }
 
+void Network::send_make_room_packet(MATCH_TYPE match_type)
+{
+	cs_packet_make_room m_packet;
+	m_packet.type = C2S_MAKE_ROOM;
+	m_packet.size = sizeof(m_packet);
+	m_packet.room_id = m_Client.id;
+	m_packet.match = match_type;
+	send_packet(&m_packet);
+}
+
 void Network::send_game_start_packet()
 {
 	cs_packet_lobby_gamestart m_packet;
@@ -432,6 +467,7 @@ void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float
 	m_packet.Dir.y = Dir.y;
 	m_packet.Dir.z = Dir.z;
 	m_packet.Power = Power;
+	m_packet.room_id = my_room_id;
 	send_packet(&m_packet);
 
 }

@@ -112,16 +112,6 @@ void CService::enter_lobby(int user_id)
 		CServer::GetInst()->send_enter_lobby_packet(user_id, cl.second.m_id);	//{
 		CServer::GetInst()->send_enter_lobby_packet(cl.second.m_id, user_id); //니가 나를 보면 나도 너를 본다	//	if (user_id == i) continue;
 	}
-	//	else if (i != user_id)		//나에게는 보내지 않는다.
-	//	{
-	//		cout << "Enter Other Client" << endl;
-
-	//		CServer::GetInst()->send_enter_lobby_packet(user_id, i);
-	//		CServer::GetInst()->send_enter_lobby_packet(i, user_id); //니가 나를 보면 나도 너를 본다
-	//	}
-	//}
-	cout << "Enter	" << endl;
-
 	cout << " Current User " << SHARED_DATA::g_clients.size() << endl;
 	for (auto& cl : SHARED_DATA::g_clients) {
 		cout << " UserID :" << cl.second.m_id<<"--" <<cl.first << endl;

@@ -17,9 +17,9 @@ void CCollisionMgr::Init()
 {
 }
 
-void CCollisionMgr::Update()
+void CCollisionMgr::Update(int index)
 {
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);
 
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
@@ -35,10 +35,10 @@ void CCollisionMgr::Update()
 	}
 }
 
-void CCollisionMgr::CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2)
+void CCollisionMgr::CheckCollisionLayer(int index ,const wstring& _strLayerName1, const wstring& _strLayerName2)
 {
-	CLayer* pLayer1 = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName1);
-	CLayer* pLayer2 = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName2);
+	CLayer* pLayer1 = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName1);
+	CLayer* pLayer2 = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName2);
 
 	assert(nullptr != pLayer1 && nullptr != pLayer2);
 
@@ -51,9 +51,9 @@ void CCollisionMgr::CheckCollisionLayer(const wstring& _strLayerName1, const wst
 	m_LayerCheck[iMinIdx] |= (1 << iMaxIdx);
 }
 
-void CCollisionMgr::CheckCollisionLayer(int _iLayerIdx1, int _iLyaerIdx2)
+void CCollisionMgr::CheckCollisionLayer(int index ,int _iLayerIdx1, int _iLyaerIdx2)
 {
-	CScene* pScene = CSceneMgr::GetInst()->GetCurScene();
+	CScene* pScene = CSceneMgr::GetInst()->GetCurScene(index);
 
 	assert(pScene->GetLayer(_iLayerIdx1) && pScene->GetLayer(_iLyaerIdx2));
 

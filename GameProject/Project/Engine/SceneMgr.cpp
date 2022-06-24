@@ -188,10 +188,7 @@ void CSceneMgr::Update()
 
 	CSensorMgr::GetInst()->Update();
 	// 충돌 처리
-	CCollisionMgr::GetInst()->Update();
-
-
-	//Network::GetInst()->RecvData();
+	Network::GetInst()->RecvData();
 
 	//if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
 	//	if (Network::GetInst()->getHost()) {

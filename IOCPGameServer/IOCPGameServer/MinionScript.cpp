@@ -395,6 +395,6 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
 	pObject->GetScript<CProjectileScript>()->Init();
 
 
-	CreateObject(pObject, _Layer);
+	CreateObject(index ,pObject, _Layer);
 
 }

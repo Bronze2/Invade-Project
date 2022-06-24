@@ -23,14 +23,21 @@
 //#include "EmptyPlayerScript.h"
 
 
-void CInGameScene::Init()
+void CInGameScene::Init(int index)
 {
+
 	GetLayer(0)->SetName(L"Red");
+	GetLayer(0)->SetIndex(index);
 	GetLayer(1)->SetName(L"Player");
+	GetLayer(1)->SetIndex(index);
 	GetLayer(2)->SetName(L"Blue");
+	GetLayer(2)->SetIndex(index);
 	GetLayer(3)->SetName(L"RedSpawnPlace");
+	GetLayer(3)->SetIndex(index);
 	GetLayer(4)->SetName(L"BlueSpawnPlace");
+	GetLayer(4)->SetIndex(index);
 	GetLayer(5)->SetName(L"Arrow");
+	GetLayer(5)->SetIndex(index);
 
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
@@ -48,7 +55,7 @@ void CInGameScene::Init()
 		pObject->GetScript<CPlayerScript>()->m_SetId(i);
 		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 		pObject->GetScript<CPlayerScript>()->Init();
-
+		pObject->GetScript<CPlayerScript>()->SetIndex(index);
 		if (i % 2 == 0) {
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 			FindLayer(L"Blue")->AddGameObject(pObject, false);
@@ -96,6 +103,8 @@ void CInGameScene::Init()
 	pObject->FrustumCheck(false);
 	pObject->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
 	pObject->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
+	pObject->GetScript<CSpawnScript>()->SetIndex(index);
+
 	FindLayer(L"Red")->AddGameObject(pObject);
 
 
@@ -110,7 +119,7 @@ void CInGameScene::Init()
 	pObject1->Transform()->SetLocalRot(Vec3(-3.14f / 6, 3.14f, 0.f));
 	pObject1->Transform()->SetLocalScale(Vec3(70.f, 70.f, 70.f));
 	pNexus = pObject1;
-	FindLayer(L"Red")->AddGameObject(pObject1);
+	FindLayer(L"Red")->AddGameObject( pObject1);
 	pNexus = pObject1;
 	pObject1 = new CGameObject;
 	pObject1->SetName(L"Spawn_Place");
@@ -121,7 +130,9 @@ void CInGameScene::Init()
 	pObject1->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject1->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
 	pObject1->GetScript<CSpawnScript>()->SetEnemyNexus(pNexus);
-	FindLayer(L"Blue")->AddGameObject(pObject1);
+	pObject1->GetScript<CSpawnScript>()->SetIndex(index);
+
+	FindLayer(L"Blue")->AddGameObject( pObject1);
 
 
 	///////////////////--Å¸¿ö
@@ -134,6 +145,8 @@ void CInGameScene::Init()
 	pRedFirstTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::FIRST);
 	pRedFirstTower->GetScript<CTowerScript>()->m_SetId(0);
 	pRedFirstTower->GetScript<CTowerScript>()->SetCamp(CAMP_STATE::RED);
+	pRedFirstTower->GetScript<CTowerScript>()->SetIndex(index);
+
 	pRedFirstTower->Sensor()->SetRadius(400.f);
 	pRedFirstTower->Transform()->SetLocalPos(Vec3(-200.f, 0.f, 3550.f));
 	pRedFirstTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
@@ -155,6 +168,8 @@ void CInGameScene::Init()
 	pRedSecondTower->GetScript<CTowerScript>()->m_SetId(1);
 	pRedSecondTower->GetScript<CTowerScript>()->SetFirstTower(pRedFirstTower);
 	pRedSecondTower->GetScript<CTowerScript>()->SetCamp(CAMP_STATE::RED);
+	pRedSecondTower->GetScript<CTowerScript>()->SetIndex(index);
+
 	pRedSecondTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pRedSecondTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pRedSecondTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
@@ -169,6 +184,7 @@ void CInGameScene::Init()
 	pBlueFirstTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::FIRST);
 	pBlueFirstTower->GetScript<CTowerScript>()->m_SetId(2);
 	pBlueFirstTower->GetScript<CTowerScript>()->SetCamp(CAMP_STATE::BLUE);
+	pBlueFirstTower->GetScript<CTowerScript>()->SetIndex(index);
 	pBlueFirstTower->Sensor()->SetRadius(400.f);
 	pBlueFirstTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pBlueFirstTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
@@ -186,6 +202,8 @@ void CInGameScene::Init()
 	pBlueSecondTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::SECOND);
 	pBlueSecondTower->GetScript<CTowerScript>()->SetCamp(CAMP_STATE::BLUE);
 	pBlueSecondTower->GetScript<CTowerScript>()->m_SetId(3);
+	pBlueSecondTower->GetScript<CTowerScript>()->SetIndex(index);
+
 	pBlueSecondTower->Sensor()->SetRadius(400.f);
 	pBlueSecondTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pBlueSecondTower->GetScript<CTowerScript>()->SetFirstTower(pBlueFirstTower);
@@ -198,16 +216,16 @@ void CInGameScene::Init()
 	////////
 
 
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Blue");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Red", L"Red");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Blue", L"Blue");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Red", L"Blue");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Red", L"Arrow");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Blue", L"Arrow");
 
 
 
 
-	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
+	CSensorMgr::GetInst()->CheckSensorLayer(index, L"Blue", L"Red");
 
 	Awake();
 	Start();

@@ -4,7 +4,7 @@ class CInGameScene :
     public CScene
 {
 public:
-    virtual void Init();
+    virtual void Init(int index);
 
 };
 

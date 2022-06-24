@@ -17,9 +17,9 @@ void CSensorMgr::Init()
 {
 }
 
-void CSensorMgr::Update()
+void CSensorMgr::Update(int index)
 {
-    CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+    CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);
 
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
@@ -35,10 +35,10 @@ void CSensorMgr::Update()
 	}
 }
 
-void CSensorMgr::CheckSensorLayer(const wstring& _strLayerName1, const wstring& _strLayerName2)
+void CSensorMgr::CheckSensorLayer(int index , const wstring& _strLayerName1, const wstring& _strLayerName2)
 {
-	CLayer* pLayer1 = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName1);
-	CLayer* pLayer2 = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName2);
+	CLayer* pLayer1 = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName1);
+	CLayer* pLayer2 = CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(_strLayerName2);
 
 	assert(nullptr != pLayer1 && nullptr != pLayer2);
 
@@ -51,9 +51,9 @@ void CSensorMgr::CheckSensorLayer(const wstring& _strLayerName1, const wstring& 
 	m_LayerCheck[iMinIdx] |= (1 << iMaxIdx);
 }
 
-void CSensorMgr::CheckSensorLayer(int _strLayer1, int _strLayer2)
+void CSensorMgr::CheckSensorLayer(int index, int _strLayer1, int _strLayer2)
 {
-	CScene* pScene = CSceneMgr::GetInst()->GetCurScene();
+	CScene* pScene = CSceneMgr::GetInst()->GetCurScene(index);
 
 	assert(pScene->GetLayer(_strLayer1) && pScene->GetLayer(_strLayer2));
 
