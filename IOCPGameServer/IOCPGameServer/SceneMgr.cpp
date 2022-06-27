@@ -88,22 +88,21 @@ void CSceneMgr::Init(int index)
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 	m_pCurScene[index] = m_arrScene[(UINT)SCENE_TYPE::INGAME];
 	m_pCurScene[index]->Init(index);
-
+	m_pCurScene[index]->isinit = true;
 }
 
 void CSceneMgr::Update()
 {
 
 	for (auto scene : m_pCurScene) {
-		scene.second->Update();
-
-		scene.second->LateUpdate();
-
-		scene.second->FinalUpdate();
-		CSensorMgr::GetInst()->Update(scene.first);
-		CCollisionMgr::GetInst()->Update(scene.first);
-		CEventMgr::GetInst()->Update(scene.first);
-
+		if (scene.second->isinit) {
+			scene.second->Update();
+			scene.second->LateUpdate();
+			scene.second->FinalUpdate();
+			CSensorMgr::GetInst()->Update(scene.first);
+			CCollisionMgr::GetInst()->Update(scene.first);
+			CEventMgr::GetInst()->Update(scene.first);
+		}
 	}
 	// 충돌 처리
 

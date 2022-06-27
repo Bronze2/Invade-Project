@@ -92,12 +92,12 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_lobby_enter* my_packet = reinterpret_cast<sc_packet_lobby_enter*>(ptr);
 		m_Client.id = my_packet->id;
-		m_Client.camp = my_packet->camp;
-		m_Client.isHost = my_packet->isHost;
+		//m_Client.camp = my_packet->camp;
+		//m_Client.isHost = my_packet->isHost;
+		//cout << "My Client ID :" << m_Client.id <<
+		//	"	Camp :" << (int)m_Client.camp << 
+		//	"	isHost:"<< boolalpha << m_Client.isHost <<endl;
 		cout << "로그인 성공" << endl;
-		cout << "My Client ID :" << m_Client.id <<
-			"	Camp :" << (int)m_Client.camp << 
-			"	isHost:"<< boolalpha << m_Client.isHost <<endl;
 	}
 	break;
 	case S2C_LOGIN_FALSE:
@@ -112,6 +112,7 @@ void Network::ProcessPacket(char* ptr)
 		int id = my_packet->id;
 		cout << my_packet->id << endl;
 		if (id == m_Client.id) {
+			cout << "ISME" << endl;
 		}
 		else {
 			m_otherClients[id].camp = my_packet->camp;
@@ -134,12 +135,14 @@ void Network::ProcessPacket(char* ptr)
 			m_Client.pos.x = my_packet->pos.x;
 			m_Client.pos.y = my_packet->pos.y;
 			m_Client.pos.z = my_packet->pos.z;
+			m_Client.camp = my_packet->camp;
 			CSceneMgr::GetInst()->EnterGame();
 		}
 		else {
 			m_otherClients[my_packet->id].pos.x = my_packet->pos.x;
 			m_otherClients[my_packet->id].pos.y = my_packet->pos.y;
 			m_otherClients[my_packet->id].pos.z = my_packet->pos.z;
+			m_otherClients[my_packet->id].camp = my_packet->camp;
 			//CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 	}

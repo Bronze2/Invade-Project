@@ -5,6 +5,5 @@ class CInGameScene :
 {
 public:
     virtual void Init(int index);
-
 };
 

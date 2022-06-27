@@ -191,18 +191,23 @@ void CThread::worker_Thread()
 				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
 				SHARED_DATA::g_clients[user_id].m_id = user_id;
-				if (user_id == 0)
-					SHARED_DATA::g_clients[user_id].m_isHost = true;
+				
+				
+				//if (user_id == 0)
+				//	SHARED_DATA::g_clients[user_id].m_isHost = true;
 
-				if (user_id % 2 == 0) {
-					SHARED_DATA::g_clients[user_id].m_camp = RED;
-					SHARED_DATA::g_clients[user_id].Pos = Vec3(0,0,1125);
+				//if (user_id % 2 == 0) {
+				//	SHARED_DATA::g_clients[user_id].m_camp = RED;
+				//	SHARED_DATA::g_clients[user_id].Pos = Vec3(0,0,1125);
 
-				}
-				else {
-					SHARED_DATA::g_clients[user_id].Pos = Vec3(0, 0, 5800);
-					SHARED_DATA::g_clients[user_id].m_camp = BLUE;
-				}
+				//}
+				//else {
+				//	SHARED_DATA::g_clients[user_id].Pos = Vec3(0, 0, 5800);
+				//	SHARED_DATA::g_clients[user_id].m_camp = BLUE;
+				//}
+
+
+
 				//SHARED_DATA::g_clients[user_id].view_list.clear();
 
 				DWORD flags = 0;
@@ -282,12 +287,18 @@ void CThread::process_packet(int user_id, char* buf)
 	{	cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
 		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match);
 		SHARED_DATA::g_clients[user_id].room_id = user_id;
+		SHARED_DATA::g_clients[user_id].m_isHost = true;
+		SHARED_DATA::g_clients[user_id].m_camp = BLUE;
+
 	}
 	break;
 	case C2S_ENTER_ROOM:
 	{	cs_packet_enter_room* packet = reinterpret_cast<cs_packet_enter_room*>(buf);
 		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
 		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
+		SHARED_DATA::g_clients[user_id].m_camp = RED;
+
+		//SHARED_DATA::g_clients[user_id].m_camp
 		//Room에 들어온 클라이언트들을 서로 알려주기.
 
 

@@ -69,7 +69,7 @@ void CService::do_move_stop(int user_id, int direction)
 
 	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.m_id == user_id) continue;
-		else
+		else if(cl.second.room_id == SHARED_DATA::g_clients[user_id].room_id)
 			CServer::GetInst()->send_move_stop_packet(cl.second.m_id, user_id);
 	}
 }
@@ -130,7 +130,7 @@ void CService::do_Rotation(int user_id)
 
 	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.m_id == user_id) continue;
-		else			
+		else if (cl.second.room_id == SHARED_DATA::g_clients[user_id].room_id)
 			CServer::GetInst()->send_mouse_packet(cl.second.m_id, user_id);
 
 	}
@@ -139,12 +139,12 @@ void CService::do_Rotation(int user_id)
 
 void CService::initialize_clients()
 {
-	for (int i = 0; i < MAX_USER; ++i)
-	{
-		//이건 멀티쓰레드로 돌기 전에, 싱글쓰레드로 돌아가는 함수여서 lock을 거는 의미가 없음. 
-		SHARED_DATA::g_clients[i].m_status = ST_FREE;
-		SHARED_DATA::g_clients[i].m_id = i;
-	}
+	//for (int i = 0; i < MAX_USER; ++i)
+	//{
+	//	//이건 멀티쓰레드로 돌기 전에, 싱글쓰레드로 돌아가는 함수여서 lock을 거는 의미가 없음. 
+	//	SHARED_DATA::g_clients[i].m_status = ST_FREE;
+	//	SHARED_DATA::g_clients[i].m_id = i;
+	//}
 	//for (auto& cl : SHARED_DATA::g_clients) {
 	//	if (cl.second.m_id == user_id) continue;
 	//	else

@@ -39,46 +39,51 @@ void CInGameScene::Init(int index)
 	GetLayer(5)->SetName(L"Arrow");
 	GetLayer(5)->SetIndex(index);
 
+	for ( auto &cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == index) {
+			CGameObject* pObject = new CGameObject;
+			pObject->AddComponent(new CTransform);
+			pObject->AddComponent(new CCollider3D);
+			pObject->AddComponent(new CPlayerScript);
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i) {
-		CGameObject* pObject = new CGameObject;
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CCollider3D);
-		pObject->AddComponent(new CPlayerScript);
+			pObject->AddComponent(new CSensor);
+			pObject->Sensor()->SetRadius(300.f);
 
-		pObject->AddComponent(new CSensor);
-		pObject->Sensor()->SetRadius(300.f);
+			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
+			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+			pObject->GetScript<CPlayerScript>()->m_SetId(cl.first);
+			pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+			pObject->GetScript<CPlayerScript>()->Init();
+			pObject->GetScript<CPlayerScript>()->SetIndex(index);
+			if (cl.first % 2 == 0) {
+				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+				FindLayer(L"Blue")->AddGameObject(pObject, false);
+				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 
-		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
-		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
-		pObject->GetScript<CPlayerScript>()->m_SetId(i);
-		pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
-		pObject->GetScript<CPlayerScript>()->Init();
-		pObject->GetScript<CPlayerScript>()->SetIndex(index);
-		if (i % 2 == 0) {
-			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
-			FindLayer(L"Blue")->AddGameObject(pObject, false);
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 
+			}
+			else {
+				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+				FindLayer(L"Red")->AddGameObject(pObject, false);
+				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+
+
+			}
+
+			//if (i % 2 == 0) {
+			//	FindLayer(L"Blue")->AddGameObject(pObject, false);
+			//	pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+
+			//}
+			//else {
+			//	FindLayer(L"Red")->AddGameObject(pObject, false);
+			//	pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+			//}
+			std::cout << "플레이어 [" << cl.first << "] 생성" << endl;
 		}
-		else {
-			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
-			FindLayer(L"Red")->AddGameObject(pObject, false);
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-
-		}
-
-		//if (i % 2 == 0) {
-		//	FindLayer(L"Blue")->AddGameObject(pObject, false);
-		//	pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
-
-		//}
-		//else {
-		//	FindLayer(L"Red")->AddGameObject(pObject, false);
-		//	pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
-		//}
-		std::cout << "플레이어 [" << i << "] 생성" << endl;
 	}
 
 	
@@ -228,5 +233,6 @@ void CInGameScene::Init(int index)
 	CSensorMgr::GetInst()->CheckSensorLayer(index, L"Blue", L"Red");
 
 	Awake();
-	Start();
+	Start(); 
+	isinit = true;
 }

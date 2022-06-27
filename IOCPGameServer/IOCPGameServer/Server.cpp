@@ -103,8 +103,6 @@ void CServer::send_lobby_login_ok_packet(int user_id)
 	p.id = user_id;
 	p.size = sizeof(p);
 	p.type = S2C_LOGIN_OK;
-	p.camp = SHARED_DATA::g_clients[user_id].m_camp;
-	p.isHost = SHARED_DATA::g_clients[user_id].m_isHost;
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }
@@ -164,12 +162,9 @@ void CServer::send_enter_packet(int user_id, int o_id)
 	p.pos.x = SHARED_DATA::g_clients[o_id].Pos.x;
 	p.pos.y = SHARED_DATA::g_clients[o_id].Pos.y;
 	p.pos.z = SHARED_DATA::g_clients[o_id].Pos.z;
+	p.camp = SHARED_DATA::g_clients[o_id].m_camp;
 	strcpy_s(p.name, SHARED_DATA::g_clients[o_id].m_name);
 	p.o_type = O_PLAYER;
-
-	SHARED_DATA::g_clients[user_id].m_cLock.lock();
-	SHARED_DATA::g_clients[user_id].view_list.insert(o_id);
-	SHARED_DATA::g_clients[user_id].m_cLock.unlock();
 
 	send_packet(user_id, &p); //&p로 주지 않으면 복사되어서 날라가니까 성능에 안좋다. 
 }

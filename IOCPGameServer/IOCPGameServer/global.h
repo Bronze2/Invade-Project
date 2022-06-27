@@ -85,9 +85,7 @@ struct MINION {
 
 namespace SHARED_DATA {
 	extern HANDLE g_iocp;					//iocp 핸들
-	//extern CLIENT g_clients[MAX_USER];		//클라이언트 동접만큼 저장하는 컨테이너 필요
 	extern unordered_map <int, CLIENT> g_clients;
-
 	extern unordered_map<int, MINION> g_minion;
 	extern priority_queue<event_type> timer_queue;
 	extern mutex timer_lock;

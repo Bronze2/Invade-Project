@@ -9,9 +9,7 @@
 //
 namespace SHARED_DATA {
 	HANDLE g_iocp;					
-	//CLIENT g_clients[MAX_USER];		
 	unordered_map <int, CLIENT> g_clients;
-	
 	unordered_map<int, MINION> g_minion;
 	priority_queue<event_type> timer_queue;
 	mutex timer_lock;
@@ -22,7 +20,6 @@ namespace SHARED_DATA {
 	unordered_map<int, Vec3> g_bullet;
 	int g_bulletindex;
 };
-
 
 
 void main()

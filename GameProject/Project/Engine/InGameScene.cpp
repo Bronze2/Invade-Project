@@ -128,7 +128,6 @@ void CInGameScene::Init()
 			//pObject = pMeshDataBlue->Instantiate();
 			pObject = pMeshDataBlue->Instantiate();
 			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
-
 //			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
 		}
 		else {
@@ -149,6 +148,8 @@ void CInGameScene::Init()
 
 		if (i % 2 == 0) {
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+
 		}
 		else {
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));

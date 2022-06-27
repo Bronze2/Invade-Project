@@ -163,8 +163,10 @@ void CSceneMgr::Init()
 	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
 	m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
 
-	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
+
+
 	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOGIN];
 	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
 	m_pCurScene->Init();

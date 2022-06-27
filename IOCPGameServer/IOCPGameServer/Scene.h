@@ -16,6 +16,7 @@ public:
 	void Update();
 	void LateUpdate();
 	void FinalUpdate();
+	int isinit = false;
 
 	void SetLayerName(int _iIdx, const wstring& _strName);
 	void AddGameObject(int index ,const wstring& _strLayerName, CGameObject* _pObject, bool _bMoveAll);

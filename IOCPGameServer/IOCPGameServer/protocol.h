@@ -133,6 +133,7 @@ struct sc_packet_enter {
 	char name[MAX_ID_LEN];
 	char o_type;
 	p_Vec3 pos;
+	char camp;
 
 };
 
@@ -226,8 +227,8 @@ struct cs_packet_arrow {
 	unsigned move_time;
 };
 
-constexpr unsigned char RED = 0;
-constexpr unsigned char BLUE = 1;
+constexpr unsigned char BLUE = 0;
+constexpr unsigned char RED = 1;
 
 
 constexpr unsigned char warrior = 0;
