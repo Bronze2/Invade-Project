@@ -177,6 +177,7 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
+    <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="BowScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
@@ -262,6 +263,7 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="ArrowScript.cpp" />
+    <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="BowScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />

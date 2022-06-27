@@ -262,6 +262,7 @@
       <Filter>Device</Filter>
     </ClCompile>
     <ClCompile Include="CSoundClass.cpp" />
+    <ClCompile Include="AudioSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -511,6 +512,7 @@
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="CSoundClass.h" />
+    <ClInclude Include="AudioSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">

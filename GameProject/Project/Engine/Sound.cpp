@@ -58,7 +58,7 @@ void CSound::Play(int _iRoopCount, bool _bOverlap)
 
 	FMOD::Channel* pChannel = nullptr;
 	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
-
+	
 	pChannel->setCallback(CHANNEL_CALLBACK);
 	pChannel->setUserData(this);
 
@@ -99,6 +99,16 @@ void CSound::Load(const wstring& _strFilePath)
 	string path(_strFilePath.begin(), _strFilePath.end());
 
 	if (FMOD_OK != g_pFMOD->createSound(path.c_str(), FMOD_DEFAULT, nullptr, &m_pSound))
+	{
+		assert(nullptr);
+	}
+}
+
+void CSound::Load3D(const wstring& _strFilePath)
+{
+	string path(_strFilePath.begin(), _strFilePath.end());
+
+	if (FMOD_OK != g_pFMOD->createSound(path.c_str(), FMOD_3D, nullptr, &m_pSound))
 	{
 		assert(nullptr);
 	}

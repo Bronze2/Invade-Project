@@ -21,6 +21,7 @@ private:
 
 
 
+
 public:
 	// 0 (무한반복) 
 	void Play(int _iRoopCount, bool _bOverlap = false);
@@ -30,6 +31,7 @@ public:
 
 public:
 	virtual void Load(const wstring& _strFilePath);
+	virtual void Load3D(const wstring& _strFilePath);
 
 public:
 	CSound();
