@@ -125,6 +125,18 @@ void CCamera::FinalUpdate()
 
 void CCamera::SortGameObject()
 {
+	int a = 0;
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
+		a = 1;
+	}
+	else if(CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::LOGIN) {
+		a = 2;
+	}
+	else if(CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::LOBBY) {
+		a = 3;
+	}
+	cout << a << endl;
+
 	for (auto& pair : m_mapInstGroup_F)
 		pair.second.clear();
 	for (auto& pair : m_mapInstGroup_D)

@@ -55,7 +55,10 @@ struct p_Vec3 {
 	float z;
 };
 
-
+enum class CAMP_STATE {
+	RED,
+	BLUE,
+};
 
 #pragma pack(push ,1)
 
@@ -133,8 +136,8 @@ struct sc_packet_enter {
 	char name[MAX_ID_LEN];
 	char o_type;
 	p_Vec3 pos;
-	char camp;
-
+	//char camp;
+	CAMP_STATE camp;
 };
 
 struct sc_packet_leave {
@@ -224,6 +227,9 @@ struct cs_packet_arrow {
 	p_Vec3 Rot;
 	p_Vec3 Dir;
 	int room_id;
+	//char camp;
+	CAMP_STATE camp;
+
 	unsigned move_time;
 };
 
@@ -239,7 +245,9 @@ struct sc_packet_spawn_minion {
 	char	size;
 	char	type;
 	int		id;
-	char    camp;
+	//char    camp;
+	CAMP_STATE camp;
+
 	int		mtype;
 	p_Vec3  pos;
 	p_Vec3  dir;
@@ -304,7 +312,9 @@ struct sc_packet_arrow {
 struct sc_packet_lobby_enter {
 	char size;
 	char type;
-	char camp;
+	//char camp;
+	CAMP_STATE camp;
+
 	int id;
 	bool isHost;
 };

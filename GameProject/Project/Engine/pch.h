@@ -49,6 +49,7 @@
 
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "mswsock.lib")
+#include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
 // 콘솔창 띄우기
 

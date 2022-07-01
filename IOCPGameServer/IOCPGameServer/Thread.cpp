@@ -151,17 +151,17 @@ void CThread::worker_Thread()
 
 		case OP_ACCEPT:			//CreateIoCompletionPort으로 클라소켓 iocp에 등록 -> 초기화 -> recv -> accept 다시(다중접속)
 		{
-			int user_id = -1;
-			for (int i = 0; i < MAX_USER; ++i)
-			{
-				lock_guard<mutex> gl{ SHARED_DATA::g_clients[i].m_cLock }; //이렇게 하면 unlock이 필요 없다. 이 블록에서 빠져나갈때 unlock을 자동으로 해준다.
-				if (ST_FREE == SHARED_DATA::g_clients[i].m_status)
-				{
-					SHARED_DATA::g_clients[i].m_status = ST_ALLOCATED;
-					user_id = i;
-					break;
-				}
-			}
+			//int user_id = -1;
+			//for (int i = 0; i < MAX_USER; ++i)
+			//{
+			//	lock_guard<mutex> gl{ SHARED_DATA::g_clients[i].m_cLock }; //이렇게 하면 unlock이 필요 없다. 이 블록에서 빠져나갈때 unlock을 자동으로 해준다.
+			//	if (ST_FREE == SHARED_DATA::g_clients[i].m_status)
+			//	{
+			//		SHARED_DATA::g_clients[i].m_status = ST_ALLOCATED;
+			//		user_id = i;
+			//		break;
+			//	}
+			//}
 
 			//for (auto& cl : SHARED_DATA::g_clients) {
 			//	lock_guard<mutex> gl{ cl.second.m_cLock };
@@ -179,18 +179,18 @@ void CThread::worker_Thread()
 				closesocket(clientSocket); // send_login_fail_packet();
 			else
 			{
-				CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket), SHARED_DATA::g_iocp, user_id, 0);
+				CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket), SHARED_DATA::g_iocp, accept_user_id, 0);
 
 				//g_clients[user_id].m_id = user_id; 멀쓰에서 하는게 아니고 초기화 할때 한번 해줘야 함 처음에 한번.
-				SHARED_DATA::g_clients[user_id].m_prev_size = 0; //이전에 받아둔 조각이 없으니 0
-				SHARED_DATA::g_clients[user_id].m_socket = clientSocket;
+				SHARED_DATA::g_clients[accept_user_id].m_prev_size = 0; //이전에 받아둔 조각이 없으니 0
+				SHARED_DATA::g_clients[accept_user_id].m_socket = clientSocket;
 
-				ZeroMemory(&SHARED_DATA::g_clients[user_id].m_recv_over.over, 0, sizeof(SHARED_DATA::g_clients[user_id].m_recv_over.over));
-				SHARED_DATA::g_clients[user_id].m_recv_over.op = OP_RECV;
-				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.buf = SHARED_DATA::g_clients[user_id].m_recv_over.io_buf;
-				SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
+				ZeroMemory(&SHARED_DATA::g_clients[accept_user_id].m_recv_over.over, 0, sizeof(SHARED_DATA::g_clients[accept_user_id].m_recv_over.over));
+				SHARED_DATA::g_clients[accept_user_id].m_recv_over.op = OP_RECV;
+				SHARED_DATA::g_clients[accept_user_id].m_recv_over.wsabuf.buf = SHARED_DATA::g_clients[accept_user_id].m_recv_over.io_buf;
+				SHARED_DATA::g_clients[accept_user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
-				SHARED_DATA::g_clients[user_id].m_id = user_id;
+				SHARED_DATA::g_clients[accept_user_id].m_id = accept_user_id;
 				
 				
 				//if (user_id == 0)
@@ -211,15 +211,16 @@ void CThread::worker_Thread()
 				//SHARED_DATA::g_clients[user_id].view_list.clear();
 
 				DWORD flags = 0;
-				WSARecv(clientSocket, &SHARED_DATA::g_clients[user_id].m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_DATA::g_clients[user_id].m_recv_over.over, NULL);
+				WSARecv(clientSocket, &SHARED_DATA::g_clients[accept_user_id].m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_DATA::g_clients[accept_user_id].m_recv_over.over, NULL);
 				SHARED_DATA::current_user++;
 				cout << " USERINDEX" << endl;
 				SHARED_DATA::g_clients.erase(999);
 				for (auto& cl : SHARED_DATA::g_clients)
 				{
-					cout << "["<<cl.first<< "]--";
+					cout << "["<<cl.second.m_id<< "]--";
 				}
 				cout << endl;
+				accept_user_id++;
 			}
 
 			//소켓 초기화 후 다시 accept
@@ -288,7 +289,7 @@ void CThread::process_packet(int user_id, char* buf)
 		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match);
 		SHARED_DATA::g_clients[user_id].room_id = user_id;
 		SHARED_DATA::g_clients[user_id].m_isHost = true;
-		SHARED_DATA::g_clients[user_id].m_camp = BLUE;
+		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;
 
 	}
 	break;
@@ -296,7 +297,7 @@ void CThread::process_packet(int user_id, char* buf)
 	{	cs_packet_enter_room* packet = reinterpret_cast<cs_packet_enter_room*>(buf);
 		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
 		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
-		SHARED_DATA::g_clients[user_id].m_camp = RED;
+		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::RED;
 
 		//SHARED_DATA::g_clients[user_id].m_camp
 		//Room에 들어온 클라이언트들을 서로 알려주기.
@@ -325,6 +326,7 @@ void CThread::process_packet(int user_id, char* buf)
 		SHARED_DATA::g_clients[user_id].dir.z = packet->dir.z;
 		SHARED_DATA::g_clients[user_id].animState = packet->state;
 		CService::GetInst()->do_move(user_id, packet->direction);
+		cout << user_id << endl;
 	}
 	break;
 	case C2S_KEY_UP:
@@ -354,10 +356,10 @@ void CThread::process_packet(int user_id, char* buf)
 		cs_packet_lobby_gamestart* packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
 		if (packet->id == user_id) {
 			if (SHARED_DATA::g_clients[user_id].m_isHost) {
-				for (auto& cl : SHARED_DATA::g_clients) {
-					if(cl.second.room_id == user_id)
-						CService::GetInst()->enter_game(cl.second.m_id);
-				}
+				//for (auto& cl : SHARED_DATA::g_clients) {
+				//	if(cl.second.room_id == user_id)
+				//		CService::GetInst()->enter_game(cl.second.m_id);
+				//}
 				//플레이어 진입 후 미니언 생성 시작
 				CSceneMgr::GetInst()->Init(user_id);
 				CService::GetInst()->add_timer(user_id, OP_UPDATE, 10);
@@ -378,7 +380,7 @@ void CThread::process_packet(int user_id, char* buf)
 		cs_packet_arrow* packet = reinterpret_cast<cs_packet_arrow*>(buf);
 		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->room_id ,packet->Clinet_id, packet->Arrow_id,
 			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
-			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, CAMP_STATE::BLUE);
+			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, packet->camp);
 	}
 	break;
 	case C2S_MOVE_BLOCK:

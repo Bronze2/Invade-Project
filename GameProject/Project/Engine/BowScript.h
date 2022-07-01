@@ -37,7 +37,7 @@ private:
 
     bool m_bMaxCharged;
     bool m_bCheckDegree;
-
+    CAMP_STATE m_camp;
     bool isMain;
 
 public:
@@ -50,6 +50,7 @@ public:
     void SetTarget(CGameObject* _target) { m_pTargetObject = _target; }
     void SetBoneIdx(int _boneIdx) { m_iTargetBoneIdx = _boneIdx; }
     void SetMain() { isMain = true; }
+    void SetCamp(CAMP_STATE camp) { m_camp = camp; }
     void SetState(BOW_STATE _eState) { m_eState = _eState; }
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot);
     void DeleteArrow(int ArrowId);

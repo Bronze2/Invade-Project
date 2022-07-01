@@ -349,10 +349,7 @@ enum class SPAWN_COUNT {
 	SEVEN,
 };
 
-enum class CAMP_STATE {
-	RED,
-	BLUE,
-};
+
 
 enum class PLAYER_STATE {
 	IDLE,
@@ -379,4 +376,9 @@ enum class ELEMENT_TYPE {
 	DARK = 2,
 	THUNDER = 3,
 	WIND = 4
+};
+
+enum class SKILL_TYPE {
+	ACT,
+	PASSIVE,
 };

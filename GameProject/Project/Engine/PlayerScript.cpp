@@ -626,7 +626,7 @@ void CPlayerScript::Update()
 			m_eState = PLAYER_STATE::DIE;
 		}
 		Transform()->SetLocalRot(vRot);
-		Network::GetInst()->send_rotation_packet(vRot);
+		//Network::GetInst()->send_rotation_packet(vRot);
 	}
 	Update_LerpPos();
 	m_FAnimation();

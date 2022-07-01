@@ -29,6 +29,8 @@ void CRenderMgr::Render()
 	CDevice::GetInst()->SetConstBufferToRegister(pGlobalBuffer, pGlobalBuffer->AddData(&g_global));
 	// 광원 정보 업데이트
 	UpdateLight3D();
+	
+
 
 	// SwapChain MRT 초기화
 	UINT iIdx = CDevice::GetInst()->GetSwapChainIndex();

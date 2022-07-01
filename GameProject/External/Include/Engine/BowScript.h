@@ -37,7 +37,7 @@ private:
 
     bool m_bMaxCharged;
     bool m_bCheckDegree;
-
+    CAMP_STATE m_camp;
     bool isMain;
 
 public:

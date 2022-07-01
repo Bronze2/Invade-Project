@@ -1,4 +1,6 @@
 #pragma once
+//#include "pch.h"
+
 //#include "Network.h"
 class CScene;
 class CCamera;
@@ -6,6 +8,7 @@ class CGameObject;
 
 enum class SCENE_TYPE {
 	TITLE,
+	LOGIN,
 	LOBBY,
 	INGAME,
 	RESULT,
@@ -44,12 +47,16 @@ private:
 	map<int, map<int,arrowMove>> m_arrow;
 
 public:
+
 	void Init();
 	void Update();
 	void Update_Tool();
 	void Init(SCENE_TYPE _eType);
 	
-	
+	CScene* GetCurScene();
+	void ChangeScene(CScene* _pNextScene);
+	void ChangeScene(SCENE_TYPE _Type);
+
 	void net_enterClient(int id, float x, float y, float z);
 	void net_setMainClient(int id, float x, float y, float z);
 	void net_setEnableClient(int id);	//지울가능성 높음
@@ -96,13 +103,11 @@ public:
 
 	minioninfo get_minioninfo(int id) { return m_minion[id]; };
 	void set_minioninfoState(int id, MINION_STATE state) { m_minion[id].state = state; }
-	CScene* GetCurScene();
-	void ChangeScene(CScene* _pNextScene);
-	void ChangeScene(SCENE_TYPE _Type);
+
 	void EnterGame();
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 
-	void net_lobby_enterClient(int id, CAMP_STATE, bool isHost);
+	//void net_lobby_enterClient(int id, CAMP_STATE camp, bool isHost);
 
 };
 

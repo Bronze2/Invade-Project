@@ -349,10 +349,7 @@ enum class SPAWN_COUNT {
 	SEVEN,
 };
 
-enum class CAMP_STATE {
-	RED,
-	BLUE,
-};
+
 
 enum class PLAYER_STATE {
 	IDLE,

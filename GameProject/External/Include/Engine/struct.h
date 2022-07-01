@@ -271,3 +271,22 @@ struct tBillBoard {
 	Vec3 vWorldDir;
 	Vec2 vPadding;
 };
+
+struct SKILL {
+	wstring Name;
+	UINT Code;
+
+	SKILL_TYPE eSkillType;
+	ELEMENT_TYPE eElementType;
+
+
+	float fDuration;
+	float fDamage;
+	std::chrono::system_clock::time_point StartTime;
+	float DotDamage;
+	float fCoolTime;
+	bool bUse;
+	bool bFinal;
+	UINT Count;
+	float Sum;
+};

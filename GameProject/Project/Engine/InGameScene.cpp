@@ -120,17 +120,134 @@ void CInGameScene::Init()
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
 
-	for (int i = 0; i < Network::GetInst()->getOtherClientSize() + 1; ++i) {
+
+
+	pObject = new CGameObject;
+
+
+	if (Network::GetInst()->getMainClient().camp == CAMP_STATE::BLUE) {
+		//pObject = pMeshDataBlue->Instantiate();
+		pObject = pMeshDataBlue->Instantiate();
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
+		//			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
+	}
+	else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
+		pObject = pMeshDataRed->Instantiate();
+		pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerRed.GetPointer());
+	}
+
+
+	pObject->SetName(L"Monster");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->AddComponent(new CSensor);
+	pObject->AddComponent(new CPlayerScript);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+	pObject->FrustumCheck(false);
+
+
+	if (Network::GetInst()->getMainClient().camp == CAMP_STATE::BLUE) {
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
+		pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+		cout << "메인클라 블루  [" << Network::GetInst()->getMainClient().id<<"]" << endl;
+	}
+	else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+		pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+		cout << "메인클라 레드  [" << Network::GetInst()->getMainClient().id << "]" << endl;
+
+	}
+
+
+	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
+	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
+	pObject->MeshRender()->SetDynamicShadow(true);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+	pObject->GetScript<CPlayerScript>()->m_SetId(Network::GetInst()->getMainClient().id);
+
+
+	pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+	//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
+
+	CAnimation* pNewAnimation = new CAnimation;
+	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
+	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
+	pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // 점프 후 팔벌리기 81, 125
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
+	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
+	pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // 누워서 끝 240, 261
+	pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
+	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
+
+	pObject->Animator3D()->SetAnimation(pNewAnimation);
+	pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+
+	pObject->GetScript<CPlayerScript>()->Init();
+	pObject->GetScript<CPlayerScript>()->SetMain();
+
+	FindLayer(L"Blue")->AddGameObject(pObject, false);
+
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
+	CGameObject* pBow;
+	pBow = pMeshbowData->Instantiate();
+	pBow->SetName(L"Bow");
+
+	pBow->AddComponent(new CTransform);
+	pBow->AddComponent(new CSensor);
+	pBow->AddComponent(new CBowScript);
+	pBow->FrustumCheck(false);
+	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
+	pBow->Transform()->SetLocalScale(Vec3(2.4f, 1.2f, 2.4f));
+	pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
+	pBow->MeshRender()->SetDynamicShadow(true);
+	pBow->GetScript<CBowScript>()->SetTarget(pObject);
+	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
+
+	Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
+	pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
+
+	pNewAnimation = new CAnimation;
+	pNewAnimation->InsertAnimClip(L"IDLE", 0, 1);         // 0, 13
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 1, 12);
+	pNewAnimation->InsertAnimClip(L"ATTACK", 13, 18);
+
+	pBow->Animator3D()->SetAnimation(pNewAnimation);
+	pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+	pBow->GetScript<CBowScript>()->Init();
+	pBow->GetScript<CBowScript>()->SetCamp(Network::GetInst()->getMainClient().camp);
+	pObject->AddChild(pBow);
+	pMainCam->Camera()->SetPlayer(pObject);
+	pMainCam->Camera()->SetbPlay(true);
+	pBow->GetScript<CBowScript>()->SetMain();
+	FindLayer(L"Blue")->AddGameObject(pBow);
+
+
+
+
+
+
+
+
+
+	for (auto &cl : Network::GetInst()->getOtherClients())
+	{
+
 		pObject = new CGameObject;
 
 
-		if (i % 2 == 0) {
+		if (cl.second.camp == CAMP_STATE::BLUE) {
 			//pObject = pMeshDataBlue->Instantiate();
 			pObject = pMeshDataBlue->Instantiate();
 			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
-//			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
+			//			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
 		}
-		else {
+		else if(cl.second.camp == CAMP_STATE::RED) {
 			pObject = pMeshDataRed->Instantiate();
 			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerRed.GetPointer());
 		}
@@ -146,14 +263,17 @@ void CInGameScene::Init()
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 		pObject->FrustumCheck(false);
 
-		if (i % 2 == 0) {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
 
-		}
-		else {
+		if (cl.second.camp == CAMP_STATE::BLUE) {
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
+			cout << "[ID" << cl.second.id << "] 블루"<< endl;
+		}
+		else if (cl.second.camp == CAMP_STATE::RED) {
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+			cout << "[ID" << cl.second.id << "] 레드" << endl;
+
 		}
 
 
@@ -161,7 +281,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 		pObject->MeshRender()->SetDynamicShadow(true);
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
-		pObject->GetScript<CPlayerScript>()->m_SetId(i);
+		pObject->GetScript<CPlayerScript>()->m_SetId(cl.second.id);
 
 
 		pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
@@ -201,6 +321,7 @@ void CInGameScene::Init()
 		pBow->MeshRender()->SetDynamicShadow(true);
 		pBow->GetScript<CBowScript>()->SetTarget(pObject);
 		pBow->GetScript<CBowScript>()->SetBoneIdx(14);
+		pBow->GetScript<CBowScript>()->SetCamp(cl.second.camp);
 
 		Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
 		pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
@@ -215,25 +336,126 @@ void CInGameScene::Init()
 		pBow->GetScript<CBowScript>()->Init();
 		pObject->AddChild(pBow);
 		FindLayer(L"Blue")->AddGameObject(pBow);
-		if (i == Network::GetInst()->getHostId()) {
-			if (i % 2 == 0) {
-				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-
-			}
-			else {
-				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-			}
-			pMainCam->Camera()->SetPlayer(pObject);
-			pMainCam->Camera()->SetbPlay(true);
-			pObject->GetScript<CPlayerScript>()->SetMain();
-			pBow->GetScript<CBowScript>()->SetMain();
-			//pObject->AddChild(pMainCam);
-		}
-	
 
 
 	}
-	
+
+//	for (int i = 0; i < Network::GetInst()->getOtherClientSize() + 1; ++i) {
+//		pObject = new CGameObject;
+//
+//
+//		if (i % 2 == 0) {
+//			//pObject = pMeshDataBlue->Instantiate();
+//			pObject = pMeshDataBlue->Instantiate();
+//			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
+////			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
+//		}
+//		else {
+//			pObject = pMeshDataRed->Instantiate();
+//			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerRed.GetPointer());
+//		}
+//
+//
+//		pObject->SetName(L"Monster");
+//		pObject->AddComponent(new CTransform);
+//		pObject->AddComponent(new CCollider3D);
+//		pObject->AddComponent(new CSensor);
+//		pObject->AddComponent(new CPlayerScript);
+//		pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+//		pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
+//		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+//		pObject->FrustumCheck(false);
+//
+//		if (i % 2 == 0) {
+//			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+//			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+//
+//		}
+//		else {
+//			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+//			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
+//		}
+//
+//
+//		pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
+//		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
+//		pObject->MeshRender()->SetDynamicShadow(true);
+//		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+//		pObject->GetScript<CPlayerScript>()->m_SetId(i);
+//
+//
+//		pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
+//		//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
+//		pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
+//
+//		CAnimation* pNewAnimation = new CAnimation;
+//		pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
+//		pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
+//		pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // 점프 후 팔벌리기 81, 125
+//		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
+//		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
+//		pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
+//		pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // 누워서 끝 240, 261
+//		pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
+//		//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
+//
+//		pObject->Animator3D()->SetAnimation(pNewAnimation);
+//		pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+//
+//		pObject->GetScript<CPlayerScript>()->Init();
+//
+//		FindLayer(L"Blue")->AddGameObject(pObject, false);
+//
+//		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
+//		CGameObject* pBow;
+//		pBow = pMeshbowData->Instantiate();
+//		pBow->SetName(L"Bow");
+//
+//		pBow->AddComponent(new CTransform);
+//		pBow->AddComponent(new CSensor);
+//		pBow->AddComponent(new CBowScript);
+//		pBow->FrustumCheck(false);
+//		pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
+//		pBow->Transform()->SetLocalScale(Vec3(2.4f, 1.2f, 2.4f));
+//		pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
+//		pBow->MeshRender()->SetDynamicShadow(true);
+//		pBow->GetScript<CBowScript>()->SetTarget(pObject);
+//		pBow->GetScript<CBowScript>()->SetBoneIdx(14);
+//
+//		Ptr<CTexture> pBowTex = CResMgr::GetInst()->FindRes<CTexture>(L"bow_big");
+//		pBow->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBowTex.GetPointer());
+//
+//		pNewAnimation = new CAnimation;
+//		pNewAnimation->InsertAnimClip(L"IDLE", 0, 1);         // 0, 13
+//		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 1, 12);
+//		pNewAnimation->InsertAnimClip(L"ATTACK", 13, 18);
+//
+//		pBow->Animator3D()->SetAnimation(pNewAnimation);
+//		pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
+//		pBow->GetScript<CBowScript>()->Init();
+//		pObject->AddChild(pBow);
+//		FindLayer(L"Blue")->AddGameObject(pBow);
+//		if (i == Network::GetInst()->getHostId()) {
+//			if (i % 2 == 0) {
+//				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+//
+//			}
+//			else {
+//				pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+//			}
+//			pMainCam->Camera()->SetPlayer(pObject);
+//			pMainCam->Camera()->SetbPlay(true);
+//			pObject->GetScript<CPlayerScript>()->SetMain();
+//			pBow->GetScript<CBowScript>()->SetMain();
+//			//pObject->AddChild(pMainCam);
+//		}
+//	
+//
+//
+//	}
+//	
+
+
 	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
 
@@ -1166,6 +1388,10 @@ void CInGameScene::Init()
 
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
+	
+	cout << "Init ----!!" << endl;
 	Awake();
 	Start();
+	cout << "DONE" << endl;
+
 }

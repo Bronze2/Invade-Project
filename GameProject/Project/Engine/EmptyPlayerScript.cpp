@@ -6,7 +6,16 @@
 void CEmptyPlayerScript::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[Network::GetInst()->getHostId()]);
+	CGameObject* pPlayer = nullptr;
+	for (auto cl : pCurScene->FindLayer(L"Blue")->GetParentObj())
+	{
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == Network::GetInst()->getMainClient().id) {
+			pPlayer = cl;
+			break;
+		}
+	}
+
+//	 = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[Network::GetInst()->getHostId()]);
 
 	//Vec3 vPos = pPlayer->Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();

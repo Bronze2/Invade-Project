@@ -71,7 +71,7 @@ void CGameFramework::Progress()
 	CEventMgr::GetInst()->Clear();
 
 	CSceneMgr::GetInst()->Update();
-	CRenderMgr::GetInst()->Render();
+	//CRenderMgr::GetInst()->Render();
 	CEventMgr::GetInst()->Update();
 	CInstancingMgr::GetInst()->Clear();
 

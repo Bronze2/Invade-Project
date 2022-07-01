@@ -352,10 +352,7 @@ enum class MINION_CAMP {
 	RED,
 };
 
-enum class CAMP_STATE {
-	RED,
-	BLUE,
-};
+
 enum class SPAWN_PATTERN {
 	PATTERN1 = 1,
 	PATTERN2,

@@ -75,7 +75,7 @@ void CBowScript::Update()
 			CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(),m_iCurArrow,vArrowPos);
 			CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(),m_iCurArrow,vArrowRot);
 
-			Network::GetInst()->send_arrow_packet(m_iCurArrow,vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed);
+			Network::GetInst()->send_arrow_packet(m_iCurArrow,vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp);
 
 			m_iCurArrow++;
 			m_iPower = 1;

@@ -178,6 +178,8 @@ void CSceneMgr::Init()
 
 void CSceneMgr::Update()
 {
+	Network::GetInst()->RecvData();
+
 	m_pCurScene->Update();
 	m_pCurScene->LateUpdate();
 
@@ -190,7 +192,7 @@ void CSceneMgr::Update()
 
 	CSensorMgr::GetInst()->Update();
 	// 面倒 贸府
-	Network::GetInst()->RecvData();
+	CRenderMgr::GetInst()->Render();
 
 	//if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
 	//	if (Network::GetInst()->getHost()) {
@@ -243,31 +245,42 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
     return (_pLeft->Transform()->GetWorldPos().z < _pRight->Transform()->GetWorldPos().z);
 }
 
-
-void CSceneMgr::net_enterClient(int id ,float x, float y, float z)
-{
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->SetActive(true);
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Awake();
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Start();
-
-    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
-    std::cout << "积己等 Player 俺荐 : " << m_pCurScene->FindLayer(L"Blue")->GetParentObj().size() << std::endl; 
-
-}
+//
+//void CSceneMgr::net_enterClient(int id ,float x, float y, float z)
+//{
+//    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->SetActive(true);
+//    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Awake();
+//    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Start();
+//
+//    m_pCurScene->FindLayer(L"Monster")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
+//    std::cout << "积己等 Player 俺荐 : " << m_pCurScene->FindLayer(L"Blue")->GetParentObj().size() << std::endl; 
+//
+//}
 
 void CSceneMgr::net_setRotationByID(int id, float x, float y, float z)
 {
 	Vec3 rot(x, y, z);
 
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpRot(rot);
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->GetScript<CPlayerScript>()->SetLerpRot(rot);
+			break;
+		}
+	}
+   // m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpRot(rot);
 }
 
 void CSceneMgr::net_setLerpMoveByID(int id, float x , float y, float z)
 {
 	Vec3 pos(x, y, z);
 	//pos*= DT;
-
-	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->GetScript<CPlayerScript>()->SetLerpPos(pos);
+			break;
+		}
+	}
+	//m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetLerpPos(pos);
 	
 	//m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetCollCheckFalse();
 }
@@ -276,44 +289,27 @@ void CSceneMgr::net_setLocalPosByID(int id, float x, float y, float z)
 {
 	Vec3 pos(x, y, z);
 	//pos*= DT;
-	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(pos);
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->Transform()->SetLocalPos(pos);
+			break;
+		}
+	}
+	//m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(pos);
 }
 
-void CSceneMgr::net_setMainClient(int id, float x, float y, float z)
-{
 
-
-    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Transform()->SetLocalPos(Vec3(-60, 40, -10));
-    ////   pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
-
-
-
-    //std::cout << "Add Camera" << std::endl;
-    //m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->AddChild(m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0));
-    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Awake();
-    //m_pCurScene->FindLayer(L"Default")->GetGameObjectById(0)->Start();
-
-
-	std::cout << "Set Loacl Pos" << std::endl;
-	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Transform()->SetLocalPos(Vec3(x, y, z));
-	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetMain();
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->SetActive(true);
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Awake();
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Start();
-	std::cout << "End MainClient" << std::endl;
-
-
-}
-void CSceneMgr::net_setEnableClient(int id)
-{
-    m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->Enable();
-
-}
 
 void CSceneMgr::net_setAnimationByID(int id, int state)
 {
-	m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
+
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->GetScript<CPlayerScript>()->SetState(state);
+			break;
+		}
+	}
+	//m_pCurScene->FindLayer(L"Blue")->GetGameObjectById(id)->GetScript<CPlayerScript>()->SetState(state);
 }
 
 void CSceneMgr::net_spawnMinion_blue(int id, int mtype,float x, float y ,float z)
@@ -380,20 +376,6 @@ void CSceneMgr::net_setRotTower(int id,	Vec3 Rot)
 
 void CSceneMgr::net_spawnProjectile(int id, Vec3 Pos)
 {
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\blueball.mdat", L"MeshData\\blueball.mdat");
-	//CGameObject* pObject = pMeshData->Instantiate();
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CCollider3D);
-	//pObject->AddComponent(new CProjectileScript);
-	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
-	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	//pObject->FrustumCheck(false);
-	//pObject->Transform()->SetLocalPos(Pos);
-	//pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//pObject->GetScript<CProjectileScript>()->Init();
-	//m_pCurScene->FindLayer(L"Red")->AddGameObject(pObject);
 	m_projectile[id] = Pos;
 	m_projectile_die[id] = false;
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Pro(id, Pos);
@@ -416,15 +398,31 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
 {
 	m_arrow[parentid][id].Pos = pos;
 	m_arrow[parentid][id].Rot = rot;
-	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
-	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetChild()[0]->
-		GetScript<CBowScript>()->InitArrow(id, pos, rot);
+
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == parentid) {
+			cl->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
+			cl->GetChild()[0]->GetScript<CBowScript>()->InitArrow(id, pos, rot);
+
+			break;
+		}
+	}
+	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
+	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[parentid]->GetChild()[0]->
+	//	GetScript<CBowScript>()->InitArrow(id, pos, rot);
 }
 void CSceneMgr::net_deleteArrow(int client_id, int arrow_id)
 {
 	m_arrow[client_id][arrow_id].Pos = Vec3(1000,1000,1000);
-	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[client_id]->GetChild()[0]->
-		GetScript<CBowScript>()->DeleteArrow(arrow_id);
+
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == client_id) {
+			cl->GetChild()[0]->GetScript<CBowScript>()->DeleteArrow(arrow_id);
+			break;
+		}
+	}
+	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[client_id]->GetChild()[0]->
+	//	GetScript<CBowScript>()->DeleteArrow(arrow_id);
 }
 
 void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
@@ -437,7 +435,13 @@ void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 	if (coll_type == 0) return;
 	else if (coll_type == 1) {
 		cout << "PlayerArrow Coll" << endl;
-		m_pCurScene->FindLayer(L"Blue")->GetParentObj()[coll_id]->GetScript<CPlayerScript>()->GetDamage(damage);
+		for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+			if (cl->GetScript<CPlayerScript>()->m_GetId() == coll_id) {
+				cl->GetScript<CPlayerScript>()->GetDamage(damage);
+				break;
+			}
+		}
+		//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[coll_id]->GetScript<CPlayerScript>()->GetDamage(damage);
 	}
 	else if (coll_type == 2) {
 
@@ -456,5 +460,11 @@ void CSceneMgr::net_deletProjectile(int id)
 
 void CSceneMgr::net_animUpdate(int id, int state)
 {
-	m_pCurScene->FindLayer(L"Blue")->GetParentObj()[id]->GetScript<CPlayerScript>()->SetState(state);
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->GetScript<CPlayerScript>()->SetState(state);
+			break;
+		}
+	}
+	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[id]->GetScript<CPlayerScript>()->
 }

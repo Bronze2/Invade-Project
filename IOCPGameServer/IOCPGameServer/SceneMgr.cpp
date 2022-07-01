@@ -11,6 +11,7 @@
 //#include "EventMgr.h"
 #include "SensorMgr.h"
 //
+#include "Service.h"
 //#include "GridScript.h"
 #include "PlayerScript.h"
 //#include "MonsterScript.h"
@@ -89,6 +90,13 @@ void CSceneMgr::Init(int index)
 	m_pCurScene[index] = m_arrScene[(UINT)SCENE_TYPE::INGAME];
 	m_pCurScene[index]->Init(index);
 	m_pCurScene[index]->isinit = true;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == index) {
+			cout << "ID ["<<cl.second.m_id << "] 방입장 패킷 전송" << endl;
+			CService::GetInst()->enter_game(cl.second.m_id);
+		}
+	}
 }
 
 void CSceneMgr::Update()
@@ -144,10 +152,31 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
 void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
 {
 	//CGameObject* player = dynamic_cast<CGameObject*>(m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]);
-	if(ClientId == 0)
-		m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
-	if (ClientId == 1)
-		m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()[ClientId-1]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+
+	//if(ClientId == 0)
+	//	m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+	//if (ClientId == 1)
+	//	m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()[ClientId-1]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+
+
+	if (camp == CAMP_STATE::RED) {
+		for (auto obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
+			if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
+				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+				break;
+			}
+		}
+	}
+
+	if (camp == CAMP_STATE::BLUE) {
+		for (auto obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
+			if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
+				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+				break;
+
+			}
+		}
+	}
 }
 
 

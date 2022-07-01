@@ -299,20 +299,20 @@ void CIMGUIMgr::Progress()
                         {
                           //  m_bOpen = true;
 
-                            if (Network::GetInst()->getHost()) {
-                                cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1 << endl;
-                                if (Network::GetInst()->getOtherClientSize() % 2 == 1) {
-                                    Network::GetInst()->send_game_start_packet();
-                                    //ChangeScene(SCENE_TYPE::INGAME);
+                            //if (Network::GetInst()->getHost()) {
+                            //    cout << "현재 방 인원수 :" << Network::GetInst()->getOtherClientSize() + 1 << endl;
+                            //    if (Network::GetInst()->getOtherClientSize() % 2 == 1) {
+                            //        Network::GetInst()->send_game_start_packet();
+                            //        //ChangeScene(SCENE_TYPE::INGAME);
 
-                                }
-                                else {
-                                    cout << "otheruser" << endl;
-                                }
-                            }
-                            else {
-                                cout << "host?" << endl;
-                            }
+                            //    }
+                            //    else {
+                            //        cout << "otheruser" << endl;
+                            //    }
+                            //}
+                            //else {
+                            //    cout << "host?" << endl;
+                            //}
                         }
                         if (m_bOpen) {
                             SUserInformation user;
@@ -397,6 +397,7 @@ void CIMGUIMgr::Progress()
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("GameStart", ImVec2(260.f, 30.f)))
                         {
+                            cout << "Click" << endl;
                             Network::GetInst()->send_game_start_packet();
                         }
                         ImGui::PopStyleVar();
@@ -522,7 +523,9 @@ void CIMGUIMgr::Progress()
         ImGui::End();
 
     }
-
+    else {
+    cout << " iMGUI ERROR" << endl;
+    }
 
     CMDLIST->SetDescriptorHeaps(1, &m_pHeap);
     ImGui::Render();

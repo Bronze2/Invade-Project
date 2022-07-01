@@ -13,5 +13,6 @@ public:
 private:
 	vector<thread> worker_threads;
 	thread timer_thread;
+	int accept_user_id = 0;
 };
 

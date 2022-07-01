@@ -210,9 +210,9 @@ void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z,
 	packet.size = sizeof(packet);
 	packet.type = S2C_SPAWN_MINION;
 	if(camp == CAMP_STATE::BLUE)
-		packet.camp = BLUE;
+		packet.camp = CAMP_STATE::BLUE;
 	else if (camp == CAMP_STATE::RED)
-		packet.camp = RED;
+		packet.camp = CAMP_STATE::RED;
 	packet.id = minion_id;
 	p_Vec3 pos = { x,y,z };
 	packet.pos = pos;

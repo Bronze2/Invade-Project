@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EmptyCameraScript.h"
 #include "Network.h"
+#include "PlayerScript.h"
 
 void CEmptyCameraScript::Update()
 {
@@ -37,7 +38,15 @@ void CEmptyCameraScript::Update()
 void CEmptyCameraScript::Init()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[Network::GetInst()->getHostId()]);
+	//CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[Network::GetInst()->getHostId()]);
+	CGameObject* pPlayer = nullptr;
+	for (auto cl : pCurScene->FindLayer(L"Blue")->GetParentObj())
+	{
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == Network::GetInst()->getMainClient().id) {
+			pPlayer = cl;
+			break;
+		}
+	}
 
 	m_vShootPos = (pPlayer->Transform()->GetLocalPos() + Vec3(0.f, 0.f, 130.f)) + Transform()->GetWorldDir(DIR_TYPE::FRONT) * 500.f;
 	m_vShootDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);

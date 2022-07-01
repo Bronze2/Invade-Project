@@ -122,6 +122,8 @@ void Network::ProcessPacket(char* ptr)
 			cout << "Other Client ID :" << m_otherClients[id].id <<
 				"	Camp :" << (int)m_otherClients[id].camp <<
 				"	isHost:" << boolalpha << m_otherClients[id].isHost << endl;
+			enter_count++;
+
 		}
 		debug_checkclient();
 	}
@@ -136,15 +138,22 @@ void Network::ProcessPacket(char* ptr)
 			m_Client.pos.y = my_packet->pos.y;
 			m_Client.pos.z = my_packet->pos.z;
 			m_Client.camp = my_packet->camp;
-			CSceneMgr::GetInst()->EnterGame();
 		}
 		else {
 			m_otherClients[my_packet->id].pos.x = my_packet->pos.x;
 			m_otherClients[my_packet->id].pos.y = my_packet->pos.y;
 			m_otherClients[my_packet->id].pos.z = my_packet->pos.z;
 			m_otherClients[my_packet->id].camp = my_packet->camp;
+			m_otherClients[my_packet->id].id = my_packet->id;
 			//CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
+		current_enter_count++;
+		if (current_enter_count == enter_count) {
+			cout<<"방인원수 - " << current_enter_count << endl;
+			CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::INGAME);
+
+		}
+
 	}
 	break;
 	case S2C_KEY_DOWN:
@@ -197,9 +206,9 @@ void Network::ProcessPacket(char* ptr)
 	case S2C_SPAWN_MINION:
 	{
 		sc_packet_spawn_minion* my_packet = reinterpret_cast<sc_packet_spawn_minion*>(ptr);
-		if(my_packet->camp == RED)
+		if(my_packet->camp == CAMP_STATE::RED)
 			CSceneMgr::GetInst()->net_spawnMinion_red(my_packet->id, my_packet->mtype,my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-		else if(my_packet->camp ==  BLUE)
+		else if(my_packet->camp == CAMP_STATE::BLUE)
 			CSceneMgr::GetInst()->net_spawnMinion_blue(my_packet->id, my_packet->mtype,my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		cout << "spawn id: " << my_packet->id <<endl;
 	}
@@ -453,7 +462,7 @@ void Network::send_game_start_packet()
 	cout << "Send Enter Packet" << endl;
 
 }
-void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
+void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
 {
 	cs_packet_arrow m_packet;
 	m_packet.type = C2S_CREATE_ARROW;
@@ -471,6 +480,7 @@ void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float
 	m_packet.Dir.z = Dir.z;
 	m_packet.Power = Power;
 	m_packet.room_id = my_room_id;
+	m_packet.camp = camp;
 	send_packet(&m_packet);
 
 }
