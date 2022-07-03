@@ -50,3 +50,12 @@ void ChangeScene(SCENE_TYPE _eNextScene);
 
 
 Vec2 GetDiagnal(const float& _fDestination, const float& _fxvalue, const float& _fzvalue);
+int TickCheck(std::chrono::system_clock::time_point start, int _Time);
+bool CoolTimeCheck(std::chrono::system_clock::time_point start, int _Time);
+bool SkillFinalCheck(SKILL* _pSkill);
+
+void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey);
+void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey);
+
+
+void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx);

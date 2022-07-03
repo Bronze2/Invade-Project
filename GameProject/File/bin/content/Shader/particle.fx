@@ -3,6 +3,7 @@
 #include "value.fx"
 #include "func.fx"
 
+
 struct tParticle
 {
     float3 vWorldPos;
@@ -90,6 +91,8 @@ void GS_Particle(point VTX_OUT _in[1], inout TriangleStream<GS_OUT> OutputStream
     float fRatio = tData[iInstID].m_fCurTime / tData[iInstID].m_fLifeTime;
     float fCurScale = ((g_float_1 - g_float_0) * fRatio + g_float_0) / 2.f;
     
+    float3 updown = float3(0, 1, 0);
+    
     output[0].vPosition = _in[0].vViewPos + float4(-fCurScale, fCurScale, 0.f, 0.f);
     output[1].vPosition = _in[0].vViewPos + float4(fCurScale, fCurScale, 0.f, 0.f);
     output[2].vPosition = _in[0].vViewPos + float4(fCurScale, -fCurScale, 0.f, 0.f);
@@ -104,6 +107,7 @@ void GS_Particle(point VTX_OUT _in[1], inout TriangleStream<GS_OUT> OutputStream
     output[1].vUV = float2(1.f, 0.f);
     output[2].vUV = float2(1.f, 1.f);
     output[3].vUV = float2(0.f, 1.f);
+    
 
     output[0].iInstID = iInstID;
     output[1].iInstID = iInstID;
@@ -182,10 +186,11 @@ void CS_ParticleUpdate(int _iThreadIdx : SV_DispatchThreadID)
                 , gaussian5x5Sample(vUV + int2(0, 0), g_tex_0),
                 gaussian5x5Sample(vUV + int2(0, 100), g_tex_0)
             };
+            float g_PI = 3.141592f;
             float3 vDir = (float4) 0.f;
             vDir = (vNoise - 0.5f) * 2.f;
             tRWData[_iThreadIdx.x].vWorldDir = normalize(vDir);
-            tRWData[_iThreadIdx.x].vWorldPos = (vNoise.xyz - 0.5f) * 50;
+            tRWData[_iThreadIdx.x].vWorldPos = sin(0.f);
             tRWData[_iThreadIdx.x].m_fLifeTime = ((g_float_1 - g_float_0) * vNoise.x) + g_float_0;
             tRWData[_iThreadIdx.x].m_fCurTime = 0.f;
         }
@@ -193,17 +198,368 @@ void CS_ParticleUpdate(int _iThreadIdx : SV_DispatchThreadID)
     else
     {
         tRWData[_iThreadIdx.x].m_fCurTime += g_fDT;
+        float Time = tRWData[_iThreadIdx.x].m_fCurTime;
         if (tRWData[_iThreadIdx.x].m_fLifeTime < tRWData[_iThreadIdx.x].m_fCurTime)
         {
             tRWData[_iThreadIdx.x].iAlive = 0;
             return;
         }
+      //  g_vec2_3;
+        float g_PI = 3.141592f;
+        float amp = 0.5f;
+        float fRatio = tRWData[_iThreadIdx.x].m_fCurTime / tRWData[_iThreadIdx.x].m_fLifeTime;
+        float fSpeed = (g_float_3 - g_float_2) * fRatio + g_float_2;
+       
+            tRWData[_iThreadIdx.x].vWorldPos.x -= g_vec4_0.z * fSpeed * g_fDT;
+            tRWData[_iThreadIdx.x].vWorldPos.y = sin(Time * 8 * g_PI) * 5.f *g_vec2_3.x;
+            tRWData[_iThreadIdx.x].vWorldPos.z -= g_vec4_0.x * fSpeed * g_fDT;
+ 
+        
+      
+        tRWSharedData[0].iCurCount = 0;
+        InterlockedAdd(tRWSharedData[0].iCurCount, 1);
+    }
+}
+[numthreads(1024, 1, 1)]
+void CS_ParticleUpdate2(int3 _iThreadIdx : SV_DispatchThreadID)
+{
+    if (_iThreadIdx.x >= g_int_0)
+        return;
+    
+    tRWSharedData[0].iAddCount = g_int_1;
+        
+    // Dead 파티클 살리기
+    if (0 == tRWData[_iThreadIdx.x].iAlive)
+    {
+        int iOrigin = tRWSharedData[0].iAddCount;
+        int iExchange = 0;
+        while (0 < iOrigin)
+        {
+            int iInputValue = iOrigin - 1;
+            InterlockedExchange(tRWSharedData[0].iAddCount, iInputValue, iExchange);
+      
+            if (iExchange == iOrigin)
+            {
+                tRWData[_iThreadIdx.x].iAlive = 1;
+                break;
+            }
+          
+            iOrigin = iInputValue;
+        }
+                
+        if (1 == tRWData[_iThreadIdx.x].iAlive)
+        {
+            // 랜덤 생성 위치, 방향           
+            float2 vUV = float2(((float) _iThreadIdx.x / (float) g_int_0) + g_fAccTime, g_fAccTime);
+            vUV.y += sin(vUV.x * 2 * 3.141592);
+            
+            if (vUV.x > 0)
+                vUV.x = frac(vUV.x);
+            else
+                vUV.x = ceil(abs(vUV.x)) - abs(vUV.x);
+            
+            if (vUV.y > 0)
+                vUV.y = frac(vUV.y);
+            else
+                vUV.y = ceil(abs(vUV.y)) - abs(vUV.y);
+            
+            vUV = vUV * g_vec2_0;
+            
+            float3 vNoise =
+            {
+                gaussian5x5Sample(vUV + int2(0, -100), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 0), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 100), g_tex_0)
+            };
+            
+            
+            float3 vDir = (float4) 0.f;
+            
+            vDir = (vNoise - 0.5f) * 2.f;
+            
+            //vDir = float3(0.f, 1.f, 0.f);
+            //vDir.x = (vNoise.x - 0.5f) * 2.f * sin(3.141592 / 8.f);
+            //vDir.z = (vNoise.z - 0.5f) * 2.f * sin(3.141592 / 8.f);
+                        
+            tRWData[_iThreadIdx.x].vWorldDir = normalize(vDir); //normalize((vNoise.xyz - 0.5f) * 2.f);
+            tRWData[_iThreadIdx.x].vWorldPos = (vNoise.xyz - 0.5f) * 50;
+            tRWData[_iThreadIdx.x].m_fLifeTime = ((g_float_1 - g_float_0) * vNoise.x) + g_float_0;
+            tRWData[_iThreadIdx.x].m_fCurTime = 0.f;
+        }
+    }
+    else // Particle Update 하기
+    {
+        tRWData[_iThreadIdx.x].m_fCurTime += g_fDT;
+        if (tRWData[_iThreadIdx.x].m_fLifeTime < tRWData[_iThreadIdx.x].m_fCurTime)
+        {
+            tRWData[_iThreadIdx.x].iAlive = 0;
+            return;
+        }
+        
         float fRatio = tRWData[_iThreadIdx.x].m_fCurTime / tRWData[_iThreadIdx.x].m_fLifeTime;
         float fSpeed = (g_float_3 - g_float_2) * fRatio + g_float_2;
         tRWData[_iThreadIdx.x].vWorldPos += tRWData[_iThreadIdx.x].vWorldDir * fSpeed * g_fDT;
+        
+        // 생존 파티클 개수 확인
         tRWSharedData[0].iCurCount = 0;
         InterlockedAdd(tRWSharedData[0].iCurCount, 1);
     }
 }
 
+[numthreads(1024, 1, 1)]
+void CS_ParticleUpdate3(int3 _iThreadIdx : SV_DispatchThreadID)
+{
+    if (_iThreadIdx.x >= g_int_0)
+        return;
+    
+    tRWSharedData[0].iAddCount = g_int_1;
+        
+    // Dead 파티클 살리기
+    if (0 == tRWData[_iThreadIdx.x].iAlive)
+    {
+        int iOrigin = tRWSharedData[0].iAddCount;
+        int iExchange = 0;
+        while (0 < iOrigin)
+        {
+            int iInputValue = iOrigin - 1;
+            InterlockedExchange(tRWSharedData[0].iAddCount, iInputValue, iExchange);
+      
+            if (iExchange == iOrigin)
+            {
+                tRWData[_iThreadIdx.x].iAlive = 1;
+                break;
+            }
+          
+            iOrigin = iInputValue;
+        }
+                
+        if (1 == tRWData[_iThreadIdx.x].iAlive)
+        {
+            // 랜덤 생성 위치, 방향           
+            float2 vUV = float2(((float) _iThreadIdx.x / (float) g_int_0) + g_fAccTime, g_fAccTime);
+            vUV.y += sin(vUV.x * 2 * 3.141592);
+            
+            if (vUV.x > 0)
+                vUV.x = frac(vUV.x);
+            else
+                vUV.x = ceil(abs(vUV.x)) - abs(vUV.x);
+            
+            if (vUV.y > 0)
+                vUV.y = frac(vUV.y);
+            else
+                vUV.y = ceil(abs(vUV.y)) - abs(vUV.y);
+            
+            vUV = vUV * g_vec2_0;
+            
+            float3 vNoise =
+            {
+                gaussian5x5Sample(vUV + int2(0, -100), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 0), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 100), g_tex_0)
+            };
+            
+            
+            float3 vDir = (float4) 0.f;
+            
+            vDir = (vNoise - 0.5f) * 2.f;
+            
+            //vDir = float3(0.f, 1.f, 0.f);
+            //vDir.x = (vNoise.x - 0.5f) * 2.f * sin(3.141592 / 8.f);
+            //vDir.z = (vNoise.z - 0.5f) * 2.f * sin(3.141592 / 8.f);
+                        
+            tRWData[_iThreadIdx.x].vWorldDir = normalize(vDir); //normalize((vNoise.xyz - 0.5f) * 2.f);
+            tRWData[_iThreadIdx.x].vWorldPos = (vNoise.xyz - 0.5f) * 50;
+            tRWData[_iThreadIdx.x].m_fLifeTime = ((g_float_1 - g_float_0) * vNoise.x) + g_float_0;
+            tRWData[_iThreadIdx.x].m_fCurTime = 0.f;
+        }
+    }
+    else // Particle Update 하기
+    {
+        tRWData[_iThreadIdx.x].m_fCurTime += g_fDT;
+        if (tRWData[_iThreadIdx.x].m_fLifeTime < tRWData[_iThreadIdx.x].m_fCurTime)
+        {
+            tRWData[_iThreadIdx.x].iAlive = 0;
+            return;
+        }
+        
+        float fRatio = tRWData[_iThreadIdx.x].m_fCurTime / tRWData[_iThreadIdx.x].m_fLifeTime;
+        float fSpeed = (g_float_3 - g_float_2) * fRatio + g_float_2;
+        tRWData[_iThreadIdx.x].vWorldPos.y -= fSpeed * g_fDT;
+        
+        // 생존 파티클 개수 확인
+        tRWSharedData[0].iCurCount = 0;
+        InterlockedAdd(tRWSharedData[0].iCurCount, 1);
+    }
+}
+[numthreads(1024, 1, 1)]
+void CS_ParticleUpdate4(int3 _iThreadIdx : SV_DispatchThreadID)
+{
+    if (_iThreadIdx.x >= g_int_0)
+        return;
+    
+    tRWSharedData[0].iAddCount = g_int_1;
+        
+    // Dead 파티클 살리기
+    if (0 == tRWData[_iThreadIdx.x].iAlive)
+    {
+        int iOrigin = tRWSharedData[0].iAddCount;
+        int iExchange = 0;
+        while (0 < iOrigin)
+        {
+            int iInputValue = iOrigin - 1;
+            InterlockedExchange(tRWSharedData[0].iAddCount, iInputValue, iExchange);
+      
+            if (iExchange == iOrigin)
+            {
+                tRWData[_iThreadIdx.x].iAlive = 1;
+                break;
+            }
+          
+            iOrigin = iInputValue;
+        }
+                
+        if (1 == tRWData[_iThreadIdx.x].iAlive)
+        {
+            // 랜덤 생성 위치, 방향           
+            float2 vUV = float2(((float) _iThreadIdx.x / (float) g_int_0) + g_fAccTime, g_fAccTime);
+            vUV.y += sin(vUV.x * 2 * 3.141592);
+            
+            if (vUV.x > 0)
+                vUV.x = frac(vUV.x);
+            else
+                vUV.x = ceil(abs(vUV.x)) - abs(vUV.x);
+            
+            if (vUV.y > 0)
+                vUV.y = frac(vUV.y);
+            else
+                vUV.y = ceil(abs(vUV.y)) - abs(vUV.y);
+            
+            vUV = vUV * g_vec2_0;
+            
+            float3 vNoise =
+            {
+                gaussian5x5Sample(vUV + int2(0, -100), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 0), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 100), g_tex_0)
+            };
+            
+            
+            float3 vDir = (float4) 0.f;
+            
+            vDir = (vNoise - 0.5f) * 2.f;
+            
+            //vDir = float3(0.f, 1.f, 0.f);
+            //vDir.x = (vNoise.x - 0.5f) * 2.f * sin(3.141592 / 8.f);
+            //vDir.z = (vNoise.z - 0.5f) * 2.f * sin(3.141592 / 8.f);
+                        
+            tRWData[_iThreadIdx.x].vWorldDir = normalize(vDir); //normalize((vNoise.xyz - 0.5f) * 2.f);
+            tRWData[_iThreadIdx.x].vWorldPos = (vNoise.xyz - 0.5f) * 50;
+            tRWData[_iThreadIdx.x].m_fLifeTime = ((g_float_1 - g_float_0) * vNoise.x) + g_float_0;
+            tRWData[_iThreadIdx.x].m_fCurTime = 0.f;
+        }
+    }
+    else // Particle Update 하기
+    {
+        tRWData[_iThreadIdx.x].m_fCurTime += g_fDT;
+        if (tRWData[_iThreadIdx.x].m_fLifeTime < tRWData[_iThreadIdx.x].m_fCurTime)
+        {
+            tRWData[_iThreadIdx.x].iAlive = 0;
+            return;
+        }
+        
+        float fRatio = tRWData[_iThreadIdx.x].m_fCurTime / tRWData[_iThreadIdx.x].m_fLifeTime;
+        float fSpeed = (g_float_3 - g_float_2) * fRatio + g_float_2;
+        tRWData[_iThreadIdx.x].vWorldPos.y += fSpeed * g_fDT;
+        
+        // 생존 파티클 개수 확인
+        tRWSharedData[0].iCurCount = 0;
+        InterlockedAdd(tRWSharedData[0].iCurCount, 1);
+    }
+}
+
+[numthreads(1024, 1, 1)]
+void CS_ParticleUpdate5(int3 _iThreadIdx : SV_DispatchThreadID)
+{
+    if (_iThreadIdx.x >= g_int_0)
+        return;
+    
+    tRWSharedData[0].iAddCount = g_int_1;
+        
+    // Dead 파티클 살리기
+    if (0 == tRWData[_iThreadIdx.x].iAlive)
+    {
+        int iOrigin = tRWSharedData[0].iAddCount;
+        int iExchange = 0;
+        while (0 < iOrigin)
+        {
+            int iInputValue = iOrigin - 1;
+            InterlockedExchange(tRWSharedData[0].iAddCount, iInputValue, iExchange);
+      
+            if (iExchange == iOrigin)
+            {
+                tRWData[_iThreadIdx.x].iAlive = 1;
+                break;
+            }
+          
+            iOrigin = iInputValue;
+        }
+                
+        if (1 == tRWData[_iThreadIdx.x].iAlive)
+        {
+            // 랜덤 생성 위치, 방향           
+            float2 vUV = float2(((float) _iThreadIdx.x / (float) g_int_0) + g_fAccTime, g_fAccTime);
+            vUV.y += sin(vUV.x * 2 * 3.141592);
+            
+            if (vUV.x > 0)
+                vUV.x = frac(vUV.x);
+            else
+                vUV.x = ceil(abs(vUV.x)) - abs(vUV.x);
+            
+            if (vUV.y > 0)
+                vUV.y = frac(vUV.y);
+            else
+                vUV.y = ceil(abs(vUV.y)) - abs(vUV.y);
+            
+            vUV = vUV * g_vec2_0;
+            
+            float3 vNoise =
+            {
+                gaussian5x5Sample(vUV + int2(0, -100), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 0), g_tex_0)
+                , gaussian5x5Sample(vUV + int2(0, 100), g_tex_0)
+            };
+            
+            
+            float3 vDir = (float4) 0.f;
+            
+            vDir = (vNoise - 0.5f) * 2.f;
+            
+            //vDir = float3(0.f, 1.f, 0.f);
+            //vDir.x = (vNoise.x - 0.5f) * 2.f * sin(3.141592 / 8.f);
+            //vDir.z = (vNoise.z - 0.5f) * 2.f * sin(3.141592 / 8.f);
+                        
+            tRWData[_iThreadIdx.x].vWorldDir = normalize(vDir); //normalize((vNoise.xyz - 0.5f) * 2.f);
+            tRWData[_iThreadIdx.x].vWorldPos = (vNoise.xyz - 0.5f) * 50;
+            tRWData[_iThreadIdx.x].m_fLifeTime = ((g_float_1 - g_float_0) * vNoise.x) + g_float_0;
+            tRWData[_iThreadIdx.x].m_fCurTime = 0.f;
+        }
+    }
+    else // Particle Update 하기
+    {
+        tRWData[_iThreadIdx.x].m_fCurTime += g_fDT;
+        if (tRWData[_iThreadIdx.x].m_fLifeTime < tRWData[_iThreadIdx.x].m_fCurTime)
+        {
+            tRWData[_iThreadIdx.x].iAlive = 0;
+            return;
+        }
+        
+        float fRatio = tRWData[_iThreadIdx.x].m_fCurTime / tRWData[_iThreadIdx.x].m_fLifeTime;
+        float fSpeed = (g_float_3 - g_float_2) * fRatio + g_float_2;
+        tRWData[_iThreadIdx.x].vWorldPos.x+= tRWData[_iThreadIdx.x].vWorldDir.x * fSpeed * g_fDT;
+        tRWData[_iThreadIdx.x].vWorldPos.z += tRWData[_iThreadIdx.x].vWorldDir.z * fSpeed * g_fDT;
+        // 생존 파티클 개수 확인
+        tRWSharedData[0].iCurCount = 0;
+        InterlockedAdd(tRWSharedData[0].iCurCount, 1);
+    }
+}
 #endif 

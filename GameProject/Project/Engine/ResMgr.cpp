@@ -7,7 +7,7 @@
 #include "Sound.h"
 #include "RenderMgr.h"
 
-CResMgr::CResMgr(){}
+CResMgr::CResMgr() {}
 CResMgr::~CResMgr() {
 
 	for (UINT i = 0; i < (UINT)RES_TYPE::END; ++i) {
@@ -94,6 +94,41 @@ void CResMgr::CreateDefaultMesh()
 		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); //D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
 
 	AddRes(L"ColRectMesh", pMesh);
+	vecVTX.clear();
+	vecIdx.clear();
+	pMesh = new CMesh;
+
+	v.vPos = Vec3(-0.5f, 0.f, 0.5f);
+	v.vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	v.vUV = Vec2(0.f, 0.f);
+	v.vNormal = Vec3(0.f, 0.f, -1.f);
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 1.f, 0.f);
+	vecVTX.push_back(v);
+
+	v.vPos = Vec3(0.5f, 0.f, 0.5f);
+	v.vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+	v.vUV = Vec2(1.f, 0.f);
+	vecVTX.push_back(v);
+
+	v.vPos = Vec3(0.5f, 0.f, -0.5f);
+	v.vColor = Vec4(0.f, 0.f, 1.f, 1.f);
+	v.vUV = Vec2(1.f, 1.f);
+	vecVTX.push_back(v);
+
+	v.vPos = Vec3(-0.5f, 0.f, -0.5f);
+	v.vColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	v.vUV = Vec2(0.f, 1.f);
+	vecVTX.push_back(v);
+
+	vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(2);
+	vecIdx.push_back(0); vecIdx.push_back(2); vecIdx.push_back(3);
+
+	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+
+	AddRes(L"Rect2Mesh", pMesh);
+
 
 	//				       3
 	// ===========	//    /
@@ -203,6 +238,69 @@ void CResMgr::CreateDefaultMesh()
 		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
 
 	AddRes(L"ColCircleMesh", pMesh);
+
+	vecVTX.clear();
+	vecIdx.clear();
+
+	pMesh = new CMesh;
+
+	// 원의 중심점
+	v.vPos = Vec3(0.f, 0.f, 0.f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = Vec3(0.f, 0.f, -1.f);
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 1.f, 0.f);
+	v.vUV = Vec2(0.5f, 0.5f);
+
+	vecVTX.push_back(v);
+
+	UINT iSliceCount2 = 32;
+	float fRadius2 = 400.f;
+	float fSliceTheta2 = XM_2PI / iSliceCount;
+
+	float fCurTheta2 = 0.f;
+	for (UINT i = 0; i < iSliceCount + 1; ++i)
+	{
+		v.vPos = Vec3(fRadius2 * cosf(fCurTheta2), 0.f, fRadius2 * sinf(fCurTheta2));
+		v.vColor = Vec4(1.f, 0.2f, 0.2f, 1.f);
+		v.vUV = Vec2(0.5f * cosf(fCurTheta2), 0.5f * sinf(fCurTheta2));
+
+		v.vUV.x += 0.5f;
+		v.vUV.y = (0.5f - v.vUV.y);
+
+		fCurTheta2 += fSliceTheta2;
+
+		vecVTX.push_back(v);
+	}
+
+	for (UINT i = 0; i < iSliceCount2; ++i)
+	{
+		vecIdx.push_back(0);
+		vecIdx.push_back(i + 2);
+		vecIdx.push_back(i + 1);
+	}
+
+	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
+
+	AddRes(L"CircleMesh2", pMesh);
+
+	// ============
+	// ColCircle Mesh
+	// ============	
+	vecIdx.clear();
+
+	pMesh = new CMesh;
+
+	for (UINT i = 1; i < iSliceCount2 + 2; ++i)
+	{
+		vecIdx.push_back(i);
+	}
+
+	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); // D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
+
+	AddRes(L"ColCircleMesh2", pMesh);
 
 	vecVTX.clear();
 	vecIdx.clear();
@@ -538,7 +636,7 @@ void CResMgr::CreateDefaultMesh()
 	fCurTheta = 0.f;
 	for (UINT i = 0; i < iSliceCount + 1; ++i)
 	{
-		v.vPos = Vec3(fRadius * sinf(fCurTheta),0.f, fRadius * cosf(fCurTheta));
+		v.vPos = Vec3(fRadius * sinf(fCurTheta), 0.f, fRadius * cosf(fCurTheta));
 		v.vColor = Vec4(1.f, 0.2f, 0.2f, 1.f);
 		v.vUV = Vec2(0.5f * cosf(fCurTheta), 0.5f * sinf(fCurTheta));
 
@@ -550,7 +648,7 @@ void CResMgr::CreateDefaultMesh()
 		vecVTX.push_back(v);
 	}
 
-	for (UINT i = 1; i < (iSliceCount+2)*3; ++i)
+	for (UINT i = 1; i < (iSliceCount + 2) * 3; ++i)
 	{
 		vecIdx.push_back(i);
 	}
@@ -617,6 +715,16 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"Collider2DShader", pShader);
 
 	// =================
+	// LINE 2D Shader
+	// =================
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_LINE2D", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_LINE2D", "ps_5_0");
+
+	pShader->Create(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	AddRes(L"Line2DShader", pShader);
+
+	// =================
 	// STD2D Shader
 	// =================
 	pShader = new CShader;
@@ -656,8 +764,9 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexInstShader(L"Shader\\std3d.fx", "VS_Std3D_Inst", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std3d.fx", "PS_Std3D", "ps_5_0");
 
-	pShader->Create(SHADER_POV::DEFERRED);
+	pShader->Create(SHADER_POV::DEFERRED);		//DEFERRED
 	AddRes(L"Std3DShader", pShader);
+
 
 	// =============
 	// Skybox Shader
@@ -701,6 +810,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->AddShaderParam(tShaderParam{ L"Light Index", SHADER_PARAM::INT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Normal Target Texture", SHADER_PARAM::TEX_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Position Target Texture", SHADER_PARAM::TEX_1 });
+	pShader->AddShaderParam(tShaderParam{ L"Specular Target Texture", SHADER_PARAM::TEX_2 });
 	pShader->Create(SHADER_POV::LIGHTING);
 
 	AddRes(L"DirLightShader", pShader);
@@ -788,6 +898,20 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"ParticleUpdateShader", pShader);
 
 	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate2", "cs_5_0");
+	AddRes(L"ParticleUpdateShader2", pShader);
+
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate3", "cs_5_0");
+	AddRes(L"ParticleUpdateShader3", pShader);
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate4", "cs_5_0");
+	AddRes(L"ParticleUpdateShader4", pShader);
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate5", "cs_5_0");
+	AddRes(L"ParticleUpdateShader5", pShader);
+
+	pShader = new CShader;
 	pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
 	AddRes(L"Animation3DUpdateShader", pShader);
 
@@ -821,6 +945,17 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"TerrainShader", pShader);
 
 
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Range2D", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Range2D", "ps_5_0");
+
+	// DepthStencilState 설정
+//	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::);
+
+	pShader->Create(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	AddRes(L"RangeShader", pShader);
+
+
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -852,6 +987,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetData(SHADER_PARAM::INT_0, &a);
 	AddRes(L"Collider2DMtrl_1", pMtrl);
 
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"Line2DShader"));
+	AddRes(L"Line2DMtrl", pMtrl);
 
 
 	pMtrl = new CMaterial;
@@ -868,6 +1007,8 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Std3DShader"));
 	AddRes(L"Std3DMtrl", pMtrl);
+
+
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
@@ -954,6 +1095,34 @@ void CResMgr::CreateDefaultMaterial()
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader2"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate2Mtrl", pMtrl);
+
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader3"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate3Mtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader4"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate4Mtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader5"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate5Mtrl", pMtrl);
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Animation3DUpdateShader"));
 	AddRes(L"Animation3DUpdateMtrl", pMtrl);
 
@@ -971,6 +1140,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
 	AddRes(L"TerrainMtrl", pMtrl);
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"RangeShader"));
+	AddRes(L"RangeMtrl", pMtrl);
+
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype

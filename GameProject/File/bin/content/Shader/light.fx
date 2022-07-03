@@ -41,9 +41,9 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _In)
     {
         clip(-1);
     }
-    float3 vViewNormal = g_tex_0.Sample(g_sam_0, _In.vUV).xyz;            // 메인카메라 view 역행렬을 곱해서 월드좌표를 알아낸다.
-    tLightColor tCurCol = CalLight(g_int_0, vViewNormal, vViewPos);          // 광원 시점으로 투영시킨 좌표 구하기
-    if (dot(tCurCol.vDiff, tCurCol.vDiff) != 0.f)                            // w 로 나눠서 실제 투영좌표 z 값을 구한다.(올바르게 비교하기 위해서)
+    float3 vViewNormal = g_tex_0.Sample(g_sam_0, _In.vUV).xyz;            // ???????? view ??????? ????? ????????? ??????.
+    tLightColor tCurCol = CalLight(g_int_0, vViewNormal, vViewPos);          // ???? ???????? ??????? ??? ?????
+    if (dot(tCurCol.vDiff, tCurCol.vDiff) != 0.f)                            // w ?? ?????? ???? ??????? z ???? ?????.(?u???? ????? ?????)
     {
         float4 vWorldPos = mul(float4(vViewPos.xyz, 1.f), g_matViewInv);
         float4 vShadowProj = mul(vWorldPos, g_mat_0);
@@ -61,7 +61,9 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _In)
     }
     
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;
-    output.vSpecular = tCurCol.vSpec;
+
+    //output.vSpecular = tCurCol.vSpec;
+
     return output;
 
 }
@@ -117,7 +119,7 @@ float4 PS_MergeLight(VS_OUTPUT _in) : SV_Target
    
     float4 vColor = g_tex_0.Sample(g_sam_0, _in.vUV);
     float4 vSpec = g_tex_2.Sample(g_sam_0, _in.vUV);
-    
+
     return (vColor * vLightPow) + vSpec;
 }
 

@@ -51,6 +51,7 @@
 #include "BowScript.h"
 #include "LobbyScene.h"
 #include "TitleScene.h"
+#include "SkillMgr.h"
 #include "Network.h";
 
 
@@ -124,15 +125,25 @@ void CSceneMgr::Init()
 	Ptr<CTexture> pPlayerRed = CResMgr::GetInst()->Load<CTexture>(L"Player_Red", L"Texture\\ArchersTextureRed.png");
 	Ptr<CTexture> pPlayerBlue = CResMgr::GetInst()->Load<CTexture>(L"Player_Blue", L"Texture\\ArchersTextureBlue.png");
 	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
+	Ptr<CTexture> pBaseLine = CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
 	CResMgr::GetInst()->Load<CTexture>(L"Snow", L"Texture\\Particle\\Snow50px.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Bubble50", L"Texture\\Particle\\Bubbles50px.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Bubble99", L"Texture\\Particle\\Bubbles99px.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Sparks", L"Texture\\Particle\\Sparks.png");
+	CResMgr::GetInst()->Load<CTexture>(L"HardRain", L"Texture\\Particle\\HardRain.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Thunder", L"Texture\\Particle\\Thunder.png");
+	CResMgr::GetInst()->Load<CTexture>(L"HardRain2", L"Texture\\Particle\\HardRain2.png");
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"particle_00", L"Texture\\Particle\\particle_00.png");
+	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle", L"Texture\\MagicCircle.png");
+	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle2", L"Texture\\MagicCircle2.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
 
@@ -159,6 +170,131 @@ void CSceneMgr::Init()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
+
+
+	SKILL* Skill = new SKILL;
+	Skill->Name = L"Water0";
+	Skill->Code = 0;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WATER;
+	Skill->fCoolTime = 10;
+	Skill->fDuration = 3;
+	Skill->DotDamage = -16.40000000000f;
+	Skill->fDamage = 0.f;
+	Skill->bUse = false;
+	Skill->Sum = 50.f;
+	CSkillMgr::GetInst()->AddSkill(0, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"Water1";
+	Skill->Code = 1;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WATER;
+	Skill->fCoolTime = 20;
+	Skill->fDuration = 5;
+	Skill->DotDamage = -20.f;
+	Skill->fDamage = 0.f;
+	Skill->bUse = false;
+	Skill->Sum = 100.f;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"Wind0";
+	Skill->Code = 2;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WIND;
+	Skill->fCoolTime = 12;
+	Skill->fDuration = 5;
+	Skill->fDamage = 20.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"Wind1";
+	Skill->Code = 3;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::WIND;
+	Skill->fCoolTime = 12;
+	Skill->fDuration = 0;
+	Skill->fDamage = 32.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"Dark0";
+	Skill->Code = 4;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::DARK;
+	Skill->fCoolTime = 15;
+	Skill->fDuration = 3;
+	Skill->fDamage = 20.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+	Skill->Name = L"Dark1";
+	Skill->Code = 5;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::DARK;
+	Skill->fCoolTime = 30;
+	Skill->fDuration = 5;
+	Skill->fDamage = 0.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+	Skill = new SKILL;
+	Skill->Name = L"Thunder0";
+	Skill->Code = 6;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::THUNDER;
+	Skill->fCoolTime = 20;
+	Skill->fDuration = 5;
+	Skill->fDamage = 15.f;
+	Skill->DotDamage = 0.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+	Skill = new SKILL;
+	Skill->Name = L"Thunder1";
+	Skill->Code = 7;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::THUNDER;
+	Skill->fCoolTime = 20;
+	Skill->fDuration = 3;
+	Skill->fDamage = 0.f;
+	Skill->bUse = false;
+	Skill->DotDamage = 24.f;
+	Skill->Sum = -72.f;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+	Skill = new SKILL;
+	Skill->Name = L"Fire0";
+	Skill->Code = 8;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::FIRE;
+	Skill->fCoolTime = 8;
+	Skill->fDuration = 5;
+	Skill->fDamage = 15.f;
+	Skill->DotDamage = 5.f;
+	Skill->Sum = -25.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
+	Skill->Name = L"Fire1";
+	Skill->Code = 9;
+	Skill->eSkillType = SKILL_TYPE::ACT;
+	Skill->eElementType = ELEMENT_TYPE::FIRE;
+	Skill->fCoolTime = 25;
+	Skill->fDuration = 3;
+	Skill->fDamage = 20.f;
+	Skill->DotDamage = 10.f;
+	Skill->Sum = -40.f;
+	Skill->bUse = false;
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
+
+
+
+
+
 
 	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
 	m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");

@@ -49,12 +49,12 @@ VS_STD3D_OUTPUT VS_Std3D(VS_STD3D_INPUT _in)
 {
     VS_STD3D_OUTPUT output = (VS_STD3D_OUTPUT) 0.f;
         
-    if (g_int_0)
+    if (g_int_0 > 0)
     {
         Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeight, _in.vIndices, 0); 
     }
+
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
-    
     output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV).xyz;
     output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV).xyz);
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV).xyz);
@@ -88,6 +88,7 @@ struct PS_STD3D_OUTPUT
     float4 vTarget0 : SV_Target0; // Diffuse
     float4 vTarget1 : SV_Target1; // Normal
     float4 vTarget2 : SV_Target2; // Position
+    float4 vTarget3 : SV_Target3; // Specular
 };
 
 PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
@@ -108,7 +109,14 @@ PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
         float3x3 matTBN = { _in.vViewTangent, _in.vViewBinormal, _in.vViewNormal };
         vViewNormal = normalize(mul(vTSNormal, matTBN));
     }
-    
+
+    if (tex_2)
+    {
+        output.vTarget3 = g_tex_2.Sample(g_sam_0, _in.vUV);
+    }
+    else
+        output.vTarget3 = float4(0.f, 0.f, 0.f, 1.f);
+
     output.vTarget1.xyz = vViewNormal;
     output.vTarget2.xyz = _in.vViewPos;
     

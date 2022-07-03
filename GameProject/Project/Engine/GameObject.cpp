@@ -27,7 +27,7 @@ CGameObject::CGameObject(const CGameObject& _origin)
 	, m_bDead(false)
 	, m_bActive(true)
 	, m_bFrustumCheck(_origin.m_bFrustumCheck)
-	
+
 {
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
@@ -41,8 +41,12 @@ CGameObject::CGameObject(const CGameObject& _origin)
 CGameObject::~CGameObject()
 {
 	Safe_Delete_Array(m_arrCom);
-	Safe_Delete_Vector(m_vecChild);
-	Safe_Delete_Vector(m_vecScript);
+	if (0 != m_vecChild.size()) {
+		Safe_Delete_Vector(m_vecChild);
+	}
+	if (0 != m_vecScript.size()) {
+		Safe_Delete_Vector(m_vecScript);
+	}
 }
 
 void CGameObject::AddChild(CGameObject* _pChildObj)
@@ -224,12 +228,13 @@ void CGameObject::Update()
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
 		if (m_vecChild[i]->IsActive())
-			m_vecChild[i]->Update();
+			if (!m_vecChild[i]->IsDead())
+				m_vecChild[i]->Update();
 	}
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
-		if(m_bActive)
+		if (m_bActive)
 			m_vecScript[i]->Update();
 	}
 }
@@ -245,7 +250,8 @@ void CGameObject::LateUpdate()
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
 		if (m_vecChild[i]->IsActive())
-			m_vecChild[i]->LateUpdate();
+			if (!m_vecChild[i]->IsDead())
+				m_vecChild[i]->LateUpdate();
 	}
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
@@ -265,7 +271,8 @@ void CGameObject::FinalUpdate()
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
 		if (m_vecChild[i]->IsActive())
-			m_vecChild[i]->FinalUpdate();
+			if (!m_vecChild[i]->IsDead())
+				m_vecChild[i]->FinalUpdate();
 	}
 }
 
@@ -279,7 +286,8 @@ void CGameObject::RegisterToLayer()
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
-		m_vecChild[i]->RegisterToLayer();
+		if (!m_vecChild[i]->IsDead())
+			m_vecChild[i]->RegisterToLayer();
 	}
 }
 
@@ -336,7 +344,7 @@ void CGameObject::SetActive(bool _bTrue)
 			event.wParam = (DWORD_PTR)this;
 
 			CEventMgr::GetInst()->AddEvent(event);
-			
+
 		}
 	}
 	else

@@ -41,9 +41,9 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _In)
     {
         clip(-1);
     }
-    float3 vViewNormal = g_tex_0.Sample(g_sam_0, _In.vUV).xyz;            // ¸ÞÀÎÄ«¸Þ¶ó view ¿ªÇà·ÄÀ» °öÇØ¼­ ¿ùµåÁÂÇ¥¸¦ ¾Ë¾Æ³½´Ù.
-    tLightColor tCurCol = CalLight(g_int_0, vViewNormal, vViewPos);          // ±¤¿ø ½ÃÁ¡À¸·Î Åõ¿µ½ÃÅ² ÁÂÇ¥ ±¸ÇÏ±â
-    if (dot(tCurCol.vDiff, tCurCol.vDiff) != 0.f)                            // w ·Î ³ª´²¼­ ½ÇÁ¦ Åõ¿µÁÂÇ¥ z °ªÀ» ±¸ÇÑ´Ù.(¿Ã¹Ù¸£°Ô ºñ±³ÇÏ±â À§ÇØ¼­)
+    float3 vViewNormal = g_tex_0.Sample(g_sam_0, _In.vUV).xyz;            // ï¿½ï¿½ï¿½ï¿½Ä«ï¿½Þ¶ï¿½ view ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ë¾Æ³ï¿½ï¿½ï¿½.
+    tLightColor tCurCol = CalLight(g_int_0, vViewNormal, vViewPos);          // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½Ï±ï¿½
+    if (dot(tCurCol.vDiff, tCurCol.vDiff) != 0.f)                            // w ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¥ z ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½.(ï¿½Ã¹Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½)
     {
         float4 vWorldPos = mul(float4(vViewPos.xyz, 1.f), g_matViewInv);
         float4 vShadowProj = mul(vWorldPos, g_mat_0);
@@ -61,7 +61,9 @@ PS_OUTPUT PS_DirLight(VS_OUTPUT _In)
     }
     
     output.vDiffuse = tCurCol.vDiff + tCurCol.vAmb;
-    output.vSpecular = tCurCol.vSpec;
+
+    //output.vSpecular = tCurCol.vSpec;
+
     return output;
 
 }
@@ -117,7 +119,7 @@ float4 PS_MergeLight(VS_OUTPUT _in) : SV_Target
    
     float4 vColor = g_tex_0.Sample(g_sam_0, _in.vUV);
     float4 vSpec = g_tex_2.Sample(g_sam_0, _in.vUV);
-    
+
     return (vColor * vLightPow) + vSpec;
 }
 

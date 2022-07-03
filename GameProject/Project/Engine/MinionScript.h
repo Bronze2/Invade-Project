@@ -75,6 +75,7 @@ public:
 
     void CheckRange();
 
+    void SetDamage(const int& _Damage);
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
     

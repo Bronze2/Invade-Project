@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "func.h"
 #include "Material.h"
+#include"ParticleScript.h"
 
 
 namespace RES_TYPE_STR
@@ -292,5 +293,126 @@ Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _f
 	float x = (_fDestination * _fxvalue) / diagnal;
 	float z = (_fDestination * _fzvalue) / diagnal;
 	return Vec2(x,z);
+}
+
+
+int TickCheck(std::chrono::system_clock::time_point start, int _Time)
+{
+	std::chrono::duration<double>sec = std::chrono::system_clock::now() - start;
+	if (_Time <= sec.count()) {
+		_Time += 1;
+	}
+	return _Time;
+}
+
+bool CoolTimeCheck(std::chrono::system_clock::time_point start, int _Time)
+{
+	std::chrono::duration<double>sec = std::chrono::system_clock::now() - start;
+	if (_Time <= sec.count()) {
+		return true;
+	}
+	return false;
+}
+
+bool SkillFinalCheck(SKILL* _pSkill)
+{
+	if (_pSkill->bFinal) {
+		delete _pSkill;
+		return true;
+	}
+	return false;
+}
+#include "ParticleSystem.h"
+#include "ResMgr.h"
+void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey)
+{
+	CGameObject* pHitParticle = new CGameObject;
+	pHitParticle->AddComponent(new CTransform);
+	pHitParticle->AddComponent(new CParticleSystem);
+	pHitParticle->AddComponent(new CParticleScript);
+	pHitParticle->Transform()->SetLocalPos(_Pos);
+	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
+	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.8f, 1.f, 0.f, 1.0f));
+	pHitParticle->ParticleSystem()->SetStartScale(5.f);
+	pHitParticle->ParticleSystem()->SetEndScale(10.f);
+	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(0.5f);
+	pHitParticle->GetScript<CParticleScript>()->SetTime();
+	pHitParticle->FrustumCheck(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
+
+
+}
+void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
+{
+	CGameObject* pHitParticle = new CGameObject;
+	pHitParticle->AddComponent(new CTransform);
+	pHitParticle->AddComponent(new CParticleSystem);
+	pHitParticle->AddComponent(new CParticleScript);
+	pHitParticle->Transform()->SetLocalPos(_Pos);
+	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
+	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.3f, 0.3f, 0.4f, 0.5f));
+	pHitParticle->ParticleSystem()->SetStartScale(100.f);
+	pHitParticle->ParticleSystem()->SetEndScale(10.f);
+	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.5f);
+	pHitParticle->GetScript<CParticleScript>()->SetTime();
+	pHitParticle->ParticleSystem()->SetMinLifeTime(1.f);
+	pHitParticle->ParticleSystem()->SetMaxLifeTime(1.5f);
+	pHitParticle->FrustumCheck(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
+
+}
+#include "ThunderSkill1Script.h"
+
+#include "MeshRender.h"
+void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
+{
+	CGameObject* pThunderObject = new CGameObject;
+	pThunderObject->AddComponent(new CTransform);
+	pThunderObject->AddComponent(new CParticleSystem);
+	pThunderObject->AddComponent(new CThunderSkill1Script);
+	pThunderObject->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate5Mtrl");
+	pThunderObject->ParticleSystem()->SetStartColor(Vec4(0.8f, 0.8f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pThunderObject->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
+	pThunderObject->ParticleSystem()->SetStartScale(10.f);
+	pThunderObject->ParticleSystem()->SetEndScale(10.f);
+	pThunderObject->ParticleSystem()->SetMinLifeTime(1.f);
+	pThunderObject->ParticleSystem()->SetMaxLifeTime(3.f);
+	pThunderObject->FrustumCheck(false);
+	pThunderObject->SetActive(true);
+	Ptr<CTexture> pMagicTexture = nullptr;
+	if (3 == _iLayerIdx) {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle");
+	}
+	else {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle2");
+	}
+
+
+
+	CGameObject* pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetLocalPos(Vec3(_Pos.x, 2.f, _Pos.z));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
+	if (3 == _iLayerIdx) {
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+	}
+	else {
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture01"));
+	}
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pMagicTexture.GetPointer());
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetTarget(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetLayer(_iLayerIdx);
+	pThunderObject->Transform()->SetLocalPos(_Pos);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
+
 }
 

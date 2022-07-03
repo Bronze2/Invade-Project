@@ -94,7 +94,7 @@ void CThunderSkill1Script::Update()
 	else {
 		Collision();
 		if (CoolTimeCheck(m_pSkill->StartTime, m_pSkill->fDuration)) {
-			DeleteObject(GetObj()->GetChild()[0]);
+			//DeleteObject(GetObj()->GetChild()[0]);
 			DeleteObject(GetObj());
 			DeleteObject(m_pTarget);
 		}

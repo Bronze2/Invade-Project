@@ -220,6 +220,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="MonsterScript.h" />
     <ClInclude Include="MRT.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="ParticleScript.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
@@ -236,12 +237,15 @@ call EngineCopy.bat</Command>
     <ClInclude Include="SensorMgr.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="ThunderSkill1Script.h" />
     <ClInclude Include="TimeMgr.h" />
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="TitleScene.h" />
@@ -296,6 +300,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="MonsterScript.cpp" />
     <ClCompile Include="MRT.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="ParticleScript.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PathMgr.cpp" />
     <ClCompile Include="pch.cpp">
@@ -315,11 +320,14 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ThunderSkill1Script.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -360,8 +368,8 @@ call EngineCopy.bat</Command>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main</EntryPointName>
     </FxCompile>
     <FxCompile Include="light.fx">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>

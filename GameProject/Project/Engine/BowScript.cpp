@@ -244,6 +244,9 @@ void CBowScript::Awake()
 		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj());
+		m_pArrow[i]->GetScript<CArrowScript>()->SetLayerIdx(GetObj()->GetLayerIdx());
+		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
+		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
 		GetObj()->AddChild(m_pArrow[i]);
 	}
 

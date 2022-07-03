@@ -40,7 +40,7 @@ public:
 	Ptr<T> Load(const wstring& _strKey, const wstring& _strPath);
 	template<typename T>
 	Ptr<T> LoadFBXTexture(const wstring& _strKey, const wstring& _strPath/*��� ���*/);
-	
+
 
 	Ptr<CTexture> CreateTexture(const wstring& _strName, UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
 		, const D3D12_HEAP_PROPERTIES& _HeapProperty, D3D12_HEAP_FLAGS _eHeapFlag
@@ -149,7 +149,7 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 		for (int j = 0; j < rFileName.length(); ++j) {
 			FileName.push_back(rFileName[rFileName.length() - j - 1]);
 		}
-	
+
 		i = 1;
 		if (rFileName == L"dsp.") {
 			while (true)
@@ -158,19 +158,19 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 					wstring& strPath = const_cast<wstring&>(_strPath);
 					strPath[length - i] = 'g';
 				}
-					
+
 				else if (i == 2) {
 					wstring& strPath = const_cast<wstring&>(_strPath);
 					strPath[length - i] = 'n';
-					
+
 				}
-					
+
 				else if (i == 3) {
 					wstring& strPath = const_cast<wstring&>(_strPath);
 					strPath[length - i] = 'p';
-				
+
 				}
-				
+
 				if (_strPath[length - i] == path) {
 					break;
 				}
@@ -180,7 +180,7 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 		}
 
 		int c = 0;
-	//	strFullPath += wFBXLoad;
+		//	strFullPath += wFBXLoad;
 	}
 
 	strFullPath += _strPath;

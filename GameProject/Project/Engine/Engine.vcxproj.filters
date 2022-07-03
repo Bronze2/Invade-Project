@@ -79,6 +79,9 @@
     <Filter Include="IMGUI">
       <UniqueIdentifier>{a5f53c73-5bdf-45d9-bb0e-282342f17907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Skill">
+      <UniqueIdentifier>{f3993354-e03d-4ff7-bfda-6431ad8646c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -307,6 +310,18 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>IMGUI</Filter>
     </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillMgr.h">
+      <Filter>Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderSkill1Script.h">
+      <Filter>Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleScript.h">
+      <Filter>Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -520,6 +535,18 @@
     <ClCompile Include="IMGUIMgr.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillMgr.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderSkill1Script.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleScript.cpp">
+      <Filter>Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -539,9 +566,6 @@
     <FxCompile Include="tool.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
-    <FxCompile Include="light.fx">
-      <Filter>ShaderCode</Filter>
-    </FxCompile>
     <FxCompile Include="std.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
@@ -558,6 +582,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="terrain.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="light.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

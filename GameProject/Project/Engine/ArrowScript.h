@@ -44,9 +44,24 @@ private:
 
     int m_ParentId;
     int m_id;
+    UINT m_iLayerIdx;
+    UINT m_iDamage;
+    SKILL* m_pSkill;
+    CGameObject* m_pPlayer;
+
+
 public:
     virtual void Awake();
     virtual void Update();
+
+
+    void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
+    bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }
+    void SetSkill(SKILL* _pSkill);
+    void SetLayerIdx(UINT _Idx) { m_iLayerIdx = _Idx; }
+    UINT GetLayerIdx() { return m_iLayerIdx; }
+    void SkillCheck();
+
 
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
 
@@ -74,6 +89,16 @@ public:
     void SetBow(CGameObject* _Obj) { m_pBow = _Obj; }
 
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
+
+    //½ºÅ³
+    void WaterSkill0(CCollider3D* _pColldier);
+    void DarkSkill0(CCollider3D* _pCollider);
+    void ThunderSkill0(CCollider3D* _pCollider);
+    void ThunderSkill1(CCollider3D* _pCollider);
+    void FireSkill0(CCollider3D* _pCollider);
+    void FireSkill1(CCollider3D* _pCollider);
+    void WindSkill0(CCollider3D* _pCollider);
+    void WindSkill1(CCollider3D* _pCollider);
 private:
 
 public:

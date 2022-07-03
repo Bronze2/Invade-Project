@@ -8,6 +8,7 @@ class CPlayerScript :
     public CScript
 {
 private:
+    vector<CGameObject* >m_arrAlliance;
     bool m_bCheckStartMousePoint;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
@@ -44,18 +45,39 @@ private:
 
     Vec3 m_LerpRot;
 
+
+    CGameObject* m_pHealParticle;
+    CGameObject* m_pFlameParticle;
+    CGameObject* m_pThunderParticle;
+    bool m_bHealCheck;
+    bool m_bFlameCheck;
+    bool m_bThunderCheck;
+    bool m_bDarkCheck;
+
+    SKILL* m_tESkill;
+    SKILL* m_tZSkill;
+
+    CGameObject* m_pESkillObject;
+    CGameObject* m_pZSkillObject;
+
+    vector<SKILL*> m_arrSkill;
+
+
+
+    
     float m_fCurDegree;
     int m_iKeyHoldCnt;
-    UINT m_uiMaxHp;
+    UINT m_iMaxHp;
     int m_iCurHp = 1500;
     CAMP_STATE m_eCamp;
     Vec3 restorePos;
+    CGameObject* m_pBowObject;
 public:
     void m_FAnimation();
     void Init();
     virtual void Awake();
     virtual void Update();
-    void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
+    void SetType(ELEMENT_TYPE _iType);
     void SetMain() { isMain = true; }
     void SetState(int state);
     void m_SetId(int id) { m_id = id; }
@@ -68,6 +90,9 @@ public:
     CPlayerScript();
     virtual ~CPlayerScript();
     void GetDamage(const UINT& _uiDamage);
+    void SetDamage(const int& _Damage);
+
+    UINT GetType() { return (UINT)m_iType; }
 
     void m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos);
     bool GetCollCheck(){return m_bColCheck;}
@@ -76,6 +101,20 @@ public:
     virtual void OnCollision3D(CCollider3D* _pOther);
     virtual void OnCollision3DExit(CCollider3D* _pOther);
 
+
+    virtual void OnDetectionEnter(CGameObject* _pOther);
+    virtual void OnDetection(CGameObject* _pOther);
+    virtual void OnDetectionExit(CGameObject* _pOther);
+
+    void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
+
+    void SkillCoolTimeCheck();
+
+    void StatusCheck();
+
+    void UseSkill();
+    void DamageBySkill(SKILL* _pSkill);
+    void GetDamage();
 
     CLONE(CPlayerScript);
 };

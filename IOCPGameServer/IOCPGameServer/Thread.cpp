@@ -326,7 +326,6 @@ void CThread::process_packet(int user_id, char* buf)
 		SHARED_DATA::g_clients[user_id].dir.z = packet->dir.z;
 		SHARED_DATA::g_clients[user_id].animState = packet->state;
 		CService::GetInst()->do_move(user_id, packet->direction);
-		cout << user_id << endl;
 	}
 	break;
 	case C2S_KEY_UP:

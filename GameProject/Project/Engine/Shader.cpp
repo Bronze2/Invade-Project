@@ -222,7 +222,7 @@ void CShader::CreateGeometryShader(const wstring& _strPath, const string& _strFu
 {
 	int iFlag = 0;
 #ifdef _DEBUG
-	iFlag = D3DCOMPILE_DEBUG ;
+	iFlag = D3DCOMPILE_DEBUG;
 #endif
 
 	wstring strPath = CPathMgr::GetResPath();
@@ -245,13 +245,13 @@ void CShader::CreateComputeShader(const wstring& _strPath, const string& _strFun
 {
 	int iFlag = 0;
 #ifdef _DEBUG
-	iFlag = D3DCOMPILE_DEBUG ;
+	iFlag = D3DCOMPILE_DEBUG;
 #endif
 	wstring strPath = CPathMgr::GetResPath();
 	strPath += _strPath;
 	char* pErr = nullptr;
 
-	if (FAILED(D3DCompileFromFile(strPath.c_str(),nullptr,D3D_COMPILE_STANDARD_FILE_INCLUDE,_strFuncName.c_str(),_strhlslVersion.c_str(),iFlag,0,&m_pCSBlob,&m_pErrBlob)))
+	if (FAILED(D3DCompileFromFile(strPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, _strFuncName.c_str(), _strhlslVersion.c_str(), iFlag, 0, &m_pCSBlob, &m_pErrBlob)))
 	{
 		pErr = (char*)m_pErrBlob->GetBufferPointer();
 		MessageBoxA(nullptr, pErr, "Shader Create Failed !!!", MB_OK);
@@ -266,7 +266,7 @@ void CShader::CreateHullShader(const wstring& _strPath, const string& _strFuncNa
 {
 	int iFlag = 0;
 #ifdef _DEBUG
-	iFlag = D3DCOMPILE_DEBUG|D3DCOMPILE_SKIP_OPTIMIZATION;
+	iFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
 	wstring strPath = CPathMgr::GetResPath();
@@ -309,7 +309,7 @@ void CShader::CreateDomainShader(const wstring& _strPath, const string& _strFunc
 
 void CShader::UpdateData(bool _bInstancing)
 {
-	
+
 	if (_bInstancing)
 	{
 		CMDLIST->SetPipelineState(m_pPipeLineStateInst.Get());
@@ -327,8 +327,8 @@ void CShader::UpdateData_CS()
 	CMDLIST_CS->SetPipelineState(m_pPipeLineState_CS.Get());
 }
 
-CShader::CShader():CResource(RES_TYPE::SHADER),m_pVSBlob(nullptr),m_pHSBlob(nullptr),m_pDSBlob(nullptr),
-m_pGSBlob(nullptr),m_pPSBlob(nullptr),m_pErrBlob(nullptr),m_pCSBlob(nullptr),m_pPipeLineState(nullptr),  m_pPipeLineStateInst(nullptr),m_tPipeLine{},m_eBlendType(BLEND_TYPE::DEFAULT),m_eDSType(DEPTH_STENCIL_TYPE::LESS)
+CShader::CShader() :CResource(RES_TYPE::SHADER), m_pVSBlob(nullptr), m_pHSBlob(nullptr), m_pDSBlob(nullptr),
+m_pGSBlob(nullptr), m_pPSBlob(nullptr), m_pErrBlob(nullptr), m_pCSBlob(nullptr), m_pPipeLineState(nullptr), m_pPipeLineStateInst(nullptr), m_tPipeLine{}, m_eBlendType(BLEND_TYPE::DEFAULT), m_eDSType(DEPTH_STENCIL_TYPE::LESS)
 {
 }
 

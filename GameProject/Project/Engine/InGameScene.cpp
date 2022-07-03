@@ -166,7 +166,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 	pObject->GetScript<CPlayerScript>()->m_SetId(Network::GetInst()->getMainClient().id);
 
 
@@ -222,6 +222,8 @@ void CInGameScene::Init()
 	pBow->GetScript<CBowScript>()->Init();
 	pBow->GetScript<CBowScript>()->SetCamp(Network::GetInst()->getMainClient().camp);
 	pObject->AddChild(pBow);
+	pBow->GetScript<CBowScript>()->SetPlayer(pObject);
+	pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
 	pMainCam->Camera()->SetPlayer(pObject);
 	pMainCam->Camera()->SetbPlay(true);
 	pBow->GetScript<CBowScript>()->SetMain();
@@ -280,7 +282,7 @@ void CInGameScene::Init()
 		pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 		pObject->MeshRender()->SetDynamicShadow(true);
-		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FROZEN);
+		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 		pObject->GetScript<CPlayerScript>()->m_SetId(cl.second.id);
 
 
@@ -335,6 +337,8 @@ void CInGameScene::Init()
 		pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 		pBow->GetScript<CBowScript>()->Init();
 		pObject->AddChild(pBow);
+		pBow->GetScript<CBowScript>()->SetPlayer(pObject);
+		pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
 		FindLayer(L"Blue")->AddGameObject(pBow);
 
 
@@ -1375,8 +1379,14 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 
-
-
+	Ptr<CMaterial> m_pMtrl = new CMaterial;
+	m_pMtrl->SetName(L"Texture00");
+	m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
+	m_pMtrl = new CMaterial;
+	m_pMtrl->SetName(L"Texture01");
+	m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
 
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");

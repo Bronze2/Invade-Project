@@ -5,7 +5,26 @@
 #include "PlayerScript.h"
 #include "ParticleSystem.h"
 #include "SceneMgr.h"
+#include "SkillMgr.h"
 #include <math.h>
+
+void CArrowScript::SetSkill(SKILL* _pSkill)
+{
+	m_pSkill = new SKILL;
+	m_pSkill->DotDamage = _pSkill->DotDamage;
+	m_pSkill->Code = _pSkill->Code;
+	m_pSkill->Name = _pSkill->Name;
+	m_pSkill->eSkillType = _pSkill->eSkillType;
+	m_pSkill->eElementType = _pSkill->eElementType;
+
+	m_pSkill->fCoolTime = _pSkill->fCoolTime;
+	m_pSkill->fDuration = _pSkill->fDuration;
+	m_pSkill->fDamage = _pSkill->fDamage;
+	m_pSkill->bUse = false;
+	m_pSkill->bFinal = false;
+	m_pSkill->Count = 0;
+	m_pSkill->Sum = _pSkill->Sum;
+}
 void CArrowScript::Awake()
 {
 
@@ -15,13 +34,14 @@ void CArrowScript::Awake()
 	m_pParticle->AddComponent(new CTransform);
 	switch (m_iType)
 	{
-	case ELEMENT_TYPE::FROZEN:
+	case ELEMENT_TYPE::WATER:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Snow"));
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Bubble99"), L"ParticleUpdateMtrl");
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.4f, 0.4f, 0.8f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
 		m_pParticle->ParticleSystem()->SetEndScale(5.f);
+
 
 		break;
 	case ELEMENT_TYPE::FIRE:
@@ -34,36 +54,53 @@ void CArrowScript::Awake()
 		break;
 	case ELEMENT_TYPE::DARK:
 		m_pParticle->AddComponent(new CParticleSystem);
-		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"));
-		m_pParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"), L"ParticleUpdateMtrl");
+		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
 		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 		break;
 	case ELEMENT_TYPE::THUNDER:
-
+		m_pParticle->AddComponent(new CParticleSystem);
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"), L"ParticleUpdateMtrl");
+		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
+		m_pParticle->ParticleSystem()->SetStartScale(2.f);
+		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 		break;
 	case ELEMENT_TYPE::WIND:
-
+		m_pParticle->AddComponent(new CParticleSystem);
 		break;
 
 
 	}
-
-
+	m_pParticle->SetActive(false);
 	m_pParticle->FrustumCheck(false);
 	m_pParticle->Transform()->SetLocalPos(Vec3(0.5f, 0.f, 0.f));
-
-	pCurScene->FindLayer(L"Default")->AddGameObject(m_pParticle);
-
 	GetObj()->AddChild(m_pParticle);
+
 
 	m_eState = ARROW_STATE::IDLE;
 }
 
 
+void CArrowScript::SkillCheck()
+{
+	if (nullptr == m_pParticle)return;
+	if (nullptr != m_pSkill) {
+		m_pParticle->SetActive(true);
+	}
+	else {
+		return;
+		m_pParticle->SetActive(false);
+	}
+
+}
 void CArrowScript::Update()
 {
+
+	SkillCheck();
+
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
 
@@ -103,6 +140,27 @@ void CArrowScript::Update()
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
+
+		if (nullptr != m_pSkill) {
+			if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+				if (vPos.y <= 1.f) {
+
+					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+					vPos3.y = 1.f;
+					CreateThunderObject(vPos3, m_iLayerIdx);
+					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+				}
+			}
+			else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+				if (vPos.y <= 1.f) {
+					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+					vPos3.y = 1.f;
+					CreateBoomParticleObject(vPos3, L"smokeparticle");
+					//Collision();
+					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+				}
+			}
+		}
 
 		//cout<<"화살 주인은" <<GetObj()->GetParent()->GetParent()->GetScript<CPlayerScript>()->m_GetId() <<endl;
 		//cout << "화살 주인은" << GetParentId() << endl;
@@ -150,4 +208,98 @@ CArrowScript::CArrowScript(ELEMENT_TYPE _iType) :CScript((UINT)SCRIPT_TYPE::ARRO
 
 CArrowScript::~CArrowScript()
 {
+	if (nullptr != m_pSkill)
+	{
+		delete m_pSkill;
+		m_pSkill = nullptr;
+	}
+
+}
+
+void CArrowScript::WaterSkill0(CCollider3D* _pCollider) {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+
+}
+
+void CArrowScript::DarkSkill0(CCollider3D* _pCollider)
+{
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+}
+
+void CArrowScript::ThunderSkill0(CCollider3D* _pCollider)
+{
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+}
+
+void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
+{
+	Vec3 vPos = GetObj()->Transform()->GetWorldPos();
+	vPos.y = 1.f;
+	CreateThunderObject(vPos, m_iLayerIdx);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+	//else if (nullptr != _pCollider->GetObj()->GetScript<CMinionScript>()) {
+	//	_pCollider->GetObj()->GetScript<CMinionScript>()->SetDamage(m_iDamage);
+	//	Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	//}
+	//else if (nullptr != _pCollider->GetObj()->GetScript<CTowerScript>()) {
+	//	_pCollider->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+	//	Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	//}
+}
+
+void CArrowScript::FireSkill0(CCollider3D* _pCollider)
+{
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+}
+
+void CArrowScript::FireSkill1(CCollider3D* _pCollider)
+{
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+		Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+		CreateBoomParticleObject(vPos3, L"smokeparticle");
+		//Collision();
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+
+}
+
+void CArrowScript::WindSkill0(CCollider3D* _pCollider)
+{
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>())
+		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+	else {
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	}
+
+}
+
+void CArrowScript::WindSkill1(CCollider3D* _pCollider)
+{
+	//if (nullptr != _pCollider->GetObj()->GetScript<CMinionScript>()) {
+	//	_pCollider->GetObj()->GetScript<CMinionScript>()->SetDamage(m_pSkill->fDamage);
+	//}
+	//else if (nullptr != _pCollider->GetObj()->GetScript<CTowerScript>()) {
+	//	_pCollider->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+
+	//}
+	//else if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+	//	_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+
+	//}
+
 }
