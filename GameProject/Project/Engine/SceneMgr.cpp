@@ -70,8 +70,10 @@ void CSceneMgr::ChangeScene(CScene* _pNextScene)
 
 void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 {
+	// 로비씬
 	if (m_pCurScene == m_arrScene[(UINT)_Type])
 		return;
+	m_pCurScene->Exit();
 	SAFE_DELETE(m_pCurScene);
 	switch (_Type)
 	{
@@ -82,9 +84,10 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		m_pCurScene = new CLoginScene;
 		break;
 	case SCENE_TYPE::LOBBY:
-		m_pCurScene =new CLobbyScene;
+		m_pCurScene = new CLobbyScene;
 		break;
 	case SCENE_TYPE::INGAME:
+		//m_pCurScene = m_arrScene[(UINT)_Type];
 		m_pCurScene = new CInGameScene;
 		break;
 	case SCENE_TYPE::RESULT:
@@ -96,6 +99,7 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		break;
 	}
 
+	m_pCurScene->SetType(_Type);
 	m_pCurScene->Init();
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
@@ -108,16 +112,30 @@ CSceneMgr::CSceneMgr()
 
 CSceneMgr::~CSceneMgr()
 {
-	for (int i = 0; i < (UINT)SCENE_TYPE::END; ++i) {
-		SAFE_DELETE(m_arrScene[i]);
-	}
+	//for (int i = 0; i < (UINT)SCENE_TYPE::END; ++i) {
+	//	SAFE_DELETE(m_arrScene[i]);
+	//}
+	delete m_pCurScene;
+	m_pCurScene = nullptr;
 }
 
 void CSceneMgr::Init()
 {
-	Ptr<CTexture> pBowBig = CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
-	Ptr<CTexture> pBaseLine = CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
-	Ptr<CTexture> pDarkUI = CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\splash.png");
+	// 로비씬
+	CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
+	CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
+	CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\splash.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIButtonGameStart", L"Texture\\UIButtonGameStart.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIReadyBar", L"Texture\\UIReadyBar.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIReadyPressed", L"Texture\\UIReadyPressed.png");
+
+	CResMgr::GetInst()->Load<CTexture>(L"PlayerBlue", L"Texture\\ArchersTextureBlue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PlayerRed", L"Texture\\ArchersTextureRed.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\property_water.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyDark", L"Texture\\property_dark.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyWind", L"Texture\\property_wind.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\property_thunder.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\property_fire.png");
 
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
@@ -288,15 +306,17 @@ void CSceneMgr::Init()
 	Skill->bUse = false;
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
+	// 로비씬
+	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	
+	m_pCurScene = new CLobbyScene;
+	m_pCurScene->SetType(SCENE_TYPE::LOBBY);
 
-	m_arrScene[(UINT)SCENE_TYPE::LOBBY]= new CLobbyScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
-
-
-
-	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::INGAME];
+	//m_pCurScene = new CInGameScene;
+	//m_pCurScene->SetType(SCENE_TYPE::INGAME);
+	
 	m_pCurScene->Init();
-
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
 	

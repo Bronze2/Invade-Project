@@ -106,7 +106,6 @@ void CTransform::FinalUpdate()
 			m_vWorldDir[i] = XMVector3TransformNormal(arrDefault[i], m_matWorld);
 			m_vWorldDir[i].Normalize();
 		}
-
 	}
 	
 

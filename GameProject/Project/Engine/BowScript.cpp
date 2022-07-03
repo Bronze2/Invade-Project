@@ -4,9 +4,9 @@
 #include "Animator3D.h"
 #include "ArrowScript.h"
 #include "CameraScript.h"
-#include "EmptyCameraScript.h"
 #include "CrossHairScript.h"
 #include "Collider3D.h"
+#include "Trail.h"
 
 void CBowScript::Update()
 {
@@ -33,7 +33,6 @@ void CBowScript::Update()
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-	CGameObject* pEmptyCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
 
 	Vec3 vBowFront = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 	Vec3 vArrowDir;
@@ -210,6 +209,10 @@ void CBowScript::Awake()
 		m_pArrow[i]->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f)); 
 		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+
+		//m_pArrow[i]->AddComponent(new CTrail);
+		//m_pArrow[i]->Trail()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"white"));
+
 
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);

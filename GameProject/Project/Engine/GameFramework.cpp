@@ -10,6 +10,7 @@
 #include "SceneMgr.h"
 #include "EventMgr.h"
 #include "InstancingMgr.h"
+#include "MRT.h"
 
 CGameFramework::CGameFramework():m_hMainhWnd(nullptr) {
 
@@ -70,9 +71,8 @@ void CGameFramework::Progress()
 	CSceneMgr::GetInst()->Update();
 	CRenderMgr::GetInst()->Render();
 
-	CEventMgr::GetInst()->Update();
 	CInstancingMgr::GetInst()->Clear();
-
+	CEventMgr::GetInst()->Update();
 }
 
 void CGameFramework::ProcessInput()

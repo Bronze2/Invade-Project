@@ -5,6 +5,6 @@ class CInGameScene :
 {
 public:
     virtual void Init();
-
+    virtual void Exit();
 };
 

@@ -13,6 +13,8 @@ private:
 
     bool m_bCheckStartMousePoint;
 
+    bool m_bMoveLobbyCam;
+
     float m_fDegree;
 
     Vec2 m_vStartMousePoint;
@@ -38,6 +40,8 @@ public:
     Vec3& CameraZoom(Vec3 _vPos);
 
     void SetZoomDir(Vec3 _vDir) { m_vZoomRestoreFront = _vDir; }
+
+    void SetMoveLobbyCam(bool _True) { m_bMoveLobbyCam = _True; }
 
     void Init();
 

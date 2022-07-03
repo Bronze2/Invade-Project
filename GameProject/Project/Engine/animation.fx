@@ -94,6 +94,7 @@ void MatrixRotationAxis(in float rad, out matrix _OutMatrix)
     _OutMatrix = mRotate;
 }
 
+// Çï¸ä ÇÃ·¹ÀÌ¾î °í°³ ±îµü
 void MatrixAffineTransformation(in float4 Scaling, in float rad, in float4 RotationOrigin, in float4 RotationQuaternion, in float4 Translation, out matrix _outMat)
 {
     matrix MScaling = (matrix) 0.f;
@@ -236,6 +237,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     float4 vTranslate = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iFrameDataNextIndex].vTranslate, g_float_0);
     float4 qRot = QuternionSlerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataNextIndex].qRot, g_float_0);
 
+    // Çï¸ä ÇÃ·¹ÀÌ¾î °í°³ ±îµü
     float rad = 0.f;
     if (g_float_2 > 0.f) {
         if ((g_int_0 * g_int_3 + _iThreadIdx.x >= 5 && g_int_0 * g_int_3 + _iThreadIdx.x <= 7)) {   

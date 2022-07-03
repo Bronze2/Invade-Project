@@ -25,6 +25,7 @@
 
 void CPlayerScript::m_FAnimation()
 {
+	// 로비씬 RUN과 JUMP 순서 바꿈
 	if (m_ePrevState != m_eState) {
 		// Blend �ʿ�
 		switch (m_eState)
@@ -55,19 +56,6 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::RUN:
-		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
-				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
-				GetObj()->Animator3D()->SetBlendState(true);
-				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
-				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
-				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-				m_ePrevState = PLAYER_STATE::RUN;
-			}
-		}
-		break;
 		case PLAYER_STATE::JUMP:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
@@ -78,6 +66,19 @@ void CPlayerScript::m_FAnimation()
 				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::JUMP, 0.f);
 				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
 				m_ePrevState = PLAYER_STATE::JUMP;
+			}
+		}
+		break;
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::RUN;
 			}
 		}
 		break;
@@ -191,6 +192,20 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::JUMP:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
+
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						m_eState = PLAYER_STATE::IDLE;
+					}
+				}
+
+			}
+		}
+		break;
 		case PLAYER_STATE::RUN:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
@@ -205,19 +220,6 @@ void CPlayerScript::m_FAnimation()
 					}
 				}
 
-			}
-		}
-		break;
-		case PLAYER_STATE::JUMP:
-		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-						m_eState = PLAYER_STATE::IDLE;
-					}
-				}
-				
 			}
 		}
 		break;
@@ -307,302 +309,379 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
+		m_iMaxHp = 200;
+		m_iCurHp = 50;
 
-	m_iMaxHp = 200;
-	m_iCurHp = 50;
+		m_fMoveSpeed = 300.f;
 
-	m_fMoveSpeed = 300.f;
+		m_pHealParticle = new CGameObject;
+		m_pHealParticle->AddComponent(new CTransform);
+		m_pHealParticle->AddComponent(new CParticleSystem);
+		m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
+		m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.8f, 1.f, 1.0f));
+		m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pHealParticle->ParticleSystem()->SetEndScale(15.f);
+		m_pHealParticle->FrustumCheck(false);
+		m_pHealParticle->SetActive(false);
 
-	m_pHealParticle = new CGameObject;
-	m_pHealParticle->AddComponent(new CTransform);
-	m_pHealParticle->AddComponent(new CParticleSystem);
-	m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
-	m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.8f, 1.f, 1.0f));
-	m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pHealParticle->ParticleSystem()->SetEndScale(15.f);
-	m_pHealParticle->FrustumCheck(false);
-	m_pHealParticle->SetActive(false);
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
+		GetObj()->AddChild(m_pHealParticle);
+
+
+		m_pFlameParticle = new CGameObject;
+		m_pFlameParticle->AddComponent(new CTransform);
+		m_pFlameParticle->AddComponent(new CParticleSystem);
+		m_pFlameParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Flame"), L"ParticleUpdate4Mtrl");
+		m_pFlameParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pFlameParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+		m_pFlameParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pFlameParticle->ParticleSystem()->SetEndScale(0.1f);
+		m_pFlameParticle->FrustumCheck(false);
+		m_pFlameParticle->SetActive(false);
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pFlameParticle);
+		GetObj()->AddChild(m_pFlameParticle);
+
+
+		m_pThunderParticle = new CGameObject;
+		m_pThunderParticle->AddComponent(new CTransform);
+		m_pThunderParticle->AddComponent(new CParticleSystem);
+		m_pThunderParticle->Transform()->SetLocalPos(Vec3(0.f, 0.f, 150.f));
+		m_pThunderParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate3Mtrl");
+		m_pThunderParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 0.f, 1.0f));
+		m_pThunderParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pThunderParticle->ParticleSystem()->SetEndScale(10.f);
+		m_pThunderParticle->FrustumCheck(false);
+		m_pThunderParticle->SetActive(false);
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
+		GetObj()->AddChild(m_pThunderParticle);
+
+		m_pDarkUI = new CGameObject;
+		m_pDarkUI->SetName(L"UIDark");
+		m_pDarkUI->FrustumCheck(false);
+		m_pDarkUI->AddComponent(new CTransform);
+		m_pDarkUI->AddComponent(new CMeshRender);
+		m_pDarkUI->AddComponent(new CStaticUI);
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+		m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+		m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
+		m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
+		pDarkUIMtrl->DisableFileSave();
+		pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+		m_pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
+		Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
+		m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
+		m_pDarkUI->SetActive(false);
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
+
+		m_fMoveSpeed = 300.f;
+	}
 	
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
-	GetObj()->AddChild(m_pHealParticle);
-
-
-	m_pFlameParticle = new CGameObject;
-	m_pFlameParticle->AddComponent(new CTransform);
-	m_pFlameParticle->AddComponent(new CParticleSystem);
-	m_pFlameParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Flame"), L"ParticleUpdate4Mtrl");
-	m_pFlameParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pFlameParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
-	m_pFlameParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pFlameParticle->ParticleSystem()->SetEndScale(0.1f);
-	m_pFlameParticle->FrustumCheck(false);
-	m_pFlameParticle->SetActive(false);
-
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pFlameParticle);
-	GetObj()->AddChild(m_pFlameParticle);
+	// 헬멧 플레이어 고개 까딱
+	Ptr<CMeshData> pHelmetMesh;
 	
-
-	m_pThunderParticle = new CGameObject;
-	m_pThunderParticle->AddComponent(new CTransform);
-	m_pThunderParticle->AddComponent(new CParticleSystem);
-	m_pThunderParticle->Transform()->SetLocalPos(Vec3(0.f, 0.f,150.f));
-	m_pThunderParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate3Mtrl");
-	m_pThunderParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 0.f, 1.0f));
-	m_pThunderParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pThunderParticle->ParticleSystem()->SetEndScale(10.f);
-	m_pThunderParticle->FrustumCheck(false);
-	m_pThunderParticle->SetActive(false);
-
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
-	GetObj()->AddChild(m_pThunderParticle);
-
-	m_pDarkUI = new CGameObject;
-	m_pDarkUI->SetName(L"UIDark");
-	m_pDarkUI->FrustumCheck(false);
-	m_pDarkUI->AddComponent(new CTransform);
-	m_pDarkUI->AddComponent(new CMeshRender);
-	m_pDarkUI->AddComponent(new CStaticUI);
-	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
-	m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
-	m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
-	pDarkUIMtrl->DisableFileSave();
-	pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
-	m_pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
-	Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
-	m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
-	m_pDarkUI->SetActive(false);
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
-	
-	Ptr<CMeshData> pHatMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\ggong.fbx");
-	m_pHatObject = pHatMesh->Instantiate();
-	m_pHatObject->MeshRender()->SetDynamicShadow(false);
-	m_pHatObject->FrustumCheck(false);
-	m_pHatObject->SetName(L"Hat");
-	m_pHatObject->Transform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
-	GetObj()->AddChild(m_pHatObject);
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->AddGameObject(m_pHatObject);
-
-	m_fMoveSpeed = 300.f;
+	if (GetObj()->GetLayerIdx() == 3) {
+		switch (m_iType) {
+		case ELEMENT_TYPE::WATER:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx");
+			break;
+		case ELEMENT_TYPE::DARK:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
+			break;
+		case ELEMENT_TYPE::WIND:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx");
+			break;
+		case ELEMENT_TYPE::THUNDER:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx");
+			break;
+		case ELEMENT_TYPE::FIRE:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx");
+			break;
+		}
+	}
+	else if (GetObj()->GetLayerIdx() == 4) {
+		switch (m_iType) {
+		case ELEMENT_TYPE::WATER:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx");
+			break;
+		case ELEMENT_TYPE::DARK:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx");
+			break;
+		case ELEMENT_TYPE::WIND:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx");
+			break;
+		case ELEMENT_TYPE::THUNDER:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx");
+			break;
+		case ELEMENT_TYPE::FIRE:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx");
+			break;
+		}
+	}
+	m_pHelmetObject = pHelmetMesh->Instantiate();
+	m_pHelmetObject->MeshRender()->SetDynamicShadow(false);
+	m_pHelmetObject->FrustumCheck(false);
+	m_pHelmetObject->SetName(L"Helmet");
+	m_pHelmetObject->Transform()->SetLocalScale(Vec3(0.1f, 0.09f, 0.1f));
+	GetObj()->AddChild(m_pHelmetObject);
 }
 
 void CPlayerScript::Update()
 {
-	SkillCoolTimeCheck();
-	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
-	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
-	Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
-
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
-	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
-	CGameObject* pBow = GetObj()->GetChild()[0];
+	if (pCurScene->GetCurScene() == SCENE_TYPE::INGAME) {
+		SkillCoolTimeCheck();
+		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
+		Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
 
-	Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vPos2 = Transform()->GetLocalPos();
-	Vec3 vPos3 = Transform()->GetWorldPos();
-	Vec3 vRot = Transform()->GetLocalRot();
-	Vec3 vRestoreRot;
-	int rotydegree = XMConvertToDegrees(vRot.y);
-	int reminder = rotydegree % 360 + 90;
+		CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
+		CGameObject* pCamera = pEmptyObject->GetChild()[0];
+		CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+		CGameObject* pBow = GetObj()->GetChild()[0];
 
-	if (0 <= reminder && reminder <= 180) {
-		m_bCheckDegree = true;
-	}
-	else {
-		m_bCheckDegree = false;
-	}
+		Vec3 vPos = Transform()->GetLocalPos();
+		Vec3 vPos2 = Transform()->GetLocalPos();
+		Vec3 vPos3 = Transform()->GetWorldPos();
+		Vec3 vRot = Transform()->GetLocalRot();
+		Vec3 vRestoreRot;
+		int rotydegree = XMConvertToDegrees(vRot.y);
+		int reminder = rotydegree % 360 + 90;
 
-
-
-	if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		m_fFactor = 0.f;
-		m_fTurnDegree = 0.f;
-		m_bTurn = true;
-
-		m_vRestoreRot = vRot;
-
-	}
-
-
-	if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		m_eState = PLAYER_STATE::IDLE;
-		m_fTurnDegree = 0.f;
-		m_fFactor = 0.f;
-		m_bTurn = true;
-		m_vRestoreRot = vRot;
-	}
-
-	if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-		if (KEY_TAB(KEY_TYPE::KEY_LSHIFT))
-		{
-			m_eState = PLAYER_STATE::RUN;
+		if (0 <= reminder && reminder <= 180) {
+			m_bCheckDegree = true;
 		}
-		else if (KEY_AWAY(KEY_TYPE::KEY_LBTN) || KEY_NONE(KEY_TYPE::KEY_LBTN))
-		{
-			m_eState = PLAYER_STATE::WALK;
+		else {
+			m_bCheckDegree = false;
 		}
 
 
-		Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
-		// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
-		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+		if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			m_fFactor = 0.f;
+			m_fTurnDegree = 0.f;
+			m_bTurn = true;
 
-		m_fCurDegree = 0.f;
-		m_iKeyHoldCnt = 0;
+			m_vRestoreRot = vRot;
 
-		if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-			m_fCurDegree += 0.f;
-			m_iKeyHoldCnt++;
 		}
-		if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-			m_fCurDegree += 180.f;
-			m_iKeyHoldCnt++;
+
+
+		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			m_eState = PLAYER_STATE::IDLE;
+			m_fTurnDegree = 0.f;
+			m_fFactor = 0.f;
+			m_bTurn = true;
+			m_vRestoreRot = vRot;
 		}
-		if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-				m_fCurDegree += 270.f;
+
+		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+			if (KEY_TAB(KEY_TYPE::KEY_LSHIFT))
+			{
+				m_eState = PLAYER_STATE::RUN;
 			}
-			else {
-				m_fCurDegree -= 90.f;
+			else if (KEY_AWAY(KEY_TYPE::KEY_LBTN) || KEY_NONE(KEY_TYPE::KEY_LBTN))
+			{
+				m_eState = PLAYER_STATE::WALK;
 			}
-			m_iKeyHoldCnt++;
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-			m_fCurDegree += 90.f;
-			m_iKeyHoldCnt++;
-		}
 
-		m_fCurDegree /= (float)m_iKeyHoldCnt;
 
-		if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+			// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
+			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+
 			m_fCurDegree = 0.f;
-		}
+			m_iKeyHoldCnt = 0;
 
-		m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
-		
-		float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
-		if (fRotDegree > 360.f) {
-			fRotDegree -= 360.f;
-		}
-		
-		// 180도 이상 회전하는 경우 없도록
-		if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
-			if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
-				m_fTurnDegree -= 360.f;
+			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+				m_fCurDegree += 0.f;
+				m_iKeyHoldCnt++;
 			}
-			else {
-				m_fTurnDegree += 360.f;
+			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+				m_fCurDegree += 180.f;
+				m_iKeyHoldCnt++;
 			}
-		}
+			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+				if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+					m_fCurDegree += 270.f;
+				}
+				else {
+					m_fCurDegree -= 90.f;
+				}
+				m_iKeyHoldCnt++;
+			}
+			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+				m_fCurDegree += 90.f;
+				m_iKeyHoldCnt++;
+			}
 
-		vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
+			m_fCurDegree /= (float)m_iKeyHoldCnt;
 
-		if (m_fFactor < 1.f) {
-			// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
-			m_fFactor += 5.f * DT;
-		}
-		else {
 			if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
-				m_bTurn = true;
+				m_fCurDegree = 0.f;
+			}
+
+			m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
+
+			float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
+			if (fRotDegree > 360.f) {
+				fRotDegree -= 360.f;
+			}
+
+			// 180도 이상 회전하는 경우 없도록
+			if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
+				if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
+					m_fTurnDegree -= 360.f;
+				}
+				else {
+					m_fTurnDegree += 360.f;
+				}
+			}
+
+			vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
+
+			if (m_fFactor < 1.f) {
+				// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
+				m_fFactor += 5.f * DT;
 			}
 			else {
-				m_bTurn = false;
+				if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+					m_bTurn = true;
+				}
+				else {
+					m_bTurn = false;
+				}
+			}
+
+			if (!m_bTurn) {
+				vPos += vFront * m_fMoveSpeed * DT;
+			}
+
+			m_FColCheck(vPos3, vPos);
+		}
+
+		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
+		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
+
+		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+			// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
+			vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
+
+			if (fCamRotDegree <= -3.f) {
+				m_eState = PLAYER_STATE::ATTACK_READY_HIGH;
+			}
+			else {
+				m_eState = PLAYER_STATE::ATTACK_READY;
 			}
 		}
-		
-		if (!m_bTurn) {
-			vPos += vFront * m_fMoveSpeed * DT;
+
+		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+			m_eState = PLAYER_STATE::ATTACK;
+		}
+		if (m_bMoveCheck) {
+			vPos = vPos2;
+			m_bMoveCheck = false;
 		}
 
-		m_FColCheck(vPos3, vPos);
-	}
-		
-	Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
-	float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-
-	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
-		vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
-
-		if (fCamRotDegree <= -3.f) {
-			m_eState = PLAYER_STATE::ATTACK_READY_HIGH;
+		if (KEY_TAB(KEY_TYPE::KEY_3))
+		{
+			m_eState = PLAYER_STATE::DEMAGED;
 		}
-		else {
-			m_eState = PLAYER_STATE::ATTACK_READY;
+
+		if (KEY_TAB(KEY_TYPE::KEY_4))
+		{
+			m_eState = PLAYER_STATE::JUMP;
 		}
+
+		if (KEY_TAB(KEY_TYPE::KEY_5))
+		{
+			m_eState = PLAYER_STATE::DIE;
+		}
+
+		UseSkill();
+		StatusCheck();
+		GetDamage();
+		Transform()->SetLocalRot(vRot);
+		Transform()->SetLocalPos(vPos);
+
 	}
 
-	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		//if (fCamRotDegree <= -3.f) {
-		//	m_eState = PLAYER_STATE::ATTACK_HIGH;
-		//}
-		//else {
-		//	m_eState = PLAYER_STATE::ATTACK;
-		//}
-		m_eState = PLAYER_STATE::ATTACK;
-	}
-	if (m_bMoveCheck) {
-		vPos = vPos2;
-		m_bMoveCheck = false;
-	}
-
-	if (KEY_TAB(KEY_TYPE::KEY_3))
-	{
-		m_eState = PLAYER_STATE::DEMAGED;
-	}
-
-	if (KEY_TAB(KEY_TYPE::KEY_4))
-	{
-		m_eState = PLAYER_STATE::JUMP;
-	}
-
-	if (KEY_TAB(KEY_TYPE::KEY_5))
-	{
-		m_eState = PLAYER_STATE::DIE;
-	}
-
-	UseSkill();
-	StatusCheck();
-	GetDamage();
-	Transform()->SetLocalRot(vRot);
-	Transform()->SetLocalPos(vPos);  
-
+	AttachHelmet();
 	m_FAnimation();
+}
 
-	tMTBone* pHeadBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(7));
-	tMTBone* pChestBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(6));
+// 헬멧 플레이어 고개 까딱
 
-	Vec3 vChestTrans1 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
-	Vec3 vChestTrans2 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
-	Vec3 vTrans1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
-	Vec3 vTrans2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
-	Vec4 qRot1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].qRot;
-	Vec4 qRot2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
+void CPlayerScript::AttachHelmet()
+{
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
+		CGameObject* pCamera = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
+		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
 
-	float fFactor = GetObj()->Animator3D()->GetRatio();
+		tMTBone* pHeadBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(7));
+		tMTBone* pChestBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(6));
 
-	Vec3 vHeadTrans = Vec3::Lerp(vTrans1, vTrans2, fFactor);
-	Vec3 vChestTrans = Vec3::Lerp(vChestTrans1, vChestTrans2, fFactor);
-	Vec3 vTransDir = vHeadTrans - vChestTrans;
-	vTransDir.Normalize();
-	Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
-	vRotDir.Normalize();
-	Vec3 vTrans = vHeadTrans + vTransDir * 30.f;
-	Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
+		Vec3 vChestTrans1 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+		Vec3 vChestTrans2 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+		Vec3 vTrans1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+		Vec3 vTrans2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+		Vec4 qRot1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].qRot;
+		Vec4 qRot2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
 
-	m_pHatObject->Transform()->SetLocalPos(vTrans);
-	m_pHatObject->Transform()->SetQuaternion(qHatRot);
-	m_pHatObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3), 0.f, 0.f));
-	m_pHatObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
+		float fFactor = GetObj()->Animator3D()->GetRatio();
 
+		Vec3 vHeadTrans = Vec3::Lerp(vTrans1, vTrans2, fFactor);
+		Vec3 vChestTrans = Vec3::Lerp(vChestTrans1, vChestTrans2, fFactor);
+		Vec3 vTransDir = vHeadTrans - vChestTrans;
+		vTransDir.Normalize();
+		Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
+		vRotDir.Normalize();
+		Vec3 vTrans = vHeadTrans; // +vTransDir * 30.f;
+		Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
+
+		m_pHelmetObject->Transform()->SetLocalPos(vTrans);
+		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
+		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f));
+		m_pHelmetObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
+	}
+	else if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::LOBBY) {
+		CGameObject* pCamera = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[0]);
+	
+		tMTBone* pHeadBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(7));
+		tMTBone* pChestBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(6));
+
+		Vec3 vChestTrans1 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+		Vec3 vChestTrans2 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+		Vec3 vTrans1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+		Vec3 vTrans2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+		Vec4 qRot1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].qRot;
+		Vec4 qRot2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
+
+		float fFactor = GetObj()->Animator3D()->GetRatio();
+
+		Vec3 vHeadTrans = Vec3::Lerp(vTrans1, vTrans2, fFactor);
+		Vec3 vChestTrans = Vec3::Lerp(vChestTrans1, vChestTrans2, fFactor);
+		Vec3 vTransDir = vHeadTrans - vChestTrans;
+		vTransDir.Normalize();
+		Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
+		vRotDir.Normalize();
+		Vec3 vTrans = vHeadTrans; // +vTransDir * 30.f;
+		Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
+
+		m_pHelmetObject->Transform()->SetLocalPos(vTrans);
+		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
+		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
+
+	}
 }
 
 void CPlayerScript::SetType(ELEMENT_TYPE _iType)

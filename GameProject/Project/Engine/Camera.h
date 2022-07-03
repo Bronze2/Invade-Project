@@ -46,8 +46,6 @@ private:
 
 public:
 
-
-
     CGameObject* m_pPlayer;
     Vec3 m_vLook;
     bool m_bPlayer = false;

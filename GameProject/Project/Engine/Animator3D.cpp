@@ -37,11 +37,12 @@ void CAnimator3D::UpdateData()
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &iRow);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
 
+		// Çï¸ä ÇÃ·¹ÀÌ¾î °í°³ ±îµü
 		float fDegree = 0;
 		float fIsPlayer = 0.f;
-		if (GetObj()->GetScript<CPlayerScript>() != nullptr) { 
+		if (GetObj()->GetScript<CPlayerScript>() != nullptr && CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) { 
 			fIsPlayer = 1.f;
-			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
+			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 			Vec3 vRot = pMainCam->Transform()->GetLocalRot();
 			fDegree = XMConvertToDegrees(vRot.x);
 		}

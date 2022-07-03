@@ -178,6 +178,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="BowScript.h" />
+    <ClInclude Include="ButtonScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
     <ClInclude Include="DarkSkill0Script.h" />
@@ -185,7 +186,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="FireSkill0Script.h" />
     <ClInclude Include="FireSkill1Script.h" />
     <ClInclude Include="CrossHairScript.h" />
-    <ClInclude Include="EmptyCameraScript.h" />
+    <ClInclude Include="EmptyCameraScript.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="IMGUIMgr.h" />
@@ -261,17 +264,22 @@ call EngineCopy.bat</Command>
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="Trail.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIBarScript.h" />
     <ClInclude Include="WaterSkill0Script.h" />
     <ClInclude Include="WaterSkill1Script.h" />
     <ClInclude Include="WindSkill0Script.h" />
     <ClInclude Include="WindSkill1Script.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animator3D.cpp" />
+    <ClCompile Include="Animator3D.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="BowScript.cpp" />
+    <ClCompile Include="ButtonScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
     <ClCompile Include="DarkSkill0Script.cpp" />
@@ -279,7 +287,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="FireSkill0Script.cpp" />
     <ClCompile Include="FireSkill1Script.cpp" />
     <ClCompile Include="CrossHairScript.cpp" />
-    <ClCompile Include="EmptyCameraScript.cpp" />
+    <ClCompile Include="EmptyCameraScript.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="IMGUIMgr.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
@@ -306,7 +316,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="func.cpp" />
-    <ClCompile Include="GameFramework.cpp" />
+    <ClCompile Include="GameFramework.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InstancingMgr.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
@@ -353,8 +365,10 @@ call EngineCopy.bat</Command>
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="Trail.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UIBarScript.cpp" />
     <ClCompile Include="WaterSkill0Script.cpp" />
     <ClCompile Include="WaterSkill1Script.cpp" />
     <ClCompile Include="WindSkill0Script.cpp" />
@@ -435,7 +449,11 @@ call EngineCopy.bat</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="trail.fx" />
+    <FxCompile Include="trail.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+    </FxCompile>
     <FxCompile Include="value.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

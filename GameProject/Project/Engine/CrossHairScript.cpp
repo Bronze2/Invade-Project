@@ -47,8 +47,6 @@ void CCrossHairScript::Update()
 
 	//m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
 
-	CGameObject* pBow = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0])->GetChild()[1];
-	float fSpeed = pBow->GetScript<CBowScript>()->GetArrowSpeed();
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		if (vScale.x >= 30.f && vScale.y >= 30.f) {
 			vScale.x -= 170.f * DT;

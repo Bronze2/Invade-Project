@@ -235,7 +235,7 @@
       <Filter>Script\Spawn</Filter>
     </ClCompile>
     <ClCompile Include="StaticUI.cpp">
-      <Filter>Script\Static</Filter>
+      <Filter>Script\UI</Filter>
     </ClCompile>
     <ClCompile Include="TowerScript.cpp">
       <Filter>Script\Tower</Filter>
@@ -292,6 +292,12 @@
       <Filter>IMGUI\Mgr</Filter>
     </ClCompile>
     <ClCompile Include="Trail.cpp" />
+    <ClCompile Include="ButtonScript.cpp">
+      <Filter>Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBarScript.cpp">
+      <Filter>Script\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -499,7 +505,7 @@
       <Filter>Script\Spawn</Filter>
     </ClInclude>
     <ClInclude Include="StaticUI.h">
-      <Filter>Script\Static</Filter>
+      <Filter>Script\UI</Filter>
     </ClInclude>
     <ClInclude Include="TowerScript.h">
       <Filter>Script\Tower</Filter>
@@ -562,6 +568,12 @@
       <Filter>IMGUI\Mgr</Filter>
     </ClInclude>
     <ClInclude Include="Trail.h" />
+    <ClInclude Include="ButtonScript.h">
+      <Filter>Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBarScript.h">
+      <Filter>Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -663,9 +675,6 @@
     <Filter Include="Script\Spawn">
       <UniqueIdentifier>{23e5720a-0978-48c4-9350-a2416b153cb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Static">
-      <UniqueIdentifier>{3f774511-2923-4dc1-9a6d-048afcbec606}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\Tower">
       <UniqueIdentifier>{8084ae00-8f8d-4d77-bf21-add6ece1c4cb}</UniqueIdentifier>
     </Filter>
@@ -677,6 +686,9 @@
     </Filter>
     <Filter Include="IMGUI\Mgr">
       <UniqueIdentifier>{98d75b2a-b3cf-4e97-8948-70230f9835b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI">
+      <UniqueIdentifier>{3f774511-2923-4dc1-9a6d-048afcbec606}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

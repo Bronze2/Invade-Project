@@ -601,14 +601,14 @@ void CResMgr::CreateDefaultShader()
 
 	pShader->Create(SHADER_POV::FORWARD);
 
-	AddRes(L"TexShader", pShader);
+	AddRes(L"TexShader", pShader);   
 
 	// ==============
 	// Texture Shader
 	// ==============
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
-	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Tex", "ps_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_DarkTex", "ps_5_0");
 
 	// BlendState 설정
 	pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
@@ -819,6 +819,8 @@ void CResMgr::CreateDefaultShader()
 
 	//pShader->Create(SHADER_POV::TRAIL, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
 
+	//pShader->AddShaderParam(tShaderParam{ L"Start Scale", SHADER_PARAM::FLOAT_0 });
+	//pShader->AddShaderParam(tShaderParam{ L"End Scale", SHADER_PARAM::FLOAT_1 });
 	//pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
 
 	//AddRes(L"TrailShader", pShader);

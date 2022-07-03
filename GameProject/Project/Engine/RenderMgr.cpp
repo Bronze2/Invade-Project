@@ -26,6 +26,7 @@ void CRenderMgr::Render()
 
 	static CConstantBuffer* pGlobalBuffer = CDevice::GetInst()->GetCB(CONST_REGISTER::b5);
 	CDevice::GetInst()->SetConstBufferToRegister(pGlobalBuffer, pGlobalBuffer->AddData(&g_global));
+
 	// 광원 정보 업데이트
 	UpdateLight3D();
 
@@ -51,8 +52,8 @@ void CRenderMgr::Render()
 
 	Merge_Light();
 
-
 	m_vecCam[0]->Render_Forward(); // skybox, grid, ui
+
 	for (auto i = 1; i < m_vecCam.size(); i++) {
 		m_vecCam[i]->SortGameObject();
 		m_vecCam[i]->Render_Forward();

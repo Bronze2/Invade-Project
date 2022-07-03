@@ -29,8 +29,8 @@ void CEmptyPlayerScript::Update()
 	}
 
 
-	Transform()->SetLocalPos(vPos);
-	Transform()->SetLocalRot(vRot);
+	GetObj()->Transform()->SetLocalPos(vPos);
+	GetObj()->Transform()->SetLocalRot(vRot);
 }
 
 

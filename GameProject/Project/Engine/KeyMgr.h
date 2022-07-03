@@ -64,6 +64,7 @@ struct tKeyState
 	KEY_STATE	eState;
 	bool		bPrevPress;
 };
+
 class CKeyMgr
 {
 	SINGLE(CKeyMgr);

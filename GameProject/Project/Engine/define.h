@@ -69,6 +69,7 @@ enum class TEXTURE_REGISTER
 	t10,
 	t11,
 	t12,
+	t13,
 	END,
 };
 
@@ -375,12 +376,12 @@ enum class ELEMENT_TYPE {
 	THUNDER = 3,
 	WIND = 4
 };
-
+// 로비씬 RUN과 JUMP 순서 바꿈
 enum class PLAYER_STATE {
 	IDLE,
 	WALK,
-	RUN,
 	JUMP,
+	RUN,
 	ATTACK_READY,
 	ATTACK,
 	ATTACK_READY_HIGH,
@@ -394,3 +395,12 @@ enum class SKILL_TYPE {
 	PASSIVE,
 };
 
+enum class BUTTON_TYPE {
+	READY,
+	GAMESTART,
+	SELECT_FIRE,
+	SELECT_THUNDER,
+	SELECT_WIND,
+	SELECT_DARK,
+	SELECT_WATER,
+};

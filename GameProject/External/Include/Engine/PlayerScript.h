@@ -35,6 +35,7 @@ private:
     CGameObject* m_pHealParticle;
     CGameObject* m_pFlameParticle;
     CGameObject* m_pThunderParticle;
+    // DarkUI
     CGameObject* m_pDarkUI;
 
     bool m_bHealCheck;
@@ -67,7 +68,11 @@ private:
 
     CGameObject* m_pBowObject;
 
-    CGameObject* m_pHatObject;
+    // Çï¸ä ÇÃ·¹ÀÌ¾î °í°³ ±îµü
+    CGameObject* m_pHelmetObject;
+
+    // ·Îºñ¾À
+    bool m_bReady;
 public:
     void m_FAnimation();
 
@@ -85,6 +90,16 @@ public:
     void UseSkill();
     void DamageBySkill(SKILL* _pSkill);
     void GetDamage();
+
+    // Çï¸ä
+    void AttachHelmet();
+
+    // ·Îºñ¾À
+    void SetReady(bool _bTrue) { m_bReady = _bTrue; }
+    bool GetReady() { return m_bReady; }
+    void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
+    PLAYER_STATE GetAnimaionState() { return m_eState; }
+
 
     void SetCurHp(int _hp) { m_iCurHp = _hp; }
     void m_FColCheck(Vec3 _vBeforePos,Vec3 _vAfterPos);

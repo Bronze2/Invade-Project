@@ -6,18 +6,13 @@
 
 void CCameraScript::Update()
 {
-    Vec3 vPos = Transform()->GetLocalPos();
-    Vec3 vWorldPos = Transform()->GetWorldPos();
-    Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+    CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
-    float fScale = Camera()->GetScale();
-    float fSpeed = m_fSpeed;
-    Vec3 vRot = Transform()->GetLocalRot();
-
-    if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE)
+    if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE && pCurScene->GetCurScene() == SCENE_TYPE::INGAME)
     {
-        CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-
+        Vec3 vPos = Transform()->GetLocalPos();
+        Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+        Vec3 vRot = Transform()->GetLocalRot();
 
         if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
             Init();
@@ -54,6 +49,7 @@ void CCameraScript::Update()
                         vRot.x = XMConvertToRadians(m_fDegree);
                     }
                 }
+
             }
             break;
         case CAMERA_EFFECT_TYPE::ZOOMIN:
@@ -68,11 +64,40 @@ void CCameraScript::Update()
         case CAMERA_EFFECT_TYPE::LIGHTNING:
             break;
         }
+
+        GetObj()->Transform()->SetLocalPos(vPos);
+        GetObj()->Transform()->SetLocalRot(vRot);
     }
 
 
-    Transform()->SetLocalPos(vPos);
-    Transform()->SetLocalRot(vRot);
+    if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE && pCurScene->GetCurScene() == SCENE_TYPE::LOBBY)
+    {
+        if (KEY_TAB(KEY_TYPE::KEY_Z)) {
+            m_bMoveLobbyCam = !m_bMoveLobbyCam;
+        }
+
+        if (KEY_TAB(KEY_TYPE::KEY_LSHIFT)) {
+            Vec3 vPos = Transform()->GetLocalPos();
+            cout << "현재 카메라 위치 : " << vPos.x << ", " << vPos.y << ", " << vPos.z << endl;
+        }
+
+        if (m_bMoveLobbyCam) {
+            Vec3 vPos = Transform()->GetLocalPos();
+            if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+                vPos.z += 200.f * DT;
+            }
+            if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+                vPos.z -= 200.f * DT;
+            }
+            if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+                vPos.x -= 200.f * DT;
+            }
+            if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+                vPos.x += 200.f * DT;
+            }
+            Transform()->SetLocalPos(vPos);
+        }
+    }
 }
 
 Vec3& CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSize)
@@ -116,10 +141,7 @@ Vec3& CCameraScript::CameraZoom(Vec3 _vPos)
 
 void CCameraScript::Init()
 {
-    CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-    CGameObject* pPlayer = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Blue")->GetParentObj()[0]);
-
-    m_vRestorePos = Transform()->GetLocalPos();
+    m_vRestorePos = GetObj()->Transform()->GetLocalPos();
     m_vZoomRestoreFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 
     m_fShakeNum = 1.0f;

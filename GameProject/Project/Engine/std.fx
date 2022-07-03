@@ -165,6 +165,19 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
     return vColor;
 }
 
+float4 PS_DarkTex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    if (tex_0)
+        vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    else
+        vColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    clip(vColor.a - 0.9f);
+
+    return vColor;
+}
 
 // =================
 // Collider2D Shader

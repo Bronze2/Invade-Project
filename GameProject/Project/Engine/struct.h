@@ -37,6 +37,11 @@ struct tLightColor
 	Vec4 vAmb;
 };
 
+struct tTrail {
+	Vec3 vWorldPos;
+	int iAlive;
+};
+
 struct tParticle {
 	Vec3 vWorldPos;
 	Vec3 vWorldDir;

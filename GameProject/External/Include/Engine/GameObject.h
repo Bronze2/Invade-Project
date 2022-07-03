@@ -15,7 +15,6 @@ class CCamera;
 class CParticleSystem;
 class CTerrain;
 class CSensor;
-
 class CStaticUI;
 
 class CGameObject :public CEntity
@@ -60,6 +59,7 @@ public:
 	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN]; }
 	CSensor* Sensor() { return (CSensor*)m_arrCom[(UINT)COMPONENT_TYPE::SENSOR]; }
 	CStaticUI* StaticUI() { return (CStaticUI*)m_arrCom[(UINT)COMPONENT_TYPE::STATIC_UI]; }
+
 	const vector<CScript*>& GetScripts()const { return m_vecScript; }
 
 	template<typename T>

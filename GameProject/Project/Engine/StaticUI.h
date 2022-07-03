@@ -7,16 +7,12 @@ class CStaticUI
 	: public CComponent
 {
 private:
-	CCamera* m_pCamera;
-
 public:
-	CCamera* GetCamera() { return m_pCamera; }
-	void SetCamera(CCamera* _cam) { m_pCamera = _cam; }
-
 	virtual void Update();
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);
+
 
 public:
 	CStaticUI();
