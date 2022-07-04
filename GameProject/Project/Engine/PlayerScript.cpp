@@ -347,6 +347,9 @@ void CPlayerScript::Update()
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
+
+
+	Vec3 vPrevPos = vPos2;
 	Vec3 vRot = Transform()->GetLocalRot();
 	Vec3 vRestoreRot;
 	int rotydegree = XMConvertToDegrees(vRot.y);
@@ -503,6 +506,16 @@ void CPlayerScript::Update()
 	GetDamage();
 	Transform()->SetLocalRot(vRot);
 	Transform()->SetLocalPos(vPos);
+
+	Vec3 vCurPos = vPos;
+
+	Transform()->GetWorldMat();
+
+
+
+	SetListener(-1*vDirFront,vDirUp,vCurPos,vPrevPos);
+
+
 
 	m_FAnimation();
 
@@ -821,6 +834,8 @@ void CPlayerScript::SetDamage(const int& _Damage)
 {
 	m_iCurHp -= _Damage;
 	if (m_iCurHp < 0) {
+
+
 		m_iCurHp = 0;
 	}
 	if (m_iCurHp > m_iMaxHp)

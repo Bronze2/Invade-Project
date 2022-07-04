@@ -16,6 +16,7 @@ private:
 	bool m_bTickCheck;
 	UINT m_iLayerIdx;
 	bool m_bStart = false;
+	CSound* m_pSound;
 
 
 public:
@@ -28,7 +29,7 @@ public:
 
 	virtual void Update();
 	virtual void OnCollision3DEnter(CCollider3D* _pColldier);
-
+	void SetSound(CSound* _pSound) { m_pSound = _pSound; }
 
 	CLONE(CThunderSkill1Script)
 

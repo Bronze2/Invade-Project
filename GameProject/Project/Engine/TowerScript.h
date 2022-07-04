@@ -15,6 +15,7 @@ private:
     int m_iCurHp;
     float m_fAttackRange;
 
+   CSound* m_pSound;
     UINT m_uiDef;
 
     TOWER_TYPE m_eType;

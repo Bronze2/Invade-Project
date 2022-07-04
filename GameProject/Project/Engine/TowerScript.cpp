@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "PathMgr.h"
 #include "TowerScript.h"
 #include "Sensor.h"
 #include "SensorMgr.h"
@@ -59,17 +60,28 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 
 void CTowerScript::Init()
 {
+	wstring strPath = L"Sound\\TowerHit.wav";
+	wstring strFullPath = CPathMgr::GetResPath();
 	switch (m_eType)
 	{
 	case TOWER_TYPE::FIRST:
 		m_iMaxHp = 1500;
 		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 150;
+	
+	
+		strFullPath += strPath;
+		m_pSound =new CSound;
+		m_pSound->Load3D(strFullPath);
+		
 		break;
 	case TOWER_TYPE::SECOND:
 		m_iMaxHp = 2000;
 		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 150;
+		strFullPath += strPath;
+		m_pSound = new CSound;
+		m_pSound->Load3D(strFullPath);
 		break;
 	case TOWER_TYPE::NEXUS:
 
@@ -79,6 +91,8 @@ void CTowerScript::Init()
 	default:
 		break;
 	}
+
+
 
 
 }
@@ -119,6 +133,9 @@ void CTowerScript::m_FAttack()
 			m_cAttackEnd = clock();
 			m_cAttackInterval = (m_cAttackEnd - m_cAttackStart) / CLOCKS_PER_SEC;
 			if (m_cAttackInterval >= ATTACK_INTERVAL) {
+
+				Vec3 vPos=Transform()->GetWorldPos();
+				m_pSound->PlaySound3D(vPos,1000.f);
 				if (CAMP_STATE::BLUE == m_eCampState)
 					CreateProjectile(L"MeshData\\blueball.mdat", L"Blue");
 				else if(CAMP_STATE::RED==m_eCampState)
@@ -199,6 +216,8 @@ CTowerScript::CTowerScript():CScript((UINT)SCRIPT_TYPE::TOWERSCRIPT), m_bAttackS
 
 CTowerScript::~CTowerScript()
 {
+	delete m_pSound;
+	m_pSound = nullptr;
 }
 
 

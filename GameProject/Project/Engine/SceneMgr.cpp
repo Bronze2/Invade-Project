@@ -20,6 +20,7 @@
 #include "Collider3D.h"
 #include "Animator3D.h"
 #include "Terrain.h"
+#include "Sound.h"
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
@@ -163,6 +164,11 @@ void CSceneMgr::Init()
 //	Ptr<CMaterial> pMtrl = new CMaterial;
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
+
+
+
+	Ptr<CSound> pSound =CResMgr::GetInst()->Load3D<CSound>(L"SparkSound",L"Sound\\Spark.wav");
+	pSound = CResMgr::GetInst()->Load3D<CSound>(L"TowerHitSound", L"Sound\\TowerHit.wav");
 
 
 	SKILL* Skill= new SKILL;

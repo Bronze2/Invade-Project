@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Sound.h"
+
 #include "ResMgr.h"
 
 
@@ -26,6 +27,7 @@ FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCO
 
 FMOD::System* CSound::g_pFMOD = nullptr;
 
+
 CSound::CSound()
 	: CResource(RES_TYPE::SOUND)
 	, m_pSound(nullptr)
@@ -41,7 +43,7 @@ CSound::~CSound()
 	}
 }
 
-void CSound::Play(int _iRoopCount, bool _bOverlap)
+void CSound::Play(int _iRoopCount, float _fVolume, bool _bOverlap)
 {
 	if (_iRoopCount <= -1)
 	{
@@ -49,25 +51,49 @@ void CSound::Play(int _iRoopCount, bool _bOverlap)
 	}
 
 	// 중복 재생 허용 안할 경우
-	if (!_bOverlap && !m_listChannel.empty())
-	{
-		return;
-	}
 
-	_iRoopCount -= 1;
 
 	FMOD::Channel* pChannel = nullptr;
 	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
-	
+
 	pChannel->setCallback(CHANNEL_CALLBACK);
 	pChannel->setUserData(this);
 
 	pChannel->setMode(FMOD_LOOP_NORMAL);
 	pChannel->setLoopCount(_iRoopCount);
+	pChannel->setVolume(_fVolume);
+	if(m_listChannel.empty())
+		m_listChannel.push_back(pChannel);
+	else
+	{
 
-	m_listChannel.push_back(pChannel);
+	}
+	
+}
 
-	Stop();
+void CSound::PlaySoundOnce(const float& _fVolume)
+{
+	FMOD::Channel* pChannel = nullptr;
+	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
+	pChannel->setCallback(CHANNEL_CALLBACK);
+	pChannel->setUserData(this);
+	pChannel->setVolume(_fVolume);
+	if (m_listChannel.empty())
+		m_listChannel.push_back(pChannel);
+}
+
+void CSound::PlaySound3D(const Vec3& _Pos, const float& _fVolume)
+{
+	FMOD::Channel* pChannel = nullptr;
+	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
+	pChannel->setCallback(CHANNEL_CALLBACK);
+	pChannel->setUserData(this);
+	FMOD_VECTOR Pos = VecToFMOD(_Pos);
+	FMOD_VECTOR vel = { 0.f,0.f,0.f };
+	pChannel->set3DAttributes(&Pos, &vel);
+	pChannel->setVolume(_fVolume);
+	if (m_listChannel.empty())
+		m_listChannel.push_back(pChannel);
 }
 
 void CSound::Stop()
@@ -112,5 +138,7 @@ void CSound::Load3D(const wstring& _strFilePath)
 	{
 		assert(nullptr);
 	}
+
+	m_pSound->set3DMinMaxDistance(0.5f, 5000.f);
 }
 

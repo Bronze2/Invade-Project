@@ -987,10 +987,6 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetData(SHADER_PARAM::INT_0, &a);
 	AddRes(L"Collider2DMtrl_1", pMtrl);
 
-	pMtrl = new CMaterial;
-	pMtrl->DisableFileSave();
-	pMtrl->SetShader(FindRes<CShader>(L"Line2DShader"));
-	AddRes(L"Line2DMtrl", pMtrl);
 
 
 	pMtrl = new CMaterial;
@@ -1154,15 +1150,22 @@ FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCO
 
 void CResMgr::InitSound()
 {
+
 	FMOD::System_Create(&CSound::g_pFMOD);
 
 	if (nullptr == CSound::g_pFMOD)
 	{
 		assert(nullptr);
 	}
+	
+	
+
 
 	// 32개 채널 생성
 	CSound::g_pFMOD->init(32, FMOD_DEFAULT, nullptr);
+	CSound::g_pFMOD->set3DSettings(1.0, 1.0f, 1.0f);
+
+
 }
 
 void CResMgr::Init()
@@ -1207,6 +1210,6 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	pMeshData->SetName(strName);
 	pMeshData->SetPath(strName);
 	m_mapRes[(UINT)RES_TYPE::MESHDATA].insert(make_pair(strName, pMeshData.GetPointer()));
-
+	
 	return pMeshData;
 }

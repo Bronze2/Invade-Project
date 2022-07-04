@@ -78,7 +78,10 @@ CThunderSkill1Script::~CThunderSkill1Script()
 		delete m_pSkill;
 		m_pSkill = nullptr;
 	}
-
+	if (nullptr != m_pSound) {
+		delete m_pSound;
+		m_pSound = nullptr;
+	}
 }
 
 
@@ -94,8 +97,10 @@ void CThunderSkill1Script::Update()
 	else {
 		Collision();
 		if (CoolTimeCheck(m_pSkill->StartTime, m_pSkill->fDuration)) {
+			m_pSound->Stop();
 			DeleteObject(GetObj());
 			DeleteObject(m_pTarget);
+			
 		}
 	}
 	

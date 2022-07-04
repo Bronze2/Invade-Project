@@ -3,6 +3,7 @@
 #include "func.h"
 #include "Material.h"
 #include"ParticleScript.h"
+#include "Sound.h"
 
 
 namespace RES_TYPE_STR
@@ -268,8 +269,8 @@ bool lengthCompare(Vec3 _vbeforeObject,  Vec3 _vAfterPos, CGameObject* _pAfterOb
 	Matrix matWorld = matScale * matRot * matTranslation;
 	Vec3 vPos = matWorld.Translation();
 
-	float length1=sqrt(pow(_vbeforeObject.x - _vTargetObject.x, 2) + pow(_vbeforeObject.z - _vTargetObject.z, 2));
-	float length2 = sqrt(pow(vPos.x - _vTargetObject.x, 2) + pow(vPos.z - _vTargetObject.z, 2));
+	float length1=(float)sqrt(pow(_vbeforeObject.x - _vTargetObject.x, 2) + pow(_vbeforeObject.z - _vTargetObject.z, 2));
+	float length2 = (float)sqrt(pow(vPos.x - _vTargetObject.x, 2) + pow(vPos.z - _vTargetObject.z, 2));
 	if (length1 < length2) {
 		return false;
 	}
@@ -289,7 +290,7 @@ void ChangeScene(SCENE_TYPE _eNextScene)
 
 Vec2 GetDiagnal(const float& _fDestination,const float& _fxvalue,const float& _fzvalue)
 {
-	float diagnal = sqrt(pow(_fxvalue, 2) + pow(_fzvalue, 2));
+	float diagnal = (float)(sqrt(pow(_fxvalue, 2) + pow(_fzvalue, 2)));
 	float x = (_fDestination * _fxvalue) / diagnal;
 	float z = (_fDestination * _fzvalue) / diagnal;
 	return Vec2(x,z);
@@ -353,12 +354,23 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
 	pHitParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.3f, 0.3f, 0.4f, 0.5f));
-	pHitParticle->ParticleSystem()->SetStartScale(500.f);
-	pHitParticle->ParticleSystem()->SetEndScale(100.f);
+	pHitParticle->ParticleSystem()->SetStartScale(300.f);
+	pHitParticle->ParticleSystem()->SetEndScale(50.f);
 	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.5f);
 	pHitParticle->GetScript<CParticleScript>()->SetTime();
 	pHitParticle->ParticleSystem()->SetMinLifeTime(3.f);
 	pHitParticle->ParticleSystem()->SetMaxLifeTime(3.f);
+
+	wstring strPath = L"Sound\\explosion.wav";
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += strPath;
+	CSound*m_pSound = new CSound;
+	m_pSound->Load3D(strFullPath);
+	m_pSound->PlaySound3D(_Pos, 1000.f);
+
+	pHitParticle->GetScript<CParticleScript>()->SetSound(m_pSound);
+
+
 	pHitParticle->FrustumCheck(false);
 
 	//불스킬 터질시
@@ -395,7 +407,16 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 	}
 
 	//
-	
+
+	wstring strPath = L"Sound\\Spark.wav";
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += strPath;
+	CSound* m_pSound = new CSound;
+	m_pSound->Load3D(strFullPath);
+	m_pSound->PlaySound3D(_Pos, 1000.f);
+
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetSound(m_pSound);
+
 
 	CGameObject* pObject = new CGameObject;
 	pObject->AddComponent(new CTransform);
@@ -418,5 +439,57 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 	pThunderObject->Transform()->SetLocalPos(_Pos);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
 	
+}
+
+void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos)
+{
+	Matrix invView = _ViewMatrix;
+	FMOD_3D_ATTRIBUTES listener;
+	listener.position = VecToFMOD(_PlayerPos);
+	Vec3 vZAxis =invView.Front();
+	vZAxis.Normalize();
+	Vec3 vYAxis = invView.Up();
+	vYAxis.Normalize();
+	listener.forward = VecToFMOD(vZAxis);
+	listener.up = VecToFMOD(vYAxis);
+	listener.velocity = { (_PlayerPos.x - _PlayerlastPos.x) * DT,(_PlayerPos.y - _PlayerlastPos.y) * DT,(_PlayerPos.z - _PlayerlastPos.z) * DT };
+	CSound::g_pFMOD->set3DListenerAttributes(0, &listener.position, &listener.velocity, &listener.forward, &listener.up);
+}
+
+void SetListener(const Vec3& _vFrontDir, const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos)
+{
+	FMOD_3D_ATTRIBUTES listener;
+	listener.position = VecToFMOD(_PlayerPos);
+	Vec3 vZAxis = _vFrontDir;
+
+	Vec3 vYAxis = _vUpDir;
+	listener.forward = VecToFMOD(vZAxis);
+	listener.up = VecToFMOD(vYAxis);
+	listener.velocity = { (_PlayerPos.x - _PlayerlastPos.x) * DT,(_PlayerPos.y - _PlayerlastPos.y) * DT,(_PlayerPos.z - _PlayerlastPos.z) * DT };
+	CSound::g_pFMOD->set3DListenerAttributes(0, &listener.position, &listener.velocity, &listener.forward, &listener.up);
+}
+
+
+
+CSound* SetSound2D(const UINT&_LoopCount,const wstring& _Path)
+{
+	CSound* pSound = new CSound;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _Path;
+	pSound->Load(_Path);
+	pSound->Play(_LoopCount,1000.f);
+
+	return pSound;
+}
+
+CSound* SetSound3D(const wstring& _Path,const Vec3&_Pos)
+{
+	CSound* pSound = new CSound;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _Path;
+	pSound->Load3D(_Path);
+	pSound->PlaySound3D(_Pos, 1000.f);
+
+	return pSound;
 }
 

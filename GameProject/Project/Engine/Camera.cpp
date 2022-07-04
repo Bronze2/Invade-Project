@@ -99,6 +99,7 @@ void CCamera::FinalUpdate()
 
 	m_vLook.x = vRight.z; m_vLook.y = vUp.z; m_vLook.z = vFront.z;
 	m_matView = matViewTrans * matViewRot;
+	
 
 	// �������
 	m_matProj = XMMatrixIdentity();
@@ -118,7 +119,7 @@ void CCamera::FinalUpdate()
 
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
-
+	g_matrixView = m_matViewInv;
 	m_frustum.FinalUpdate();
 	if(!m_bModule)
 		CRenderMgr::GetInst()->RegisterCamera(this);

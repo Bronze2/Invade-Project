@@ -42,6 +42,7 @@ private:
     
 
     CGameObject* m_pPlayer;
+    CSound* m_pSound;
 public:
 
     CGameObject* GetCurArrow() { return m_pArrow[m_iCurArrow]; }

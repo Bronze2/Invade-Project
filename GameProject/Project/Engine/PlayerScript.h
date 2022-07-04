@@ -68,6 +68,10 @@ private:
   
 
     CGameObject* m_pBowObject;
+
+    CSound* m_pHitSound;
+    CSound* m_pDeadSound;
+
 public:
     void m_FAnimation();
 

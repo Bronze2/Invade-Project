@@ -28,6 +28,13 @@ public:
 
 	template<typename T>
 	void AddCloneRes(Ptr<T> _pCloneRes);
+
+
+
+	template<typename T>
+	void AddCloneRes3D(Ptr<T> _pCloneRes);
+
+
 	template<typename T>
 	bool DestroyResource(const wstring& _strKey);
 
@@ -38,6 +45,11 @@ public:
 
 	template<typename T>
 	Ptr<T> Load(const wstring& _strKey, const wstring& _strPath);
+
+
+	template<typename T>
+	Ptr<T> Load3D(const wstring& _strKey, const wstring& _strPath);
+
 	template<typename T>
 	Ptr<T> LoadFBXTexture(const wstring& _strKey, const wstring& _strPath/*��� ���*/);
 	
@@ -89,6 +101,19 @@ inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T> _pRes)
 
 template<typename T>
 void CResMgr::AddCloneRes(Ptr<T> _pCloneRes)
+{
+	assert(nullptr != _pCloneRes);
+
+	RES_TYPE eType = GetType<T>();
+
+	CResource** ppRes = (CResource**)&_pCloneRes;
+	m_vecCloneRes[(UINT)eType].push_back(*ppRes);
+}
+
+
+
+template<typename T>
+inline void CResMgr::AddCloneRes3D(Ptr<T> _pCloneRes)
 {
 	assert(nullptr != _pCloneRes);
 
@@ -185,6 +210,31 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 
 	strFullPath += _strPath;
 	pRes->Load(strFullPath);
+
+
+	RES_TYPE eType = GetType<T>();
+
+	CResource** ppRes = (CResource**)&pRes;
+	m_mapRes[(UINT)eType].insert(make_pair(_strKey, *ppRes));
+	pRes->SetName(_strKey);
+	pRes->SetPath(_strPath);
+
+	return pRes;
+}
+
+template<typename T>
+inline Ptr<T> CResMgr::Load3D(const wstring& _strKey, const wstring& _strPath)
+{
+	Ptr<T> pRes = FindRes<T>(_strKey);
+
+	// 중복키 문제
+	if (nullptr != pRes)
+		return pRes;
+
+	pRes = new T;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _strPath;
+	pRes->Load3D(strFullPath);
 
 
 	RES_TYPE eType = GetType<T>();

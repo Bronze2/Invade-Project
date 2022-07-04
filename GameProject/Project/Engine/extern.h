@@ -5,3 +5,5 @@ extern D3D12_DEPTH_STENCIL_DESC g_arrDepthStencilDesc[(UINT)DEPTH_STENCIL_TYPE::
 extern tGlobalValue g_global;
 static  bool bChat = false;
 
+static Matrix g_matrixView;
+

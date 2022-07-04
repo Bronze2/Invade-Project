@@ -120,6 +120,7 @@ void CBowScript::m_FAnimation()
 				GetObj()->Animator3D()->SetCurTime((UINT)BOW_STATE::ATTACK, 0.f);
 				GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 				m_ePrevState = BOW_STATE::ATTACK;
+				m_pSound->PlaySoundOnce(100.f);
 			}
 		}
 		break;
@@ -181,6 +182,11 @@ void CBowScript::Init()
 		m_eState = BOW_STATE::IDLE;
 		m_ePrevState = BOW_STATE::IDLE;
 	}
+	wstring strPath = L"Sound\\ArrowShoot.mp3";
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += strPath;
+	m_pSound = new CSound;
+	m_pSound->Load3D(strFullPath);
 }
 
 void CBowScript::Awake()
@@ -235,4 +241,6 @@ CBowScript::CBowScript() : CScript((UINT)SCRIPT_TYPE::BOWSCRIPT), m_fArcherLocat
 
 CBowScript::~CBowScript()
 {
+	delete m_pSound;
+	m_pSound = nullptr;
 }
