@@ -47,7 +47,7 @@ void CPlayerScript::Update()
 
 }
 
-void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power)
+void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power,PACKET_SKILL skill)
 {
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetIndex(index);
@@ -58,14 +58,14 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetCamp(GetCamp());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetAttackDamge(Power/7);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetPacketSkill(skill);
 
 	m_pArrow[ArrowId]->ClearParent(index);
 	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
 	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
 	m_pArrow[ArrowId]->SetActive(true);
-
 	//cout << "플레이어 ID: " <<m_GetId() <<"화살 ID "<< ArrowId <<" 생성 , 파워"<< Power<<endl;
-	CServer::GetInst()->send_create_arrow_packet(m_GetId(), ArrowId, Pos, Rot);
+	CServer::GetInst()->send_create_arrow_packet(m_GetId(), ArrowId, Pos, Rot, skill);
 
 }
 #include "Collider3D.h"

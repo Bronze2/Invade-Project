@@ -286,6 +286,7 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_delete_arrow* my_packet = reinterpret_cast<sc_packet_delete_arrow*>(ptr);
 		CSceneMgr::GetInst()->net_deleteArrow(my_packet->client_id, my_packet->arrow_id);
 		CSceneMgr::GetInst()->net_DamagedByArrow(my_packet->coll_type, my_packet->coll_id, my_packet->damage);
+		cout << (int)my_packet->skill << endl;
 	}
 	break;
 	case S2C_DELETE_PROJECTILE:
@@ -462,7 +463,7 @@ void Network::send_game_start_packet()
 	cout << "Send Enter Packet" << endl;
 
 }
-void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
+void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill)
 {
 	cs_packet_arrow m_packet;
 	m_packet.type = C2S_CREATE_ARROW;
@@ -481,6 +482,7 @@ void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float
 	m_packet.Power = Power;
 	m_packet.room_id = my_room_id;
 	m_packet.camp = camp;
+	m_packet.skill = skill;
 	send_packet(&m_packet);
 
 }

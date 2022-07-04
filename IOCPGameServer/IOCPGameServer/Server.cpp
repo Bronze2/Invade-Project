@@ -312,7 +312,7 @@ void CServer::send_projectile_packet(int projectile_id, int type)
 		send_packet(i, &packet);
 }
 
-void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot)
+void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)
 {
 	sc_packet_arrow packet;
 	packet.size = sizeof(packet);
@@ -326,6 +326,7 @@ void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Ve
 	packet.Rot.x = Rot.x;
 	packet.Rot.y = Rot.y;
 	packet.Rot.z = Rot.z;
+	packet.skill = skill;
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		if (i == client_id) continue;
@@ -343,7 +344,7 @@ void CServer::send_update_animation(int client_id, int state)
 		else send_packet(i, &packet);
 }
 
-void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot)
+void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)
 {
 	sc_packet_arrow packet;
 	packet.size = sizeof(packet);
@@ -358,12 +359,13 @@ void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3
 	packet.Rot.x = Rot.x;
 	packet.Rot.y = Rot.y;
 	packet.Rot.z = Rot.z;
+	packet.skill = skill;
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 }
 
-void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type, int coll_id, int damage)
+void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type, int coll_id, int damage, PACKET_SKILL skill)
 {
 	//0 ÀÚ¿¬»ç
 	//1 -> Player
@@ -378,7 +380,7 @@ void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_typ
 	packet.coll_type = coll_type;
 	packet.coll_id = coll_id;
 	packet.damage = damage;
-	
+	packet.skill = skill;
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 }

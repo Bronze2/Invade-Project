@@ -40,15 +40,15 @@ public:
 
 	void send_projectile_packet(int bullet_id, int type);
 
-	void send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot);
+	void send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill);
 
-	void send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot);
+	void send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill);
 	
 	void send_update_animation(int client_id, int state);
 	
 	void send_delete_minion(int minion_id);
 
-	void send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type,int coll_id ,int damage);
+	void send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type,int coll_id ,int damage, PACKET_SKILL skill);
 
 	void send_current_room(int user_id, int room_id, int max_user, int current_user);
 

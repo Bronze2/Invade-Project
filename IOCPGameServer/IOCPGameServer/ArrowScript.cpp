@@ -92,7 +92,7 @@ void CArrowScript::Update()
 			GetObj()->SetActive(false);
 			Init();
 			m_eState = ARROW_STATE::IDLE;
-			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,0,0,0);
+			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,0,0,0, m_PacketSkill);
 		}
 
 		m_vRestorePos = vPos;
@@ -114,7 +114,7 @@ void CArrowScript::Update()
 		Transform()->SetLocalPos(vPos);
 		m_vTargetDir = vPos - m_vRestorePos;
 		m_vTargetDir.Normalize();
-		CServer::GetInst()->send_move_arrow_packet(m_ParentId,m_id,vPos,vRot);
+		CServer::GetInst()->send_move_arrow_packet(m_ParentId,m_id,vPos,vRot, m_PacketSkill);
 
 		//float value = XMConvertToRadians(90.f * DT * 10);
 
@@ -156,7 +156,7 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 				_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(500);
 				GetObj()->SetActive(false);
 				Init();
-				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,2, _pOther->GetObj()->GetScript<CMinionScript>()->m_GetId(),500);
+				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,2, _pOther->GetObj()->GetScript<CMinionScript>()->m_GetId(),500, m_PacketSkill);
 			}
 		}
 
@@ -170,7 +170,7 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 				_pOther->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
 				GetObj()->SetActive(false);
 				Init();
-				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,1, _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId(),500);
+				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,1, _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId(),500, m_PacketSkill);
 			}
 		}
 
@@ -180,7 +180,7 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 		if (nullptr != _pOther->GetObj()) {
 			GetObj()->SetActive(false);
 			Init();
-			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id, 3, 0, 500);
+			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id, 3, 0, 500, m_PacketSkill);
 
 		}
 

@@ -149,20 +149,12 @@ bool Compare(CGameObject* _pLeft, CGameObject* _pRight)
     return (_pLeft->Transform()->GetWorldPos().z < _pRight->Transform()->GetWorldPos().z);
 }
 
-void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp)
+void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp , PACKET_SKILL skill)
 {
-	//CGameObject* player = dynamic_cast<CGameObject*>(m_pCurScene->FindLayer(L"Blue")->GetParentObj()[ClientId]);
-
-	//if(ClientId == 0)
-	//	m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()[ClientId]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
-	//if (ClientId == 1)
-	//	m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()[ClientId-1]->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
-
-
 	if (camp == CAMP_STATE::RED) {
 		for (auto obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
 			if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
-				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power , skill);
 				break;
 			}
 		}
@@ -171,7 +163,7 @@ void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 P
 	if (camp == CAMP_STATE::BLUE) {
 		for (auto obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
 			if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
-				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power);
+				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
 				break;
 
 			}

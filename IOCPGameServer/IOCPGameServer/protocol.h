@@ -48,7 +48,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_CURRENT_ROOM 21
 
 enum MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
-
+enum PACKET_SKILL { E_WATER = 0, Z_WATER, E_FIRE,  Z_FIRE, E_THUNDER, Z_TUNDER, E_DARK, Z_DARK, E_WIND,Z_WIND ,NONE};
 struct p_Vec3 {
 	float x;
 	float y;
@@ -229,6 +229,7 @@ struct cs_packet_arrow {
 	int room_id;
 	//char camp;
 	CAMP_STATE camp;
+	PACKET_SKILL skill;
 
 	unsigned move_time;
 };
@@ -279,6 +280,7 @@ struct sc_packet_delete_arrow {
 	int coll_type;
 	int coll_id;
 	int damage;
+	PACKET_SKILL skill;
 };
 
 
@@ -303,6 +305,7 @@ struct sc_packet_arrow {
 	int  Arrowid;
 	p_Vec3 Pos;
 	p_Vec3 Rot;
+	PACKET_SKILL skill;
 };
 
 

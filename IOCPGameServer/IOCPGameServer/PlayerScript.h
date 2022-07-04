@@ -23,7 +23,7 @@ public:
     CPlayerScript();
     virtual ~CPlayerScript();
 
-    void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power);
+    void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, PACKET_SKILL skill);
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
     void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }

@@ -43,6 +43,7 @@ private:
     Vec3 m_vRestorePos;
     Vec3 m_vTargetDir;
     Vec3 m_vDeltaPos;
+    PACKET_SKILL m_PacketSkill;
 
     CGameObject* m_pBow;
     int m_ParentId;
@@ -51,6 +52,8 @@ private:
 public:
     virtual void Awake();
     virtual void Update();
+    PACKET_SKILL GetPacketSkill() { return m_PacketSkill; }
+    void SetPacketSkill(PACKET_SKILL paket_skill) { m_PacketSkill = paket_skill; }
 
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
 

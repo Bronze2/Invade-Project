@@ -854,10 +854,21 @@ void CPlayerScript::UseSkill()
 
 			}
 			break;
-			default:
+			case ELEMENT_TYPE::FIRE:
 			{
 				if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
 					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tZSkill);
+					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill(Z_FIRE);
+				}
+			}
+
+			break;
+			case ELEMENT_TYPE::THUNDER:
+			{
+				if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
+					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tZSkill);
+					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill(Z_TUNDER);
+
 				}
 			}
 

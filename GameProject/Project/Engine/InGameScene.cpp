@@ -153,12 +153,15 @@ void CInGameScene::Init()
 		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
 		pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 		cout << "메인클라 블루  [" << Network::GetInst()->getMainClient().id<<"]" << endl;
+		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+
 	}
 	else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
 		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
 		pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 		cout << "메인클라 레드  [" << Network::GetInst()->getMainClient().id << "]" << endl;
+		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
 	}
 
@@ -166,7 +169,6 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 	pObject->GetScript<CPlayerScript>()->m_SetId(Network::GetInst()->getMainClient().id);
 
 
@@ -270,11 +272,15 @@ void CInGameScene::Init()
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
 			cout << "[ID" << cl.second.id << "] 블루"<< endl;
+			pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+
 		}
 		else if (cl.second.camp == CAMP_STATE::RED) {
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
 			cout << "[ID" << cl.second.id << "] 레드" << endl;
+			pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+
 
 		}
 

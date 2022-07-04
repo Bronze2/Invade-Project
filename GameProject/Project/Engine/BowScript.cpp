@@ -75,8 +75,9 @@ void CBowScript::Update()
 			CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(),m_iCurArrow,vArrowPos);
 			CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(),m_iCurArrow,vArrowRot);
 
-			Network::GetInst()->send_arrow_packet(m_iCurArrow,vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp);
-
+			Network::GetInst()->send_arrow_packet(m_iCurArrow,vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp,
+				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
+			//GetCurArrow()->s
 			m_iCurArrow++;
 			m_iPower = 1;
 			if (m_iCurArrow > 19) {
@@ -247,6 +248,11 @@ void CBowScript::Awake()
 		m_pArrow[i]->GetScript<CArrowScript>()->SetLayerIdx(GetObj()->GetLayerIdx());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
+		m_pArrow[i]->GetScript<CArrowScript>()->SetPacketSkill(PACKET_SKILL::NONE);
+		m_pArrow[i]->GetScript<CArrowScript>()->Awake();
+
+
+
 		GetObj()->AddChild(m_pArrow[i]);
 	}
 

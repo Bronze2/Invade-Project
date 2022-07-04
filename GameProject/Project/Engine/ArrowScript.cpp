@@ -24,6 +24,7 @@ void CArrowScript::SetSkill(SKILL* _pSkill)
 	m_pSkill->bFinal = false;
 	m_pSkill->Count = 0;
 	m_pSkill->Sum = _pSkill->Sum;
+	
 }
 void CArrowScript::Awake()
 {

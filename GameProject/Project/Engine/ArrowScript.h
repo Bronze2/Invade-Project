@@ -23,6 +23,7 @@ private:
     float a;
     ELEMENT_TYPE m_iType;
     CGameObject* m_pParticle;
+    PACKET_SKILL m_PacketSkill;
     bool m_bMove;
     float m_fFallSpeed;
 
@@ -62,6 +63,8 @@ public:
     UINT GetLayerIdx() { return m_iLayerIdx; }
     void SkillCheck();
 
+    PACKET_SKILL GetPacketSkill() { return m_PacketSkill; }
+    void SetPacketSkill(PACKET_SKILL paket_skill) {  m_PacketSkill = paket_skill; }
 
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
 

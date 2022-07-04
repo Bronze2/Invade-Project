@@ -379,7 +379,7 @@ void CThread::process_packet(int user_id, char* buf)
 		cs_packet_arrow* packet = reinterpret_cast<cs_packet_arrow*>(buf);
 		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->room_id ,packet->Clinet_id, packet->Arrow_id,
 			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
-			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, packet->camp);
+			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, packet->camp , packet->skill);
 	}
 	break;
 	case C2S_MOVE_BLOCK:
