@@ -143,8 +143,11 @@ void CArrowScript::Update()
 
 		if (nullptr != m_pSkill) {
 			if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+				cout << " Thnder" << endl;
+
 				if (vPos.y <= 1.f) {
 
+					cout << " Thnder down" << endl;
 					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
 					vPos3.y = 1.f;
 					CreateThunderObject(vPos3, m_iLayerIdx);
