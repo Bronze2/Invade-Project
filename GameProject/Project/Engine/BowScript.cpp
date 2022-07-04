@@ -52,6 +52,7 @@ void CBowScript::Update()
 		}
 	}
 
+	// 크로스헤어
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
 		Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();

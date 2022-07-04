@@ -10,8 +10,9 @@
 void CButtonScript::Awake()
 {
 	// 로비씬
-	// 나!! 본인 플레이어에 대한 헬멧 변경
-	m_pPlayerObj = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[1];
+	// 나!! 메인 플레이어
+	m_pPlayerObj = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Red")->GetParentObj()[1];
+
 	for (int i = 0 ; i < m_pPlayerObj->GetChild().size() ; i++){
 		if (m_pPlayerObj->GetChild()[i]->GetName() == L"Helmet") {
 			m_pPlayerHelmet = m_pPlayerObj->GetChild()[i];
@@ -20,8 +21,6 @@ void CButtonScript::Awake()
 			m_pReadyBar = m_pPlayerObj->GetChild()[i];
 		}
 	}
-
-	m_pReadyButton = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->GetParentObj()[1];
 
 	m_pReadyNonePressedMtrl = new CMaterial;
 	m_pReadyNonePressedMtrl->DisableFileSave();
@@ -45,9 +44,9 @@ void CButtonScript::Update()
 		}
 	}
 
-	//if (m_pPlayerObj->GetScript<CPlayerScript>()->GetReady() && m_pPlayerObj->GetScript<CPlayerScript>()->GetAnimaionState() == PLAYER_STATE::IDLE) {
-	//	m_pReadyBar->SetActive(true);
-	//}
+	if (m_pPlayerObj->GetScript<CPlayerScript>()->GetReady() && m_pPlayerObj->GetScript<CPlayerScript>()->GetAnimaionState() == PLAYER_STATE::IDLE) {
+		m_pReadyBar->SetActive(true);
+	}
 }
 
 void CButtonScript::Execute()
@@ -55,15 +54,15 @@ void CButtonScript::Execute()
 	switch (m_eType) {
 	case BUTTON_TYPE::READY:
 		if (!m_pPlayerObj->GetScript<CPlayerScript>()->GetReady()) {
-			//m_pPlayerObj->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
-			m_pReadyButton->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
-			m_pReadyButton->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
+			m_pPlayerObj->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
+			GetObj()->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
+			GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
 			m_pPlayerObj->GetScript<CPlayerScript>()->SetReady(true);
 		}
 		else {
 			m_pReadyBar->SetActive(false);
-			m_pReadyButton->MeshRender()->SetMaterial(m_pReadyNonePressedMtrl);
-			m_pReadyButton->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyNonePressedTex.GetPointer());
+			GetObj()->MeshRender()->SetMaterial(m_pReadyNonePressedMtrl);
+			GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyNonePressedTex.GetPointer());
 			m_pPlayerObj->GetScript<CPlayerScript>()->SetReady(false);
 		}
 		break;

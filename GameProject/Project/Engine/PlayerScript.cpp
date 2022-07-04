@@ -381,10 +381,10 @@ void CPlayerScript::Awake()
 
 		m_fMoveSpeed = 300.f;
 	}
-	
+
 	// 헬멧 플레이어 고개 까딱
 	Ptr<CMeshData> pHelmetMesh;
-	
+
 	if (GetObj()->GetLayerIdx() == 3) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
@@ -654,8 +654,8 @@ void CPlayerScript::AttachHelmet()
 		m_pHelmetObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
 	}
 	else if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::LOBBY) {
-		CGameObject* pCamera = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[0]);
-	
+		// 로비씬
+
 		tMTBone* pHeadBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(7));
 		tMTBone* pChestBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(6));
 

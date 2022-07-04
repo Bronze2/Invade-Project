@@ -8,7 +8,6 @@
 #include "SceneMgr.h"
 #include "PlayerScript.h"
 #include "CameraScript.h"
-#include "CrossHairScript.h"
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
 {

@@ -127,10 +127,11 @@ void CInGameScene::Init()
 	// AddGameObject
 	FindLayer(L"Tile")->AddGameObject(pObject);
 
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\no_head.fbx");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_red.fbx");
 	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\no_head.mdat", L"MeshData\\no_head.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 
-
+	pObject = new CGameObject;
 	pObject = pMeshData->Instantiate();
 	pObject->SetName(L"Monster");
 	pObject->AddComponent(new CCollider3D);
@@ -145,17 +146,18 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
-	
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
 	// pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
+
 	pMainCam->Camera()->SetPlayer(pObject);
 	pMainCam->Camera()->SetbPlay(true);
 
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
-	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);   
+	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);
 	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
@@ -168,22 +170,8 @@ void CInGameScene::Init()
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
 	pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
 	pObject->GetScript<CPlayerScript>()->Init();
-	
+
 	FindLayer(L"Blue")->AddGameObject(pObject, false);
-
-	CGameObject* pEmptyPlayer = new CGameObject;
-	pEmptyPlayer->AddComponent(new CTransform);		
-	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
-	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
-	
-	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -50.f));		// -300, 130, -50
-	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));		// -15.f
-	pMainCam->GetScript<CCameraScript>()->Init();
-
-	pEmptyPlayer->AddChild(pMainCam);
-
-	FindLayer(L"Default")->AddGameObject(pEmptyPlayer);
-
 
 	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
@@ -213,6 +201,20 @@ void CInGameScene::Init()
 	pObject->AddChild(pBow);
 	pBow->GetScript<CBowScript>()->SetPlayer(pObject);
 	pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
+
+	CGameObject* pEmptyPlayer = new CGameObject;
+	pEmptyPlayer->AddComponent(new CTransform);
+	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
+	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
+
+	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -50.f));		// -300, 130, -50
+	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));		// -15.f
+	pMainCam->GetScript<CCameraScript>()->Init();
+
+	pEmptyPlayer->AddChild(pMainCam);
+
+	FindLayer(L"Default")->AddGameObject(pEmptyPlayer);
+
 
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\\Tower Mage.FBX");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
@@ -1169,7 +1171,7 @@ void CInGameScene::Init()
 	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
 	FindLayer(L"Default")->AddGameObject(pUICam, false);
 
-
+	// 크로스헤어
 	CGameObject* pUICrossHair = new CGameObject;
 	pUICrossHair->SetName(L"UICrossHair");
 	pUICrossHair->FrustumCheck(false);
@@ -1181,7 +1183,7 @@ void CInGameScene::Init()
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 	Vec3 vScale = Vec3(res.fWidth / 13, res.fWidth/13, 1.f);
 
-	pUICrossHair->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	pUICrossHair->Transform()->SetLocalPos(Vec3(0.f, res.fHeight/4, 1.f));
 	pUICrossHair->Transform()->SetLocalScale(vScale);
 
 	pUICrossHair->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

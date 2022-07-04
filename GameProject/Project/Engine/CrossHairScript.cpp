@@ -45,8 +45,6 @@ void CCrossHairScript::Update()
 
 	m_vPos = Vec3(matViewInv._41, matViewInv._42, matViewInv._43);
 
-	//m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
-
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		if (vScale.x >= 30.f && vScale.y >= 30.f) {
 			vScale.x -= 170.f * DT;

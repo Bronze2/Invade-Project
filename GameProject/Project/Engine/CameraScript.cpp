@@ -49,7 +49,6 @@ void CCameraScript::Update()
                         vRot.x = XMConvertToRadians(m_fDegree);
                     }
                 }
-
             }
             break;
         case CAMERA_EFFECT_TYPE::ZOOMIN:

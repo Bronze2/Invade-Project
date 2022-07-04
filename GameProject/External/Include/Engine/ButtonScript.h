@@ -16,7 +16,6 @@ private:
 	CGameObject* m_pPlayerObj;
 	CGameObject* m_pPlayerHelmet;
 	CGameObject* m_pReadyBar;
-	CGameObject* m_pReadyButton;
 
 	Ptr<CMaterial> m_pReadyNonePressedMtrl;
 	Ptr<CTexture> m_pReadyNonePressedTex;
@@ -34,6 +33,7 @@ public:
 	void StatusCheck();
 	void Execute();
 	void SetButtonType(BUTTON_TYPE _eType) { m_eType = _eType; }
+	void SetMainPlayer(CGameObject* _pObj) { m_pPlayerObj = _pObj; }
 
 public:
 	CButtonScript();

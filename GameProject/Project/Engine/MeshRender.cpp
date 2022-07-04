@@ -27,8 +27,9 @@ ULONG64 CMeshRender::GetInstID(UINT _iMtrlIdx)
 
 void CMeshRender::Render()
 {
-	if (IsActive() == false || nullptr == m_pMesh)
+	if (IsActive() == false || nullptr == m_pMesh) {
 		return;
+	}
 	if (!m_bRender) {
 		return;
 	}
@@ -57,8 +58,9 @@ void CMeshRender::Render()
 
 void CMeshRender::Render(UINT _iMtrlIdx)
 {
-	if (IsActive() == false || nullptr == m_pMesh)
+	if (IsActive() == false || nullptr == m_pMesh) {
 		return;
+	}
 	if (!m_bRender) {
 		return;
 	}
