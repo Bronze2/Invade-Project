@@ -128,7 +128,7 @@ void CInGameScene::Init()
 	FindLayer(L"Tile")->AddGameObject(pObject);
 
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\no_head.fbx");
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\no_head.mdat", L"MeshData\\no_head.mdat");
 
 
 	pObject = pMeshData->Instantiate();
@@ -214,7 +214,7 @@ void CInGameScene::Init()
 	pBow->GetScript<CBowScript>()->SetPlayer(pObject);
 	pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
 
-
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\\Tower Mage.FBX");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
 	pRedFirstTower = pMeshData->Instantiate();

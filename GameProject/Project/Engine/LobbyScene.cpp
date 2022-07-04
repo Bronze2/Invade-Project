@@ -178,7 +178,7 @@ void CLobbyScene::Init()
 		pPlayerObj = pPlayerBlueMeshData->Instantiate();
 		pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
 
-		pPlayerObj->SetName(L"Player");
+		pPlayerObj->SetName(L"Monster");
 		pPlayerObj->AddComponent(new CPlayerScript);
 		pPlayerObj->FrustumCheck(false);
 		pPlayerObj->Transform()->SetLocalPos(Vec3(-75.f - i * 150.f, 0.f, 1000.f));
@@ -188,8 +188,8 @@ void CLobbyScene::Init()
 
 		CAnimation* pPlayerAnimation = new CAnimation;
 		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);
-		pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
-		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 100);
+		//pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
+		//pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 100);
 		pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);
 		pPlayerObj->Animator3D()->SetAnimClip(pPlayerAnimation->GetAnimClip());
 		pPlayerObj->GetScript<CPlayerScript>()->Init();
@@ -245,7 +245,7 @@ void CLobbyScene::Init()
 		pPlayerObj = pPlayerRedMeshData->Instantiate();
 		pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
 
-		pPlayerObj->SetName(L"Player");
+		pPlayerObj->SetName(L"Monster");
 		pPlayerObj->AddComponent(new CPlayerScript);
 		pPlayerObj->FrustumCheck(false);
 		pPlayerObj->Transform()->SetLocalPos(Vec3(75 + i * 150.f, 0.f, 1000.f));
@@ -255,6 +255,7 @@ void CLobbyScene::Init()
 
 		CAnimation* pPlayerAnimation = new CAnimation;
 		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);
+		pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
 		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 100);
 		pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);
 		pPlayerObj->Animator3D()->SetAnimClip(pPlayerAnimation->GetAnimClip());
@@ -277,6 +278,31 @@ void CLobbyScene::Init()
 			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 			break;
 		}
+
+		pReadyBarObj = new CGameObject;
+		pReadyBarObj->SetName(L"UIReadyBar");
+		pReadyBarObj->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pReadyBarObj->AddComponent(new CTransform);
+		pReadyBarObj->AddComponent(new CMeshRender);
+		pReadyBarObj->SetActive(false);
+
+		Vec3 vUIReadyBarScale = Vec3(100.f, 40.f, 1.f);
+		pReadyBarObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 300.f));
+		pReadyBarObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
+		pReadyBarObj->Transform()->SetLocalScale(vUIReadyBarScale);
+		pReadyBarObj->Transform()->SetBillBoard(false);
+		pReadyBarObj->Transform()->SetCamera(pMainCam);
+
+		pReadyBarObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIReadyBarMtrl = new CMaterial;
+		pUIReadyBarMtrl->DisableFileSave();
+		pUIReadyBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+		pReadyBarObj->MeshRender()->SetMaterial(pUIReadyBarMtrl);
+		Ptr<CTexture> pUIReadyBarTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
+		pReadyBarObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyBarTex.GetPointer());
+
+		pPlayerObj->AddChild(pReadyBarObj);
+
 
 		FindLayer(L"Red")->AddGameObject(pPlayerObj);
 	}

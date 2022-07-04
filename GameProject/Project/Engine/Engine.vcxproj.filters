@@ -298,6 +298,12 @@
     <ClCompile Include="UIBarScript.cpp">
       <Filter>Script\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Animation2D.cpp">
+      <Filter>Object\Component\Ani</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator2D.cpp">
+      <Filter>Object\Component\Ani</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -573,6 +579,12 @@
     </ClInclude>
     <ClInclude Include="UIBarScript.h">
       <Filter>Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation2D.h">
+      <Filter>Object\Component\Ani</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator2D.h">
+      <Filter>Object\Component\Ani</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

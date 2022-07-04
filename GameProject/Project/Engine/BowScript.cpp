@@ -210,10 +210,6 @@ void CBowScript::Awake()
 		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f)); 
 		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 
-		//m_pArrow[i]->AddComponent(new CTrail);
-		//m_pArrow[i]->Trail()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"white"));
-
-
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);

@@ -11,7 +11,7 @@ void CButtonScript::Awake()
 {
 	// 로비씬
 	// 나!! 본인 플레이어에 대한 헬멧 변경
-	m_pPlayerObj = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[4];
+	m_pPlayerObj = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[1];
 	for (int i = 0 ; i < m_pPlayerObj->GetChild().size() ; i++){
 		if (m_pPlayerObj->GetChild()[i]->GetName() == L"Helmet") {
 			m_pPlayerHelmet = m_pPlayerObj->GetChild()[i];
@@ -45,9 +45,9 @@ void CButtonScript::Update()
 		}
 	}
 
-	if (m_pPlayerObj->GetScript<CPlayerScript>()->GetReady() && m_pPlayerObj->GetScript<CPlayerScript>()->GetAnimaionState() == PLAYER_STATE::IDLE) {
-		m_pReadyBar->SetActive(true);
-	}
+	//if (m_pPlayerObj->GetScript<CPlayerScript>()->GetReady() && m_pPlayerObj->GetScript<CPlayerScript>()->GetAnimaionState() == PLAYER_STATE::IDLE) {
+	//	m_pReadyBar->SetActive(true);
+	//}
 }
 
 void CButtonScript::Execute()
@@ -55,7 +55,7 @@ void CButtonScript::Execute()
 	switch (m_eType) {
 	case BUTTON_TYPE::READY:
 		if (!m_pPlayerObj->GetScript<CPlayerScript>()->GetReady()) {
-			m_pPlayerObj->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
+			//m_pPlayerObj->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
 			m_pReadyButton->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
 			m_pReadyButton->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
 			m_pPlayerObj->GetScript<CPlayerScript>()->SetReady(true);

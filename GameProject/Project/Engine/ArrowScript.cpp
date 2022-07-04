@@ -37,8 +37,6 @@ void CArrowScript::Awake()
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
 		m_pParticle->ParticleSystem()->SetEndScale(5.f);
-	
-
 		break;
 	case ELEMENT_TYPE::FIRE:
 		m_pParticle->AddComponent(new CParticleSystem);
