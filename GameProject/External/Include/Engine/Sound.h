@@ -29,7 +29,7 @@ public:
 
 	
 	// 0 (무한반복) 
-	void Play(int _iRoopCount, bool _bOverlap = false);
+	void Play(int _iRoopCount, float _fVolume, bool _bOverlap = false);
 	void PlaySoundOnce(const float& _fVolume);
 	void PlaySound3D(const Vec3& _Pos,const float& _fVolume);
 	void Stop();

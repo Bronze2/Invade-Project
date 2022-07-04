@@ -72,3 +72,9 @@ void CreateThunderObject(const Vec3& _Pos,const UINT& _iLayerIdx);
 void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);
 
 void SetListener(const Vec3& _vFrontDir,const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);
+
+class CSound;
+
+
+CSound* SetSound2D(const UINT& _LoopCount, const wstring& _Path);
+CSound* SetSound3D(const wstring& _Path);

@@ -52,6 +52,10 @@ void CSound::Play(int _iRoopCount, float _fVolume, bool _bOverlap)
 
 	// 중복 재생 허용 안할 경우
 
+	if (!_bOverlap && !m_listChannel.empty())
+	{
+		return;
+	}
 
 	FMOD::Channel* pChannel = nullptr;
 	g_pFMOD->playSound(m_pSound, nullptr, false, &pChannel);
