@@ -241,6 +241,7 @@ void CServer::send_move_minion_packet(int minion_id)
 	//cout << "["<<packet.state<<"]" << endl;
 	//cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
 
+
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
 

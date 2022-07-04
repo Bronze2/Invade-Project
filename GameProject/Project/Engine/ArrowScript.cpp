@@ -137,34 +137,34 @@ void CArrowScript::Update()
 		//}
 		vPos = Vec3::Lerp(vPos,CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id),DT *10.f);
 		vRot = Vec3::Lerp(vRot, CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id), DT * 10.f);
+		if (CSceneMgr::GetInst()->get_arrowSkill(m_ParentId, m_id)) {
+			EnterSkill(vPos);
+			CSceneMgr::GetInst()->set_arrowSkill(m_ParentId, m_id, false);
+		}
 		//cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
 
-		if (nullptr != m_pSkill) {
-			if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
-				cout << " Thnder" << endl;
-
-				if (vPos.y <= 1.f) {
-
-					cout << " Thnder down" << endl;
-					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-					vPos3.y = 1.f;
-					CreateThunderObject(vPos3, m_iLayerIdx);
-					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-				}
-			}
-			else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
-				if (vPos.y <= 1.f) {
-					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-					vPos3.y = 1.f;
-					CreateBoomParticleObject(vPos3, L"smokeparticle");
-					//Collision();
-					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-				}
-			}
-		}
+		//if (nullptr != m_pSkill) {
+		//	if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+		//		if (vPos.y <= 1.f) {
+		//			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+		//			vPos3.y = 1.f;
+		//			CreateThunderObject(vPos3, m_iLayerIdx);
+		//			Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+		//		}
+		//	}
+		//	else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+		//		if (vPos.y <= 1.f) {
+		//			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+		//			vPos3.y = 1.f;
+		//			CreateBoomParticleObject(vPos3, L"smokeparticle");
+		//			//Collision();
+		//			Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+		//		}
+		//	}
+		//}
 
 		//cout<<"화살 주인은" <<GetObj()->GetParent()->GetParent()->GetScript<CPlayerScript>()->m_GetId() <<endl;
 		//cout << "화살 주인은" << GetParentId() << endl;
@@ -182,6 +182,29 @@ void CArrowScript::Update()
 	}
 	break;
 	}
+}
+
+void CArrowScript::EnterSkill(Vec3 vPos)
+{
+	cout << "EnterSKill" << endl;
+	if (nullptr != m_pSkill) {
+		if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+				Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+				vPos.y = 1.f;
+				CreateThunderObject(vPos, m_iLayerIdx);
+				//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+		}
+		else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+				Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+				vPos.y = 1.f;
+				CreateBoomParticleObject(vPos, L"smokeparticle");
+				//Collision();
+				//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+		}
+	}
+
+	SetState(ARROW_STATE::IDLE);
+
 }
 
 void CArrowScript::Init()

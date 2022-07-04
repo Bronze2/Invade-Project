@@ -56,13 +56,14 @@ private:
 
     SKILL* m_tESkill;
     SKILL* m_tZSkill;
+    SKILL* m_currentSkill = nullptr;
 
     CGameObject* m_pESkillObject;
     CGameObject* m_pZSkillObject;
 
     vector<SKILL*> m_arrSkill;
 
-
+    CGameObject* m_pHelmetObject;
 
     
     float m_fCurDegree;
@@ -73,6 +74,8 @@ private:
     Vec3 restorePos;
     CGameObject* m_pBowObject;
 public:
+
+    void AttachHelmet();
     void m_FAnimation();
     void Init();
     virtual void Awake();
@@ -91,6 +94,7 @@ public:
     virtual ~CPlayerScript();
     void GetDamage(const UINT& _uiDamage);
     void SetDamage(const int& _Damage);
+    void SetCamp(CAMP_STATE camp) { m_eCamp = camp; }
 
     UINT GetType() { return (UINT)m_iType; }
 
@@ -115,6 +119,10 @@ public:
     void UseSkill();
     void DamageBySkill(SKILL* _pSkill);
     void GetDamage();
+    SKILL* GetSkill_E() { return m_tESkill; }
+    SKILL* GetSkill_Z() { return m_tZSkill; }
+    SKILL* GetCurrentSkill() { return m_currentSkill; }
+
 
     CLONE(CPlayerScript);
 };

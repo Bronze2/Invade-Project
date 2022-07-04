@@ -6,14 +6,16 @@
 #include "ConstantBuffer.h"
 #include "RenderMgr.h"
 #include "Camera.h"
+#include "BowScript.h"
 
 void CCrossHairScript::Init()
 {
+	m_vRestoreScale = Transform()->GetLocalScale();
 }
 
 void CCrossHairScript::Update()
 {
-	Vec3 vScale = Vec3(100.f, 100.f, 1.f);
+	Vec3 vScale = Transform()->GetLocalScale();
 	Matrix matProj = m_pMainCam->Camera()->GetProjMat();
 
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
@@ -43,13 +45,22 @@ void CCrossHairScript::Update()
 
 	m_vPos = Vec3(matViewInv._41, matViewInv._42, matViewInv._43);
 
-	//m_pMainCam->Camera()->SetRay(m_vPos, m_vDir);
+	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
+		if (vScale.x >= 30.f && vScale.y >= 30.f) {
+			vScale.x -= 170.f * DT;
+			vScale.y -= 170.f * DT;
+		}
+	}
+	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+		vScale = m_vRestoreScale;
+	}
 
 	Vec3 vPos = vTargetPos;
-	vPos.x -= vScale.x / 2;
-	vPos.y += vScale.y / 2;
+	vPos.x -= m_vRestoreScale.x / 2.f;
+	vPos.y += m_vRestoreScale.y / 2.f;
 
 	Transform()->SetLocalPos(vPos);
+	Transform()->SetLocalScale(vScale);
 }
 
 CCrossHairScript::CCrossHairScript() :CScript(0)

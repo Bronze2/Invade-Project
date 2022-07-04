@@ -254,7 +254,7 @@ void Network::ProcessPacket(char* ptr)
 		sc_packet_arrow* my_packet = reinterpret_cast<sc_packet_arrow*>(ptr);
 		CSceneMgr::GetInst()->net_initArrow(my_packet->Clinetid, my_packet->Arrowid,
 			Vec3(my_packet->Pos.x, my_packet->Pos.y, my_packet->Pos.z),
-			Vec3(my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z));
+			Vec3(my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z) , my_packet->skill);
 	}
 	break;
 

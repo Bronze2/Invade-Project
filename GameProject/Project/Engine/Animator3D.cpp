@@ -5,6 +5,9 @@
 #include "Material.h"
 #include "ResMgr.h"
 #include "StructuredBuffer.h"
+#include "SceneMgr.h"
+#include "PlayerScript.h"
+#include "Network.h"
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
 {
@@ -32,6 +35,21 @@ void CAnimator3D::UpdateData()
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_2, &m_iNextFrameIdx);
 		m_pBoneMtrl->SetData(SHADER_PARAM::INT_3, &iRow);
 		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_0, &m_fRatio);
+
+		// 헬멧 플레이어 고개 까딱
+		float fDegree = 0;
+		float fIsPlayer = 0.f;
+		if (GetObj()->GetScript<CPlayerScript>() != nullptr && CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME
+			&&GetObj()->GetScript<CPlayerScript>()->m_GetId() == Network::GetInst()->getMainClient().id) {
+			fIsPlayer = 1.f;
+			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+			Vec3 vRot = pMainCam->Transform()->GetLocalRot();
+			fDegree = XMConvertToDegrees(vRot.x);
+			m_fDegree = fDegree;
+			//서버 넘겨주고 받기
+		}
+		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_1, &fDegree);
+		m_pBoneMtrl->SetData(SHADER_PARAM::FLOAT_2, &fIsPlayer);
 
 		UINT iGrounX = (iBoneCount / 256) + 1;
 		m_pBoneMtrl->Dispatch(iGrounX, 1, 1);

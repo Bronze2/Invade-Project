@@ -1,8 +1,5 @@
 #pragma once
 #include "Component.h"
-
-
-
 class CTransform :
     public CComponent
 {
@@ -10,6 +7,7 @@ private:
     Vec3 m_vLocalPos;
     Vec3 m_vLocalScale;
     Vec3 m_vLocalRot;
+    Vec3 m_vRevolutionRot;
 
     Vec3 m_vLocalDir[(UINT)DIR_TYPE::END];
     Vec3 m_vWorldDir[(UINT)DIR_TYPE::END];
@@ -18,11 +16,18 @@ private:
     Vec4 m_vQuaternion;
     CGameObject* m_pCamera;
     bool m_bBillBoard;
+    bool m_bNotParent;// 부모는 필요하지않지만 특정 오브젝트의 matworld가 필요할때
+
+    Matrix m_matObjectWorldMatrix;
+    Matrix m_matLocal;
+
 
 public:
+    Matrix GetLocal() { return m_matLocal; }
     const Vec4 GetQuaternion()const { return m_vQuaternion; }
     void SetQuaternion(const Vec4& _vQuaternion) { m_vQuaternion = _vQuaternion; }
-  
+    void SetNotParent(bool _bNotParent) { m_bNotParent = _bNotParent; }
+    void SetObjectMatrix(const Matrix& _Matrix) { m_matObjectWorldMatrix = _Matrix; }
     const Vec3 GetLocalPos() { return m_vLocalPos; }
     void SetBillBoard(bool _bBillBoard) { m_bBillBoard = _bBillBoard; }
     Vec3 GetWorldPos() { return m_matWorld.Translation(); }
@@ -31,16 +36,20 @@ public:
     const Vec3& GetLocalRot() { return m_vLocalRot; }
     const Matrix& GetWorldMat() { return m_matWorld; }
     void SetWorldMat(const Matrix& _mMatrix) { m_matWorld = _mMatrix; }
+    void SetLocalDir(DIR_TYPE _eType, Vec3 _vDir) { m_vLocalDir[(UINT)_eType] = _vDir; }
+    void SetWorldDir(DIR_TYPE _eType, Vec3 _vDir) { m_vWorldDir[(UINT)_eType] = _vDir; }
     const Vec3& GetLocalDir(DIR_TYPE _eType) { return m_vLocalDir[(UINT)_eType]; }
     const Vec3& GetWorldDir(DIR_TYPE _eType) { return m_vWorldDir[(UINT)_eType]; }
     void SetLocalPos(const Vec3& _vPos) { if (m_vLocalPos != _vPos) { m_vLocalPos = _vPos; Changed(); } }
+    void SetLocalPos(const Vec3& _vPos, bool _bActive) { if (m_vLocalPos != _vPos) { m_vLocalPos = _vPos; Changed(); GetObj()->SetActive(_bActive); } }
     void SetLocalScale(const Vec3& _vScale) { if (m_vLocalScale != _vScale) { m_vLocalScale = _vScale; Changed(); } }
     void SetLocalRot(const Vec3& _vRot) { if (m_vLocalRot != _vRot) { m_vLocalRot = _vRot; Changed(); } }
     void LookAt(const Vec3& _vLook);
-    void SetWorldDir(DIR_TYPE _eType, Vec3 _vDir) { m_vWorldDir[(UINT)_eType] = _vDir; }
     void LookAt(const Vec3& _vLook, const Vec3& _vRot);
-   // const Vec3 GetLocalDir() { return m_vLocalDir; }
-   
+    void SetRevolutionRot(const Vec3& _vRevRot) { m_vRevolutionRot = _vRevRot; }
+
+    // const Vec3 GetLocalDir() { return m_vLocalDir; }
+
     Matrix LookAt(const Vec3& Eye, const Vec3& target, const Vec3& _Up);
 
     void SetCamera(CGameObject* _pCamera) { m_pCamera = _pCamera; }
@@ -55,5 +64,3 @@ public:
     CTransform();
     virtual ~CTransform();
 };
-
-

@@ -28,6 +28,7 @@ struct arrowId {
 struct arrowMove {
 	Vec3 Pos;
 	Vec3 Rot;
+	bool skill = false;
 };
 
 
@@ -56,9 +57,8 @@ public:
 	void ChangeScene(CScene* _pNextScene);
 	void ChangeScene(SCENE_TYPE _Type);
 
-	void net_enterClient(int id, float x, float y, float z);
-	void net_setMainClient(int id, float x, float y, float z);
-	void net_setEnableClient(int id);	//지울가능성 높음
+	void net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot, int skill);
+
 	void net_setLerpMoveByID(int id, float x, float y , float z);
 	void net_setLocalPosByID(int id, float x, float y, float z);
 	void net_setRotationByID(int id, float x, float y, float z);
@@ -73,8 +73,6 @@ public:
 	void net_setRotTower(int id, Vec3 rot);
 	void net_spawnProjectile(int id, Vec3 pos);
 	void net_moveProjectile(int id, Vec3 pos);
-
-	void net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot);
 	void net_moveArrow(int parentid,int id, Vec3 pos,Vec3 rot);
 	void net_animUpdate(int id, int state);
 	void net_deleteMinion(int id);
@@ -86,11 +84,12 @@ public:
 	
 	
 	
-	
+	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
 	Vec3 get_arrowRot(int p_id, int m_id) { return m_arrow[p_id][m_id].Rot; }
 	void set_arrowPos(int p_id, int m_id,Vec3 pos) {  m_arrow[p_id][m_id].Pos = pos; }
 	void set_arrowRot(int p_id, int m_id,Vec3 rot) {  m_arrow[p_id][m_id].Rot = rot; }
+	void set_arrowSkill(int p_id, int m_id, bool b) { m_arrow[p_id][m_id].skill = b; }
 
 
 	Vec3 get_towerRot(int id) { return m_tower[id]; }

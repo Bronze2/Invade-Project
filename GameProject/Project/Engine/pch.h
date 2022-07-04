@@ -24,6 +24,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <chrono>
+#include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
 #include <dxgi1_4.h>
 #include <D3Dcompiler.h>
@@ -49,7 +50,6 @@
 
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "mswsock.lib")
-#include "..\..\..\IOCPGameServer\IOCPGameServer\protocol.h"
 
 // 콘솔창 띄우기
 

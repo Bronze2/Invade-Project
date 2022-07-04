@@ -530,7 +530,7 @@ void CSceneMgr::net_moveArrow(int parentid, int id, Vec3 pos, Vec3 rot)
 	m_arrow[parentid][id].Rot = rot;
 }
 
-void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
+void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot, int skill)
 {
 	m_arrow[parentid][id].Pos = pos;
 	m_arrow[parentid][id].Rot = rot;
@@ -538,7 +538,7 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
 	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 		if (cl->GetScript<CPlayerScript>()->m_GetId() == parentid) {
 			cl->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
-			cl->GetChild()[0]->GetScript<CBowScript>()->InitArrow(id, pos, rot);
+			cl->GetChild()[0]->GetScript<CBowScript>()->InitArrow(id, pos, rot, (PACKET_SKILL)skill);
 
 			break;
 		}
@@ -549,14 +549,15 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot)
 }
 void CSceneMgr::net_deleteArrow(int client_id, int arrow_id)
 {
-	m_arrow[client_id][arrow_id].Pos = Vec3(1000,1000,1000);
 
+	m_arrow[client_id][arrow_id].skill = true;
 	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 		if (cl->GetScript<CPlayerScript>()->m_GetId() == client_id) {
 			cl->GetChild()[0]->GetScript<CBowScript>()->DeleteArrow(arrow_id);
 			break;
 		}
 	}
+	m_arrow[client_id][arrow_id].Pos = Vec3(1000,1000,1000);
 	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[client_id]->GetChild()[0]->
 	//	GetScript<CBowScript>()->DeleteArrow(arrow_id);
 }

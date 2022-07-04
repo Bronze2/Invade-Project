@@ -43,7 +43,7 @@
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
 #include "EmptyCameraScript.h"
-
+#include "CrossHairScript.h"
 #include "Network.h"
 void CInGameScene::Init()
 {
@@ -60,9 +60,8 @@ void CInGameScene::Init()
 
 	GetLayer(8)->SetName(L"BlueSpawnPlace");
 	GetLayer(9)->SetName(L"RedSpawnPlace");
-	
+	GetLayer(30)->SetName(L"UI");
 	GetLayer(31)->SetName(L"Tool");
-
 
 	CGameObject* pMainCam = nullptr;
 
@@ -77,17 +76,17 @@ void CInGameScene::Init()
 	pMainCam->Camera()->SetLayerAllCheck();
 	CCollisionMgr::GetInst()->SetCameraObject(pMainCam->Camera());
 	//pMainCam->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-	pMainCam->Camera()->SetFar(10000.f);
+	pMainCam->Camera()->SetFar(20000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 
-	CGameObject* pEmptyCam = nullptr;
-	pEmptyCam = new CGameObject;
-	pEmptyCam->SetName(L"EmptyCam");
-	pEmptyCam->AddComponent(new CTransform);
-	pEmptyCam->AddComponent(new CCamera);
-	pEmptyCam->AddComponent(new CEmptyCameraScript);
-	pEmptyCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-	CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
+	//CGameObject* pEmptyCam = nullptr;
+	//pEmptyCam = new CGameObject;
+	//pEmptyCam->SetName(L"EmptyCam");
+	//pEmptyCam->AddComponent(new CTransform);
+	//pEmptyCam->AddComponent(new CCamera);
+	//pEmptyCam->AddComponent(new CEmptyCameraScript);
+	//pEmptyCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	//CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
 
 
 	CGameObject* pObject = nullptr;
@@ -105,10 +104,23 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 
+
+
+
+
+
 	//Ptr<CMeshData> pMeshDataBlue = CResMgr::GetInst()->LoadFBX(L"FBX\\player_without_bow03.fbx");
 	//pMeshDataBlue->Save(pMeshDataBlue->GetPath());
-	Ptr<CMeshData> pMeshDataRed = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
-	Ptr<CMeshData> pMeshDataBlue = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow03.mdat", L"MeshData\\player_without_bow03.mdat");
+
+
+	//Ptr<CMeshData> pMeshDataRed = CResMgr::GetInst()->LoadFBX(L"FBX\\player_red.fbx");
+	//pMeshDataRed->Save(pMeshDataRed->GetPath());
+
+	//Ptr<CMeshData> pMeshDataBlue = CResMgr::GetInst()->LoadFBX(L"FBX\\player_blue.fbx");
+	//pMeshDataBlue->Save(pMeshDataBlue->GetPath());
+
+	Ptr<CMeshData> pMeshDataRed = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
+	Ptr<CMeshData> pMeshDataBlue = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_blue.mdat", L"MeshData\\player_blue.mdat");
 	Ptr<CMeshData> pMeshbowData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
 
 	Ptr<CTexture>pPlayerRed = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Red");
@@ -118,7 +130,13 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddComponent(new CTransform);
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
+	
+	pMainCam->Transform()->SetLocalPos(Vec3(-200, 100, -50));
 
+	//pMainCam->Transform()->SetLocalPos(Vec3(-200, 100, -50));
+	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
+	pMainCam->GetScript<CCameraScript>()->Init();
+	pEmptyPlayer->AddChild(pMainCam);
 
 
 
@@ -149,19 +167,21 @@ void CInGameScene::Init()
 
 
 	if (Network::GetInst()->getMainClient().camp == CAMP_STATE::BLUE) {
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
-		pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 0));
+		//pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
 		cout << "메인클라 블루  [" << Network::GetInst()->getMainClient().id<<"]" << endl;
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+		pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
 	}
 	else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
-		pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 0));
+		//pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
 		cout << "메인클라 레드  [" << Network::GetInst()->getMainClient().id << "]" << endl;
 		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+		pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 
 	}
 
@@ -171,20 +191,16 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->m_SetId(Network::GetInst()->getMainClient().id);
 
-
-	pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
-	//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
-
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
-	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
-	pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // 점프 후 팔벌리기 81, 125
-	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
-	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
-	pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
-	pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // 누워서 끝 240, 261
-	pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
+	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);
+	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
+	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 220, 235);
+	pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261      
+	pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -235,6 +251,15 @@ void CInGameScene::Init()
 
 
 
+	//pEmptyCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
+	//pEmptyCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
+//	pEmptyPlayer->AddChild(pEmptyCam);
+	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
+
+
+
+
+
 
 
 
@@ -246,10 +271,8 @@ void CInGameScene::Init()
 
 
 		if (cl.second.camp == CAMP_STATE::BLUE) {
-			//pObject = pMeshDataBlue->Instantiate();
 			pObject = pMeshDataBlue->Instantiate();
 			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
-			//			pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerBlue.GetPointer());
 		}
 		else if(cl.second.camp == CAMP_STATE::RED) {
 			pObject = pMeshDataRed->Instantiate();
@@ -273,6 +296,7 @@ void CInGameScene::Init()
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
 			cout << "[ID" << cl.second.id << "] 블루"<< endl;
 			pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
 		}
 		else if (cl.second.camp == CAMP_STATE::RED) {
@@ -280,31 +304,25 @@ void CInGameScene::Init()
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
 			cout << "[ID" << cl.second.id << "] 레드" << endl;
 			pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
-
-
+			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 		}
 
 
 		pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 		pObject->MeshRender()->SetDynamicShadow(true);
-		pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 		pObject->GetScript<CPlayerScript>()->m_SetId(cl.second.id);
-
-
-		pMainCam->Transform()->SetLocalPos(Vec3(-60, 40, -10));
-		//	pMainCam->Transform()->SetLocalScale(Vec3(15000.f, 15000.f, 15000.f));
-		pMainCam->Transform()->SetLocalRot(Vec3(0, PI / 2, -PI / 18));
 
 		CAnimation* pNewAnimation = new CAnimation;
 		pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
-		pNewAnimation->InsertAnimClip(L"WALK", 44, 73);         // 45, 69
-		pNewAnimation->InsertAnimClip(L"JUMP", 81, 108); // 점프 후 팔벌리기 81, 125
-		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);      ///145 167
-		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175); // 168 175
-		pNewAnimation->InsertAnimClip(L"DEMAGED", 231, 242);
-		pNewAnimation->InsertAnimClip(L"DIE", 242, 269);      // 누워서 끝 240, 261
-		pNewAnimation->InsertAnimClip(L"RUN", 298, 320);      // 305, 320
+		pNewAnimation->InsertAnimClip(L"WALK", 44, 73);
+		pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
+		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 220, 235);
+		pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
+		pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261      
+		pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 		//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 		pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -466,16 +484,6 @@ void CInGameScene::Init()
 //	
 
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
-	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(-15.f)));
-
-	pEmptyCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
-	pEmptyCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
-
-	pEmptyPlayer->AddChild(pMainCam);
-	pEmptyPlayer->AddChild(pEmptyCam);
-	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
-
 
 
 
@@ -580,34 +588,33 @@ void CInGameScene::Init()
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
 
-	Ptr<CTexture>pFloorRed = CResMgr::GetInst()->FindRes<CTexture>(L"FloorRed");
-	Ptr<CTexture>pFloorBlue = CResMgr::GetInst()->FindRes<CTexture>(L"FloorBlue");
-	Ptr<CTexture>pFloorWater = CResMgr::GetInst()->FindRes<CTexture>(L"FloorWater");
-
-
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\fencet.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\baseMap.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFloorRed.GetPointer());
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pFloorWater.GetPointer());
-	//pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_2, pFloorWater.GetPointer());
-
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->MeshRender()->SetDynamicShadow(false);
+	FindLayer(L"Default")->AddGameObject(pObject);
 
-	//pObject->Transform()->SetLocalPos(Vec3(0.f, -50.f, 400.f));
-	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(1, 1, 1));
-
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
+	//pMeshData->Save(pMeshData->GetPath());
+	pObject = pMeshData->Instantiate();
+	pObject->AddComponent(new CTransform);
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	pObject->MeshRender()->SetDynamicShadow(false);
-
-
 	FindLayer(L"Default")->AddGameObject(pObject);
+
+
+
 
 
 	CGameObject* pNexus = nullptr;
@@ -1364,12 +1371,7 @@ void CInGameScene::Init()
 
 		FindLayer(L"Cover")->AddGameObject(pObject);
 
-
 	}
-
-
-
-
 
 
 	pObject = new CGameObject;
@@ -1381,8 +1383,54 @@ void CInGameScene::Init()
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyboxMtrl"));
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
-
 	FindLayer(L"Default")->AddGameObject(pObject);
+
+
+	// UI Camera
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICam");
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+	pUICam->AddComponent(new CCameraScript);
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHGRAPHIC);
+
+	pUICam->Camera()->SetFar(1000.f);
+	pUICam->Camera()->SetLayerCheck(30, true);
+
+	pUICam->Camera()->SetWidth(CRenderMgr::GetInst()->GetResolution().fWidth);
+	pUICam->Camera()->SetHeight(CRenderMgr::GetInst()->GetResolution().fHeight);
+	FindLayer(L"Default")->AddGameObject(pUICam, false);
+
+	// 크로스헤어
+	CGameObject* pUICrossHair = new CGameObject;
+	pUICrossHair->SetName(L"UICrossHair");
+	pUICrossHair->FrustumCheck(false);
+	pUICrossHair->AddComponent(new CTransform);
+	pUICrossHair->AddComponent(new CMeshRender);
+	//pUICrossHair->AddComponent(new CStaticUI);
+	pUICrossHair->AddComponent(new CCrossHairScript);
+
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	Vec3 vScale = Vec3(res.fWidth / 13, res.fWidth / 13, 1.f);
+
+	pUICrossHair->Transform()->SetLocalPos(Vec3(0.f, res.fHeight / 4, 1.f));
+	pUICrossHair->Transform()->SetLocalScale(vScale);
+
+	pUICrossHair->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pCrossHairMtrl = new CMaterial;
+	pCrossHairMtrl->DisableFileSave();
+	pCrossHairMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pUICrossHair->MeshRender()->SetMaterial(pCrossHairMtrl);
+	pUICrossHair->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
+	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"BaseLine");
+	pUICrossHair->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pCrossHairTex.GetPointer());
+
+	pUICrossHair->GetScript<CCrossHairScript>()->SetMainCam(pMainCam);
+	pUICrossHair->GetScript<CCrossHairScript>()->Init();
+
+	FindLayer(L"UI")->AddGameObject(pUICrossHair);
+
+
 
 
 	Ptr<CMaterial> m_pMtrl = new CMaterial;
@@ -1405,9 +1453,9 @@ void CInGameScene::Init()
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 	
-	cout << "Init ----!!" << endl;
-	Awake();
-	Start();
-	cout << "DONE" << endl;
+	//cout << "Init ----!!" << endl;
+	//Awake();
+	//Start();
+	//cout << "DONE" << endl;
 
 }

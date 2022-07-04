@@ -37,9 +37,11 @@ private:
 	float m_fBlendMaxFrame;
 
 	CAnimation* m_pAnimation;
+	float m_fDegree;
 
 public:
 
+	float GetBoneDegree() { return m_fDegree; }
 	void SetAnimation(CAnimation* _pAni) { m_pAnimation = _pAni; }
 	CAnimation* GetAnimation() { return m_pAnimation; }
 

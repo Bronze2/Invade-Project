@@ -322,6 +322,9 @@
     <ClInclude Include="ParticleScript.h">
       <Filter>Skill</Filter>
     </ClInclude>
+    <ClInclude Include="CrossHairScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -546,6 +549,9 @@
     </ClCompile>
     <ClCompile Include="ParticleScript.cpp">
       <Filter>Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossHairScript.cpp">
+      <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

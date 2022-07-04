@@ -91,6 +91,8 @@ public:
 
     void SetBow(CGameObject* _Obj) { m_pBow = _Obj; }
 
+    void EnterSkill(Vec3 vPos);
+
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 
     //½ºÅ³
