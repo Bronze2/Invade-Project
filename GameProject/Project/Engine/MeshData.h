@@ -16,7 +16,7 @@ public:
     static CMeshData* LoadFromFBX(const wstring& _strFilePath);
     virtual void Load(const wstring& _strFilePath);
     virtual void Save(const wstring& _strFilePath);
-
+    Ptr<CMesh> GetMesh() { return m_pMesh; }
     CGameObject* Instantiate();
 
     CMeshData();

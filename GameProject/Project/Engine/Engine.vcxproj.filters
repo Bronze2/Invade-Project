@@ -325,6 +325,9 @@
     <ClInclude Include="CrossHairScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -551,6 +554,9 @@
       <Filter>Skill</Filter>
     </ClCompile>
     <ClCompile Include="CrossHairScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>

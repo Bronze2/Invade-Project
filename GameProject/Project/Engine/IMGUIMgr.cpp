@@ -523,8 +523,7 @@ void CIMGUIMgr::Progress()
         ImGui::End();
 
     }
-    else {
-    cout << " iMGUI ERROR" << endl;
+    else if (SCENE_TYPE::LOBBY == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
     }
 
     CMDLIST->SetDescriptorHeaps(1, &m_pHeap);

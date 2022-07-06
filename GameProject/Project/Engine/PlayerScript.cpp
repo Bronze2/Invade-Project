@@ -403,204 +403,205 @@ void CPlayerScript::Update()
 
 // Z-up To Y-up
 	AttachHelmet();
-	SkillCoolTimeCheck();
 	
-	
-	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
-	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-	Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
-	Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
+		SkillCoolTimeCheck();
+		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+		Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
+		Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
 
-	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
-	CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-	CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
-	CGameObject* pBow = GetObj()->GetChild()[0];
+		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+		CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
+		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+		CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+		CGameObject* pBow = GetObj()->GetChild()[0];
 
-	Vec3 vPos = Transform()->GetLocalPos();
-	Vec3 vPos2 = Transform()->GetLocalPos();
-	Vec3 vPos3 = Transform()->GetWorldPos();
-	Vec3 vRot = Transform()->GetLocalRot();
-	Vec3 vRestoreRot;
-	int rotydegree = XMConvertToDegrees(vRot.y);
-	int reminder = rotydegree % 360 + 90;
-	Update_LerpPos();
+		Vec3 vPos = Transform()->GetLocalPos();
+		Vec3 vPos2 = Transform()->GetLocalPos();
+		Vec3 vPos3 = Transform()->GetWorldPos();
+		Vec3 vRot = Transform()->GetLocalRot();
+		Vec3 vRestoreRot;
+		int rotydegree = XMConvertToDegrees(vRot.y);
+		int reminder = rotydegree % 360 + 90;
+		Update_LerpPos();
 
-	if (isMain) {
-		if (0 <= reminder && reminder <= 180) {
-			m_bCheckDegree = true;
-		}
-		else {
-			m_bCheckDegree = false;
-		}
-		if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
-			int a = 0;
-		}
-
-		if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-			m_fFactor = 0.f;
-			m_fTurnDegree = 0.f;
-			m_bTurn = true;
-
-			m_vRestoreRot = vRot;
-
-		}
-		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D))) {
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-			Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
-		}
-
-		if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-
-			
-			m_eState = PLAYER_STATE::IDLE;
-			m_fTurnDegree = 0.f;
-			m_fFactor = 0.f;
-			m_bTurn = true;
-			m_vRestoreRot = vRot;
-
-		}
-
-		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-			m_eState = PLAYER_STATE::WALK;
-			if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
-			{
-				m_eState = PLAYER_STATE::RUN;
-			}
-
-
-			Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-
-			// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
-			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-
-			m_fCurDegree = 0.f;
-			m_iKeyHoldCnt = 0;
-
-			if (KEY_HOLD(KEY_TYPE::KEY_W)) {
-				m_fCurDegree += 0.f;
-				m_iKeyHoldCnt++;
-			}
-			if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-				m_fCurDegree += 180.f;
-				m_iKeyHoldCnt++;
-			}
-			if (KEY_HOLD(KEY_TYPE::KEY_A)) {
-				if (KEY_HOLD(KEY_TYPE::KEY_S)) {
-					m_fCurDegree += 270.f;
-				}
-				else {
-					m_fCurDegree -= 90.f;
-				}
-				m_iKeyHoldCnt++;
-			}
-			if (KEY_HOLD(KEY_TYPE::KEY_D)) {
-				m_fCurDegree += 90.f;
-				m_iKeyHoldCnt++;
-			}
-
-			m_fCurDegree /= (float)m_iKeyHoldCnt;
-
-			if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
-				m_fCurDegree = 0.f;
-			}
-
-			m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
-
-			float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
-			if (fRotDegree > 360.f) {
-				fRotDegree -= 360.f;
-			}
-
-			// 180도 이상 회전하는 경우 없도록
-			if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
-				if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
-					m_fTurnDegree -= 360.f;
-				}
-				else {
-					m_fTurnDegree += 360.f;
-				}
-			}
-			// 0 -> 270보다는 0 -> -90되는게 이쁘니까
-			vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
-			if (m_fFactor < 1.f) {
-				// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
-				m_fFactor += 10.f * DT;
-			}
-			else{
-				m_fFactor = 1.f;
-				if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
-					m_bTurn = true;
-				}
-				else {
-					m_bTurn = false;
-				}
-			}
-
-
-			if (!m_bTurn && CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
-				Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				restorePos = Transform()->GetLocalPos();
-				Network::GetInst()->send_rotation_packet(vRot);
-				Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
-				//m_bColCheck = false;
-			}
-
-		}
-
-
-		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
-		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-
-		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-			// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
-			vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);   // 5.f 더 회전시킬건지?
-
-			if (fCamRotDegree <= -3.f) {
-				m_eState = PLAYER_STATE::ATTACK_READY_HIGH;
-				Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH);
+		if (isMain) {
+			if (0 <= reminder && reminder <= 180) {
+				m_bCheckDegree = true;
 			}
 			else {
-				m_eState = PLAYER_STATE::ATTACK_READY;
-				Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY);
+				m_bCheckDegree = false;
 			}
-			Network::GetInst()->send_rotation_packet(vRot);
+			if (KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_A)) {
+				int a = 0;
+			}
 
+			if ((KEY_TAB(KEY_TYPE::KEY_W) || KEY_TAB(KEY_TYPE::KEY_S) || KEY_TAB(KEY_TYPE::KEY_A) || KEY_TAB(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+				m_fFactor = 0.f;
+				m_fTurnDegree = 0.f;
+				m_bTurn = true;
+
+				m_vRestoreRot = vRot;
+
+			}
+			if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D))) {
+				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+				Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
+			}
+
+			if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+
+
+				m_eState = PLAYER_STATE::IDLE;
+				m_fTurnDegree = 0.f;
+				m_fFactor = 0.f;
+				m_bTurn = true;
+				m_vRestoreRot = vRot;
+
+			}
+
+			if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+				m_eState = PLAYER_STATE::WALK;
+				if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
+				{
+					m_eState = PLAYER_STATE::RUN;
+				}
+
+
+				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+				// m_fRotateDegree = 현재 정상적으로 플레이어가 있어야 할 회전값 (W기준 여기로 가야 함)
+				m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+
+				m_fCurDegree = 0.f;
+				m_iKeyHoldCnt = 0;
+
+				if (KEY_HOLD(KEY_TYPE::KEY_W)) {
+					m_fCurDegree += 0.f;
+					m_iKeyHoldCnt++;
+				}
+				if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+					m_fCurDegree += 180.f;
+					m_iKeyHoldCnt++;
+				}
+				if (KEY_HOLD(KEY_TYPE::KEY_A)) {
+					if (KEY_HOLD(KEY_TYPE::KEY_S)) {
+						m_fCurDegree += 270.f;
+					}
+					else {
+						m_fCurDegree -= 90.f;
+					}
+					m_iKeyHoldCnt++;
+				}
+				if (KEY_HOLD(KEY_TYPE::KEY_D)) {
+					m_fCurDegree += 90.f;
+					m_iKeyHoldCnt++;
+				}
+
+				m_fCurDegree /= (float)m_iKeyHoldCnt;
+
+				if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+					m_fCurDegree = 0.f;
+				}
+
+				m_fTurnDegree = m_fRotateDegree + m_fCurDegree;
+
+				float fRotDegree = XMConvertToDegrees(m_vRestoreRot.y);
+				if (fRotDegree > 360.f) {
+					fRotDegree -= 360.f;
+				}
+
+				// 180도 이상 회전하는 경우 없도록
+				if (abs(fRotDegree - m_fTurnDegree) > 180.f) {
+					if (abs(fRotDegree - ((m_fTurnDegree + 360.f) - fRotDegree)) > abs(fRotDegree - ((m_fTurnDegree - 360.f) - fRotDegree))) {
+						m_fTurnDegree -= 360.f;
+					}
+					else {
+						m_fTurnDegree += 360.f;
+					}
+				}
+				// 0 -> 270보다는 0 -> -90되는게 이쁘니까
+				vRot.y = XMConvertToRadians(fRotDegree * (1.f - m_fFactor) + m_fTurnDegree * m_fFactor);
+				if (m_fFactor < 1.f) {
+					// 회전 속도 빠르게 할 때 m_fFactor 빠르게 해주면 됨
+					m_fFactor += 10.f * DT;
+				}
+				else {
+					m_fFactor = 1.f;
+					if ((KEY_HOLD(KEY_TYPE::KEY_W) && KEY_HOLD(KEY_TYPE::KEY_S)) || (KEY_HOLD(KEY_TYPE::KEY_A) && KEY_HOLD(KEY_TYPE::KEY_D))) {
+						m_bTurn = true;
+					}
+					else {
+						m_bTurn = false;
+					}
+				}
+
+
+				if (!m_bTurn && CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
+					Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+					restorePos = Transform()->GetLocalPos();
+					Network::GetInst()->send_rotation_packet(vRot);
+					Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+					//m_bColCheck = false;
+				}
+
+			}
+
+
+			Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
+			float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
+
+			if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+				m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+				// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
+				vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);   // 5.f 더 회전시킬건지?
+
+				if (fCamRotDegree <= -3.f) {
+					m_eState = PLAYER_STATE::ATTACK_READY_HIGH;
+					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH);
+				}
+				else {
+					m_eState = PLAYER_STATE::ATTACK_READY;
+					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY);
+				}
+				Network::GetInst()->send_rotation_packet(vRot);
+
+			}
+
+
+			//if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
+			//	m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
+			//	// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
+			//	vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f 더 회전시킬건지?
+			//	m_eState = PLAYER_STATE::ATTACK_READY;
+			//	Network::GetInst()->send_attack_ready_packet(m_GetId(),(int)PLAYER_STATE::ATTACK_READY);
+			//	Network::GetInst()->send_rotation_packet(vRot);
+
+			//}
+
+			if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+				m_eState = PLAYER_STATE::ATTACK;
+
+			}
+
+
+			if (KEY_TAB(KEY_TYPE::KEY_NUM4))
+			{
+				m_eState = PLAYER_STATE::JUMP;
+			}
+
+			if (KEY_TAB(KEY_TYPE::KEY_NUM5))
+			{
+				m_eState = PLAYER_STATE::DIE;
+			}
+			Transform()->SetLocalRot(vRot);
+			UseSkill();
+			StatusCheck();
+			GetDamage();
 		}
-
-
-		//if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		//	m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
-		//	// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
-		//	vRot.y = XMConvertToRadians(m_fRotateDegree);	// 5.f 더 회전시킬건지?
-		//	m_eState = PLAYER_STATE::ATTACK_READY;
-		//	Network::GetInst()->send_attack_ready_packet(m_GetId(),(int)PLAYER_STATE::ATTACK_READY);
-		//	Network::GetInst()->send_rotation_packet(vRot);
-
-		//}
-
-		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-			m_eState = PLAYER_STATE::ATTACK;
-
-		}
-
-
-		if (KEY_TAB(KEY_TYPE::KEY_NUM4))
-		{
-			m_eState = PLAYER_STATE::JUMP;
-		}
-
-		if (KEY_TAB(KEY_TYPE::KEY_NUM5))
-		{
-			m_eState = PLAYER_STATE::DIE;
-		}
-		Transform()->SetLocalRot(vRot);
-		UseSkill();
-		StatusCheck();
-		GetDamage();
+		Update_LerpPos();
 	}
-	Update_LerpPos();
 	m_FAnimation();
 }
 
@@ -1038,6 +1039,35 @@ void CPlayerScript::AttachHelmet()
 		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
 		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f));
 		m_pHelmetObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
+	}
+	else if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::LOBBY) {
+		// 로비씬
+
+		tMTBone* pHeadBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(7));
+		tMTBone* pChestBone = const_cast<tMTBone*>(GetObj()->MeshRender()->GetMesh()->GetBone(6));
+
+		Vec3 vChestTrans1 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+		Vec3 vChestTrans2 = pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+		Vec3 vTrans1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
+		Vec3 vTrans2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
+		Vec4 qRot1 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].qRot;
+		Vec4 qRot2 = pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
+
+		float fFactor = GetObj()->Animator3D()->GetRatio();
+
+		Vec3 vHeadTrans = Vec3::Lerp(vTrans1, vTrans2, fFactor);
+		Vec3 vChestTrans = Vec3::Lerp(vChestTrans1, vChestTrans2, fFactor);
+		Vec3 vTransDir = vHeadTrans - vChestTrans;
+		vTransDir.Normalize();
+		Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
+		vRotDir.Normalize();
+		Vec3 vTrans = vHeadTrans; // +vTransDir * 30.f;
+		Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
+
+		m_pHelmetObject->Transform()->SetLocalPos(vTrans);
+		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
+		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
+
 	}
 
 }

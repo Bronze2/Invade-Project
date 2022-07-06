@@ -1432,7 +1432,6 @@ void CInGameScene::Init()
 
 
 
-
 	Ptr<CMaterial> m_pMtrl = new CMaterial;
 	m_pMtrl->SetName(L"Texture00");
 	m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));

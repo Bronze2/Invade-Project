@@ -144,6 +144,23 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle", L"Texture\\MagicCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle2", L"Texture\\MagicCircle2.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
+
+
+	//Lobby
+	CResMgr::GetInst()->Load<CTexture>(L"UIButtonGameStart", L"Texture\\UIButtonGameStart.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIReadyBar", L"Texture\\UIReadyBar.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIReadyPressed", L"Texture\\UIReadyPressed.png");
+
+	CResMgr::GetInst()->Load<CTexture>(L"PlayerBlue", L"Texture\\ArchersTextureBlue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PlayerRed", L"Texture\\ArchersTextureRed.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\property_water.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyDark", L"Texture\\property_dark.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyWind", L"Texture\\property_wind.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\property_thunder.png");
+	CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\property_fire.png");
+	//
+
+
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pNormal = CResMgr::GetInst()->Load<CTexture>(L"Tile_n", L"Texture\\Tile\\TILE_03_N.tga");
 
@@ -296,17 +313,23 @@ void CSceneMgr::Init()
 
 
 
-	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
-	m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
+	//m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
+	//m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
+
+
+	m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new  CLobbyScene;
+	m_arrScene[(UINT)SCENE_TYPE::LOBBY]->SetName(L"LobbyScene");
+
 
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 
 
-	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOGIN];
-	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
+	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOBBY];
+	m_pCurScene->SetType(SCENE_TYPE::LOBBY);
 	m_pCurScene->Init();
-
+	m_pCurScene->Awake();
+	m_pCurScene->Start();
 	cout << "Done init" << endl;
 
 

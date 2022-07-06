@@ -3,8 +3,8 @@
 class CLobbyScene :
     public CScene
 {
-public :
+public:
     virtual void Init();
-    virtual void Update();
+    virtual void Exit();
 };
 

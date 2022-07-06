@@ -73,6 +73,7 @@ private:
     CAMP_STATE m_eCamp;
     Vec3 restorePos;
     CGameObject* m_pBowObject;
+    bool m_bReady;
 public:
 
     void AttachHelmet();
@@ -110,6 +111,7 @@ public:
     virtual void OnDetection(CGameObject* _pOther);
     virtual void OnDetectionExit(CGameObject* _pOther);
 
+
     void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
 
     void SkillCoolTimeCheck();
@@ -122,6 +124,12 @@ public:
     SKILL* GetSkill_E() { return m_tESkill; }
     SKILL* GetSkill_Z() { return m_tZSkill; }
     SKILL* GetCurrentSkill() { return m_currentSkill; }
+
+    //Lobby
+    void SetReady(bool _bTrue) { m_bReady = _bTrue; }
+    bool GetReady() { return m_bReady; }
+    void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
+    PLAYER_STATE GetAnimaionState() { return m_eState; }
 
 
     CLONE(CPlayerScript);
