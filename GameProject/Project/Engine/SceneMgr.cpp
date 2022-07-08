@@ -313,20 +313,20 @@ void CSceneMgr::Init()
 
 
 
-	//m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
-	//m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
+	m_arrScene[(UINT)SCENE_TYPE::LOGIN] = new  CLoginScene;
+	m_arrScene[(UINT)SCENE_TYPE::LOGIN]->SetName(L"LoginScene");
 
 
-	m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new  CLobbyScene;
-	m_arrScene[(UINT)SCENE_TYPE::LOBBY]->SetName(L"LobbyScene");
+//	m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new  CLobbyScene;
+//	m_arrScene[(UINT)SCENE_TYPE::LOBBY]->SetName(L"LobbyScene");
 
 
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 
 
-	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOBBY];
-	m_pCurScene->SetType(SCENE_TYPE::LOBBY);
+	m_pCurScene = m_arrScene[(UINT)SCENE_TYPE::LOGIN];
+	m_pCurScene->SetType(SCENE_TYPE::LOGIN);
 	m_pCurScene->Init();
 	m_pCurScene->Awake();
 	m_pCurScene->Start();

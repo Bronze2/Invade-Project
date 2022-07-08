@@ -299,11 +299,11 @@ void CThread::process_packet(int user_id, char* buf)
 		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
 		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::RED;
 
+		
 		//SHARED_DATA::g_clients[user_id].m_camp
 		//Room에 들어온 클라이언트들을 서로 알려주기.
-
-
 		//방금 들어온놈이 들어와있는놈들 확인
+
 		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
 			if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
 			else

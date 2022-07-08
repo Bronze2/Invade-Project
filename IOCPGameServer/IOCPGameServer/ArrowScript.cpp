@@ -99,11 +99,20 @@ void CArrowScript::Update()
 
 		//Vec3 vDir = Transform()->GetLocalDir(DIR_TYPE::RIGHT);
 	
+
+		// m_fSpeed -> X¿«»˚¿Ã∞Ì
+		// m_fXSpeed + m_fYspeed = 500;
+
 		vPos += m_vDir * m_fSpeed * DT;
+	
+		// y  m_fYspeed 
 		m_fVelocityY -= (GRAVITY * DT);
 		m_fFallSpeed += m_fVelocityY ;
 		vPos.y += m_fFallSpeed * 7*  DT;
-
+		
+		//			(V * cos(rad_zy * Pi / 180) * cos(rad_zx * Pi / 180))
+		//			V* sin(rad_zy * Pi / 180)
+		
 		m_vDeltaPos = vPos - m_vRestorePos;
 		float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
 		//vRot.y += fAngle;

@@ -388,6 +388,8 @@ void CIMGUIMgr::Progress()
                                 if (Network::GetInst()->roomInfo[i].roomMaxUser > Network::GetInst()->roomInfo[i].roomCurrentUser) {
                                     Network::GetInst()->send_enter_room_packet(Network::GetInst()->roomInfo[i].room_id);
                                     cout << " Room Enter " << endl;
+                                    //CSceneMgr::GetInst()->GetCurScene()->
+                                    CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::LOBBY);
                                 }
                             }
                             ImGui::PopStyleVar();
@@ -440,6 +442,8 @@ void CIMGUIMgr::Progress()
                                 if (ImGui::Button("Create", ImVec2(260.f, 30.f)))
                                 {
                                     Network::GetInst()->send_make_room_packet(MATCH_TYPE::TWO);
+                                    CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::LOBBY);
+
                                     cout << "Make room Send" << endl;
                                     m_MakeRoomOpen = false;
 
