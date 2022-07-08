@@ -46,8 +46,8 @@ void CBowScript::Update()
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		m_fArrowSpeed += 2000.f * DT;
-		if (m_fArrowSpeed > 700.f) {
-			m_fArrowSpeed = 700.f;
+		if (m_fArrowSpeed > 1000.f) {
+			m_fArrowSpeed = 1000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
 	}
@@ -63,14 +63,21 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
-		Vec3 vBowRot = GetObj()->GetParent()->Transform()->GetLocalRot();
-		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
-		Vec3 vArrowRot = Vec3(vBowRot.x, XMConvertToRadians(XMConvertToDegrees(vBowRot.y) + 80.f), vBowRot.z);
+		cout << vTargetDir.x << ", " << vTargetDir.y << ", " << vTargetDir.z << endl;
+
+		Vec3 vPlayerRot = GetObj()->GetParent()->Transform()->GetLocalRot();
+		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
+		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
+		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
+		Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
+		//Vec4 qArrowQtrn = GetObj()->GetParent
 
 		m_pArrow[m_iCurArrow]->ClearParent();
 
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartPos(vArrowPos);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartAngle(fCamRotDegree);
 
 		m_iCurArrow++;
 		m_iPower = 1;
@@ -197,7 +204,7 @@ void CBowScript::Awake()
 
 		m_pArrow[i]->AddComponent(new CTransform());
 		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-		m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
+		m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), 0.f));
 		m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));
 
 		m_pArrow[i]->AddComponent(new CMeshRender);

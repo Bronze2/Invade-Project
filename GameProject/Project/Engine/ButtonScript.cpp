@@ -24,12 +24,12 @@ void CButtonScript::Awake()
 
 	m_pReadyNonePressedMtrl = new CMaterial;
 	m_pReadyNonePressedMtrl->DisableFileSave();
-	m_pReadyNonePressedMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	m_pReadyNonePressedMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	m_pReadyNonePressedTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
 
 	m_pReadyPressedMtrl = new CMaterial;
 	m_pReadyPressedMtrl->DisableFileSave();
-	m_pReadyPressedMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	m_pReadyPressedMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	m_pReadyPressedTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyPressed");
 }
 
@@ -133,7 +133,7 @@ void CButtonScript::ConvertPos()
 	// |	4--->				¸¶¿ì½º Ä¿¼­ ÁÂÇ¥°è ¿øÁ¡ 0 
 	// v      					UI ÁÂÇ¥°è ¿øÁ¡ 4 (È­¸é Áß¾Ó)
 
-	GetCursorPos(&m_ptCursorPos);
+	m_ptCursorPos = CKeyMgr::GetInst()->GetMousePos();
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &m_ptCursorPos);
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
 
@@ -148,14 +148,6 @@ void CButtonScript::ConvertPos()
 	m_rcImg.right = m_vPos.x + m_vScale.x / 2;
 	m_rcImg.top = m_vPos.y + m_vScale.y / 2;
 	m_rcImg.bottom = m_vPos.y - m_vScale.y / 2;
-}
-
-void CButtonScript::SaveToScene(FILE* _pFile)
-{
-}
-
-void CButtonScript::LoadFromScene(FILE* _pFile)
-{
 }
 
 CButtonScript::CButtonScript() : CScript(0), m_bIsPressed(false)

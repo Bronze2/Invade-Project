@@ -269,7 +269,6 @@ call EngineCopy.bat</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="UIBarScript.h" />
     <ClInclude Include="WaterSkill0Script.h" />
     <ClInclude Include="WaterSkill1Script.h" />
     <ClInclude Include="WindSkill0Script.h" />
@@ -372,7 +371,6 @@ call EngineCopy.bat</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="UIBarScript.cpp" />
     <ClCompile Include="WaterSkill0Script.cpp" />
     <ClCompile Include="WaterSkill1Script.cpp" />
     <ClCompile Include="WindSkill0Script.cpp" />

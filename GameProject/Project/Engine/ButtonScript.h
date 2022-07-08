@@ -26,9 +26,6 @@ public:
 	virtual void Awake();
 	virtual void Update();
 
-	virtual void SaveToScene(FILE* _pFile);
-	virtual void LoadFromScene(FILE* _pFile);
-
 	void ConvertPos();
 	void StatusCheck();
 	void Execute();

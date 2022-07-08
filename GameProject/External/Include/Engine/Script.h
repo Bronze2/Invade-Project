@@ -38,7 +38,7 @@ enum class SCRIPT_TYPE {
     CROSSHAIRSCRIPT,
     PARTICLE,
     BUTTON,
-    UIBAR,
+    TRAIL,
     END,
 };
 

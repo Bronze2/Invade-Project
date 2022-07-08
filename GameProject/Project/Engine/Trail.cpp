@@ -31,15 +31,7 @@ void CTrail::Init(Ptr<CTexture> _pTexture)
 	m_pMtrl->SetData(SHADER_PARAM::TEX_0, pParticle.GetPointer());
 }
 
-void CTrail::SaveToScene(FILE* _pFile)
-{
-}
-
-void CTrail::LoadFromScene(FILE* _pFile)
-{
-}
-
-CTrail::CTrail() : CComponent(COMPONENT_TYPE::TRAIL)
+CTrail::CTrail() : CScript(0)
 	, m_pTrailBuffer(nullptr)
 	, m_fFrequency(0.f)
 	, m_fStartScale(1.f)

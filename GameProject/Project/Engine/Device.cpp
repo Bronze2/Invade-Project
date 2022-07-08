@@ -358,7 +358,7 @@ void CDevice::CreateSwapChain()
 	tDesc.Flags = 0; // DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
 
 	tDesc.OutputWindow = m_hWnd;	// 출력 윈도우
-	tDesc.Windowed = !m_bWindowed;   // 창 모드 or 전체화면 모드
+	tDesc.Windowed = m_bWindowed;   // 창 모드 or 전체화면 모드
 	tDesc.SampleDesc.Count = 1;		// 멀티 샘플 사용 안함
 	tDesc.SampleDesc.Quality = 0;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_FLIP_DISCARD; // 전면 후면 버퍼 교체 시 이전 프레임 정보 버림

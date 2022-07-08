@@ -1,12 +1,12 @@
 #pragma once
-#include "Component.h"
+#include "Script.h"
 #include "Ptr.h"
 #include "Material.h"
 #include "Mesh.h"
 
 class CStructuredBuffer;
 class CTrail
-	: public CComponent
+	: public CScript
 {
 private:
 	CStructuredBuffer*		m_pTrailBuffer;			// 트레일 데이터 저장 버퍼
@@ -28,13 +28,12 @@ public:
 	void SetStartScale(float _fStartScale) { m_fStartScale = _fStartScale; }
 	void SetEndScale(float _fEndScale) { m_fEndScale = _fEndScale; }
 
-	virtual void SaveToScene(FILE* _pFile);
-	virtual void LoadFromScene(FILE* _pFile);
 	//void Init(Ptr<CTexture> _pTexture, const wstring& _MtrlName = L"ParticleUpdateMtrl");
 
 public:
 	CTrail();
 	virtual ~CTrail();
-	CLONE(CTrail);
+
+//	CLONE(CTrail);
 };
 

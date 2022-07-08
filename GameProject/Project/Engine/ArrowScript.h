@@ -41,6 +41,9 @@ private:
     Vec3 m_vTargetDir;
     Vec3 m_vDeltaPos;
 
+    // 화살 다시
+    float m_fStartAngle;
+
     CGameObject* m_pBow;
 
     UINT m_iLayerIdx;
@@ -66,6 +69,8 @@ public:
     void SetVelocityY(float _fVelocityY) { m_fVelocityY = _fVelocityY; }
     void SetVelocityX() { m_fVelocityX = m_vDir.x * m_fSpeed  * DT; }
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
+    // 화살 다시
+    void SetStartAngle(float _Angle) { m_fStartAngle = _Angle; }
     void SkillCheck();
     void SetType(const UINT& _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }

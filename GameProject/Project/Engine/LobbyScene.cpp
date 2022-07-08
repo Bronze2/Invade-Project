@@ -10,14 +10,13 @@
 #include "KeyMgr.h"
 #include "MeshRender.h"
 #include "CameraScript.h"
-#include "StaticUI.h"
 #include "CollisionMgr.h"
 #include "ButtonScript.h"
 #include "PlayerScript.h"
 #include "Animation3D.h"
 #include "Animator3D.h"
-#include "UIBarScript.h"
 #include "Light3D.h"
+#include "CrossHairScript.h"
 
 void CLobbyScene::Init()
 {
@@ -238,7 +237,7 @@ void CLobbyScene::Init()
 		pReadyBarObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pUIReadyBarMtrl = new CMaterial;
 		pUIReadyBarMtrl->DisableFileSave();
-		pUIReadyBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+		pUIReadyBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 		pReadyBarObj->MeshRender()->SetMaterial(pUIReadyBarMtrl);
 		Ptr<CTexture> pUIReadyBarTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
 		pReadyBarObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyBarTex.GetPointer());
@@ -262,7 +261,6 @@ void CLobbyScene::Init()
 	pUIButtonStart->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 	pUIButtonStart->AddComponent(new CTransform);
 	pUIButtonStart->AddComponent(new CMeshRender);
-	pUIButtonStart->AddComponent(new CStaticUI);
 	pUIButtonStart->AddComponent(new CButtonScript);
 
 	Vec3 vUIButtonStartScale = Vec3(res.fWidth/13, res.fHeight/14, 1.f);
@@ -272,7 +270,7 @@ void CLobbyScene::Init()
 	pUIButtonStart->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pUIButtonStartMtrl = new CMaterial;
 	pUIButtonStartMtrl->DisableFileSave();
-	pUIButtonStartMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pUIButtonStartMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	pUIButtonStart->MeshRender()->SetMaterial(pUIButtonStartMtrl);
 	Ptr<CTexture> pUIButtonGameStart = CResMgr::GetInst()->FindRes<CTexture>(L"UIButtonGameStart");
 	pUIButtonStart->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonGameStart.GetPointer());
@@ -291,7 +289,6 @@ void CLobbyScene::Init()
 	pUIButtonReady->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 	pUIButtonReady->AddComponent(new CTransform);
 	pUIButtonReady->AddComponent(new CMeshRender);
-	pUIButtonReady->AddComponent(new CStaticUI);
 	pUIButtonReady->AddComponent(new CButtonScript);
 
 	pUIButtonReady->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2 + vUIButtonStartScale.y, 1.f));
@@ -300,7 +297,7 @@ void CLobbyScene::Init()
 	pUIButtonReady->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pUIButtonReadyMtrl = new CMaterial;
 	pUIButtonReadyMtrl->DisableFileSave();
-	pUIButtonReadyMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pUIButtonReadyMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	pUIButtonReady->MeshRender()->SetMaterial(pUIButtonReadyMtrl);
 	Ptr<CTexture> pUIButtonReadyTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
 	pUIButtonReady->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonReadyTex.GetPointer());
@@ -326,7 +323,6 @@ void CLobbyScene::Init()
 		pUIButtonProperty->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		pUIButtonProperty->AddComponent(new CTransform);
 		pUIButtonProperty->AddComponent(new CMeshRender);
-		pUIButtonProperty->AddComponent(new CStaticUI);
 		pUIButtonProperty->AddComponent(new CButtonScript);
 
 		pUIButtonProperty->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIProPertyButtonScale.x / 2 - vUIProPertyButtonScale.x * i, res.fHeight / 2 - vUIProPertyButtonScale.y / 2, 1.f));
@@ -335,7 +331,7 @@ void CLobbyScene::Init()
 		pUIButtonProperty->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pUIButtonStartMtrl = new CMaterial;
 		pUIButtonStartMtrl->DisableFileSave();
-		pUIButtonStartMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+		pUIButtonStartMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 		pUIButtonProperty->MeshRender()->SetMaterial(pUIButtonStartMtrl);
 
 		switch (i) {
@@ -385,6 +381,7 @@ void CLobbyScene::Init()
 	pSkyBox->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pSky01.GetPointer());
 
 	FindLayer(L"Default")->AddGameObject(pSkyBox);
+
 }
 
 void CLobbyScene::Exit()

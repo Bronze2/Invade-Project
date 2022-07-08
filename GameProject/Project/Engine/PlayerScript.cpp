@@ -69,19 +69,6 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::RUN:
-		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
-				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
-				GetObj()->Animator3D()->SetBlendState(true);
-				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
-				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
-				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-				m_ePrevState = PLAYER_STATE::RUN;
-			}
-		}
-		break;
 		case PLAYER_STATE::ATTACK_READY:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
@@ -110,16 +97,72 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::ATTACK_READY_HIGH:
+		case PLAYER_STATE::ATTACK_READY_HIGH_1:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH")) {
-				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH");
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_1")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_1");
 				GetObj()->Animator3D()->SetBlendState(true);
-				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH_1);
 				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH, 0.f);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH_1, 0.f);
 				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH;
+				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH_1;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_2:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_2")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_2");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH_2);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH_2, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH_2;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_3:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_3")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_3");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH_3);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH_3, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH_3;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_4:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_4")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_4");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH_4);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH_4, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH_4;
+				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_5:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_5")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_5");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH_5);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH_5, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH_5;
 				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
 			}
 		}
@@ -150,7 +193,19 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
+				GetObj()->Animator3D()->SetBlendState(true);
+				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
+				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
+				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
+				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
+				m_ePrevState = PLAYER_STATE::RUN;
+			}
+		}
+		break;
 		default:
 			break;
 		}
@@ -171,7 +226,7 @@ void CPlayerScript::m_FAnimation()
 						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 					}
 				}
-				
+
 			}
 		}
 		break;
@@ -188,7 +243,7 @@ void CPlayerScript::m_FAnimation()
 						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
 					}
 				}
-				
+
 			}
 		}
 		break;
@@ -206,31 +261,12 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
-		case PLAYER_STATE::RUN:
-		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
-
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::RUN);
-						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
-						GetObj()->Animator3D()->SetCurTime(0.f);
-						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-					}
-				}
-
-			}
-		}
-		break;
 		case PLAYER_STATE::ATTACK_READY:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
-					}
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
 				}
 			}
 		}
@@ -238,24 +274,60 @@ void CPlayerScript::m_FAnimation()
 		case PLAYER_STATE::ATTACK:
 		{
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-						m_eState = PLAYER_STATE::IDLE;
-						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
-					}
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					m_eState = PLAYER_STATE::IDLE;
+					GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
 				}
 			}
 		}
 		break;
-		case PLAYER_STATE::ATTACK_READY_HIGH:
+		case PLAYER_STATE::ATTACK_READY_HIGH_1:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH");
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
-					}
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_1")) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_1");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_2:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_2")) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_2");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_3:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_3")) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_3");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_4:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_4")) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_4");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+				}
+			}
+		}
+		break;
+		case PLAYER_STATE::ATTACK_READY_HIGH_5:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_5")) {
+				m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH_5");
+				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
+					GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
 				}
 			}
 		}
@@ -285,7 +357,23 @@ void CPlayerScript::m_FAnimation()
 			}
 		}
 		break;
+		case PLAYER_STATE::RUN:
+		{
+			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
+				if (!GetObj()->Animator3D()->GetBlendState()) {
+					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
 
+					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::RUN);
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+						GetObj()->Animator3D()->SetCurTime(0.f);
+						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+					}
+				}
+
+			}
+		}
+		break;
 		default:
 			break;
 		}
@@ -379,7 +467,7 @@ void CPlayerScript::Awake()
 		m_pDarkUI->SetActive(false);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
 
-		m_fMoveSpeed = 300.f;
+		m_fMoveSpeed = 500.f;
 	}
 
 	// 헬멧 플레이어 고개 까딱
@@ -567,20 +655,38 @@ void CPlayerScript::Update()
 			m_FColCheck(vPos3, vPos);
 		}
 
+
+		// 화살 발사
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-
+	
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 			// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
 			vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
 
-			if (fCamRotDegree <= -3.f) {
-				m_eState = PLAYER_STATE::ATTACK_READY_HIGH;
+			// 화살 위아래 애니메이션
+			if (fCamRotDegree <= -3.f ){
+				m_eState = PLAYER_STATE::ATTACK_READY_HIGH_5;
+			}
+			else if (fCamRotDegree <= -1.f) {
+				m_eState = PLAYER_STATE::ATTACK_READY_HIGH_4;
+			}
+			else if (fCamRotDegree <= 1.f) {
+				m_eState = PLAYER_STATE::ATTACK_READY_HIGH_3;
+			}
+			else if (fCamRotDegree <= 3.f) {
+				m_eState = PLAYER_STATE::ATTACK_READY_HIGH_2;
+			}
+			else if (fCamRotDegree <= 5.f) {
+				m_eState = PLAYER_STATE::ATTACK_READY_HIGH_1;
 			}
 			else {
 				m_eState = PLAYER_STATE::ATTACK_READY;
 			}
+
+			cout << fCamRotDegree << endl;
+
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {

@@ -73,7 +73,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	DesireAxis.ConvertScene(m_pScene);
 	originAxis = m_pScene->GetGlobalSettings().GetAxisSystem();*/
 
-	m_pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::Max);
+	m_pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::DirectX);
 
 	// Bone 정보 읽기
 	LoadSkeleton(m_pScene->GetRootNode());
@@ -86,7 +86,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 
 	// 삼각화(Triangulate)
 	Triangulate(m_pScene->GetRootNode());
-
+	
 	// 메쉬 데이터 얻기
 	LoadMeshDataFromNode(m_pScene->GetRootNode());
 
@@ -101,6 +101,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 
 void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 {
+
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
 
@@ -153,11 +154,6 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 	// 폴리곤 개수
 	int iPolyCnt = _pFbxMesh->GetPolygonCount();
 
-	// 폴리곤을 구성하는 정점 개수
-	//int iPolySize = _pFbxMesh->GetPolygonSize(0);
-	//if (3 != iPolySize)
-	//	assert(NULL); // Polygon 구성 정점이 3개가 아닌 경우
-
 	// 재질의 개수 ( ==> SubSet 개수 ==> Index Buffer Count)
 	int iMtrlCnt = _pFbxMesh->GetNode()->GetMaterialCount();
 	Container.vecIdx.resize(iMtrlCnt);
@@ -178,22 +174,23 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		for (int j = 0; j < iPolySize; ++j)
 		{
 			// i 번째 폴리곤에, j 번째 정점
-			int iIdx = _pFbxMesh->GetPolygonVertex(i, j);
-			arrIdx[j] = iIdx;
+			int iControlPointIdx = _pFbxMesh->GetPolygonVertex(i, j);
+			arrIdx[j] = iControlPointIdx;
 
-			GetTangent(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetNormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
-
-			GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j));
+			GetTangent(_pFbxMesh, &Container, iControlPointIdx, iVtxOrder);
+			GetBinormal(_pFbxMesh, &Container, iControlPointIdx, iVtxOrder);
+			GetNormal(_pFbxMesh, &Container, iControlPointIdx, iVtxOrder);
+			GetUV(_pFbxMesh, &Container, iControlPointIdx, _pFbxMesh->GetTextureUVIndex(i, j), 0);
 
 			++iVtxOrder;
 		}
 
 		UINT iSubsetIdx = pMtrl->GetIndexArray().GetAt(i);
+
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[0]);
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[2]);
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[1]);
+
 	}
 
 	LoadAnimationData(_pFbxMesh, &Container);
@@ -333,17 +330,15 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 	_pContainer->vecNormal[_iIdx].z = (float)vNormal.mData[1];
 }
 
-void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex)
+void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex, int _iLayerCnt)
 {
 	FbxGeometryElementUV* pUV = _pMesh->GetElementUV();
 
 	UINT iUVIdx = 0;
 	if (pUV->GetMappingMode() == FbxGeometryElement::eByPolygonVertex) 
 	{
-		if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iUVIdx = _iUVIndex;
-		else if (pUV->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
-			iUVIdx = _iUVIndex;		// eByPolygonVertex일때 mappingmode 무시하고 GetTextureUVIndex사용
+		if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect || pUV->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+			iUVIdx = _iUVIndex;	// eByPolygonVertex일때 mappingmode 무시하고 GetTextureUVIndex사용
 	}
 	else if (pUV->GetMappingMode() == FbxGeometryElement::eByControlPoint) 
 	{
@@ -352,11 +347,10 @@ void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int 
 		else
 			iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
 	}
-	// iUVIdx = _iUVIndex;
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
 
 	_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
-	_pContainer->vecUV[_iIdx].y = 1-(float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
+	_pContainer->vecUV[_iIdx].y = 1.f -(float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
 }
 
 Vec4 CFBXLoader::GetMtrlData(FbxSurfaceMaterial* _pSurface

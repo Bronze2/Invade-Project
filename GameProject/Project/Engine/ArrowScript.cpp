@@ -93,10 +93,6 @@ void CArrowScript::Update()
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
 
-	// ���Ŀ� ī�޶� ���Ʒ� �����ӿ� ���� �߻� ���� �ٲ� �� �ʿ�
-	//CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	//CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-
 	switch (m_eState)
 	{
 	case ARROW_STATE::IDLE:
@@ -115,7 +111,8 @@ void CArrowScript::Update()
 	{
 		if (Transform()->GetWorldPos().y < 0.f)
 		{
-			GetObj()->SetActive(false);
+			cout << Transform()->GetWorldPos().x << ", " << Transform()->GetWorldPos().y << ", " << Transform()->GetWorldPos().z << endl;
+			//GetObj()->SetActive(false);
 			if (nullptr != m_pSkill)
 			{
 				delete m_pSkill;
@@ -128,12 +125,28 @@ void CArrowScript::Update()
 	
 		Vec4 vDir = Vec4(m_vDir, 1.f);
 		m_pParticle->ParticleSystem()->SetDir(vDir);
-
-		CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[1];
-		Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
-		float fDegree = XMConvertToDegrees(vRot.x);
 		
-		vPos.x += m_vDir.x * m_fSpeed * DT;
+		// 화살 기존 코드
+		CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
+		CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+		Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
+		float fDegree = XMConvertToDegrees(vCamRot.x);
+
+		Vec3 vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
+		vXZDir.Normalize();
+		float fAngle = acos(Dot(m_vDir, vXZDir));
+
+		float fSpeedY = XMConvertToDegrees(fAngle) / 90.f * m_fSpeed;
+		float fSpeedX = m_fSpeed - fSpeedY;
+		m_fTime += DT;
+
+		vPos.x = m_vStartPos.x + m_vDir.x * fSpeedX * m_fTime * cos(fAngle);
+		vPos.z = m_vStartPos.z + m_vDir.z * fSpeedX * m_fTime * cos(fAngle);
+			   	  
+		vPos.y = m_vStartPos.y + (m_vDir.y * fSpeedY * m_fTime * sin(fAngle)) - (0.5f * GRAVITY * m_fTime * m_fTime);
+	
+
+		/*vPos.x += m_vDir.x * m_fSpeed * DT;
 		vPos.z += m_vDir.z * m_fSpeed * DT;
 
 		if (fDegree <= -3.f) {
@@ -150,28 +163,10 @@ void CArrowScript::Update()
 		}
 
 		m_fFallSpeed += m_fVelocityY;
-		vPos.y += m_fFallSpeed * DT;
-
-		//m_vDeltaPos = vPos - m_vRestorePos;
-		//float fAngle = XMConvertToRadians(acos(Dot(m_vDir, m_vDeltaPos)));
-		//vRot.y += fAngle;
+		vPos.y += m_fFallSpeed * DT;*/
 		
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
-
-		//m_vTargetDir = vPos - m_vRestorePos;
-		//m_vTargetDir.Normalize();
-
-		//float value = XMConvertToRadians(90.f * DT * 10);
-
-		//float vDotValue = Dot(vDir, m_vTargetDir);
-		//Vec3 vCrossValue = Cross(m_vTargetDir, m_vDir);
-
-		//Vec3 vCrossValue = Cross(m_vDir, vDir);
-
-		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-		//Transform()->SetQuaternion(Vec4(fAngle, 0.f, 0.f, 1.f));
 	}
 	break;
 	}
@@ -189,11 +184,10 @@ void CArrowScript::Init()
 	m_fVelocityY = 0.f;
 	m_fFallSpeed = 0.f;
 	m_bMaxCharged = false;
+	m_fTime = 0.f;
 	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
-
-
 
 }
 void CArrowScript::SkillCheck()

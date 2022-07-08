@@ -310,11 +310,11 @@ void CSceneMgr::Init()
 	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	
-	m_pCurScene = new CLobbyScene;
-	m_pCurScene->SetType(SCENE_TYPE::LOBBY);
+	//m_pCurScene = new CLobbyScene;
+	//m_pCurScene->SetType(SCENE_TYPE::LOBBY);
 
-	//m_pCurScene = new CInGameScene;
-	//m_pCurScene->SetType(SCENE_TYPE::INGAME);
+	m_pCurScene = new CInGameScene;
+	m_pCurScene->SetType(SCENE_TYPE::INGAME);
 	
 	m_pCurScene->Init();
 	m_pCurScene->Awake();

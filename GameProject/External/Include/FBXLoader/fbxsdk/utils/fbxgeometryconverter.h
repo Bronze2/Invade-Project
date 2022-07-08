@@ -264,6 +264,7 @@ public:
 	*/
 	void RemoveBadPolygonsFromMeshes(FbxScene* pScene, FbxArray<FbxNode*>* pAffectedNodes = NULL);
 
+	FbxMesh* TriangulateMeshInternal(const FbxMesh* pMesh);
 /*****************************************************************************************************************************
 ** WARNING! Anything beyond these lines is for internal use, may not be documented and is subject to change without notice! **
 *****************************************************************************************************************************/
@@ -272,7 +273,6 @@ public:
     ~FbxGeometryConverter();
 
 private:
-	FbxMesh* TriangulateMeshInternal(const FbxMesh* pMesh);
 	FbxMesh* TriangulateMeshInternalLegacy(const FbxMesh* pMesh);
 	FbxMesh* TriangulatePatchInternal(const FbxPatch* pPatch);
 	FbxMesh* TriangulateNurbsInternal(const FbxNurbs* pNurbs);

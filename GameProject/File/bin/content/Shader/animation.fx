@@ -94,6 +94,32 @@ void MatrixRotationAxis(in float rad, out matrix _OutMatrix)
     _OutMatrix = mRotate;
 }
 
+void MatrixRotationX(in float rad, out matrix _OutMatrix)
+{
+    matrix mRotate = (matrix)0.f;
+    mRotate[0][0] = 1.0f;
+    mRotate[0][1] = 0.0f;
+    mRotate[0][2] = 0.0f;
+    mRotate[0][3] = 0.0f;
+    
+    mRotate[1][0] = 0.0f;
+    mRotate[1][1] = cos(rad);
+    mRotate[1][2] = sin(rad);
+    mRotate[1][3] = 0.0f;
+    
+    mRotate[2][0] = 0.0f;
+    mRotate[2][1] = -sin(rad);
+    mRotate[2][2] = cos(rad);
+    mRotate[2][3] = 0.0f;
+    
+    mRotate[3][0] = 0.0f;
+    mRotate[3][1] = 0.0f;
+    mRotate[3][2] = 0.0f;
+    mRotate[3][3] = 1.0f;
+
+    _OutMatrix = mRotate;
+}
+
 // Çï¸ä ÇÃ·¹ÀÌ¾î °í°³ ±îµü
 void MatrixAffineTransformation(in float4 Scaling, in float rad, in float4 RotationOrigin, in float4 RotationQuaternion, in float4 Translation, out matrix _outMat)
 {
@@ -109,11 +135,14 @@ void MatrixAffineTransformation(in float4 Scaling, in float rad, in float4 Rotat
 
     matrix mRotation = (matrix) 0.f;
     MatrixRotationQuaternion(RotationQuaternion, mRotation);
+    
     matrix M = MScaling;
+
     M._41_42_43_44 = M._41_42_43_44 - vRotationOrigin;
     M = mul(M, mRotation);
     M._41_42_43_44 = M._41_42_43_44 + vRotationOrigin;
     M._41_42_43_44 = M._41_42_43_44 + vTranslation;
+
     _outMat = M;
 
 }

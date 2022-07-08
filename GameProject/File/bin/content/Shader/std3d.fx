@@ -60,8 +60,7 @@ VS_STD3D_OUTPUT VS_Std3D(VS_STD3D_INPUT _in)
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV).xyz);
     output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV).xyz);
     output.vUV = _in.vUV;
-    //output.vUV = normalize(mul(float4(_in.vUV, 0.f, 1.f), _in.matWV).xy);
-    
+     
     return output;
 }
 
@@ -106,7 +105,7 @@ PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
     if (tex_1)
     {
         float3 vTSNormal = g_tex_1.Sample(g_sam_0, _in.vUV).xyz;
-        vTSNormal.xyz = (vTSNormal.xyz - 0.5f) * 2.f;
+        vTSNormal.xyz = normalize(vTSNormal.xyz - 0.5f) * 2.f;
         float3x3 matTBN = { _in.vViewTangent, _in.vViewBinormal, _in.vViewNormal };
         vViewNormal = normalize(mul(vTSNormal, matTBN));
     }

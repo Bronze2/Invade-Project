@@ -295,9 +295,6 @@
     <ClCompile Include="ButtonScript.cpp">
       <Filter>Script\UI</Filter>
     </ClCompile>
-    <ClCompile Include="UIBarScript.cpp">
-      <Filter>Script\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Animation2D.cpp">
       <Filter>Object\Component\Ani</Filter>
     </ClCompile>
@@ -575,9 +572,6 @@
     </ClInclude>
     <ClInclude Include="Trail.h" />
     <ClInclude Include="ButtonScript.h">
-      <Filter>Script\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIBarScript.h">
       <Filter>Script\UI</Filter>
     </ClInclude>
     <ClInclude Include="Animation2D.h">
