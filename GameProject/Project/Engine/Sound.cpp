@@ -64,7 +64,7 @@ void CSound::Play(int _iRoopCount, float _fVolume, bool _bOverlap)
 	pChannel->setUserData(this);
 
 	pChannel->setMode(FMOD_LOOP_NORMAL);
-	pChannel->setLoopCount(_iRoopCount);
+//	pChannel->setLoopCount(_iRoopCount);
 	pChannel->setVolume(_fVolume);
 	if(m_listChannel.empty())
 		m_listChannel.push_back(pChannel);

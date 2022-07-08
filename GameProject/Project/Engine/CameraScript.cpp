@@ -6,6 +6,7 @@
 
 void CCameraScript::Update()
 {
+
     Vec3 vPos = Transform()->GetLocalPos();
     Vec3 vWorldPos = Transform()->GetWorldPos();
     Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);

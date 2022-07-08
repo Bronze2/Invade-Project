@@ -60,8 +60,8 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 
 void CTowerScript::Init()
 {
-	wstring strPath = L"Sound\\TowerHit.wav";
-	wstring strFullPath = CPathMgr::GetResPath();
+
+	 m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"TowerHitSound");
 	switch (m_eType)
 	{
 	case TOWER_TYPE::FIRST:
@@ -70,18 +70,14 @@ void CTowerScript::Init()
 		m_uiAttackDamage = 150;
 	
 	
-		strFullPath += strPath;
-		m_pSound =new CSound;
-		m_pSound->Load3D(strFullPath);
+
 		
 		break;
 	case TOWER_TYPE::SECOND:
 		m_iMaxHp = 2000;
 		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 150;
-		strFullPath += strPath;
-		m_pSound = new CSound;
-		m_pSound->Load3D(strFullPath);
+	
 		break;
 	case TOWER_TYPE::NEXUS:
 
@@ -216,8 +212,7 @@ CTowerScript::CTowerScript():CScript((UINT)SCRIPT_TYPE::TOWERSCRIPT), m_bAttackS
 
 CTowerScript::~CTowerScript()
 {
-	delete m_pSound;
-	m_pSound = nullptr;
+
 }
 
 

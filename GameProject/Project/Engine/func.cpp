@@ -361,11 +361,8 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->SetMinLifeTime(3.f);
 	pHitParticle->ParticleSystem()->SetMaxLifeTime(3.f);
 
-	wstring strPath = L"Sound\\explosion.wav";
-	wstring strFullPath = CPathMgr::GetResPath();
-	strFullPath += strPath;
-	CSound*m_pSound = new CSound;
-	m_pSound->Load3D(strFullPath);
+
+	Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"explosion");
 	m_pSound->PlaySound3D(_Pos, 1000.f);
 
 	pHitParticle->GetScript<CParticleScript>()->SetSound(m_pSound);
@@ -408,11 +405,8 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 
 	//
 
-	wstring strPath = L"Sound\\Spark.wav";
-	wstring strFullPath = CPathMgr::GetResPath();
-	strFullPath += strPath;
-	CSound* m_pSound = new CSound;
-	m_pSound->Load3D(strFullPath);
+
+	Ptr<CSound> m_pSound =CResMgr::GetInst()->FindRes<CSound>(L"SparkSound");
 	m_pSound->PlaySound3D(_Pos, 1000.f);
 
 	pThunderObject->GetScript<CThunderSkill1Script>()->SetSound(m_pSound);
@@ -471,24 +465,22 @@ void SetListener(const Vec3& _vFrontDir, const Vec3& _vUpDir, const Vec3& _Playe
 
 
 
-CSound* SetSound2D(const UINT&_LoopCount,const wstring& _Path)
+CSound* SetSound2D(const wstring& _Path)
 {
 	CSound* pSound = new CSound;
 	wstring strFullPath = CPathMgr::GetResPath();
 	strFullPath += _Path;
-	pSound->Load(_Path);
-	pSound->Play(_LoopCount,1000.f);
+	pSound->Load(strFullPath);
 
 	return pSound;
 }
 
-CSound* SetSound3D(const wstring& _Path,const Vec3&_Pos)
+CSound* SetSound3D(const wstring& _Path)
 {
 	CSound* pSound = new CSound;
 	wstring strFullPath = CPathMgr::GetResPath();
 	strFullPath += _Path;
-	pSound->Load3D(_Path);
-	pSound->PlaySound3D(_Pos, 1000.f);
+	pSound->Load3D(strFullPath);
 
 	return pSound;
 }

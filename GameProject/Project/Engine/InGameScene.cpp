@@ -16,7 +16,6 @@
 #include "MeshData.h"
 #include "Collider3D.h"
 #include "Animator3D.h"
-#include "Terrain.h"
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
@@ -58,7 +57,7 @@ void CInGameScene::Init()
 	GetLayer(4)->SetName(L"Red");
 	GetLayer(5)->SetName(L"Cover");
 	GetLayer(6)->SetName(L"Arrow");
-	GetLayer(7)->SetName(L"Terrain");
+	GetLayer(7)->SetName(L"Obstacle");
 	GetLayer(8)->SetName(L"Tile");
 	GetLayer(30)->SetName(L"UI");
 	GetLayer(31)->SetName(L"Tool");
@@ -75,7 +74,7 @@ void CInGameScene::Init()
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
 	//pMainCam->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-	pMainCam->Camera()->SetFar(10000.f);
+	pMainCam->Camera()->SetFar(30000.f);
 	pMainCam->Camera()->SetLayerAllCheck();
 	CCollisionMgr::GetInst()->SetCameraObject(pMainCam->Camera());
 
@@ -153,7 +152,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -228,6 +227,8 @@ void CInGameScene::Init()
 	pBow->GetScript<CBowScript>()->SetPlayer(pObject);
 	pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
 
+
+
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
 	pRedFirstTower = pMeshData->Instantiate();
@@ -253,8 +254,9 @@ void CInGameScene::Init()
 
 
 
+	
 
-//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet.fbx");
+
 
 
 	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\SecondTower.fbx");
@@ -301,7 +303,21 @@ void CInGameScene::Init()
 	pBlueFirstTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueFirstTower);
 
-
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Obstacle.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Obstacle.mdat", L"MeshData\\Obstacle.mdat");
+	//pMeshData->Save(pMeshData->GetPath());
+	pObject = pMeshData->Instantiate();
+	pObject->SetName(L"Obstacle");
+	pObject->AddComponent(new CCollider3D);
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 500.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 250.f));
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(-600.f, 100.f, 2150.f));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 3.14f/2, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->MeshRender()->SetDynamicShadow(false);
+	FindLayer(L"Obstacle")->AddGameObject(pObject);
 
 
 	
@@ -330,19 +346,19 @@ void CInGameScene::Init()
 	pBlueSecondTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\castle007.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\castle007.mdat", L"MeshData\\castle007.mdat");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\baseMap.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	
 	pObject = pMeshData->Instantiate();
 
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 370.f, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 //	pObject->Transform()->SetLocalPos(Vec3(0.f, -50.f, 0.f));
 	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
-
+	FindLayer(L"Default")->AddGameObject(pObject);
 // 맵 머테리얼==========================================
 //	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Red"));
 //	Ptr<CTexture> pTex = CResMgr::GetInst()->FindRes<CTexture>(L"Snow");
@@ -396,7 +412,19 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 
-	
+//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
+//	pMeshData->Save(pMeshData->GetPath());
+
+	pObject = pMeshData->Instantiate();
+
+	pObject->FrustumCheck(false);
+	pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));
+	//	pObject->Transform()->SetLocalPos(Vec3(0.f, -50.f, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pObject->MeshRender()->SetDynamicShadow(true);
+	FindLayer(L"Default")->AddGameObject(pObject);
 
 
 	CGameObject* pNexus = nullptr;
@@ -1284,6 +1312,9 @@ void CInGameScene::Init()
 	
 
 
+	 m_pSceneBGM = SetSound2D(L"Sound\\MainMusic.wav");
+
+	m_pSceneBGM->Play(0, 0.1f);
 
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
@@ -1299,4 +1330,13 @@ void CInGameScene::Init()
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Red");
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Obstacle");
+	CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Obstacle");
+}
+
+CInGameScene::~CInGameScene() {
+	if (nullptr != m_pSceneBGM) {
+		delete m_pSceneBGM;
+		m_pSceneBGM = nullptr;
+	}
 }

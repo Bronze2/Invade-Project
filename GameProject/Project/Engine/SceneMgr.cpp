@@ -169,7 +169,13 @@ void CSceneMgr::Init()
 
 	Ptr<CSound> pSound =CResMgr::GetInst()->Load3D<CSound>(L"SparkSound",L"Sound\\Spark.wav");
 	pSound = CResMgr::GetInst()->Load3D<CSound>(L"TowerHitSound", L"Sound\\TowerHit.wav");
-
+	CResMgr::GetInst()->Load3D<CSound>(L"explosion", L"Sound\\explosion.wav");
+	CResMgr::GetInst()->Load3D<CSound>(L"ArrowShoot", L"Sound\\ArrowShoot.mp3");
+	CResMgr::GetInst()->Load3D<CSound>(L"MinionRangeHit", L"Sound\\MinionRangeHIt.wav");
+	CResMgr::GetInst()->Load3D<CSound>(L"MinionMeleeHit", L"Sound\\MinionMeleeHit.wav");
+	CResMgr::GetInst()->Load3D<CSound>(L"MainMusic", L"Sound\\MainMusic.wav");
+	CResMgr::GetInst()->Load3D<CSound>(L"PlayerDie", L"Sound\\PlayerDie.wav");
+	CResMgr::GetInst()->Load3D<CSound>(L"PlayerHit", L"Sound\\PlayerHit.wav");
 
 	SKILL* Skill= new SKILL;
 	Skill->Name = L"Water0";

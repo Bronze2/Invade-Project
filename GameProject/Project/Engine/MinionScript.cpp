@@ -14,6 +14,8 @@
 
 void CMinionScript::Init()
 {
+	m_pMeleeSound = CResMgr::GetInst()->FindRes<CSound>(L"MinionMeleeHit");
+	m_pRangeSound = CResMgr::GetInst()->FindRes<CSound>(L"MinionRangeHit");
 	m_eState = MINION_STATE::WALK;
 	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK")) {
 		m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK");
@@ -55,6 +57,8 @@ void CMinionScript::Init()
 	}
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
+	m_pRay = new SimpleMath::Ray;
+
 
 }
 
@@ -62,6 +66,8 @@ void CMinionScript::Init()
 void CMinionScript::Update()
 {
 
+	
+	CheckObstacle();
 	if (KEY_HOLD(KEY_TYPE::KEY_1)) {
 		m_eState = MINION_STATE::IDLE;
 	}
@@ -174,17 +180,76 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	CreateObject(pObject, _Layer);
 }
 
+void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
+{
+	Vec3 vWorldPos = Transform()->GetWorldPos();
+
+	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	vDir *= -1.0f;
+
+	if (nullptr == m_pTarget)
+		return;
+	if (nullptr == m_pTarget->GetScript<CPlayerScript>())
+		return;
+	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+		int a = 0;
+	}
+
+	Vec3 target = m_pTarget->Transform()->GetWorldPos();
+	target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+	m_pRay->position = vWorldPos;
+	m_pRay->direction = vDir;
+	float min = INFINITE;
+	if (_pCollider->GetObj()->GetName() != L"Obstacle") 
+	{
+			
+	}
+	if (m_pRay->Intersects(_pCollider->GetBox(), min)) {
+		Vec3 target = m_pTarget->Transform()->GetWorldPos();
+
+		target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+		float distance = Vec3::Distance(target, vWorldPos);
+
+		
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
+		if (distance2 > distance)
+			return;
+		if (_pCollider->GetObj()->GetName() == L"Obstacle") {
+			m_InterSectObject=_pCollider->GetObj();
+
+			m_eFindState = FIND_STATE::RAY_FIRST;
+			
+		}
+		
+	}
+}
+
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 {
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
 		m_arrEnemy.push_back(_pOther);
 		m_bFindNear = true;
+
+		if (nullptr != _pOther->GetScript<CPlayerScript>())
+		{
+			
+		}
 	}
 }
 
 void CMinionScript::OnDetection(CGameObject* _pOther)
 {
 	
+}
+
+void CMinionScript::CheckObstacle()
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	
+	RayCollision(pCurScene->FindLayer(L"Obstacle"));
+	
+
+
 }
 
 void CMinionScript::OnDetectionExit(CGameObject* _pOther)
@@ -198,6 +263,7 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 				m_pTarget = m_pNexus;
 			}
 			else {
+
 				FindNearObject(m_arrEnemy);
 			}
 			return;
@@ -207,11 +273,41 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 
 }
 
+void CMinionScript::RayCollision(const CLayer* _pLayer)
+{
+	const vector<CGameObject*>& vecObj = _pLayer->GetObjects();
+	
+	map<DWORD_PTR, bool>::iterator iter;
+	for (size_t i = 0; i < vecObj.size(); ++i) {
+		CCollider3D* pCollider = vecObj[i]->Collider3D();
+		if (nullptr == pCollider)
+			continue;
+		InterSectsObject(pCollider);
+	}
+
+
+
+}
+
 void CMinionScript::AddObject(CGameObject* _pObject)
 {
 
 	m_arrEnemy.push_back(_pObject);
 
+}
+
+void CMinionScript::IsPlayerandObstacle()
+{
+	m_bIsPlayerandObstacle = 0;
+	for (int i = 0; i < m_arrEnemy.size(); ++i) {
+		if (nullptr != m_arrEnemy[i]->GetScript<CPlayerScript>())
+			m_bIsPlayerandObstacle = 1;
+	}
+
+	for (int i = 0; i < m_arrEnemy.size(); ++i) {
+		if (L"Obstacle" != m_arrEnemy[i]->GetName())
+			m_bIsPlayerandObstacle = 2;
+	}
 }
 
 void CMinionScript::CheckHp()
@@ -251,12 +347,15 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 		m_pTarget = m_pNexus;
 	}
 
+
 	if (0 == _pObject.size()||!m_bFindNear)return;
 	for (int i = 0; i < _pObject.size(); ++i) {
 		if (i == 0) {
 			m_pTarget = _pObject[i];
 		}
 		else {
+			if (L"Obstacle"==_pObject[i]->GetName())
+				continue;
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 			Vec3 vPos = Transform()->GetWorldPos();
 			float length1= sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
@@ -265,6 +364,10 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 			float length2 = sqrt(pow(vTargetPos2.x - vPos.x, 2) + pow(vTargetPos2.z - vPos.z, 2));
 			if (length1 > length2) {
 				m_pTarget = _pObject[i];
+			
+				if (nullptr != m_pTarget->GetScript<CPlayerScript>())
+					m_eFindState=FIND_STATE::SENSOR_FIRST;
+				
 			}
 		}
 	}

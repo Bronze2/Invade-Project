@@ -331,7 +331,7 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-	
+
 	SkillCoolTimeCheck();
 	Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 	Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);

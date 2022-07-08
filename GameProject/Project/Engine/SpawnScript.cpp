@@ -36,7 +36,7 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 }
 void CSpawnScript::Update()
 {
-	return;
+	
 	if (!m_bClockStart) {
 		m_uiPatternStart = clock();
 		m_bClockStart = true;
@@ -56,6 +56,7 @@ void CSpawnScript::Update()
 			{
 			case CAMP_STATE::RED:
 			{
+				return;
 				switch (m_eSpawnPattern)
 				{
 				case SPAWN_PATTERN::PATTERN1:

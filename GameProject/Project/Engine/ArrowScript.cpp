@@ -24,6 +24,9 @@ void CArrowScript::SetSkill(SKILL* _pSkill)
 }
 void CArrowScript::Awake()
 {
+	//사운드
+	m_pSound = SetSound2D(L"Sound\\Hit.wav");
+
 	CScene* pCurScene=CSceneMgr::GetInst()->GetCurScene();
 	m_pParticle = new CGameObject;
 	m_pParticle->SetName(L"Particle");
@@ -54,7 +57,7 @@ void CArrowScript::Awake()
 		m_pParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.f, 0.f, 0.5f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.f, 0.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
-m_pParticle->ParticleSystem()->SetEndScale(5.f);
+		m_pParticle->ParticleSystem()->SetEndScale(5.f);
 break;
 	case ELEMENT_TYPE::THUNDER:
 		m_pParticle->AddComponent(new CParticleSystem);
@@ -152,7 +155,7 @@ void CArrowScript::Update()
 			if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
 				if (vPos.y <= 1.f) {
 
-					Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+					Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
 					vPos3.y = 1.f;
 					CreateThunderObject(vPos3, m_iLayerIdx);
 					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
@@ -226,8 +229,12 @@ void CArrowScript::SkillCheck()
 #include "Collider3D.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
+
+
+
 	if (nullptr == m_pSkill) {
 		if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+			m_pSound->PlaySoundOnce(100.f);
 			if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>()) {
 				_pColldier->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
 			}
@@ -360,6 +367,10 @@ CArrowScript::~CArrowScript()
 		delete m_pSkill;
 		m_pSkill = nullptr;
 	}
+	if (nullptr != m_pSound) {
+		delete m_pSound;
+		m_pSound = nullptr;
+	}
 }
  
 void CArrowScript::WaterSkill0(CCollider3D* _pCollider) {
@@ -388,7 +399,7 @@ void CArrowScript::ThunderSkill0(CCollider3D* _pCollider)
 
 void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
 {
-	Vec3 vPos = GetObj()->Transform()->GetWorldPos();
+	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 	vPos.y = 1.f;
 	CreateThunderObject(vPos, m_iLayerIdx);
 	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {

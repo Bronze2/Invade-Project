@@ -49,6 +49,8 @@ private:
     SKILL* m_pSkill;
     CGameObject* m_pPlayer;
 
+    //»ç¿îµå
+    CSound* m_pSound;
  
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }

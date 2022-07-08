@@ -78,10 +78,7 @@ CThunderSkill1Script::~CThunderSkill1Script()
 		delete m_pSkill;
 		m_pSkill = nullptr;
 	}
-	if (nullptr != m_pSound) {
-		delete m_pSound;
-		m_pSound = nullptr;
-	}
+
 }
 
 
