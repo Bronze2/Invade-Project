@@ -51,6 +51,8 @@ private:
     UINT m_iDamage;
     SKILL* m_pSkill;
     CGameObject* m_pPlayer;
+
+    bool isColl = false;
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }

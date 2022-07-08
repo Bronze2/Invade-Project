@@ -109,64 +109,71 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-		if (Transform()->GetWorldPos().y < 0.f)
+		if (Transform()->GetWorldPos().y < 5.f)
 		{
-			cout << Transform()->GetWorldPos().x << ", " << Transform()->GetWorldPos().y << ", " << Transform()->GetWorldPos().z << endl;
 			//GetObj()->SetActive(false);
 			if (nullptr != m_pSkill)
 			{
 				delete m_pSkill;
 				m_pSkill = nullptr;
 			}
-			m_eState = ARROW_STATE::IDLE;
+			isColl = true;
+			//m_eState = ARROW_STATE::IDLE;
+			vPos.y = 5.f;
+			Transform()->SetLocalPos(vPos);
+			Transform()->SetLocalRot(vRot);
 		}
+		else if (isColl == false) {
+			m_vRestorePos = vPos;
 
-		m_vRestorePos = vPos;
-	
-		Vec4 vDir = Vec4(m_vDir, 1.f);
-		m_pParticle->ParticleSystem()->SetDir(vDir);
-		
-		// 화살 기존 코드
-		CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
-		CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-		Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
-		float fDegree = XMConvertToDegrees(vCamRot.x);
+			Vec4 vDir = Vec4(m_vDir, 1.f);
+			m_pParticle->ParticleSystem()->SetDir(vDir);
 
-		Vec3 vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
-		vXZDir.Normalize();
-		float fAngle = acos(Dot(m_vDir, vXZDir));
+			// 화살 기존 코드
+			CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
+			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+			Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
+			float fDegree = XMConvertToDegrees(vCamRot.x);
 
-		float fSpeedY = XMConvertToDegrees(fAngle) / 90.f * m_fSpeed;
-		float fSpeedX = m_fSpeed - fSpeedY;
-		m_fTime += DT;
+			Vec3 vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
+			vXZDir.Normalize();
+			float fAngle = acos(Dot(m_vDir, vXZDir));
+			m_fSpeed = 20;
+			float fSpeedY = XMConvertToDegrees(fAngle) / 90.f * m_fSpeed;
+			float fSpeedX = m_fSpeed - fSpeedY;
+			m_fTime += DT;
 
-		vPos.x = m_vStartPos.x + m_vDir.x * fSpeedX * m_fTime * cos(fAngle);
-		vPos.z = m_vStartPos.z + m_vDir.z * fSpeedX * m_fTime * cos(fAngle);
-			   	  
-		vPos.y = m_vStartPos.y + (m_vDir.y * fSpeedY * m_fTime * sin(fAngle)) - (0.5f * GRAVITY * m_fTime * m_fTime);
-	
+			//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
+			vPos.z = vPos.z + vXZDir.z * (m_fSpeed * m_fTime * cos(fAngle))/2;
+			vPos.x = vPos.x + vXZDir.x * (m_fSpeed * m_fTime * cos(fAngle))/2;
 
-		/*vPos.x += m_vDir.x * m_fSpeed * DT;
-		vPos.z += m_vDir.z * m_fSpeed * DT;
+			//vPos = m_vDir 
+			
+			vPos.y = vPos.y + (( m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * GRAVITY * m_fTime * m_fTime));
 
-		if (fDegree <= -3.f) {
-			vPos.y += m_vDir.y * m_fSpeed * DT;
-			m_fVelocityY -= (GRAVITY * DT) * 6;
+
+			/*vPos.x += m_vDir.x * m_fSpeed * DT;
+			vPos.z += m_vDir.z * m_fSpeed * DT;
+
+			if (fDegree <= -3.f) {
+				vPos.y += m_vDir.y * m_fSpeed * DT;
+				m_fVelocityY -= (GRAVITY * DT) * 6;
+			}
+			else if (fDegree >= 5.f) {
+				vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
+				m_fVelocityY -= (GRAVITY * DT) * 6;
+			}
+			else {
+				vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
+				m_fVelocityY -= (GRAVITY * DT) * 4;
+			}
+
+			m_fFallSpeed += m_fVelocityY;
+			vPos.y += m_fFallSpeed * DT;*/
+
+			Transform()->SetLocalPos(vPos);
+			Transform()->SetLocalRot(vRot);
 		}
-		else if (fDegree >= 5.f) {
-			vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
-			m_fVelocityY -= (GRAVITY * DT) * 6;
-		}
-		else {
-			vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
-			m_fVelocityY -= (GRAVITY * DT) * 4;
-		}
-
-		m_fFallSpeed += m_fVelocityY;
-		vPos.y += m_fFallSpeed * DT;*/
-		
-		Transform()->SetLocalPos(vPos);
-		Transform()->SetLocalRot(vRot);
 	}
 	break;
 	}
