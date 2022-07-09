@@ -13,14 +13,20 @@ class CArrowScript :
     public CScript
 {
 private: 
+    float m_fDir = 1;
+    float m_fHighest = 0;
+    float m_fPerRotate = 1;
+    Vec3 m_vQtrnRotAxis;
     float m_fSpeed;
     Vec3 m_vDir;
     Vec3 m_vStartPos;
     float m_fTime;
-    float m_fVelocityY;
+    float m_fVelocityY = 5000;
     float m_fVelocityX;
     float m_fVelocityZ;
     float a;
+
+    float m_fMaxTime = 100;
     ELEMENT_TYPE m_iType;
     CGameObject* m_pParticle;
     bool m_bMove;
@@ -38,6 +44,7 @@ private:
 
     ARROW_STATE m_eState;
     Vec3 m_vRestorePos;
+    Vec3 m_StartRot;
     Vec3 m_vTargetDir;
     Vec3 m_vDeltaPos;
 
@@ -51,7 +58,7 @@ private:
     UINT m_iDamage;
     SKILL* m_pSkill;
     CGameObject* m_pPlayer;
-
+    
     bool isColl = false;
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
@@ -61,6 +68,12 @@ public:
     UINT GetLayerIdx() { return m_iLayerIdx; }
     virtual void Awake();
     virtual void Update();
+
+
+    void SetQtrnRotAxis(Vec3 _Axis) { m_vQtrnRotAxis = _Axis; }
+
+
+    void SetStartRot(Vec3 _vRot) { m_StartRot = _vRot; }
 
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
    

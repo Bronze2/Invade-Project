@@ -41,6 +41,7 @@ static type* GetInst()\
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
 typedef DirectX::SimpleMath::Vector4 Vec4;
+typedef DirectX::SimpleMath::Quaternion Quaternion;
 using DirectX::SimpleMath::Matrix;
 
 enum class CONST_REGISTER

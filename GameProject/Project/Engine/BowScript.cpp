@@ -63,7 +63,7 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
-		cout << vTargetDir.x << ", " << vTargetDir.y << ", " << vTargetDir.z << endl;
+		//cout << vTargetDir.x << ", " << vTargetDir.y << ", " << vTargetDir.z << endl;
 
 		Vec3 vPlayerRot = GetObj()->GetParent()->Transform()->GetLocalRot();
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
@@ -75,9 +75,13 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->ClearParent();
 
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
+		//m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartAngle(fCamRotDegree);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartRot(vArrowRot);
+		Vec3 vQtrnDir = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetQtrnRotAxis(vQtrnDir);
 
 		m_iCurArrow++;
 		m_iPower = 1;

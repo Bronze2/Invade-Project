@@ -92,7 +92,6 @@ void CArrowScript::Update()
 	
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vRot = Transform()->GetLocalRot();
-
 	switch (m_eState)
 	{
 	case ARROW_STATE::IDLE:
@@ -102,7 +101,7 @@ void CArrowScript::Update()
 	case ARROW_STATE::ATTACK_READY:
 	{
 		if (!m_bMaxCharged) {
-			vPos.x += 15.f * DT;			// 15.f
+			//vPos.x += 15.f * DT;			// 15.f
 		}
 		Transform()->SetLocalPos(vPos);
 	}
@@ -138,41 +137,42 @@ void CArrowScript::Update()
 			Vec3 vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			vXZDir.Normalize();
 			float fAngle = acos(Dot(m_vDir, vXZDir));
-			m_fSpeed = 20;
-			float fSpeedY = XMConvertToDegrees(fAngle) / 90.f * m_fSpeed;
-			float fSpeedX = m_fSpeed - fSpeedY;
+			m_fSpeed = 1000;
+			
 			m_fTime += DT;
 
-			//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
-			vPos.z = vPos.z + vXZDir.z * (m_fSpeed * m_fTime * cos(fAngle))/2;
-			vPos.x = vPos.x + vXZDir.x * (m_fSpeed * m_fTime * cos(fAngle))/2;
+			m_fMaxTime = m_fSpeed * sin(fAngle) / GRAVITY * 30 * DT;
+
+			vPos.z = m_vStartPos.z +  vXZDir.z * (m_fSpeed * m_fTime * cos(fAngle))/2;
+			vPos.x = m_vStartPos.x +  vXZDir.x * (m_fSpeed * m_fTime * cos(fAngle))/2;
 
 			//vPos = m_vDir 
-			
-			vPos.y = vPos.y + (( m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * GRAVITY * m_fTime * m_fTime));
+			vPos.y = m_vStartPos.y + (( m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * (GRAVITY *30) * m_fTime * m_fTime));
 
+			//처음 화살 Update
+			if (m_fVelocityY == 5000) {
+				//  현재 포물선 운동을 하고 있는 Y값
+				// 
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * (GRAVITY * 30) * m_fTime * m_fTime));
 
-			/*vPos.x += m_vDir.x * m_fSpeed * DT;
-			vPos.z += m_vDir.z * m_fSpeed * DT;
+				//최고점 높이 == velocity가 0이되는 지점. 
+				m_fHighest = (m_fSpeed * sin(fAngle)) * (m_fSpeed * sin(fAngle)) / ((GRAVITY * 30) *2);
+				m_fPerRotate = m_fHighest / fAngle;
 
-			if (fDegree <= -3.f) {
-				vPos.y += m_vDir.y * m_fSpeed * DT;
-				m_fVelocityY -= (GRAVITY * DT) * 6;
-			}
-			else if (fDegree >= 5.f) {
-				vPos.y += m_vDir.y * m_fSpeed / 4 * DT;
-				m_fVelocityY -= (GRAVITY * DT) * 6;
 			}
 			else {
-				vPos.y += m_vDir.y * m_fSpeed / 2 * DT;
-				m_fVelocityY -= (GRAVITY * DT) * 4;
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * (GRAVITY * 30) * m_fTime * m_fTime));
+				float fHigh = m_fHighest - m_fVelocityY; 
+				float fRotateAngle = fHigh / m_fPerRotate;
+				if (fRotateAngle <= 0.005f && m_fDir ==1) {
+					m_fDir = -1;
+				}
+				Quaternion qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, fRotateAngle * m_fDir);
+				Transform()->SetQuaternion(qRot);
 			}
 
-			m_fFallSpeed += m_fVelocityY;
-			vPos.y += m_fFallSpeed * DT;*/
-
 			Transform()->SetLocalPos(vPos);
-			Transform()->SetLocalRot(vRot);
+
 		}
 	}
 	break;
@@ -188,7 +188,7 @@ void CArrowScript::Init()
 
 
 	m_bSetDotValue = false;
-	m_fVelocityY = 0.f;
+	m_fVelocityY = 5000.f;
 	m_fFallSpeed = 0.f;
 	m_bMaxCharged = false;
 	m_fTime = 0.f;
