@@ -38,6 +38,9 @@ private:
     // DarkUI
     CGameObject* m_pDarkUI;
 
+    // Run
+    bool m_bRun = false;
+
     bool m_bHealCheck;
     bool m_bFlameCheck;
     bool m_bThunderCheck;

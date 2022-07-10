@@ -8,7 +8,6 @@
 
 #include "ProjectileScript.h"
 
-#include "StaticUI.h"
 #include "BowScript.h"
 #include "ParticleSystem.h"
 #include "SkillMgr.h"
@@ -453,7 +452,6 @@ void CPlayerScript::Awake()
 		m_pDarkUI->FrustumCheck(false);
 		m_pDarkUI->AddComponent(new CTransform);
 		m_pDarkUI->AddComponent(new CMeshRender);
-		m_pDarkUI->AddComponent(new CStaticUI);
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
 		m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
 		m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
@@ -467,7 +465,9 @@ void CPlayerScript::Awake()
 		m_pDarkUI->SetActive(false);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
 
+		// Run
 		m_fMoveSpeed = 500.f;
+		m_bRun = false;
 	}
 
 	// 헬멧 플레이어 고개 까딱
@@ -569,14 +569,30 @@ void CPlayerScript::Update()
 			m_vRestoreRot = vRot;
 		}
 
+		// Run
+		if (KEY_TAB(KEY_TYPE::KEY_LSHIFT) && !(KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D))) {
+			m_bRun = false;
+		}
+
 		if ((KEY_HOLD(KEY_TYPE::KEY_W) || KEY_HOLD(KEY_TYPE::KEY_S) || KEY_HOLD(KEY_TYPE::KEY_A) || KEY_HOLD(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
-			if (KEY_TAB(KEY_TYPE::KEY_LSHIFT))
-			{
-				m_eState = PLAYER_STATE::RUN;
-			}
-			else if (KEY_AWAY(KEY_TYPE::KEY_LBTN) || KEY_NONE(KEY_TYPE::KEY_LBTN))
-			{
+			// Run	
+			if (!m_bRun) {
 				m_eState = PLAYER_STATE::WALK;
+				m_fMoveSpeed = 500.f;
+				if (KEY_TAB(KEY_TYPE::KEY_LSHIFT)) {
+					m_eState = PLAYER_STATE::RUN;
+					m_fMoveSpeed = 750.f;
+					m_bRun = true;
+				}
+			}
+			else {
+				m_eState = PLAYER_STATE::RUN;
+				m_fMoveSpeed = 750.f;
+				if (KEY_TAB(KEY_TYPE::KEY_LSHIFT)) {
+					m_eState = PLAYER_STATE::WALK;
+					m_fMoveSpeed = 500.f;
+					m_bRun = false;
+				}
 			}
 
 
@@ -684,8 +700,6 @@ void CPlayerScript::Update()
 			else {
 				m_eState = PLAYER_STATE::ATTACK_READY;
 			}
-
-			cout << fCamRotDegree << endl;
 
 		}
 

@@ -13,6 +13,10 @@ class CArrowScript :
     public CScript
 {
 private: 
+    float m_fDir = 1;
+    float m_fHighest = 0;
+    float m_fPerRotate = 1;
+
     float m_fSpeed;
     Vec3 m_vDir;
     Vec3 m_vStartPos;
@@ -35,14 +39,16 @@ private:
     bool m_bCheckDegree;
     bool m_bMaxCharged;
 
+    // 트레일
+    CGameObject* m_pTrail;
 
     ARROW_STATE m_eState;
     Vec3 m_vRestorePos;
     Vec3 m_vTargetDir;
     Vec3 m_vDeltaPos;
 
-    // 화살 다시
     float m_fStartAngle;
+    Vec3 m_vQtrnRotAxis;
 
     CGameObject* m_pBow;
 
@@ -51,6 +57,7 @@ private:
     UINT m_iDamage;
     SKILL* m_pSkill;
     CGameObject* m_pPlayer;
+
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }
@@ -71,6 +78,8 @@ public:
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
     // 화살 다시
     void SetStartAngle(float _Angle) { m_fStartAngle = _Angle; }
+    void SetQtrnRotAxis(Vec3 _Axis) { m_vQtrnRotAxis = _Axis; }
+
     void SkillCheck();
     void SetType(const UINT& _iType) { m_iType = (ELEMENT_TYPE)_iType; }
     void SetMove(bool _bMove) { m_bMove = _bMove; }

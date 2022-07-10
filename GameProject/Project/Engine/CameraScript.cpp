@@ -53,7 +53,7 @@ void CCameraScript::Update()
             break;
         case CAMERA_EFFECT_TYPE::ZOOMIN:
             //vRot.x = 0.f;
-            //vPos = CameraZoom(vPos);
+            vPos = CameraZoom(vPos);
             break;
         case CAMERA_EFFECT_TYPE::SHAKING:
             vPos = CameraShake(vPos, 6.0f, 3.f);

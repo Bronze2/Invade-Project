@@ -234,9 +234,6 @@
     <ClCompile Include="SpawnScript.cpp">
       <Filter>Script\Spawn</Filter>
     </ClCompile>
-    <ClCompile Include="StaticUI.cpp">
-      <Filter>Script\UI</Filter>
-    </ClCompile>
     <ClCompile Include="TowerScript.cpp">
       <Filter>Script\Tower</Filter>
     </ClCompile>
@@ -291,7 +288,6 @@
     <ClCompile Include="IMGUIMgr.cpp">
       <Filter>IMGUI\Mgr</Filter>
     </ClCompile>
-    <ClCompile Include="Trail.cpp" />
     <ClCompile Include="ButtonScript.cpp">
       <Filter>Script\UI</Filter>
     </ClCompile>
@@ -300,6 +296,12 @@
     </ClCompile>
     <ClCompile Include="Animator2D.cpp">
       <Filter>Object\Component\Ani</Filter>
+    </ClCompile>
+    <ClCompile Include="TrailScript.cpp">
+      <Filter>Script\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="TrailRenderer.cpp">
+      <Filter>Object\Component\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -507,9 +509,6 @@
     <ClInclude Include="SpawnScript.h">
       <Filter>Script\Spawn</Filter>
     </ClInclude>
-    <ClInclude Include="StaticUI.h">
-      <Filter>Script\UI</Filter>
-    </ClInclude>
     <ClInclude Include="TowerScript.h">
       <Filter>Script\Tower</Filter>
     </ClInclude>
@@ -570,7 +569,6 @@
     <ClInclude Include="IMGUIMgr.h">
       <Filter>IMGUI\Mgr</Filter>
     </ClInclude>
-    <ClInclude Include="Trail.h" />
     <ClInclude Include="ButtonScript.h">
       <Filter>Script\UI</Filter>
     </ClInclude>
@@ -579,6 +577,12 @@
     </ClInclude>
     <ClInclude Include="Animator2D.h">
       <Filter>Object\Component\Ani</Filter>
+    </ClInclude>
+    <ClInclude Include="TrailScript.h">
+      <Filter>Script\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="TrailRenderer.h">
+      <Filter>Object\Component\Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -695,6 +699,12 @@
     </Filter>
     <Filter Include="Script\UI">
       <UniqueIdentifier>{3f774511-2923-4dc1-9a6d-048afcbec606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Trail">
+      <UniqueIdentifier>{0684c2d2-ce4b-4309-b0f7-7f8ac91a5431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Component\Trail">
+      <UniqueIdentifier>{55c9a9af-0d00-4a7f-acf1-3dc9c490e29f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

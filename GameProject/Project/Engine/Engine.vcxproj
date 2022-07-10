@@ -253,7 +253,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SpawnScript.h" />
-    <ClInclude Include="StaticUI.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Terrain.h" />
@@ -264,8 +263,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TowerScript.h" />
-    <ClInclude Include="Trail.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    <ClInclude Include="TrailRenderer.h" />
+    <ClInclude Include="TrailScript.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Transform.h" />
@@ -356,7 +356,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
-    <ClCompile Include="StaticUI.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -366,8 +365,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TowerScript.cpp" />
-    <ClCompile Include="Trail.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    <ClCompile Include="TrailRenderer.cpp" />
+    <ClCompile Include="TrailScript.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Transform.cpp" />

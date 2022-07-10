@@ -3,7 +3,6 @@
 
 #include "PlayerScript.h"
 #include "MeshRender.h"
-#include "StaticUI.h"
 #include "RenderMgr.h"
 
 CDarkSkill0Script::CDarkSkill0Script() :CScript((UINT)SCRIPT_TYPE::DARKSKILL0), m_bStart(false), m_bTickCheck(false)

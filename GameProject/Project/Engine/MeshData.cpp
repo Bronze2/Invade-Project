@@ -46,8 +46,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 	// 메테리얼 가져오기
 	for (int j = 0; j < 1; ++j)
 	{
-		wcout << strMeshName;
-		cout << " : " << loader.GetContainerCount() << endl;
+		/*wcout << strMeshName;
+		cout << " : " << loader.GetContainerCount() << endl;*/
 		for (UINT i = 0; i < loader.GetContainer(j).vecMtrl.size(); ++i)
 		{
 			// 예외처리 (material 이름이 입력 안되어있을 수도 있다.)

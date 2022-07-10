@@ -27,7 +27,6 @@ static type* GetInst()\
 
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
-
 #define CLONE(type) public: type* Clone() { return new type(*this); }
 #define CLONE_DISABLE(type) type* Clone() { assert(nullptr); return nullptr;} \
                             type(const type& _class){assert(nullptr);}
@@ -41,6 +40,7 @@ static type* GetInst()\
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
 typedef DirectX::SimpleMath::Vector4 Vec4;
+typedef DirectX::SimpleMath::Quaternion Quaternion;
 using DirectX::SimpleMath::Matrix;
 
 enum class CONST_REGISTER
@@ -150,7 +150,7 @@ enum class COMPONENT_TYPE
 	PARTICLESYSTEM,
 	TERRAIN,
 	SENSOR,
-	STATIC_UI,
+	TRAILRENDERER,
 	END,
 	SCRIPT,
 

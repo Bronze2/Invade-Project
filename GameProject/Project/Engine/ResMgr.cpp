@@ -809,21 +809,23 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"ParticleShader", pShader);
 
-	//pShader = new CShader;
-	//pShader->CreateVertexShader(L"Shader\\trail.fx", "VS_Trail", "vs_5_0");
-	//pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
-	//pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
+	// 트레일
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\trail.fx", "VS_Trail", "vs_5_0");
+	pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
+	pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
 
-	//pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
-	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
 
-	//pShader->Create(SHADER_POV::TRAIL, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
+	pShader->Create(SHADER_POV::TRAIL, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
 
-	//pShader->AddShaderParam(tShaderParam{ L"Start Scale", SHADER_PARAM::FLOAT_0 });
-	//pShader->AddShaderParam(tShaderParam{ L"End Scale", SHADER_PARAM::FLOAT_1 });
-	//pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
+	pShader->AddShaderParam(tShaderParam{ L"Width", SHADER_PARAM::FLOAT_0 });
+	pShader->AddShaderParam(tShaderParam{ L"Height", SHADER_PARAM::FLOAT_1 });
+	pShader->AddShaderParam(tShaderParam{ L"Color", SHADER_PARAM::VEC4_0 });
+	pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
 
-	//AddRes(L"TrailShader", pShader);
+	AddRes(L"TrailShader", pShader);
 
 
 
@@ -1057,6 +1059,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
 	AddRes(L"TerrainMtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"TrailShader"));
+	AddRes(L"TrailMtrl", pMtrl);
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype

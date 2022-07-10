@@ -6,7 +6,7 @@
 #include "CameraScript.h"
 #include "CrossHairScript.h"
 #include "Collider3D.h"
-#include "Trail.h"
+#include "Camera.h"
 
 void CBowScript::Update()
 {
@@ -38,7 +38,7 @@ void CBowScript::Update()
 	Vec3 vArrowDir;
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed = 200.f;
+		m_fArrowSpeed = 500.f;
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
@@ -55,29 +55,34 @@ void CBowScript::Update()
 	// 크로스헤어
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 		CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
-		Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
-		Vec3 vStartPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
+		CGameObject* pPlayer = GetObj()->GetParent();
+		Vec3 vCrossHairDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
+		Vec3 vCrossHairPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
 		
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
-		cout << vTargetDir.x << ", " << vTargetDir.y << ", " << vTargetDir.z << endl;
-
-		Vec3 vPlayerRot = GetObj()->GetParent()->Transform()->GetLocalRot();
+		Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
+		//Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
+		Vec3 vArrowPos = pPlayer->Transform()->GetWorldPos() + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -50.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y, 0.f);
 		Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
-		//Vec4 qArrowQtrn = GetObj()->GetParent
+
+		Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
+		vArrowDir.y = vCrossHairDir.y;
+		vArrowDir.Normalize();
+		cout << "vArrowDir : " << vArrowDir.x << ", " << vArrowDir.y << ", " << vArrowDir.z << endl;
 
 		m_pArrow[m_iCurArrow]->ClearParent();
-
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartAngle(fCamRotDegree);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vCrossHairDir);
+		Vec3 vQtrnDir = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetQtrnRotAxis(vQtrnDir);
 
 		m_iCurArrow++;
 		m_iPower = 1;
@@ -225,6 +230,7 @@ void CBowScript::Awake()
 		m_pArrow[i]->GetScript<CArrowScript>()->SetLayerIdx(GetObj()->GetLayerIdx());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
+		
 		GetObj()->AddChild(m_pArrow[i]);
 		m_pArrow[i]->Awake();
 

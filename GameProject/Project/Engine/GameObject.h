@@ -15,7 +15,7 @@ class CCamera;
 class CParticleSystem;
 class CTerrain;
 class CSensor;
-class CStaticUI;
+class CTrailRenderer;
 
 class CGameObject :public CEntity
 {
@@ -58,7 +58,7 @@ public:
 	CParticleSystem* ParticleSystem() { return (CParticleSystem*)m_arrCom[(UINT)COMPONENT_TYPE::PARTICLESYSTEM]; }
 	CTerrain* Terrain() { return (CTerrain*)m_arrCom[(UINT)COMPONENT_TYPE::TERRAIN]; }
 	CSensor* Sensor() { return (CSensor*)m_arrCom[(UINT)COMPONENT_TYPE::SENSOR]; }
-	CStaticUI* StaticUI() { return (CStaticUI*)m_arrCom[(UINT)COMPONENT_TYPE::STATIC_UI]; }
+	CTrailRenderer* TrailRenderer() { return (CTrailRenderer*)m_arrCom[(UINT)COMPONENT_TYPE::TRAILRENDERER]; }
 
 	const vector<CScript*>& GetScripts()const { return m_vecScript; }
 

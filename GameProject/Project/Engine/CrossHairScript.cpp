@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "CrossHairScript.h"
 
-#include "StaticUI.h"
 #include "Device.h"
 #include "ConstantBuffer.h"
 #include "RenderMgr.h"
@@ -19,14 +18,14 @@ void CCrossHairScript::Update()
 	Matrix matProj = m_pMainCam->Camera()->GetProjMat();
 
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
-	RECT rtWindow;
-	GetWindowRect(CRenderMgr::GetInst()->GethWnd(), &rtWindow);
+	RECT rtClient;
+	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rtClient);
 	Vec3 vTargetPos;
 
-	Vec3 vCrossHairPos = Vec3(rtWindow.left + res.fWidth/2, rtWindow.top - res.fHeight/2, 1.f);
+	Vec3 vCrossHairPos = Vec3(rtClient.left + res.fWidth/2.f, rtClient.top - res.fHeight/2.f + res.fHeight / 4.f, 1.f);
 
-	vTargetPos.x = (((2.f * vCrossHairPos.x) / res.fWidth) - 1.f);
-	vTargetPos.y = (((-2.f * vCrossHairPos.y) / res.fHeight) + 1.f);
+	vTargetPos.x = ((2.f * vCrossHairPos.x) / res.fWidth - 1.f);
+	vTargetPos.y = ((-2.f * vCrossHairPos.y) / res.fHeight + 1.f);
 	vTargetPos.z = 1.f;
 
 	Vec3 vProj = vTargetPos;
@@ -41,9 +40,13 @@ void CCrossHairScript::Update()
 	m_vDir.x = vView.x * matViewInv._11 + vView.y * matViewInv._21 + vView.z * matViewInv._31;
 	m_vDir.y = vView.x * matViewInv._12 + vView.y * matViewInv._22 + vView.z * matViewInv._32;
 	m_vDir.z = vView.x * matViewInv._13 + vView.y * matViewInv._23 + vView.z * matViewInv._33;
+
+	//m_vPos = XMVector2TransformCoord(Vec3(0.f, 0.f, 0.f), matViewInv);
+	//m_vDir = XMVector3TransformNormal(vView, matViewInv);
 	m_vDir.Normalize();
 
-	m_vPos = Vec3(matViewInv._41, matViewInv._42, matViewInv._43);
+	m_vPos = m_vPos + m_vDir * 100.f;
+
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 		if (vScale.x >= 30.f && vScale.y >= 30.f) {
@@ -56,7 +59,7 @@ void CCrossHairScript::Update()
 	}
 
 	Vec3 vPos = vTargetPos;
-	vPos.x -= m_vRestoreScale.x / 2.f;
+	//vPos.x -= m_vRestoreScale.x / 2.f;
 	vPos.y += m_vRestoreScale.y / 2.f;
 
 	Transform()->SetLocalPos(vPos);
