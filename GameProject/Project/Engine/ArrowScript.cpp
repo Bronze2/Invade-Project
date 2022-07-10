@@ -79,7 +79,8 @@ void CArrowScript::Awake()
 	m_pTrail->TrailRenderer()->SetColor(Vec4(1.f, 0.f, 0.f, 1.f));
 	m_pTrail->TrailRenderer()->SetWidth(10.f);
 	m_pTrail->TrailRenderer()->SetHeight(100.f);
-	m_pTrail->SetActive(false);
+	m_pTrail->TrailRenderer()->SetEmit(false);
+	m_pTrail->SetActive(true);
 	m_pTrail->FrustumCheck(false);
 	GetObj()->AddChild(m_pTrail);
 
@@ -143,7 +144,7 @@ void CArrowScript::Update()
 			Vec4 vDir = Vec4(m_vDir, 1.f);
 			m_pParticle->ParticleSystem()->SetDir(vDir);
 
-			m_pTrail->SetActive(true);
+			m_pTrail->TrailRenderer()->SetEmit(true);
 
 			// 화살 기존 코드
 			CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
@@ -153,7 +154,7 @@ void CArrowScript::Update()
 
 			Vec3 vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			vXZDir.Normalize();
-			float fAngle = acos(Dot(m_vDir, vXZDir));
+			m_fAngle = acos(Dot(m_vDir, vXZDir));
 			//m_fSpeed = 1000;
 
 			m_fTime += DT;
@@ -164,25 +165,25 @@ void CArrowScript::Update()
 			//vRot.z = fAngle * 180 / PI;
 
 			//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
-			vPos.z = m_vStartPos.z + vXZDir.z * (m_fSpeed * m_fTime * cos(fAngle)) / 2;
-			vPos.x = m_vStartPos.x + vXZDir.x * (m_fSpeed * m_fTime * cos(fAngle)) / 2;
+			vPos.z = m_vStartPos.z + vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+			vPos.x = m_vStartPos.x + vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
 
 			//vPos = m_vDir 
-			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
 
 			//처음 화살 Update
 			if (m_fVelocityY == 5000) {
 				//  현재 포물선 운동을 하고 있는 Y값
 				// 
-				m_fVelocityY = ((m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
 
 				//최고점 높이 == velocity가 0이되는 지점. 
-				m_fHighest = (m_fSpeed * sin(fAngle)) * (m_fSpeed * sin(fAngle)) / ((GRAVITY * 70) * 2);
-				m_fPerRotate = m_fHighest / fAngle;
+				m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
+				m_fPerRotate = m_fHighest / m_fAngle;
 
 			}
 			else {
-				m_fVelocityY = ((m_fSpeed * m_fTime * sin(fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
 				float fHigh = m_fHighest - m_fVelocityY;
 				float fRotateAngle = fHigh / m_fPerRotate;
 				if (fRotateAngle <= 0.005f && m_fDir == 1) {
@@ -207,7 +208,7 @@ void CArrowScript::Init()
 		m_pBow->AddChild(GetObj());
 	}
 
-	m_pTrail->SetActive(false);
+	m_pTrail->TrailRenderer()->SetEmit(false);
 	m_bSetDotValue = false;
 	m_fVelocityY = 5000;
 	m_fFallSpeed = 0.f;

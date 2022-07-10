@@ -18,12 +18,17 @@ private:
 
 public:
 	void Init(Ptr<CTexture> _pTex);
+	virtual void Update();
 	virtual void FinalUpdate();
 	virtual void Render();
 
 	void SetColor(Vec4 _vColor) { m_vColor = _vColor; }
 	void SetWidth(float _fWidth) { m_fWidth = _fWidth; }
 	void SetHeight(float _fHeight) { m_fHeight = _fHeight; }
+
+	void EmitPoint(Vec3 _vPos, float _fAngle);
+	// 일정 시간마다 점 기준으로 Point 생성 (Update에서 호출)
+	// bool 변수로 끝인지 아닌지 판별
 
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);

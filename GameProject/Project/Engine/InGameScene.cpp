@@ -199,7 +199,7 @@ void CInGameScene::Init()
 	pBow->Transform()->SetLocalPos(Vec3(0.0f, 0.0f, 0.0f));
 	pBow->Transform()->SetLocalScale(Vec3(2.4f, 1.2f, 2.4f));
 	pBow->Transform()->SetLocalRot(Vec3(0.0f, 0.0f, 0.0f));
-	pBow->MeshRender()->SetDynamicShadow(false);
+	pBow->MeshRender()->SetDynamicShadow(true);
 	pBow->GetScript<CBowScript>()->SetTarget(pObject);
 	pBow->GetScript<CBowScript>()->SetBoneIdx(14);
 
@@ -281,7 +281,7 @@ void CInGameScene::Init()
 	pRedFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedFirstTower->FrustumCheck(false);
 	pRedFirstTower->GetScript<CTowerScript>()->Init();
-	pRedFirstTower->MeshRender()->SetDynamicShadow(false);
+	pRedFirstTower->MeshRender()->SetDynamicShadow(true);
 
 	FindLayer(L"Red")->AddGameObject(pRedFirstTower);
 
@@ -326,7 +326,7 @@ void CInGameScene::Init()
 	pBlueFirstTower->Transform()->SetLocalPos(Vec3(375.f, 0.f, 300.f));
 	pBlueFirstTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pBlueFirstTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
-	pBlueFirstTower->MeshRender()->SetDynamicShadow(false);
+	pBlueFirstTower->MeshRender()->SetDynamicShadow(true);
 	pBlueFirstTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueFirstTower);
 
@@ -347,7 +347,7 @@ void CInGameScene::Init()
 	pBlueSecondTower->Transform()->SetLocalPos(Vec3(-2125.f, 0.f, -2200.f));
 	pBlueSecondTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pBlueSecondTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
-	pBlueSecondTower->MeshRender()->SetDynamicShadow(false);
+	pBlueSecondTower->MeshRender()->SetDynamicShadow(true);
 	pBlueSecondTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
@@ -368,7 +368,7 @@ void CInGameScene::Init()
 	pBlueNexus->Transform()->SetLocalRot(Vec3(-3.14f / 6, 0.F, 0.f));
 
 	pBlueNexus->Transform()->SetLocalScale(Vec3(130.f, 130.f, 130.f));
-	pBlueNexus->MeshRender()->SetDynamicShadow(false);
+	pBlueNexus->MeshRender()->SetDynamicShadow(true);
 
 	FindLayer(L"Blue")->AddGameObject(pBlueNexus);
 
@@ -398,7 +398,7 @@ void CInGameScene::Init()
 	pRedNexus->Transform()->SetLocalRot(Vec3(-3.14f / 6, 3.14f, 0.f));
 
 	pRedNexus->Transform()->SetLocalScale(Vec3(130.f, 130.f, 130.f));
-	pRedNexus->MeshRender()->SetDynamicShadow(false);
+	pRedNexus->MeshRender()->SetDynamicShadow(true);
 	FindLayer(L"Red")->AddGameObject(pRedNexus);
 
 	CGameObject* pRedSpawnPlace = new CGameObject;

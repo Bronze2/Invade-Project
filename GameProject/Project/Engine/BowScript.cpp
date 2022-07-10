@@ -79,7 +79,6 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartPos(vArrowPos);
-		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartAngle(fCamRotDegree);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vCrossHairDir);
 		Vec3 vQtrnDir = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetQtrnRotAxis(vQtrnDir);
