@@ -347,7 +347,9 @@ void CPlayerScript::Update()
 	Vec3 vPos = Transform()->GetLocalPos();
 	Vec3 vPos2 = Transform()->GetLocalPos();
 	Vec3 vPos3 = Transform()->GetWorldPos();
-
+	if (KEY_TAB(KEY_TYPE::KEY_L)) {
+		cout << vPos2.x <<" :" << vPos2.y <<" :" << vPos2.z << endl;
+	}
 
 	Vec3 vPrevPos = vPos2;
 	Vec3 vRot = Transform()->GetLocalRot();

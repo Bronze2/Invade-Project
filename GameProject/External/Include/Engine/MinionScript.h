@@ -63,12 +63,12 @@ class CMinionScript :
     SimpleMath::Ray* GetRay() { return m_pRay; }
    
 
-
+    float m_fStartXValue;
 
 public:
 
     void IsPlayerandObstacle();
-
+ 
     void CheckHp();
     CLONE(CMinionScript)
     void Init();

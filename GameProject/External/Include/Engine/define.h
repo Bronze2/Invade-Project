@@ -391,7 +391,7 @@ enum class SKILL_TYPE {
 	PASSIVE,
 };
 
-
+using namespace SimpleMath;
 
 
 enum class eSOUND {

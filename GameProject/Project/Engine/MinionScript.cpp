@@ -14,6 +14,7 @@
 
 void CMinionScript::Init()
 {
+	m_fStartXValue = Transform()->GetLocalPos().x;
 	m_pMeleeSound = CResMgr::GetInst()->FindRes<CSound>(L"MinionMeleeHit");
 	m_pRangeSound = CResMgr::GetInst()->FindRes<CSound>(L"MinionRangeHit");
 	m_eState = MINION_STATE::WALK;
@@ -59,14 +60,14 @@ void CMinionScript::Init()
 	m_pTarget = m_pNexus;
 	m_pRay = new SimpleMath::Ray;
 
-
+	 m_fSpeed = 500.f;
 }
 
 
 void CMinionScript::Update()
 {
 
-	
+
 	CheckObstacle();
 	if (KEY_HOLD(KEY_TYPE::KEY_1)) {
 		m_eState = MINION_STATE::IDLE;
@@ -85,19 +86,28 @@ void CMinionScript::Update()
 	}
 	FindNearObject(m_arrEnemy);
 	CheckRange();
-	Vec3 vPos = Transform()->GetWorldPos(); 
+	Vec3 vPos = Transform()->GetWorldPos();
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
-	if (nullptr != m_pTarget&&!m_bAllienceCol) {
+	if (nullptr != m_pTarget && !m_bAllienceCol) {
 		Vec3 vTargetPos;
 		if (!m_pTarget->IsDead()) {
-			vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-			float rotate = angle * 0.0174532925f;
-			vRot.y = rotate;
+
+			if (FIND_STATE::RAY_FIRST == m_eFindState) {
+				float angle = atan2(vPos.x - m_fStartXValue, vPos.z - vPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+
+			}
+			else {
+				vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+			}
 		}
 	}
-	if (m_bAllienceCol&&!m_bSeparate) {
+	if (m_bAllienceCol && !m_bSeparate) {
 		if (m_bRotate) {
 			if (m_eCamp == CAMP_STATE::RED) {
 				vRot.y -= PI / 2;
@@ -111,14 +121,21 @@ void CMinionScript::Update()
 
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
-	
+	if (FIND_STATE::RAY_FIRST == m_eFindState)
+	{
+		if ((int)vLocalPos.x == (int)m_fStartXValue) {
+			m_eFindState = FIND_STATE::NONE;
+			m_pTarget = m_pNexus;
+			m_arrEnemy.clear();
+		}
+	}
 
 	switch (m_eState)
 	{
 	case MINION_STATE::WALK: {
 		Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		vLocalPos.x -= vWorldDir.x * 100.f * DT;
-		vLocalPos.z -= vWorldDir.z * 100.f * DT;
+		vLocalPos.x -= vWorldDir.x * m_fSpeed * DT;
+		vLocalPos.z -= vWorldDir.z * m_fSpeed * DT;
 		Transform()->SetLocalPos(vLocalPos);
 		Transform()->SetLocalRot(vRot);
 	}
@@ -126,10 +143,20 @@ void CMinionScript::Update()
 	case MINION_STATE::ATTACK:
 	{
 		if (m_ePrevState != m_eState) {
-			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-			float rotate = angle * 0.0174532925f;
-			vRot.y = rotate;
+
+			if (FIND_STATE::RAY_FIRST == m_eFindState) {
+				float angle = atan2(vPos.x - m_fStartXValue, vPos.z - vPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+				m_eState = MINION_STATE::WALK;
+				m_arrEnemy.clear();
+			}
+			else {
+				Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+			}
 		}
 	}
 		break;
@@ -185,7 +212,7 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 	Vec3 vWorldPos = Transform()->GetWorldPos();
 
 	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	vDir *= -1.0f;
+
 
 	if (nullptr == m_pTarget)
 		return;
@@ -209,10 +236,10 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 
 		target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
 		float distance = Vec3::Distance(target, vWorldPos);
-
+		Vec3 vPos2 = Vec3();
 		
 		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
-		if (distance2 > distance)
+		if (min > distance)
 			return;
 		if (_pCollider->GetObj()->GetName() == L"Obstacle") {
 			m_InterSectObject=_pCollider->GetObj();
@@ -343,6 +370,12 @@ void CMinionScript::CheckRange()
 
 void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {
+	if (FIND_STATE::RAY_FIRST == m_eFindState) {
+
+
+		return;
+	}
+
 	if (m_arrEnemy.size() == 0) {
 		m_pTarget = m_pNexus;
 	}

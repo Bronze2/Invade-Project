@@ -72,6 +72,7 @@ private:
     CSound* m_pHitSound;
     CSound* m_pDeadSound;
 
+    CSound* m_pErrorSound;
 public:
     void m_FAnimation();
 
