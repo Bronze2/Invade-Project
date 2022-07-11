@@ -14,6 +14,9 @@
 
 void CMinionScript::Init()
 {
+	m_bDetection = false;
+	m_fMinStartX = -630;
+	m_fMaxStartX = -620;
 	m_fStartXValue = Transform()->GetLocalPos().x;
 	m_pMeleeSound = CResMgr::GetInst()->FindRes<CSound>(L"MinionMeleeHit");
 	m_pRangeSound = CResMgr::GetInst()->FindRes<CSound>(L"MinionRangeHit");
@@ -60,13 +63,12 @@ void CMinionScript::Init()
 	m_pTarget = m_pNexus;
 	m_pRay = new SimpleMath::Ray;
 
-	 m_fSpeed = 500.f;
+	 m_fSpeed = 200.f;
 }
 
 
 void CMinionScript::Update()
 {
-
 
 	CheckObstacle();
 	if (KEY_HOLD(KEY_TYPE::KEY_1)) {
@@ -123,11 +125,25 @@ void CMinionScript::Update()
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	if (FIND_STATE::RAY_FIRST == m_eFindState)
 	{
-		if ((int)vLocalPos.x == (int)m_fStartXValue) {
+		if ((m_fMinStartX < vLocalPos.x)&&(m_fMaxStartX>vLocalPos.x)) {
 			m_eFindState = FIND_STATE::NONE;
-			m_pTarget = m_pNexus;
+			if (!m_pFirstTower->IsDead())
+			{
+
+				m_pTarget = m_pFirstTower;
+
+			}
+			else if (!m_pSecondTower->IsDead()) {
+
+				m_pTarget = m_pSecondTower;
+
+			}
+			else
+				m_pTarget = m_pNexus;
 			m_arrEnemy.clear();
 		}
+
+	
 	}
 
 	switch (m_eState)
@@ -210,6 +226,7 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 {
 	Vec3 vWorldPos = Transform()->GetWorldPos();
+	vWorldPos.y += Collider3D()->GetOffsetPos().y;
 
 	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
@@ -218,9 +235,7 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 		return;
 	if (nullptr == m_pTarget->GetScript<CPlayerScript>())
 		return;
-	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
-		int a = 0;
-	}
+
 
 	Vec3 target = m_pTarget->Transform()->GetWorldPos();
 	target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
@@ -241,10 +256,12 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
 		if (min > distance)
 			return;
-		if (_pCollider->GetObj()->GetName() == L"Obstacle") {
+		if (_pCollider->GetObj()->GetName() == L"obstacle") {
 			m_InterSectObject=_pCollider->GetObj();
 
 			m_eFindState = FIND_STATE::RAY_FIRST;
+
+			m_fPrevXValue = vWorldPos.x;
 			
 		}
 		
@@ -256,12 +273,13 @@ void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
 		m_arrEnemy.push_back(_pOther);
 		m_bFindNear = true;
-
+		m_bDetection = true;
 		if (nullptr != _pOther->GetScript<CPlayerScript>())
 		{
 			
 		}
 	}
+	
 }
 
 void CMinionScript::OnDetection(CGameObject* _pOther)
@@ -287,7 +305,19 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 			m_arrEnemy.erase(iter);
 			if (Sensor()->GetDetectionCount() == 0) {
 				m_bFindNear = false;
-				m_pTarget = m_pNexus;
+				if (!m_pFirstTower->IsDead())
+				{
+
+					m_pTarget = m_pFirstTower;
+
+				}
+				else if (!m_pSecondTower->IsDead()) {
+
+					m_pTarget = m_pSecondTower;
+
+				}
+				else
+					m_pTarget = m_pNexus;
 			}
 			else {
 
@@ -297,7 +327,7 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 		}
 		
 	}
-
+	
 }
 
 void CMinionScript::RayCollision(const CLayer* _pLayer)
@@ -347,24 +377,47 @@ void CMinionScript::CheckHp()
 #include "GameObject.h"
 void CMinionScript::CheckRange()
 {
-	
+
+
 	if (m_pTarget == nullptr)return;
 	if (m_pTarget->IsDead())return;
+
+
+
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
-	if (m_fAttackRange >= length) {
-		m_eState = MINION_STATE::ATTACK;
+	if (m_pTarget->GetScript<CTowerScript>()) {
+		float m_fTowerAttackRange = m_fAttackRange+100.f;
+
+		if (m_fTowerAttackRange >= length) {
+			m_eState = MINION_STATE::ATTACK;
+		}
+		else {
+			if (m_bFinishAnimation) {
+
+
+				m_eState = MINION_STATE::WALK;
+
+
+			}
+
+		}
 	}
 	else {
-		if (m_bFinishAnimation) {
-			
-			
-			m_eState = MINION_STATE::WALK;
-			
-			
+		if (m_fAttackRange >= length) {
+			m_eState = MINION_STATE::ATTACK;
 		}
-		
+		else {
+			if (m_bFinishAnimation) {
+
+
+				m_eState = MINION_STATE::WALK;
+
+
+			}
+
+		}
 	}
 }
 
@@ -376,8 +429,31 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 		return;
 	}
 
+
+
+
 	if (m_arrEnemy.size() == 0) {
-		m_pTarget = m_pNexus;
+
+		if (!m_bDetection)
+		{
+			m_pTarget = m_pNexus;
+		}
+		else {
+			if (!m_pFirstTower->IsDead())
+			{
+				
+				m_pTarget = m_pFirstTower;
+				
+			}
+			else if (!m_pSecondTower->IsDead()) {
+				
+				m_pTarget = m_pSecondTower;
+				
+			}
+			else
+				m_pTarget = m_pNexus;
+		}
+	
 	}
 
 
@@ -654,7 +730,12 @@ static bool iSeparate=true;
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
-	
+		if (nullptr != _pOther->GetObj()->GetScript<CTowerScript>()) {
+			if ((UINT)_pOther->GetObj()->GetScript<CTowerScript>()->GetCamp() != (UINT)m_eCamp) {
+				m_eState = MINION_STATE::ATTACK;
+				m_pTarget = _pOther->GetObj();
+			}
+		}
 	}
 	else {
 		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp&&m_eState==MINION_STATE::WALK) {
@@ -664,10 +745,10 @@ void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 				float Value=_pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
 				if (Value >= 0) {
 					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
-					GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
+					SetSeparate(true);
 				}
 				else {
-					GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
+					SetSeparate(false);
 					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
 				}
 			

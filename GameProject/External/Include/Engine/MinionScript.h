@@ -63,10 +63,25 @@ class CMinionScript :
     SimpleMath::Ray* GetRay() { return m_pRay; }
    
 
+
+    //Ray
     float m_fStartXValue;
+    float m_fMinStartX;
+    float m_fMaxStartX;
+    bool m_bDetection;
+    float m_fPrevXValue;
+
+
+    CGameObject* m_pFirstTower;
+    CGameObject* m_pSecondTower;
+
+
+
 
 public:
 
+    void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
+    void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
     void IsPlayerandObstacle();
  
     void CheckHp();

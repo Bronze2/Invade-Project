@@ -16,7 +16,7 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMinionScript);
 	pObject->AddComponent(new CSensor);
-	pObject->Sensor()->SetRadius(1600.f);
+	pObject->Sensor()->SetRadius(1500.f);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(_vOffsetScale);
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
@@ -27,6 +27,8 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 	pObject->Animator3D()->SetAnimation(_pAnimation);
 	pObject->Animator3D()->SetAnimClip(_pAnimation->GetAnimClip());
 	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
+	pObject->GetScript<CMinionScript>()->SetFirstTower(m_pFirstTower);
+	pObject->GetScript<CMinionScript>()->SetSecondTower(m_pSecondTower);
 	pObject->GetScript<CMinionScript>()->SetAttackType(_eAttackRange);
 	pObject->GetScript<CMinionScript>()->SetCamp(_eCamp);
 	pObject->GetScript<CMinionScript>()->Init();
@@ -36,7 +38,7 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 }
 void CSpawnScript::Update()
 {
-	return;
+
 	if (!m_bClockStart) {
 		m_uiPatternStart = clock();
 		m_bClockStart = true;

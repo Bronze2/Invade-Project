@@ -120,6 +120,8 @@ void CTowerScript::SetNexus(CGameObject* _pObject)
 
 void CTowerScript::m_FAttack()
 {
+
+
 	if (nullptr != m_pTarget) {
 		if (!m_bAttackStart) {
 			m_bAttackStart = true;
@@ -165,6 +167,11 @@ void CTowerScript::Update()
 		DeleteObject(GetObj());
 		return;
 	}
+	if (TOWER_TYPE::NEXUS == m_eType) {
+		return;
+	}
+
+
 	FindNearObject(m_arrEnemy);
 	m_FRotate();
 	m_FAttack();
@@ -174,8 +181,46 @@ void CTowerScript::FinalUpdate()
 {
 }
 
+void CTowerScript::GetDamage(const UINT& _Dmg)
+{
+	if (TOWER_TYPE::SECOND == m_eType)
+	{
+		if (m_pFirstTower->IsDead()) {
+			m_iCurHp -= _Dmg;
+			if (m_iCurHp < 0) {
+				m_iCurHp = 0;
+			}
+			if (m_iCurHp > m_iMaxHp)
+				m_iCurHp = m_iMaxHp;
+		}
+	}
+	else if (TOWER_TYPE::NEXUS == m_eType) {
+		if (m_pSecondTower->IsDead()) {
+			m_iCurHp -= _Dmg;
+			if (m_iCurHp < 0) {
+				m_iCurHp = 0;
+			}
+			if (m_iCurHp > m_iMaxHp)
+				m_iCurHp = m_iMaxHp;
+		}
+	}
+	else {
+		m_iCurHp -= _Dmg;
+		if (m_iCurHp < 0) {
+			m_iCurHp = 0;
+		}
+		if (m_iCurHp > m_iMaxHp)
+			m_iCurHp = m_iMaxHp;
+	}
+	
+	
+}
+
 void CTowerScript::OnDetectionEnter(CGameObject* _pOther)
 {
+	if(TOWER_TYPE::NEXUS==m_eType) {
+		return;
+	}
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
 		m_arrEnemy.push_back(_pOther);
 		m_bFindNear = true;
@@ -187,10 +232,16 @@ void CTowerScript::OnDetectionEnter(CGameObject* _pOther)
 
 void CTowerScript::OnDetection(CGameObject* _pOther)
 {
+	if (TOWER_TYPE::NEXUS == m_eType) {
+		return;
+	}
 }
 
 void CTowerScript::OnDetectionExit(CGameObject* _pOther)
 {
+	if (TOWER_TYPE::NEXUS == m_eType) {
+		return;
+	}
 	vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
 	for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
 		if (m_arrEnemy[i] == _pOther) {

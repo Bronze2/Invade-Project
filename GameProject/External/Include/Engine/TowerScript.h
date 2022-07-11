@@ -66,14 +66,7 @@ public:
     virtual void Update();
     virtual void FinalUpdate();
 
-    void GetDamage(const UINT& _Dmg) {
-        m_iCurHp -= _Dmg;
-        if (m_iCurHp < 0) {
-            m_iCurHp = 0;
-        }
-        if (m_iCurHp > m_iMaxHp)
-            m_iCurHp = m_iMaxHp;
-    }
+    void GetDamage(const UINT& _Dmg);
    
 
     virtual void OnDetectionEnter(CGameObject* _pOther);

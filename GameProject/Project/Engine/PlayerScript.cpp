@@ -325,7 +325,7 @@ void CPlayerScript::Awake()
 	GetObj()->AddChild(m_pThunderParticle);
 	
 
-	m_fMoveSpeed = 300.f;
+	m_fMoveSpeed = 500.f;
 
 }
 
