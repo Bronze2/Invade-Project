@@ -52,6 +52,9 @@ public:
 
 	void send_current_room(int user_id, int room_id, int max_user, int current_user);
 
+	void send_lobby_team_packet(int room_id, int client_id);
+
+	void send_lobby_ready_pacekt(int room_id, bool _isReady , int id);
 private:
 
 };

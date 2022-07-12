@@ -29,6 +29,8 @@ void CLobbyScene::Init()
 	GetLayer(3)->SetName(L"Blue");
 	GetLayer(4)->SetName(L"Red");
 	GetLayer(8)->SetName(L"Tile");
+	GetLayer(9)->SetName(L"Player");
+
 	GetLayer(30)->SetName(L"UI");
 
 	tResolution res = CRenderMgr::GetInst()->GetResolution();
@@ -53,12 +55,12 @@ void CLobbyScene::Init()
 
 	pMainCam->Transform()->SetLocalPos(Vec3(0, 100, 0));		// -300, 130, -50
 	pMainCam->Transform()->SetLocalRot(Vec3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f)));		// -15.f
-	
-	
+
+
 	//pMainCam->GetScript<CCameraScript>()->SetMoveLobbyCam(false);
 
 	CRenderMgr::GetInst()->SetCamera(pMainCam->Camera());
-	
+
 	FindLayer(L"Default")->AddGameObject(pMainCam);
 
 
@@ -92,6 +94,108 @@ void CLobbyScene::Init()
 	pLight->Light3D()->SetLightDir(Vec3(1.f, -1.f, 1.f));
 	pLight->Light3D()->SetLightRange(10000.f);
 	FindLayer(L"Default")->AddGameObject(pLight);
+	
+
+
+
+
+
+
+	//-----------------------------------------------------------------------------------------------
+// 플레이어 fbx
+//-----------------------------------------------------------------------------------------------
+
+	// Player (helmet - PlayerScript에서)
+	Ptr<CMeshData> pPlayerBlueMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_blue.mdat", L"MeshData\\player_blue.mdat");
+	Ptr<CMeshData> pPlayerRedMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
+	Ptr<CTexture> pBlueTex = CResMgr::GetInst()->FindRes<CTexture>(L"PlayerBlue");
+	Ptr<CTexture> pRedTex = CResMgr::GetInst()->FindRes<CTexture>(L"PlayerRed");
+
+	for (int i = 0; i < 8; i++) {
+		CGameObject* pPlayerObj = new CGameObject;
+
+		if (i < 4) {
+			pPlayerObj = pPlayerBlueMeshData->Instantiate();
+			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
+		}
+		else {
+			pPlayerObj = pPlayerRedMeshData->Instantiate();
+			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
+		}
+
+		pPlayerObj->SetName(L"Monster");
+		pPlayerObj->AddComponent(new CPlayerScript);
+		pPlayerObj->FrustumCheck(false);
+		pPlayerObj->Transform()->SetLocalPos(Vec3(-525.f + i * 150.f, 0.f - 1000.f, 1000.f));
+		pPlayerObj->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
+		pPlayerObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), XMConvertToRadians(0.f), 0.f));
+		pPlayerObj->MeshRender()->SetDynamicShadow(false);
+
+		CAnimation* pPlayerAnimation = new CAnimation;
+		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);
+		pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
+		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 100);
+
+		pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);
+		pPlayerObj->Animator3D()->SetAnimClip(pPlayerAnimation->GetAnimClip());
+
+		switch (i % 4) {
+		case 0:
+			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
+			break;
+		case 1:
+			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
+			break;
+		case 2:
+			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WIND);
+			break;
+		case 3:
+			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+			break;
+		case 4:
+			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+			break;
+		}
+
+		pPlayerObj->GetScript<CPlayerScript>()->Init();
+
+		if (i < 4) {
+			pPlayerObj->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+			FindLayer(L"Player")->AddGameObject(pPlayerObj);
+		}
+		else {
+			pPlayerObj->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+			FindLayer(L"Player")->AddGameObject(pPlayerObj);
+
+		}
+		CGameObject* pReadyBarObj = new CGameObject;
+		pReadyBarObj->SetName(L"UIReadyBar");
+		pReadyBarObj->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pReadyBarObj->AddComponent(new CTransform);
+		pReadyBarObj->AddComponent(new CMeshRender);
+		pReadyBarObj->SetActive(false);
+
+		Vec3 vUIReadyBarScale = Vec3(100.f, 40.f, 1.f);
+		pReadyBarObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 300.f));
+		pReadyBarObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
+		pReadyBarObj->Transform()->SetLocalScale(vUIReadyBarScale);
+		pReadyBarObj->Transform()->SetBillBoard(false);
+		pReadyBarObj->Transform()->SetCamera(pMainCam);
+
+		pReadyBarObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIReadyBarMtrl = new CMaterial;
+		pUIReadyBarMtrl->DisableFileSave();
+		pUIReadyBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+		pReadyBarObj->MeshRender()->SetMaterial(pUIReadyBarMtrl);
+		Ptr<CTexture> pUIReadyBarTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
+		pReadyBarObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyBarTex.GetPointer());
+
+		pPlayerObj->AddChild(pReadyBarObj);
+		FindLayer(L"Blue")->AddGameObject(pReadyBarObj);
+	}
+
+
+
 
 	//-----------------------------------------------------------------------------------------------
 	// 맵
@@ -163,98 +267,7 @@ void CLobbyScene::Init()
 
 	FindLayer(L"Red")->AddGameObject(pNexus);
 
-	//-----------------------------------------------------------------------------------------------
-	// 플레이어 fbx
-	//-----------------------------------------------------------------------------------------------
 
-		// Player (helmet - PlayerScript에서)
-	Ptr<CMeshData> pPlayerBlueMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_blue.mdat", L"MeshData\\player_blue.mdat");
-	Ptr<CMeshData> pPlayerRedMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
-	Ptr<CTexture> pBlueTex = CResMgr::GetInst()->FindRes<CTexture>(L"PlayerBlue");
-	Ptr<CTexture> pRedTex = CResMgr::GetInst()->FindRes<CTexture>(L"PlayerRed");
-
-	for (int i = 0; i < 8; i++) {
-		CGameObject* pPlayerObj = new CGameObject;
-
-		if (i < 4) {
-			pPlayerObj = pPlayerBlueMeshData->Instantiate();
-			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
-		}
-		else {
-			pPlayerObj = pPlayerRedMeshData->Instantiate();
-			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
-		}
-
-		pPlayerObj->SetName(L"Monster");
-		pPlayerObj->AddComponent(new CPlayerScript);
-		pPlayerObj->FrustumCheck(false);
-		pPlayerObj->Transform()->SetLocalPos(Vec3(-525.f + i * 150.f, 0.f, 1000.f));
-		pPlayerObj->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
-		pPlayerObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), XMConvertToRadians(0.f), 0.f));
-		pPlayerObj->MeshRender()->SetDynamicShadow(false);
-
-		CAnimation* pPlayerAnimation = new CAnimation;
-		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);
-		pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
-		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 100);
-
-		pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);
-		pPlayerObj->Animator3D()->SetAnimClip(pPlayerAnimation->GetAnimClip());
-
-		switch (i % 4) {
-		case 0:
-			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
-			break;
-		case 1:
-			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
-			break;
-		case 2:
-			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WIND);
-			break;
-		case 3:
-			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
-			break;
-		case 4:
-			pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
-			break;
-		}
-
-		pPlayerObj->GetScript<CPlayerScript>()->Init();
-
-		if (i < 4) {
-			pPlayerObj->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
-			FindLayer(L"Blue")->AddGameObject(pPlayerObj);
-		}
-		else {
-			pPlayerObj->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
-			FindLayer(L"Red")->AddGameObject(pPlayerObj);
-
-		}
-		CGameObject* pReadyBarObj = new CGameObject;
-		pReadyBarObj->SetName(L"UIReadyBar");
-		pReadyBarObj->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-		pReadyBarObj->AddComponent(new CTransform);
-		pReadyBarObj->AddComponent(new CMeshRender);
-		pReadyBarObj->SetActive(false);
-
-		Vec3 vUIReadyBarScale = Vec3(100.f, 40.f, 1.f);
-		pReadyBarObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 300.f));
-		pReadyBarObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
-		pReadyBarObj->Transform()->SetLocalScale(vUIReadyBarScale);
-		pReadyBarObj->Transform()->SetBillBoard(false);
-		pReadyBarObj->Transform()->SetCamera(pMainCam);
-
-		pReadyBarObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pUIReadyBarMtrl = new CMaterial;
-		pUIReadyBarMtrl->DisableFileSave();
-		pUIReadyBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-		pReadyBarObj->MeshRender()->SetMaterial(pUIReadyBarMtrl);
-		Ptr<CTexture> pUIReadyBarTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
-		pReadyBarObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyBarTex.GetPointer());
-
-		pPlayerObj->AddChild(pReadyBarObj);
-		FindLayer(L"Blue")->AddGameObject(pReadyBarObj);
-	}
 
 	//-----------------------------------------------------------------------------------------------
 	// UI - BUTTON
@@ -285,7 +298,7 @@ void CLobbyScene::Init()
 
 
 	pUIButtonStart->MeshRender()->SetMaterial(pUIButtonStartMtrl);
-	
+
 	Ptr<CTexture> pUIButtonGameStart = CResMgr::GetInst()->FindRes<CTexture>(L"UIButtonGameStart");
 	pUIButtonStart->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonGameStart.GetPointer());
 

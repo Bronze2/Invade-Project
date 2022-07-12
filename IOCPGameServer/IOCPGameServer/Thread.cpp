@@ -283,14 +283,20 @@ void CThread::process_packet(int user_id, char* buf)
 		
 	}
 	break;
-
+	case C2S_LOBBY_READY:
+	{	cs_packet_lobby_ready* packet = reinterpret_cast<cs_packet_lobby_ready*>(buf);
+		//팀 정보 갱신
+		CServer::GetInst()->send_lobby_ready_pacekt(SHARED_DATA::g_clients[user_id].room_id, packet->isReady, user_id);
+	}
+	break;
 	case C2S_MAKE_ROOM:
 	{	cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
 		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match);
 		SHARED_DATA::g_clients[user_id].room_id = user_id;
 		SHARED_DATA::g_clients[user_id].m_isHost = true;
 		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;
-
+		//팀 정보 갱신
+		CServer::GetInst()->send_lobby_team_packet(user_id, user_id);
 	}
 	break;
 	case C2S_ENTER_ROOM:
@@ -298,8 +304,9 @@ void CThread::process_packet(int user_id, char* buf)
 		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
 		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
 		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::RED;
+		//팀 정보 갱신
+		CServer::GetInst()->send_lobby_team_packet(packet->room_id, user_id);
 
-		
 		//SHARED_DATA::g_clients[user_id].m_camp
 		//Room에 들어온 클라이언트들을 서로 알려주기.
 		//방금 들어온놈이 들어와있는놈들 확인

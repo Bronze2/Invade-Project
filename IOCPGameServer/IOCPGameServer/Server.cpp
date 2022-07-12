@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Server.h"
 #include "Thread.h"
+#include "MatchMaking.h"
 
 CServer::CServer()
 {
@@ -384,4 +385,44 @@ void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_typ
 	packet.skill = skill;
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
+}
+
+///
+
+void CServer::send_lobby_team_packet(int room_id, int client_id)
+{
+	sc_packet_lobby_team packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_LOBBY_TEAM;
+
+
+	for (int i = 0; i < 4; ++i) {
+		packet.blue[i] = 999;
+		packet.red[i] = 999;
+	}
+	for (int i = 0; i < CMatchMaking::GetInst()->getLobbyTeamBlue(room_id).size(); ++i) {
+		packet.blue[i] = CMatchMaking::GetInst()->getLobbyTeamBlue(room_id)[i];
+	}
+	for (int i = 0; i < CMatchMaking::GetInst()->getLobbyTeamRed(room_id).size(); ++i) {
+		packet.red[i] = CMatchMaking::GetInst()->getLobbyTeamRed(room_id)[i];
+	}
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == room_id)
+			send_packet(cl.second.m_id, &packet);
+
+	}
+}
+
+void CServer::send_lobby_ready_pacekt(int room_id, bool _isReady, int id)
+{
+	sc_packet_lobby_ready packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_LOBBY_READY;
+	packet.isReady = _isReady;
+	packet.id = id;
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
 }

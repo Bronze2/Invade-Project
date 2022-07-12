@@ -81,8 +81,7 @@ public:
 	void net_deletProjectile(int id);
 
 
-	
-	
+
 	
 	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
@@ -105,6 +104,9 @@ public:
 	void EnterGame();
 	void FindGameObjectByTag(const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 
+	//Lobby
+	void ChangeLobbyTeamState(int blue[4], int red[4]);
+	void LobbySetReady(int id, bool isReady);
 	//void net_lobby_enterClient(int id, CAMP_STATE camp, bool isHost);
 
 };

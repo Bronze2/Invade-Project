@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 constexpr auto BUF_SIZE = 8192;
+
 //int NPC_ID_START = 10000;
 #define MAX_BUF	8192
 #define MAX_PACKET_SIZE	8192
@@ -74,7 +75,7 @@ public:
 	//Room
 	void send_make_room_packet( MATCH_TYPE match_type);
 	void send_enter_room_packet(int room_id);
-
+	void send_lobby_ready(bool isReady);
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 
@@ -87,6 +88,10 @@ public:
 	void debug_checkclient();
 	vector<RoomInfo> roomInfo;
 
+	int Blue[4];
+	int Red[4];
+	bool isNewState = false;
+
 private:
 	CLIENT m_Client;
 	unordered_map<int, OTHER_CLINET> m_otherClients;
@@ -98,5 +103,7 @@ private:
 	int my_room_id;
 	int enter_count = 1;
 	int current_enter_count = 0;
+
+
 };
 

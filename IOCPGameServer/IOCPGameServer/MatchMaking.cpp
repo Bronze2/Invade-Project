@@ -7,16 +7,34 @@ CMatchMaking::~CMatchMaking() {};
 
 
 
-void CMatchMaking::enterRoom(int room_id , int clinet_id)
+void CMatchMaking::enterRoom(int room_id , int client_id)
 {
 
-	Match2by2[room_id].push_back(clinet_id);
+	Match2by2[room_id].push_back(client_id);
 	for (auto room : Match2by2) {
 		cout << "--------Room Index[" << room.first << "]----------" << endl;
 		for (int i = 0; i < room.second.size(); ++i) {
 			cout << "유저 아이디" << room.second[i] << endl;
 		}
 		cout << "-------------------------------------------" << endl;
+	}
+	if (LobbyBlue[room_id].size() <= LobbyRed[room_id].size()) {
+		LobbyBlue[room_id].push_back(client_id);
+	}
+	else {
+		LobbyRed[room_id].push_back(client_id);
+	}
+
+	for (auto blue : LobbyBlue) {
+		for (int i = 0; i < blue.second.size(); ++i) {
+			cout << "블루팀 - " << blue.second[i] << endl;
+		}
+	}
+
+	for (auto red : LobbyRed) {
+		for (int i = 0; i < red.second.size(); ++i) {
+			cout << "레드팀 - " << red.second[i] << endl;
+		}
 	}
 }
 
@@ -32,9 +50,24 @@ void CMatchMaking::makeRoom(int room_id, MATCH_TYPE matchType)
 		cout<<"--------Room Index[" << room.first<<"]----------"<< endl;
 		for (int i = 0; i < room.second.size(); ++i) {
 			cout << "유저 아이디" << room.second[i] <<endl;
+			LobbyBlue[room_id].push_back(room.second[i]);
 		}
 		cout << "-------------------------------------------" <<endl;
 	}
+
+	// 확인 
+	for (auto blue : LobbyBlue) {
+		for (int i = 0; i < blue.second.size(); ++i) {
+			cout << "블루팀 - " << blue.second[i] << endl;
+		}
+	}
+
+	for (auto red : LobbyRed) {
+		for (int i = 0; i < red.second.size(); ++i) {
+			cout << "레드팀 - " << red.second[i] << endl;
+		}
+	}
+
 }
 
 void CMatchMaking::SetMatching(MATCH_TYPE matchType, int user_id)

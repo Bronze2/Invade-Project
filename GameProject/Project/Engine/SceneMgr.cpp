@@ -339,6 +339,7 @@ void CSceneMgr::Update()
 {
 	Network::GetInst()->RecvData();
 
+
 	m_pCurScene->Update();
 	m_pCurScene->LateUpdate();
 
@@ -363,6 +364,59 @@ void CSceneMgr::Update()
 	//		}
 	//	}
 	//}
+}
+
+#include "ButtonScript.h"
+void CSceneMgr::ChangeLobbyTeamState(int blue[4], int red[4])
+{
+	for (int i = 0; i < 4; ++i) {
+		CGameObject* p_tempPlayerBlue = m_pCurScene->FindLayer(L"Player")->GetParentObj()[i];
+		p_tempPlayerBlue->GetScript<CPlayerScript>()->m_SetId(blue[i]);
+		cout <<"B-"<< blue[i] << endl;
+		cout << "R-" << red[i] << endl;
+
+		if (blue[i] != 999) {
+			Vec3 Pos = p_tempPlayerBlue->Transform()->GetLocalPos();
+			Pos.y = 0;
+			p_tempPlayerBlue->Transform()->SetLocalPos(Pos);
+			p_tempPlayerBlue->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
+		}
+		else {
+			Vec3 Pos = p_tempPlayerBlue->Transform()->GetLocalPos();
+			Pos.y = 1000;
+			p_tempPlayerBlue->Transform()->SetLocalPos(Pos);
+		}
+		CGameObject* p_tempPlayerRed = m_pCurScene->FindLayer(L"Player")->GetParentObj()[i+4];
+		p_tempPlayerRed->GetScript<CPlayerScript>()->m_SetId(red[i]);
+		if (red[i] != 999) {
+			Vec3 Pos = p_tempPlayerRed->Transform()->GetLocalPos();
+			Pos.y = 0;
+			p_tempPlayerRed->Transform()->SetLocalPos(Pos);
+			p_tempPlayerRed->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
+
+		}
+		else {
+			Vec3 Pos = p_tempPlayerRed->Transform()->GetLocalPos();
+			Pos.y = 1000;
+			p_tempPlayerRed->Transform()->SetLocalPos(Pos);
+		}
+	}
+
+	for (auto button : m_pCurScene->FindLayer(L"UI")->GetParentObj())
+	{
+		button->GetScript<CButtonScript>()->SetPlayerInit(Network::GetInst()->getMainClient().id);
+	}
+
+}
+
+void CSceneMgr::LobbySetReady(int id, bool isReady)
+{
+	if (isReady) {
+		for (auto button : m_pCurScene->FindLayer(L"UI")->GetParentObj())
+		{
+			//if(button->GetScript<CButtonScript>()->GetButtonType() == BUTTO)
+		}
+	}
 }
 
 void CSceneMgr::EnterGame()

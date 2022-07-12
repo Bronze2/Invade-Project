@@ -96,6 +96,7 @@ public:
     void GetDamage(const UINT& _uiDamage);
     void SetDamage(const int& _Damage);
     void SetCamp(CAMP_STATE camp) { m_eCamp = camp; }
+    CAMP_STATE GetCamp() { return m_eCamp; }
 
     UINT GetType() { return (UINT)m_iType; }
 

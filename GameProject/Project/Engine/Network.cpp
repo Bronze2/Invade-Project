@@ -2,6 +2,7 @@
 #include "Network.h"
 #include "SceneMgr.h"
 #include "TimeMgr.h"
+#include "GameObject.h"
 
 
 Network::Network() {}
@@ -251,10 +252,11 @@ void Network::ProcessPacket(char* ptr)
 
 	case S2C_CREATE_ARROW:
 	{
+		//오류 날수 있음 -> int 강제 변환형
 		sc_packet_arrow* my_packet = reinterpret_cast<sc_packet_arrow*>(ptr);
 		CSceneMgr::GetInst()->net_initArrow(my_packet->Clinetid, my_packet->Arrowid,
 			Vec3(my_packet->Pos.x, my_packet->Pos.y, my_packet->Pos.z),
-			Vec3(my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z) , my_packet->skill);
+			Vec3(my_packet->Rot.x, my_packet->Rot.y, my_packet->Rot.z) , (int)my_packet->skill);
 	}
 	break;
 
@@ -307,6 +309,35 @@ void Network::ProcessPacket(char* ptr)
 		roomInfo.push_back(room);
 	}
 	break;
+
+	case S2C_LOBBY_TEAM:
+	{
+		sc_packet_lobby_team* my_packet = reinterpret_cast<sc_packet_lobby_team*>(ptr);
+		
+		for (int i = 0; i < 4; ++i) {
+			Blue[i] = my_packet->blue[i];
+			Red[i] = my_packet->red[i];
+
+
+		}
+			cout << "BlueTeam - " << Blue[0]<<","<< Blue[1] << ","<< Blue[2] << "," << Blue[3] << endl;
+			cout << "RedTeam - " << Red[0] << "," << Red[1] << "," << Red[2] << "," << Red[3] << endl;
+			isNewState = true;
+			CSceneMgr::GetInst()->ChangeLobbyTeamState(Blue, Red);
+			
+	}
+	break;
+
+	case S2C_LOBBY_READY:
+	{
+		sc_packet_lobby_ready* my_packet = reinterpret_cast<sc_packet_lobby_ready*>(ptr);
+
+		CSceneMgr::GetInst()->LobbySetReady(my_packet->id,my_packet->isReady);
+
+	}
+
+	break;
+
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
@@ -355,6 +386,15 @@ void Network::send_packet(void* buffer)
 
 }
 
+void Network::send_lobby_ready(bool _isReady)
+{
+	cs_packet_lobby_ready m_packet;
+	m_packet.type = C2S_LOBBY_READY;
+	m_packet.size = sizeof(m_packet);
+	m_packet.isReady = _isReady;
+	send_packet(&m_packet);
+}
+
 
 void Network::send_enter_room_packet(int room_id)
 {
@@ -367,6 +407,7 @@ void Network::send_enter_room_packet(int room_id)
 	my_room_id = room_id;
 	send_packet(&m_packet);
 	cout << "Send Login Packet" << endl;
+
 }
 
 

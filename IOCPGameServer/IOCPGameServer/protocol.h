@@ -22,6 +22,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_MOVE_BLOCK 8
 #define C2S_MAKE_ROOM 9
 #define C2S_ENTER_ROOM 10
+#define C2S_LOBBY_READY 11
+
 
 #define S2C_LOGIN_OK		1
 #define S2C_KEY_DOWN		2
@@ -46,9 +48,12 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_DELETE_PROJECTILE	19
 #define S2C_LOGIN_FALSE 20
 #define S2C_CURRENT_ROOM 21
+#define S2C_LOBBY_TEAM 22
+#define S2C_LOBBY_READY 23
 
-enum MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
-enum PACKET_SKILL { E_WATER = 0, Z_WATER, E_FIRE,  Z_FIRE, E_THUNDER, Z_TUNDER, E_DARK, Z_DARK, E_WIND,Z_WIND ,NONE};
+
+enum class  MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
+enum class PACKET_SKILL { E_WATER = 0, Z_WATER, E_FIRE,  Z_FIRE, E_THUNDER, Z_TUNDER, E_DARK, Z_DARK, E_WIND,Z_WIND ,NONE};
 struct p_Vec3 {
 	float x;
 	float y;
@@ -311,6 +316,27 @@ struct sc_packet_arrow {
 
 
 ////////////////// Lobby ///////////////////////////////////
+
+struct cs_packet_lobby_ready {
+	char size;
+	char type;
+	bool isReady;
+};
+
+struct sc_packet_lobby_ready {
+	char size;
+	char type;
+	int id;
+	bool isReady;
+};
+
+
+struct sc_packet_lobby_team {
+	char size;
+	char type;
+	int blue[4];
+	int red[4];
+};
 
 struct sc_packet_lobby_enter {
 	char size;
