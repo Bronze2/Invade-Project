@@ -411,12 +411,12 @@ void CSceneMgr::ChangeLobbyTeamState(int blue[4], int red[4])
 
 void CSceneMgr::LobbySetReady(int id, bool isReady)
 {
-	if (isReady) {
 		for (auto button : m_pCurScene->FindLayer(L"UI")->GetParentObj())
 		{
-			//if(button->GetScript<CButtonScript>()->GetButtonType() == BUTTO)
+			if (button->GetScript<CButtonScript>()->GetButtonType() == BUTTON_TYPE::READY) {
+				button->GetScript<CButtonScript>()->ExecuteReady(id);
+			}
 		}
-	}
 }
 
 void CSceneMgr::EnterGame()

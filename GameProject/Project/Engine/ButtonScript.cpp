@@ -89,6 +89,7 @@ void CButtonScript::Update()
 		if (m_bIsPressed) {
 			if (m_eType == BUTTON_TYPE::READY || !m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetReady()) {
 				Execute();
+				Network::GetInst()->send_lobby_ready(true);
 				m_bIsPressed = false;
 			}
 		}
@@ -104,64 +105,93 @@ void CButtonScript::Update()
 
 void CButtonScript::Execute()
 {
-	switch (m_eType) {
-	case BUTTON_TYPE::READY:
-		if (!m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetReady()) {
-			m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
-			GetObj()->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
-			GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
-			m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->SetReady(true);
+	for (int i = 0; i < 8; ++i) {
+		if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->m_GetId() == m_mainPlayerId) {
+			switch (m_eType) {
+			case BUTTON_TYPE::READY:
+
+				if (!m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetReady()) {
+					GetObj()->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
+					GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
+				}
+				else {
+					GetObj()->MeshRender()->SetMaterial(m_pReadyNonePressedMtrl);
+					GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyNonePressedTex.GetPointer());
+				}
+				//if (!m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetReady()) {
+				//	m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
+				//	GetObj()->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
+				//	GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
+				//	m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->SetReady(true);
+				//}
+				//else {
+				//	m_pReadyBar[m_mainPlayerId]->SetActive(false);
+				//	GetObj()->MeshRender()->SetMaterial(m_pReadyNonePressedMtrl);
+				//	GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyNonePressedTex.GetPointer());
+				//	m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->SetReady(false);
+				//}
+				break;
+			case BUTTON_TYPE::GAMESTART:
+				ChangeScene(SCENE_TYPE::INGAME);
+				break;
+			case BUTTON_TYPE::SELECT_WATER:
+				if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx")->GetMesh());
+				}
+				else if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx")->GetMesh());
+				}
+				break;
+			case BUTTON_TYPE::SELECT_DARK:
+				if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx")->GetMesh());
+				}
+				else if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx")->GetMesh());
+				}
+				break;
+			case BUTTON_TYPE::SELECT_WIND:
+				if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx")->GetMesh());
+				}
+				else if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx")->GetMesh());
+				}
+				break;
+			case BUTTON_TYPE::SELECT_THUNDER:
+				if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx")->GetMesh());
+				}
+				else if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx")->GetMesh());
+				}
+				break;
+			case BUTTON_TYPE::SELECT_FIRE:
+				if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx")->GetMesh());
+				}
+				else if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+					m_pPlayerHelmet[i]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx")->GetMesh());
+				}
+				break;
+			}
 		}
-		else {
-			m_pReadyBar[m_mainPlayerId]->SetActive(false);
-			GetObj()->MeshRender()->SetMaterial(m_pReadyNonePressedMtrl);
-			GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyNonePressedTex.GetPointer());
-			m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->SetReady(false);
+	}
+}
+
+void CButtonScript::ExecuteReady(int id)
+{
+	for (int i = 0; i < 8; ++i) {
+		if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->m_GetId() == id) {
+			if (!m_pPlayerObj[i]->GetScript<CPlayerScript>()->GetReady()) {
+				m_pPlayerObj[i]->GetScript<CPlayerScript>()->SetAnimationState(PLAYER_STATE::JUMP);
+				m_pPlayerObj[i]->GetScript<CPlayerScript>()->SetReady(true);
+			}
+			else {
+				m_pReadyBar[i]->SetActive(false);
+				m_pPlayerObj[i]->GetScript<CPlayerScript>()->SetReady(false);
+			}
 		}
-		break;
-	case BUTTON_TYPE::GAMESTART:
-		ChangeScene(SCENE_TYPE::INGAME);
-		break;
-	case BUTTON_TYPE::SELECT_WATER:
-		if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE ) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_DARK:
-		if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_WIND:
-		if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_THUNDER:
-		if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_FIRE:
-		if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[m_mainPlayerId]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[m_mainPlayerId]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx")->GetMesh());
-		}
-		break;
 	}
 }
 
