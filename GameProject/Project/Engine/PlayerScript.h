@@ -73,11 +73,14 @@ private:
     CSound* m_pDeadSound;
 
     CSound* m_pErrorSound;
+
+
+
 public:
     void m_FAnimation();
 
 
-
+    bool MoveCheck(const Vec3& _vPos);
     void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
     void Init();
     virtual void Awake();

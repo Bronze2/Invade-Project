@@ -13,6 +13,7 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 {
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_Key, _Key);
 	CGameObject* pObject = pMeshData->Instantiate();
+	pObject->SetName(L"Projectile");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CProjectileScript);
@@ -133,7 +134,8 @@ void CTowerScript::m_FAttack()
 			if (m_cAttackInterval >= ATTACK_INTERVAL) {
 
 				Vec3 vPos=Transform()->GetWorldPos();
-				m_pSound->PlaySound3D(vPos,1000.f);
+				m_pSound->PlaySound3D(vPos,100.f);
+				m_pSound->GetSound()->set3DMinMaxDistance(0.5f, 1000.f);
 				if (CAMP_STATE::BLUE == m_eCampState)
 					CreateProjectile(L"MeshData\\blueball.mdat", L"Blue");
 				else if(CAMP_STATE::RED==m_eCampState)

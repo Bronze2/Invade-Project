@@ -19,6 +19,7 @@ private:
     Matrix m_matColWorld;
     UINT m_iColID;
     BoundingBox m_bBound;
+    Matrix m_matColWorldNotify;
 
 public:
     virtual void Update();
@@ -40,7 +41,7 @@ public:
     void SetCollider3DType(COLLIDER3D_TYPE _eType);
     UINT GetColID() { return m_iColID; }
     const Matrix& GetColliderWorldMat() { return m_matColWorld; }
-
+    const Matrix& GetColliderWorldMatNotify() { return m_matColWorldNotify; }
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);
     void operator=(const CCollider3D* _pOther);

@@ -26,7 +26,7 @@ private:
 
 
 public:
-
+	FMOD::Sound* GetSound() { return m_pSound; }
 	
 	// 0 (무한반복) 
 	void Play(int _iRoopCount, float _fVolume, bool _bOverlap = false);

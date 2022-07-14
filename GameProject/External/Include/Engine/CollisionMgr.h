@@ -30,6 +30,7 @@ public:
 	void CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2);
 	void CheckCollisionLayer(int _iLayerIdx1, int _iLyaerIdx2);
 	void SetCameraObject(CCamera* _pCamera) { m_pCameraObject = _pCamera; }
+	bool CollisionCubeMatrix(const Matrix& _pCollider1, const Matrix& _pCollider2);
 private:
 	void CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2);
 	void Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLayer2);
