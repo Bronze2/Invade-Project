@@ -55,6 +55,8 @@ public:
 	void send_lobby_team_packet(int room_id, int client_id);
 
 	void send_lobby_ready_pacekt(int room_id, bool _isReady , int id);
+
+	void send_lobby_change_skill_pacekt(int room_id, PACKET_ELEMENT_TYPE skill, int id);
 private:
 
 };

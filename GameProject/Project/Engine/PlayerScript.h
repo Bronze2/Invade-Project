@@ -97,6 +97,7 @@ public:
     void SetDamage(const int& _Damage);
     void SetCamp(CAMP_STATE camp) { m_eCamp = camp; }
     CAMP_STATE GetCamp() { return m_eCamp; }
+    bool MoveCheck(const Vec3& _vPos);
 
     UINT GetType() { return (UINT)m_iType; }
 

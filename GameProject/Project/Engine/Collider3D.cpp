@@ -24,6 +24,7 @@ void CCollider3D::FinalUpdate()
 	Matrix matScale = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
+	m_matColWorldNotify = m_matColWorld;
 	Matrix bWorld = XMLoadFloat4x4(&m_matColWorld);
 	m_bBound = {};
 	m_bBound.Transform(m_bBound, m_matColWorld);
@@ -33,7 +34,7 @@ void CCollider3D::FinalUpdate()
 
 void CCollider3D::Render()
 {
-	static bool bRender = false;
+	static bool bRender = true;
 	if (KEY_AWAY(KEY_TYPE::KEY_T)) {
 		bRender = !bRender;
 	}

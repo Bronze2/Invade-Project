@@ -419,6 +419,30 @@ void CSceneMgr::LobbySetReady(int id, bool isReady)
 		}
 }
 
+void CSceneMgr::LobbySetSkill(int id, ELEMENT_TYPE skill)
+{
+	BUTTON_TYPE tempButton;
+	if (skill == ELEMENT_TYPE::DARK)
+		tempButton = BUTTON_TYPE::SELECT_DARK;
+	else if (skill == ELEMENT_TYPE::FIRE)
+		tempButton = BUTTON_TYPE::SELECT_FIRE;
+	else if (skill == ELEMENT_TYPE::THUNDER)
+		tempButton = BUTTON_TYPE::SELECT_THUNDER;
+	else if (skill == ELEMENT_TYPE::WATER)
+		tempButton = BUTTON_TYPE::SELECT_WATER;
+	else if (skill == ELEMENT_TYPE::WIND)
+		tempButton = BUTTON_TYPE::SELECT_WIND;
+
+	for (auto button : m_pCurScene->FindLayer(L"UI")->GetParentObj())
+	{
+		if (button->GetScript<CButtonScript>()->GetButtonType() == tempButton) {
+			button->GetScript<CButtonScript>()->ExecuteChangeSkill(id);
+		}
+	}
+}
+
+
+
 void CSceneMgr::EnterGame()
 {
 	ChangeScene(SCENE_TYPE::INGAME);

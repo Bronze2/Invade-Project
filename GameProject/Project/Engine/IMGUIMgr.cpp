@@ -400,7 +400,6 @@ void CIMGUIMgr::Progress()
                         if (ImGui::Button("GameStart", ImVec2(260.f, 30.f)))
                         {
                             cout << "Click" << endl;
-                            Network::GetInst()->send_game_start_packet();
                         }
                         ImGui::PopStyleVar();
 
@@ -442,6 +441,7 @@ void CIMGUIMgr::Progress()
                                 if (ImGui::Button("Create", ImVec2(260.f, 30.f)))
                                 {
                                     Network::GetInst()->send_make_room_packet(MATCH_TYPE::TWO);
+
                                     CSceneMgr::GetInst()->ChangeScene(SCENE_TYPE::LOBBY);
 
                                     cout << "Make room Send" << endl;

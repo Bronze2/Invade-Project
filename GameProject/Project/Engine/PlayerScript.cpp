@@ -6,6 +6,7 @@
 #include"CameraScript.h"
 #include "Animator3D.h"
 #include "Network.h"
+#include "Collider3D.h"
 
 #include "ProjectileScript.h"
 #include "ParticleSystem.h"
@@ -298,7 +299,7 @@ void CPlayerScript::Init()
 void CPlayerScript::Awake()
 {
 	cout << "PlayerAwake - [" << m_id << "]" << endl;
-	m_fMoveSpeed = 300.f;
+	m_fMoveSpeed = 500.f;
 
 	m_pHealParticle = new CGameObject;
 	m_pHealParticle->AddComponent(new CTransform);
@@ -446,8 +447,22 @@ void CPlayerScript::Update()
 
 			}
 			if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D))) {
+
 				Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-				Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
+				Vec3 vCollisonCheckPos = vPos;
+				vCollisonCheckPos.x += vFront.x * m_fMoveSpeed * DT;
+				vCollisonCheckPos.z += vFront.z * m_fMoveSpeed * DT;
+				if (MoveCheck(vCollisonCheckPos)) {
+					SetLerpPos(vPos);
+				}
+				else {
+					Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+					restorePos = Transform()->GetLocalPos();
+					Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
+
+				}
+				//Vec3 vFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+				//Network::GetInst()->send_key_up_packet(0, vFront.x, vFront.y, vFront.z, 1);
 			}
 
 			if ((KEY_AWAY(KEY_TYPE::KEY_W) || KEY_AWAY(KEY_TYPE::KEY_S) || KEY_AWAY(KEY_TYPE::KEY_A) || KEY_AWAY(KEY_TYPE::KEY_D)) && KEY_NONE(KEY_TYPE::KEY_LBTN)) {
@@ -538,11 +553,24 @@ void CPlayerScript::Update()
 				}
 
 
+
 				if (!m_bTurn && CTimeMgr::GetInst()->GetPlayerMoveFPS()) {
-					Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-					restorePos = Transform()->GetLocalPos();
-					Network::GetInst()->send_rotation_packet(vRot);
-					Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+
+
+					Vec3 vCollisonCheckPos = vPos;
+					vCollisonCheckPos.x += vFront.x * m_fMoveSpeed * DT;
+					vCollisonCheckPos.z += vFront.z * m_fMoveSpeed * DT;
+					if (MoveCheck(vCollisonCheckPos)) {
+						SetPrevLerpPos(vPos);
+						m_bColCheck = true;
+					}
+					else {
+						Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+						restorePos = Transform()->GetLocalPos();
+						Network::GetInst()->send_rotation_packet(vRot);
+						Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+					}
+
 					//m_bColCheck = false;
 				}
 
@@ -603,6 +631,56 @@ void CPlayerScript::Update()
 		Update_LerpPos();
 	}
 	m_FAnimation();
+}
+
+#include "InGameScene.h"
+#include "CollisionMgr.h"
+
+bool CPlayerScript::MoveCheck(const Vec3& _vPos)
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	Vec3 vFinalPos = Collider3D()->GetOffsetPos();
+	vFinalPos = vFinalPos / Transform()->GetWorldScale();
+	Matrix matColTranslation = XMMatrixTranslation(vFinalPos.x, vFinalPos.y, vFinalPos.z);
+	Matrix matColScale = XMMatrixScaling(Collider3D()->GetOffsetScale().x, Collider3D()->GetOffsetScale().y, Collider3D()->GetOffsetScale().z);
+	Matrix MatColWorld = matColScale * matColTranslation;
+	Matrix matTranslation = XMMatrixTranslation(_vPos.x, _vPos.y, _vPos.z);
+	Matrix matScale = XMMatrixScaling(Transform()->GetLocalScale().x, Transform()->GetLocalScale().y, Transform()->GetLocalScale().z);
+	Matrix matRot = XMMatrixRotationX(Transform()->GetLocalRot().x);
+	matRot *= XMMatrixRotationY(Transform()->GetLocalRot().y);
+	matRot *= XMMatrixRotationZ(Transform()->GetLocalRot().z);
+	Matrix matWorld = matScale * matRot * matTranslation;
+	MatColWorld *= matWorld;
+	bool bTrue = false;
+	for (int i = (UINT)INGAME_LAYER::DEFAULT + 1; i < (UINT)INGAME_LAYER::OBSTACLE + 1; ++i) {
+		const vector<CGameObject*>& vecObj = pCurScene->GetLayer(i)->GetObjects();
+		if (i == 6)
+			continue;
+		for (int j = 0; j < vecObj.size(); ++j) {
+			if (vecObj[j] == GetObj())
+				continue;
+			if (vecObj[j]->IsDead())
+				continue;
+			if (!vecObj[j]->Collider3D())
+				continue;
+			if (L"Projectile" == vecObj[j]->GetName())
+				continue;
+			if (L"Minion" == vecObj[j]->GetName())
+				continue;
+
+			bTrue = CCollisionMgr::GetInst()->CollisionCubeMatrix(MatColWorld, vecObj[j]->Collider3D()->GetColliderWorldMatNotify());
+			if (bTrue) {
+				cout << " ??" << endl;
+				cout << vecObj[j]->GetName().c_str() << endl;
+				return bTrue;
+			}
+		}
+
+	}
+
+
+	return bTrue;
+
 }
 
 //
@@ -887,7 +965,9 @@ void CPlayerScript::Update_LerpPos()
 {
 
 		Vec3 vPos = Transform()->GetLocalPos();
-		m_FColCheck(m_PrevLerpPos, m_LerpPos);
+
+
+		//m_FColCheck(m_PrevLerpPos, m_LerpPos);
 		if (m_bMoveCheck)
 		{
 			m_LerpPos = m_PrevLerpPos;
@@ -899,11 +979,19 @@ void CPlayerScript::Update_LerpPos()
 
 		}
 		else {
+
 			vPos.y = 0;
 			m_LerpPos.y = 0;
-			vPos = Vec3::Lerp(vPos, m_LerpPos, DT * (5.f));
-			Transform()->SetLocalPos(vPos);
-
+			Vec3 vPos2;
+			if (MoveCheck(vPos2 = Vec3::Lerp(vPos, m_LerpPos, DT * (5.f)))) {
+				SetPrevLerpPos(vPos2);
+				m_bColCheck = true;
+				Transform()->SetLocalPos(vPos);
+			}
+			else {
+				vPos = Vec3::Lerp(vPos, m_LerpPos, DT * (5.f));
+				Transform()->SetLocalPos(vPos);
+			}
 		}
 	if (!isMain) {
 		Vec3 vRot = Transform()->GetLocalRot();

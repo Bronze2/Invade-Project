@@ -426,3 +426,16 @@ void CServer::send_lobby_ready_pacekt(int room_id, bool _isReady, int id)
 			send_packet(cl.second.m_id, &packet);
 	}
 }
+
+void CServer::send_lobby_change_skill_pacekt(int room_id, PACKET_ELEMENT_TYPE skill, int id)
+{
+	sc_packet_lobby_change_skill packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_LOBBY_CHAGNE_SKILL;
+	packet.skill = skill;
+	packet.id = id;
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
+}

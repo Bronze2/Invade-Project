@@ -18,6 +18,7 @@
 #include "Animator3D.h"
 #include "Light3D.h"
 #include "CrossHairScript.h"
+#include "Network.h"
 
 
 void CLobbyScene::Init()
@@ -279,61 +280,68 @@ void CLobbyScene::Init()
 		// 좌상단 Vec3(-res.fWidth/2, res.fHeight/2, 1.f)
 
 		// Start Button
-	CGameObject* pUIButtonStart = new CGameObject;
-	pUIButtonStart->SetName(L"StartButton");
-	pUIButtonStart->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-	pUIButtonStart->AddComponent(new CTransform);
-	pUIButtonStart->AddComponent(new CMeshRender);
-	//pUIButtonStart->AddComponent(new CStaticUI);
-	pUIButtonStart->AddComponent(new CButtonScript);
-
 	Vec3 vUIButtonStartScale = Vec3(res.fWidth / 13, res.fHeight / 14, 1.f);
-	pUIButtonStart->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2, 1.f));
-	pUIButtonStart->Transform()->SetLocalScale(vUIButtonStartScale);
 
-	pUIButtonStart->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pUIButtonStartMtrl = new CMaterial;
-	pUIButtonStartMtrl->DisableFileSave();
-	pUIButtonStartMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+		CGameObject* pUIButtonStart = new CGameObject;
+		pUIButtonStart->SetName(L"StartButton");
+		pUIButtonStart->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pUIButtonStart->AddComponent(new CTransform);
+		pUIButtonStart->AddComponent(new CMeshRender);
+		//pUIButtonStart->AddComponent(new CStaticUI);
+		pUIButtonStart->AddComponent(new CButtonScript);
+		if (Network::GetInst()->getMainClient().isHost ==false ) {
+			pUIButtonStart->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2  - 1000.f, 1.f));
+		}
+		else {
+			pUIButtonStart->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2, 1.f));
 
+		}
+		pUIButtonStart->Transform()->SetLocalScale(vUIButtonStartScale);
 
-	pUIButtonStart->MeshRender()->SetMaterial(pUIButtonStartMtrl);
-
-	Ptr<CTexture> pUIButtonGameStart = CResMgr::GetInst()->FindRes<CTexture>(L"UIButtonGameStart");
-	pUIButtonStart->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonGameStart.GetPointer());
-
-	pUIButtonStart->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::GAMESTART);
-
-	FindLayer(L"UI")->AddGameObject(pUIButtonStart);
-
-
-
-	// Ready Button
-	CGameObject* pUIButtonReady = new CGameObject;
-	pUIButtonReady->SetName(L"ReadyButton");
-	pUIButtonReady->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
-	pUIButtonReady->AddComponent(new CTransform);
-	pUIButtonReady->AddComponent(new CMeshRender);
-	//pUIButtonReady->AddComponent(new CStaticUI);
-	pUIButtonReady->AddComponent(new CButtonScript);
-
-	pUIButtonReady->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2 + vUIButtonStartScale.y, 1.f));
-	pUIButtonReady->Transform()->SetLocalScale(vUIButtonStartScale);
-
-	pUIButtonReady->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pUIButtonReadyMtrl = new CMaterial;
-	pUIButtonReadyMtrl->DisableFileSave();
-	pUIButtonReadyMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-	pUIButtonReady->MeshRender()->SetMaterial(pUIButtonReadyMtrl);
-	Ptr<CTexture> pUIButtonReadyTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
-
-	pUIButtonReady->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonReadyTex.GetPointer());
-
-	pUIButtonReady->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::READY);
-
-	FindLayer(L"UI")->AddGameObject(pUIButtonReady);
+		pUIButtonStart->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIButtonStartMtrl = new CMaterial;
+		pUIButtonStartMtrl->DisableFileSave();
+		pUIButtonStartMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 
 
+		pUIButtonStart->MeshRender()->SetMaterial(pUIButtonStartMtrl);
+
+		Ptr<CTexture> pUIButtonGameStart = CResMgr::GetInst()->FindRes<CTexture>(L"UIButtonGameStart");
+		pUIButtonStart->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonGameStart.GetPointer());
+
+		pUIButtonStart->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::GAMESTART);
+
+		FindLayer(L"UI")->AddGameObject(pUIButtonStart);
+
+		// Ready Button
+		CGameObject* pUIButtonReady = new CGameObject;
+		pUIButtonReady->SetName(L"ReadyButton");
+		pUIButtonReady->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pUIButtonReady->AddComponent(new CTransform);
+		pUIButtonReady->AddComponent(new CMeshRender);
+		//pUIButtonReady->AddComponent(new CStaticUI);
+		pUIButtonReady->AddComponent(new CButtonScript);
+		if (Network::GetInst()->getMainClient().isHost ) {
+			pUIButtonReady->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2 - 1000.f, 1.f));
+		}
+		else {
+			pUIButtonReady->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIButtonStartScale.x / 2, -res.fHeight / 2 + vUIButtonStartScale.y / 2, 1.f));
+
+		}
+		pUIButtonReady->Transform()->SetLocalScale(vUIButtonStartScale);
+
+		pUIButtonReady->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIButtonReadyMtrl = new CMaterial;
+		pUIButtonReadyMtrl->DisableFileSave();
+		pUIButtonReadyMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+		pUIButtonReady->MeshRender()->SetMaterial(pUIButtonReadyMtrl);
+		Ptr<CTexture> pUIButtonReadyTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
+
+		pUIButtonReady->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIButtonReadyTex.GetPointer());
+
+		pUIButtonReady->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::READY);
+
+		FindLayer(L"UI")->AddGameObject(pUIButtonReady);
 
 
 	// Property Button

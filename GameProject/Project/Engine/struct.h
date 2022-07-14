@@ -1,5 +1,4 @@
 #pragma once
-
 #include "define.h"
 
 struct tResolution

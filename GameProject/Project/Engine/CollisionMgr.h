@@ -27,6 +27,7 @@ public:
 	void Update();
 	void PrevUpdate();
 public:
+	bool CollisionCubeMatrix(const Matrix& _pCollider1, const Matrix& _pCollider2);
 	void CheckCollisionLayer(const wstring& _strLayerName1, const wstring& _strLayerName2);
 	void CheckCollisionLayer(int _iLayerIdx1, int _iLyaerIdx2);
 	void SetCameraObject(CCamera* _pCamera) { m_pCameraObject = _pCamera; }

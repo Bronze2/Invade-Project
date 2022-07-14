@@ -23,6 +23,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_MAKE_ROOM 9
 #define C2S_ENTER_ROOM 10
 #define C2S_LOBBY_READY 11
+#define C2S_LOBBY_CHAGNE_SKILL 12
 
 
 #define S2C_LOGIN_OK		1
@@ -50,10 +51,21 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_CURRENT_ROOM 21
 #define S2C_LOBBY_TEAM 22
 #define S2C_LOBBY_READY 23
+#define S2C_LOBBY_CHAGNE_SKILL 24
+
 
 
 enum class  MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
 enum class PACKET_SKILL { E_WATER = 0, Z_WATER, E_FIRE,  Z_FIRE, E_THUNDER, Z_TUNDER, E_DARK, Z_DARK, E_WIND,Z_WIND ,NONE};
+enum class PACKET_ELEMENT_TYPE {
+
+	START = -1,
+	WATER = 0,
+	FIRE = 1,
+	DARK = 2,
+	THUNDER = 3,
+	WIND = 4
+};
 struct p_Vec3 {
 	float x;
 	float y;
@@ -328,6 +340,19 @@ struct sc_packet_lobby_ready {
 	char type;
 	int id;
 	bool isReady;
+};
+
+struct cs_packet_lobby_change_skill {
+	char size;
+	char type;
+	PACKET_ELEMENT_TYPE skill;
+};
+
+struct sc_packet_lobby_change_skill {
+	char size;
+	char type;
+	int id;
+	PACKET_ELEMENT_TYPE skill;
 };
 
 

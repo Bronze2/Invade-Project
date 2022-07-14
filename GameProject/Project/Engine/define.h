@@ -371,6 +371,7 @@ enum class CAMERA_EFFECT_TYPE {
 	DAMAGED,
 	LIGHTNING,
 };
+
 enum class ELEMENT_TYPE {
 
 	START = -1,
@@ -380,7 +381,6 @@ enum class ELEMENT_TYPE {
 	THUNDER = 3,
 	WIND = 4
 };
-
 enum class SKILL_TYPE {
 	ACT,
 	PASSIVE,

@@ -76,6 +76,7 @@ public:
 	void send_make_room_packet( MATCH_TYPE match_type);
 	void send_enter_room_packet(int room_id);
 	void send_lobby_ready(bool isReady);
+	void send_lobby_change_skill(ELEMENT_TYPE skill);
 
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 

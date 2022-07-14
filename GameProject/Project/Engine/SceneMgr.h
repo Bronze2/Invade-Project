@@ -107,6 +107,7 @@ public:
 	//Lobby
 	void ChangeLobbyTeamState(int blue[4], int red[4]);
 	void LobbySetReady(int id, bool isReady);
+	void LobbySetSkill(int id, ELEMENT_TYPE skill);
 	//void net_lobby_enterClient(int id, CAMP_STATE camp, bool isHost);
 
 };

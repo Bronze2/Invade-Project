@@ -33,6 +33,7 @@ public:
 	void StatusCheck();
 	void Execute();
 	void ExecuteReady(int id);
+	void ExecuteChangeSkill(int id);
 	BUTTON_TYPE GetButtonType() { return m_eType; }
 	void SetButtonType(BUTTON_TYPE _eType) { m_eType = _eType; }
 	//void SetMainPlayer(CGameObject* _pObj) { m_pPlayerObj = _pObj; }

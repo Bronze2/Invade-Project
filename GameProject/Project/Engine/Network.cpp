@@ -335,7 +335,15 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->LobbySetReady(my_packet->id,my_packet->isReady);
 
 	}
+	break;
 
+	case S2C_LOBBY_CHAGNE_SKILL:
+	{
+		sc_packet_lobby_change_skill* my_packet = reinterpret_cast<sc_packet_lobby_change_skill*>(ptr);
+
+		CSceneMgr::GetInst()->LobbySetSkill(my_packet->id, (ELEMENT_TYPE)my_packet->skill);
+
+	}
 	break;
 
 	//case S2C_LEAVE:
@@ -395,6 +403,14 @@ void Network::send_lobby_ready(bool _isReady)
 	send_packet(&m_packet);
 }
 
+void Network::send_lobby_change_skill(ELEMENT_TYPE skill) 
+{
+	cs_packet_lobby_change_skill m_packet;
+	m_packet.type = C2S_LOBBY_CHAGNE_SKILL;
+	m_packet.size = sizeof(m_packet);
+	m_packet.skill = (PACKET_ELEMENT_TYPE)skill;
+	send_packet(&m_packet);
+}
 
 void Network::send_enter_room_packet(int room_id)
 {
@@ -486,6 +502,8 @@ void Network::send_rotation_packet(Vec3 Rot)
 
 void Network::send_make_room_packet(MATCH_TYPE match_type)
 {
+
+	m_Client.isHost = true;
 	cs_packet_make_room m_packet;
 	m_packet.type = C2S_MAKE_ROOM;
 	m_packet.size = sizeof(m_packet);

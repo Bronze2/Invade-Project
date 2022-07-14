@@ -284,9 +284,18 @@ void CThread::process_packet(int user_id, char* buf)
 	}
 	break;
 	case C2S_LOBBY_READY:
-	{	cs_packet_lobby_ready* packet = reinterpret_cast<cs_packet_lobby_ready*>(buf);
+	{	
+		cs_packet_lobby_ready* packet = reinterpret_cast<cs_packet_lobby_ready*>(buf);
 		//ÆÀ Á¤º¸ °»½Å
+		SHARED_DATA::g_clients[user_id].isReady = packet->isReady;
 		CServer::GetInst()->send_lobby_ready_pacekt(SHARED_DATA::g_clients[user_id].room_id, packet->isReady, user_id);
+	}
+	break;
+	case C2S_LOBBY_CHAGNE_SKILL:
+	{	
+		cs_packet_lobby_change_skill* packet = reinterpret_cast<cs_packet_lobby_change_skill*>(buf);
+		SHARED_DATA::g_clients[user_id].skill = packet->skill;
+		CServer::GetInst()->send_lobby_change_skill_pacekt(SHARED_DATA::g_clients[user_id].room_id, packet->skill, user_id);
 	}
 	break;
 	case C2S_MAKE_ROOM:

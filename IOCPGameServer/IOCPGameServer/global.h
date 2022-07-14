@@ -65,6 +65,8 @@ struct CLIENT
 	bool isMove = false;
 	unordered_set<int> view_list; //순서가 상관없을 땐 unordered 쓰는게 더 속도가 빠르다 
 	int room_id;
+	bool isReady = false;
+	PACKET_ELEMENT_TYPE skill;
 };
 
 struct MINION {
