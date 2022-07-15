@@ -28,7 +28,7 @@ class CMinionScript :
     tMTAnimClip* m_pNextAnimClip;
     CGameObject* m_pTarget;
 
-    UINT m_bIsPlayerandObstacle;
+ 
     CGameObject* m_pNexus;
     float m_fFindRange;
     float m_fAttackRange;
@@ -82,7 +82,7 @@ public:
 
     void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
     void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
-    void IsPlayerandObstacle();
+ 
  
     void CheckHp();
     CLONE(CMinionScript)

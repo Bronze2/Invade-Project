@@ -38,10 +38,12 @@ private:
     UINT m_uiAttackDamage;
 
     wstring m_CampName;
-    bool m_bDeadTrue = false;
+    bool m_bDeadCheck;
+
+
 
 public:
-    bool GetDeadCheck() { return m_bDeadTrue; }
+    void SetDeadCheck(const bool& _bValue) { m_bDeadCheck = _bValue; }
     void SetCampState(CAMP_STATE _eCampState) { 
         m_eCampState = _eCampState;
         if (m_eCampState == CAMP_STATE::RED)

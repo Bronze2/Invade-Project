@@ -166,6 +166,13 @@ void CTowerScript::m_FRotate()
 void CTowerScript::Update()
 {
 	if (m_iCurHp <= 0) {
+		if (TOWER_TYPE::FIRST == m_eType) {
+			m_pSecondTower->GetScript<CTowerScript>()->SetDeadCheck(true);
+		}
+		else if (TOWER_TYPE::SECOND == m_eType) {
+			m_pNexus->GetScript<CTowerScript>()->SetDeadCheck(true);
+		}
+
 		DeleteObject(GetObj());
 		return;
 	}
@@ -187,7 +194,7 @@ void CTowerScript::GetDamage(const UINT& _Dmg)
 {
 	if (TOWER_TYPE::SECOND == m_eType)
 	{
-		if (m_pFirstTower->IsDead()) {
+		if (m_bDeadCheck) {
 			m_iCurHp -= _Dmg;
 			if (m_iCurHp < 0) {
 				m_iCurHp = 0;
@@ -197,7 +204,7 @@ void CTowerScript::GetDamage(const UINT& _Dmg)
 		}
 	}
 	else if (TOWER_TYPE::NEXUS == m_eType) {
-		if (m_pSecondTower->IsDead()) {
+		if (m_bDeadCheck) {
 			m_iCurHp -= _Dmg;
 			if (m_iCurHp < 0) {
 				m_iCurHp = 0;
@@ -259,7 +266,7 @@ void CTowerScript::OnDetectionExit(CGameObject* _pOther)
 }
 
 CTowerScript::CTowerScript():CScript((UINT)SCRIPT_TYPE::TOWERSCRIPT), m_bAttackStart(false), m_bFindNear(false)
-,m_bTest(false)
+, m_bDeadCheck(false)
 {
 }
 

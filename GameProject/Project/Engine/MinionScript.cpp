@@ -353,19 +353,7 @@ void CMinionScript::AddObject(CGameObject* _pObject)
 
 }
 
-void CMinionScript::IsPlayerandObstacle()
-{
-	m_bIsPlayerandObstacle = 0;
-	for (int i = 0; i < m_arrEnemy.size(); ++i) {
-		if (nullptr != m_arrEnemy[i]->GetScript<CPlayerScript>())
-			m_bIsPlayerandObstacle = 1;
-	}
 
-	for (int i = 0; i < m_arrEnemy.size(); ++i) {
-		if (L"Obstacle" != m_arrEnemy[i]->GetName())
-			m_bIsPlayerandObstacle = 2;
-	}
-}
 
 void CMinionScript::CheckHp()
 {

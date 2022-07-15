@@ -307,6 +307,7 @@ void CInGameScene::Init()
     pRedSecondTower->MeshRender()->SetDynamicShadow(false);
 
     pRedSecondTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::RED);
+    pRedFirstTower->GetScript<CTowerScript>()->SetSecondTower(pRedSecondTower);
     FindLayer(L"Red")->AddGameObject(pRedSecondTower);
 
     // 블루 1차타워
@@ -353,6 +354,7 @@ void CInGameScene::Init()
     pBlueSecondTower->GetScript<CTowerScript>()->Init();
     pBlueSecondTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
     pBlueSecondTower->GetScript<CTowerScript>()->SetFirstTower(pBlueFirstTower);
+    pBlueFirstTower->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
     FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
 
@@ -378,6 +380,7 @@ void CInGameScene::Init()
     pBlueNexus->GetScript<CTowerScript>()->SetType(TOWER_TYPE::NEXUS);
     pBlueNexus->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
     pBlueNexus->GetScript<CTowerScript>()->Init();
+    pBlueSecondTower->GetScript<CTowerScript>()->SetNexus(pBlueNexus);
     FindLayer(L"Blue")->AddGameObject(pBlueNexus);
 
     CGameObject* pBlueSpawnPlace = new CGameObject;
@@ -412,6 +415,7 @@ void CInGameScene::Init()
     pRedNexus->GetScript<CTowerScript>()->SetType(TOWER_TYPE::NEXUS);
     pRedNexus->GetScript<CTowerScript>()->SetSecondTower(pRedSecondTower);
     pRedNexus->GetScript<CTowerScript>()->Init();
+    pRedSecondTower->GetScript<CTowerScript>()->SetNexus(pRedNexus);
     FindLayer(L"Red")->AddGameObject(pRedNexus);
 
     CGameObject* pRedSpawnPlace = new CGameObject;
@@ -426,6 +430,7 @@ void CInGameScene::Init()
     pBlueSpawnPlace->GetScript<CSpawnScript>()->SetEnemyNexus(pRedNexus);
     pRedSpawnPlace->GetScript<CSpawnScript>()->SetEnemyNexus(pBlueNexus);
     pBlueSpawnPlace->GetScript<CSpawnScript>()->SetFirstTower(pRedFirstTower);
+    
     pRedSpawnPlace->GetScript<CSpawnScript>()->SetFirstTower(pBlueFirstTower);
     pBlueSpawnPlace->GetScript<CSpawnScript>()->SetSecondTower(pRedSecondTower);
     pRedSpawnPlace->GetScript<CSpawnScript>()->SetSecondTower(pBlueSecondTower);
