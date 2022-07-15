@@ -13,6 +13,8 @@ struct tIndexInfo {
 	UINT iIdxCount;
 	void* pIdxSysMem;
 };
+
+
 class CMesh
 	:public CResource
 {
@@ -21,6 +23,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW m_tVtxView;
 	
 	vector<tIndexInfo>m_vecIdxInfo;
+
 
 	UINT m_iVtxSize;
 	UINT m_iVtxCount;
@@ -33,11 +36,15 @@ private:
 	CStructuredBuffer* m_pBoneFrameData;
 	CStructuredBuffer* m_pBoneOffset;
 public:
-	void Create(UINT _iVtxSize, UINT _iVtxCount, BYTE* _pVtxSysMem, DXGI_FORMAT _iIdxFormat, UINT _iIdxCount, BYTE* _pIdxSysMem);
+	void Create(UINT _iVtxSize, UINT _iVtxCount, BYTE* _pVtxSysMem, DXGI_FORMAT _iIdxFormat, UINT _iIdxCount, BYTE* _pIdxSysMem);	
 	static CMesh* CreateFromContainer(CFBXLoader& _Loader);
 	void Render(UINT _iSubset=0);
 	void Render_Particle(UINT _iInstanceCount, UINT _iSubset = 0);
 	void Render_Instancing(UINT _iSubset, CInstancingBuffer* _pInstBuffer);
+
+	// ∆Æ∑π¿œ
+	void CreateTrail(UINT _iVtxSize, UINT _iVtxCount, BYTE* _pVtxSysMem);
+	void RenderTrail(UINT _iInstanceCount, UINT _iSubset = 0);
 
 	CMesh();
 	virtual ~CMesh();

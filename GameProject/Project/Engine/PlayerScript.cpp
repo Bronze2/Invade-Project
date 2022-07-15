@@ -350,7 +350,9 @@ void CPlayerScript::m_FAnimation()
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-						m_eState = PLAYER_STATE::IDLE;
+						// 누워있는 상태로 멈춰이아어리ㅏ어리어라ㅓ이리ㅏㅓ
+						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
+						//m_eState = PLAYER_STATE::IDLE;
 					}
 				}
 			}

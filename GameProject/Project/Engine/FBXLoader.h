@@ -35,6 +35,15 @@ private:
 	FbxArray<FbxString*> m_arrAnimName;
 	vector<tAnimClip*> m_vecAnimClip;
 
+	// 220711 추가
+	//Vec3 vPosition;
+	//Vec3 vTangent;
+	//Vec3 vBinormal;
+	//Vec3 vNormal;
+	//Vec2 vUV;
+	//vector<FbxVertex> vertices;
+	//vector<UINT> indices;
+	//unordered_map<FbxVertex, UINT> indexMapping;
 
 public:
 	void Init();
@@ -53,6 +62,13 @@ private:
 	void GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex, int _iLayerCnt);
+
+	// 220711 추가
+	Vec3 GetTangent(FbxMesh* _pMesh, int _iIdx, int _iVtxOrder);
+	Vec3 GetBinormal(FbxMesh* _pMesh, int _iIdx, int _iVtxOrder);
+	Vec3 GetNormal(FbxMesh* _pMesh, int _iIdx, int _iVtxOrder);
+	Vec2 GetUV(FbxMesh* _pMesh, int _iIdx, int _iUVIndex);
+	void InsertVertex(const Vec3& position, const Vec3& tangent, const Vec3& binormal, const Vec3& normal, const Vec2& uv);
 
 	Vec4 GetMtrlData(FbxSurfaceMaterial* _pSurface, const char* _pMtrlName, const char* _pMtrlFactorName);
 	wstring GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char* _pMtrlProperty);

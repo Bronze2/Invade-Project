@@ -38,8 +38,15 @@ struct tLightColor
 };
 
 struct tTrail {
+	Vec3 vWorldDir;
 	Vec3 vWorldPos;
+	float fCurTime;
+	float fLifeTime;
 	int iAlive;
+};
+
+struct tTrailShared {
+	int iAddCount;
 };
 
 struct tParticle {
@@ -229,6 +236,15 @@ typedef struct _tagContainer
 	}
 
 }tContainer;
+
+//struct FbxVertex
+//{
+//	Vec3 vPos;
+//	Vec3 vTangent;
+//	Vec3 vBinormal;
+//	Vec3 vNormal;
+//	Vec2 vUV;
+//} FbxVertex;
 
 struct tFrameTrans {
 	Vec4 vTranslate;

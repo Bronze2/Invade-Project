@@ -1,39 +1,35 @@
 #pragma once
-#include "Script.h"
 #include "Ptr.h"
 #include "Material.h"
 #include "Mesh.h"
 
-class CStructuredBuffer;
 class CTrail
-	: public CScript
 {
 private:
-	CStructuredBuffer*		m_pTrailBuffer;			// 트레일 데이터 저장 버퍼
+	Vec3					m_vPos;
+	Vec3					m_vColor;
+	float					m_fWidth;
+		
+	float					m_fCurTime;			// 정점 생성 후 경과 시간
+	float					m_fLifeTime;		// 정점 생존 시간
 
-	Ptr<CMaterial>			m_pMtrl;
-	Ptr<CMesh>				m_pMesh;
-
-	float					m_fFrequency;			// 생성 주기
-	float					m_fStartScale;			// 시작 폭
-	float					m_fEndScale;			// 마지막 폭
-
+	bool					m_bEndPoint;			// 정점 생성 여부
 
 public:
 	void Init(Ptr<CTexture> _pTexture);
 
+	virtual void Update();
 	virtual void FinalUpdate();
 	virtual void Render();
 
-	void SetStartScale(float _fStartScale) { m_fStartScale = _fStartScale; }
-	void SetEndScale(float _fEndScale) { m_fEndScale = _fEndScale; }
-
-	//void Init(Ptr<CTexture> _pTexture, const wstring& _MtrlName = L"ParticleUpdateMtrl");
+	void SetColor(Vec4 _vColor) { m_vColor = _vColor; }
+	void SetWidth(float _fWidth) { m_fWidth = _fWidth; }
+	void SetLifeTime(float _fLifeTime) { m_fLifeTime = _fLifeTime; }
 
 public:
 	CTrail();
 	virtual ~CTrail();
 
-//	CLONE(CTrail);
+	CLONE(CTrail);
 };
 

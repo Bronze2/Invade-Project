@@ -73,8 +73,7 @@ void CBowScript::Update()
 		Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
 		vArrowDir.y = vCrossHairDir.y;
 		vArrowDir.Normalize();
-		cout << "vArrowDir : " << vArrowDir.x << ", " << vArrowDir.y << ", " << vArrowDir.z << endl;
-
+	
 		m_pArrow[m_iCurArrow]->ClearParent();
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
@@ -224,7 +223,7 @@ void CBowScript::Awake()
 
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
-		m_pArrow[i]->SetActive(false);
+		//m_pArrow[i]->SetActive(false);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetLayerIdx(GetObj()->GetLayerIdx());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);

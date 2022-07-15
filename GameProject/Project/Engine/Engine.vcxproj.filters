@@ -297,10 +297,10 @@
     <ClCompile Include="Animator2D.cpp">
       <Filter>Object\Component\Ani</Filter>
     </ClCompile>
-    <ClCompile Include="TrailScript.cpp">
-      <Filter>Script\Trail</Filter>
-    </ClCompile>
     <ClCompile Include="TrailRenderer.cpp">
+      <Filter>Object\Component\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="Trail.cpp">
       <Filter>Object\Component\Trail</Filter>
     </ClCompile>
   </ItemGroup>
@@ -578,10 +578,10 @@
     <ClInclude Include="Animator2D.h">
       <Filter>Object\Component\Ani</Filter>
     </ClInclude>
-    <ClInclude Include="TrailScript.h">
-      <Filter>Script\Trail</Filter>
-    </ClInclude>
     <ClInclude Include="TrailRenderer.h">
+      <Filter>Object\Component\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="Trail.h">
       <Filter>Object\Component\Trail</Filter>
     </ClInclude>
   </ItemGroup>

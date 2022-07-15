@@ -3,44 +3,71 @@
 #include "Ptr.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "Script.h"
+
+struct TrailPoint
+{
+	Vec3						vPos;
+	float						fCurTime;			// 생성 후 경과 시간
+	float						fLifeTime;			// 생존 시간
+};
+
 
 class CTrailRenderer
 	: public CComponent
 {
-private:	
-	Ptr<CMaterial>		m_pMtrl;			// 렌더링 쉐이더
-	Ptr<CMesh>			m_pMesh;			// 사용 메쉬
+private:
+	//Ptr<CMesh>					m_pMesh;
+	//vector<Ptr<CMesh>>			m_pMesh;
+	//vector<Ptr<CMaterial>>		m_pMtrl;
+	Ptr<CTexture>				m_pTex;
 
-	Vec4				m_vColor;			// 트레일 색상
-	float				m_fWidth;			// 트레일 너비
-	float				m_fHeight;			// 트레일 높이
-	
-	float				m_fCurTime;			// 정점 생성 후 경과 시간
-	float				m_fEmitTime;		// 정점 생성 기준 시간
+	Vec3						m_vColor;
+	float						m_fMaxWidth;
+	float						m_fMinWidth;
 
-	bool				m_bEmit;			// 정점 생성 여부
+	bool						m_bEmit;			// 정점 생성 여부
 
-	CGameObject*		m_pObj;				// 트레일 대상 오브젝트	
+	float						m_fCurTime;			// 정점 생성 후 경과 시간
+	float						m_fEmitTime;		// 정점 생성 기준 시간
+	float						m_fLifeTime;		// 정점 생존 시간
+
+	//vector<TrailPoint>			m_vecVtx;
+	//vector<UINT>				m_vecIdx;
+
+	vector<TrailPoint>			m_pTrails;
+	int							m_iMaxTrail;
+
+	//ComPtr<ID3D12Resource>		m_pVB;
+	//D3D12_VERTEX_BUFFER_VIEW	m_tVtxView;
+
+	//CStructuredBuffer*			m_pTrailBuffer;
+	//CStructuredBuffer*			m_pSharedBuffer;
+	//Ptr<CMaterial>				m_pUpdateMtrl;
+	Ptr<CMesh>					m_pMesh;
+	Ptr<CMaterial>				m_pMtrl;
+	int							m_iCount;
 
 public:
 	void Init(Ptr<CTexture> _pTex);
 	virtual void Update();
 	virtual void FinalUpdate();
-	virtual void Render();
 
 	void SetColor(Vec4 _vColor) { m_vColor = _vColor; }
-	void SetWidth(float _fWidth) { m_fWidth = _fWidth; }
-	void SetHeight(float _fHeight) { m_fHeight = _fHeight; }
-
-	void EmitPoint(Vec3 _vPos, float _fAngle);
-	// 일정 시간마다 점 기준으로 Point 생성 (Update에서 호출)
-	// bool 변수로 끝인지 아닌지 판별
+	void SetMaxWidth(float _fWidth) { m_fMaxWidth = _fWidth; }
+	void SetMinWidth(float _fWidth) { m_fMinWidth = _fWidth; }
+	void SetLifeTime(float _fLifeTime) { m_fLifeTime = _fLifeTime; }
 
 	bool GetEmit() { return m_bEmit; }
 	void SetEmit(bool _bTrue) { m_bEmit = _bTrue; }
 
+	void EmitPoint(Vec3 _vPos, float _fAngle);
+	void ErasePoint();
+
+public:
 	virtual void SaveToScene(FILE* _pFile);
 	virtual void LoadFromScene(FILE* _pFile);
+
 public:
 	CTrailRenderer();
 	virtual ~CTrailRenderer();

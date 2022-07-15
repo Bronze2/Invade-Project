@@ -812,22 +812,25 @@ void CResMgr::CreateDefaultShader()
 	// 트레일
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\trail.fx", "VS_Trail", "vs_5_0");
-	pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
+	//pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
 	pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
 
 	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
 	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
 
-	pShader->Create(SHADER_POV::TRAIL, D3D_PRIMITIVE_TOPOLOGY_POINTLIST); // TOPOLOGY 가 점 형태(정점 1개)
+	pShader->Create(SHADER_POV::TRAIL);
 
-	pShader->AddShaderParam(tShaderParam{ L"Width", SHADER_PARAM::FLOAT_0 });
-	pShader->AddShaderParam(tShaderParam{ L"Height", SHADER_PARAM::FLOAT_1 });
+	//pShader->Create(SHADER_POV::FORWARD);
+
+	//pShader->AddShaderParam(tShaderParam{ L"Width", SHADER_PARAM::FLOAT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Color", SHADER_PARAM::VEC4_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
 
 	AddRes(L"TrailShader", pShader);
 
-
+	//pShader = new CShader;
+	//pShader->CreateComputeShader(L"Shader\\trail.fx", "CS_TrailUpdate", "cs_5_0");
+	//AddRes(L"TrailUpdateShader", pShader);
 
 	// ======================
 	// Particle Update Shader
@@ -1060,10 +1063,16 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CShader>(L"TerrainShader"));
 	AddRes(L"TerrainMtrl", pMtrl);
 
+	// 트레일
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"TrailShader"));
 	AddRes(L"TrailMtrl", pMtrl);
+
+	//pMtrl = new CMaterial;
+	//pMtrl->DisableFileSave();
+	//pMtrl->SetShader(FindRes<CShader>(L"TrailUpdateShader"));
+	//AddRes(L"TrailUpdateMtrl", pMtrl);
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype

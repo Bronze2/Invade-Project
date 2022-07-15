@@ -158,7 +158,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -179,8 +179,9 @@ void CInGameScene::Init()
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_4", 202, 210);
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_5", 202, 212);
 	pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
-	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      // ������ �� 240, 261		
-	pNewAnimation->InsertAnimClip(L"RUN", 305, 320);      // 305, 320
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      // ������ �� 240, 261
+	// 달리기
+	pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 	pObject->Animator3D()->SetAnimation(pNewAnimation);
@@ -235,33 +236,33 @@ void CInGameScene::Init()
 // 맵 (baseMap + 타워 + 넥서스)
 //-----------------------------------------------------------------------------------------------
 		// 기본 성 fbx
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\testmap01.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\testmap01.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
+	////pMeshData->Save(pMeshData->GetPath());
 
-	pObject = pMeshData->Instantiate();
+	//pObject = pMeshData->Instantiate();
 
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));		//0.f, 370.f, 0.f
-	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-	pObject->MeshRender()->SetDynamicShadow(true);
+	//pObject->FrustumCheck(false);
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));		//0.f, 370.f, 0.f
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
+	//pObject->MeshRender()->SetDynamicShadow(true);
 
-	FindLayer(L"Default")->AddGameObject(pObject);
+	//FindLayer(L"Default")->AddGameObject(pObject);
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	////pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
+	////pMeshData->Save(pMeshData->GetPath());
 
-	pObject = pMeshData->Instantiate();
+	//pObject = pMeshData->Instantiate();
 
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));		//0.f, 370.f, 0.f
-	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-	pObject->MeshRender()->SetDynamicShadow(false);
+	//pObject->FrustumCheck(false);
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));		//0.f, 370.f, 0.f
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
+	//pObject->MeshRender()->SetDynamicShadow(false);
 
-	FindLayer(L"Default")->AddGameObject(pObject);
+	//FindLayer(L"Default")->AddGameObject(pObject);
 
 	// 레드 1차타워
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
@@ -424,7 +425,6 @@ void CInGameScene::Init()
 	Quaternion qRot;
 
 	for (int i = 0; i < 8; ++i) {
-		pObstacle = new CGameObject;
 		pObstacle = pMeshData->Instantiate();
 		pObstacle->AddComponent(new CCollider3D);
 		pObstacle->SetName(L"obstacle");

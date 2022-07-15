@@ -36,6 +36,8 @@ void CShader::Create(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopology)
 		{ "WVP", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 176, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1} ,
 		{ "ROWINDEX", 0, DXGI_FORMAT_R32_SINT, 1, 192, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1}
 	};
+	
+	//UINT uiNumElement = sizeof(inputElementDescs) / sizeof(inputElementDescs[0]);
 
 	m_tPipeLine.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 	m_tPipeLine.pRootSignature = CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::RENDER).Get();

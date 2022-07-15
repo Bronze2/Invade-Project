@@ -41,13 +41,14 @@ private:
 
     // 트레일
     CGameObject* m_pTrail;
+    float m_fAngle;
+    float m_fRotateAngle;
 
     ARROW_STATE m_eState;
     Vec3 m_vRestorePos;
     Vec3 m_vTargetDir;
     Vec3 m_vDeltaPos;
 
-    float m_fStartAngle;
     Vec3 m_vQtrnRotAxis;
 
     CGameObject* m_pBow;
@@ -76,8 +77,12 @@ public:
     void SetVelocityY(float _fVelocityY) { m_fVelocityY = _fVelocityY; }
     void SetVelocityX() { m_fVelocityX = m_vDir.x * m_fSpeed  * DT; }
     void SetVelocityZ() { m_fVelocityZ = m_vDir.z * m_fSpeed * DT; }
-    // 화살 다시
-    void SetStartAngle(float _Angle) { m_fStartAngle = _Angle; }
+    // 트레일
+    void SetAngle(float _Angle) { m_fAngle = _Angle; }
+    float GetAngle() { return m_fAngle; }
+    float GetRotateAngle() { return m_fRotateAngle; }
+    Vec3 GetDir() { return m_vDir; }
+
     void SetQtrnRotAxis(Vec3 _Axis) { m_vQtrnRotAxis = _Axis; }
 
     void SkillCheck();

@@ -264,7 +264,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TowerScript.h" />
     <ClInclude Include="TrailRenderer.h" />
-    <ClInclude Include="TrailScript.h">
+    <ClInclude Include="Trail.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -366,7 +366,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TowerScript.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />
-    <ClCompile Include="TrailScript.cpp">
+    <ClCompile Include="Trail.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>

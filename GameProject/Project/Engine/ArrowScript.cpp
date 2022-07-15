@@ -74,14 +74,19 @@ void CArrowScript::Awake()
 	m_pTrail = new CGameObject;
 	m_pTrail->SetName(L"ArrowTrail");
 	m_pTrail->AddComponent(new CTransform);
+	m_pTrail->AddComponent(new CMeshRender);
 	m_pTrail->AddComponent(new CTrailRenderer);
-	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain"));
+	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"PlayerRed"));
 	m_pTrail->TrailRenderer()->SetColor(Vec4(1.f, 0.f, 0.f, 1.f));
-	m_pTrail->TrailRenderer()->SetWidth(10.f);
-	m_pTrail->TrailRenderer()->SetHeight(100.f);
+	m_pTrail->TrailRenderer()->SetMaxWidth(500.f);
+	m_pTrail->TrailRenderer()->SetMinWidth(100.f);
 	m_pTrail->TrailRenderer()->SetEmit(false);
 	m_pTrail->SetActive(true);
 	m_pTrail->FrustumCheck(false);
+	//Vec3 vTrailPos = Vec3(0.f, 0.f, 0.f) - GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 40.f;
+	//m_pTrail->Transform()->SetLocalPos(vTrailPos);
+	//m_pTrail->Transform()->SetBillBoard(true);
+	//m_pTrail->Transform()->SetCamera(dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0]);
 	GetObj()->AddChild(m_pTrail);
 
 	m_eState = ARROW_STATE::IDLE;
@@ -126,7 +131,10 @@ void CArrowScript::Update()
 	{
 		if (Transform()->GetWorldPos().y < 5.f)
 		{
-			GetObj()->SetActive(false);
+			//GetObj()->SetActive(false);
+			// 트레일
+			m_pTrail->TrailRenderer()->SetEmit(false);
+			
 			if (nullptr != m_pSkill)
 			{
 				delete m_pSkill;
@@ -144,6 +152,7 @@ void CArrowScript::Update()
 			Vec4 vDir = Vec4(m_vDir, 1.f);
 			m_pParticle->ParticleSystem()->SetDir(vDir);
 
+			// 트레일
 			m_pTrail->TrailRenderer()->SetEmit(true);
 
 			// 화살 기존 코드
@@ -185,11 +194,11 @@ void CArrowScript::Update()
 			else {
 				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
 				float fHigh = m_fHighest - m_fVelocityY;
-				float fRotateAngle = fHigh / m_fPerRotate;
-				if (fRotateAngle <= 0.005f && m_fDir == 1) {
+				m_fRotateAngle = fHigh / m_fPerRotate;
+				if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
 					m_fDir = -1;
 				}
-				Quaternion qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, fRotateAngle * m_fDir);
+				Quaternion qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
 				Transform()->SetQuaternion(qRot);
 			}
 
