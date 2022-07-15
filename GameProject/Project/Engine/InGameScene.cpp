@@ -297,7 +297,6 @@ void CInGameScene::Init()
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
 			cout << "[ID" << cl.second.id << "] 블루"<< endl;
-			pObject->GetScript<CPlayerScript>()->SetType(cl.second.skill);
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
 		}
@@ -305,10 +304,10 @@ void CInGameScene::Init()
 			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
 			cout << "[ID" << cl.second.id << "] 레드" << endl;
-			pObject->GetScript<CPlayerScript>()->SetType(cl.second.skill);
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 		}
 
+		pObject->GetScript<CPlayerScript>()->SetType(cl.second.skill);
 
 		pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 		pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));

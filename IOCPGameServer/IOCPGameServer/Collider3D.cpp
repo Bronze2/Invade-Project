@@ -16,12 +16,17 @@ void CCollider3D::FinalUpdate()
 		return;
 
 	Vec3 vFinalPos = m_vOffsetPos;
-
 	vFinalPos = vFinalPos / Transform()->GetWorldScale();
 	Matrix matTranslation = XMMatrixTranslation(vFinalPos.x, vFinalPos.y, vFinalPos.z);
 	Matrix matScale = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
 	m_matColWorld = matScale * matTranslation;
 	m_matColWorld *= Transform()->GetWorldMat();
+	m_matColWorldNotify = m_matColWorld;
+	Matrix bWorld = XMLoadFloat4x4(&m_matColWorld);
+	m_bBound = {};
+	m_bBound.Transform(m_bBound, m_matColWorld);
+	XMFLOAT3 corners[8] = {};
+	m_bBound.GetCorners(corners);
 }
 
 

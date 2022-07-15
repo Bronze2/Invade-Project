@@ -32,9 +32,9 @@ public:
 
 	void send_spawn_minion_packet(int minion_id , float x, float y , float z, MINION_ATTACK_TYPE type ,CAMP_STATE camp);
 
-	void send_move_minion_packet(int minion_id);
+	void send_move_minion_packet(int minion_id, int room_id);
 
-	void send_anim_minion_packet(int minion_id);
+	void send_anim_minion_packet(int minion_id, int room_id);
 
 	void send_rot_tower_packet(int tower_id);
 

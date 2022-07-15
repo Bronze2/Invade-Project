@@ -226,7 +226,7 @@ void CServer::send_spawn_minion_packet(int minion_id, float x, float y, float z,
 
 }
 
-void CServer::send_move_minion_packet(int minion_id)
+void CServer::send_move_minion_packet(int minion_id, int room_id)
 {
 	sc_packet_move_minion packet;
 	packet.size = sizeof(packet);
@@ -241,15 +241,18 @@ void CServer::send_move_minion_packet(int minion_id)
 	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
 	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
 	//cout << "["<<packet.state<<"]" << endl;
-	//cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
+	cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
 
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i)
-		send_packet(i, &packet);
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == room_id)
+			send_packet(cl.second.m_id, &packet);
+
+	}
 
 }
 
-void CServer::send_anim_minion_packet(int minion_id)
+void CServer::send_anim_minion_packet(int minion_id, int room_id)
 {
 	sc_packet_move_minion packet;
 	packet.size = sizeof(packet);
@@ -264,8 +267,14 @@ void CServer::send_anim_minion_packet(int minion_id)
 	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
 	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i)
-		send_packet(i, &packet);
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == room_id)
+			send_packet(cl.second.m_id, &packet);
+
+	}
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i)
+	//	send_packet(i, &packet);
 
 }
 

@@ -18,18 +18,23 @@ private:
 
     Matrix m_matColWorld;
     UINT m_iColID;
+    BoundingBox m_bBound;
+    Matrix m_matColWorldNotify;
 
 public:
     virtual void Update();
     virtual void FinalUpdate();
-    void Render();
+
+    const Matrix& GetColliderWorldMatNotify() {
+        return m_matColWorldNotify;
+    }
 
     void OnCollisionEnter(CCollider3D* _pOther);
     void OnCollision(CCollider3D* _pOther);
     void OnCollisionExit(CCollider3D* _pOther);
     void SetOffsetPos(const Vec3& _vPos) { m_vOffsetPos = _vPos; }
     void SetOffsetScale(const Vec3& _vScale) { m_vOffsetScale = _vScale; }
-
+    BoundingBox GetBox() { return m_bBound; }
     const Vec3& GetOffsetPos() { return m_vOffsetPos; }
     const Vec3& GetOffsetScale() { return m_vOffsetScale; }
     COLLIDER3D_TYPE GetColliderType() { return m_eType; }

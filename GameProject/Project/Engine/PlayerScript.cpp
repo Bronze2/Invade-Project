@@ -625,9 +625,10 @@ void CPlayerScript::Update()
 			}
 			Transform()->SetLocalRot(vRot);
 			UseSkill();
-			StatusCheck();
 			GetDamage();
 		}
+		StatusCheck();
+
 		Update_LerpPos();
 	}
 	m_FAnimation();
@@ -667,11 +668,12 @@ bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 				continue;
 			if (L"Minion" == vecObj[j]->GetName())
 				continue;
+			if (L"Arrow" == vecObj[j]->GetName())
+				continue;
 
 			bTrue = CCollisionMgr::GetInst()->CollisionCubeMatrix(MatColWorld, vecObj[j]->Collider3D()->GetColliderWorldMatNotify());
 			if (bTrue) {
-				cout << " ??" << endl;
-				cout << vecObj[j]->GetName().c_str() << endl;
+				wcout << vecObj[j]->GetName() << endl;
 				return bTrue;
 			}
 		}

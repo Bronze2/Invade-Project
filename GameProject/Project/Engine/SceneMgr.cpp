@@ -337,7 +337,6 @@ void CSceneMgr::Init()
 
 void CSceneMgr::Update()
 {
-	Network::GetInst()->RecvData();
 
 
 	m_pCurScene->Update();
@@ -551,7 +550,7 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 
 void CSceneMgr::net_spawnMinion_blue(int id, int mtype,float x, float y ,float z)
 {
-	Vec3 Pos{ x,y,100 };
+	Vec3 Pos{ x,y,z };
 	m_minion[id].pos = Pos;
 
 	m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);

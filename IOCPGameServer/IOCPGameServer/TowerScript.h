@@ -37,7 +37,9 @@ public:
     const CAMP_STATE& GetCamp()const { return m_eCampState; }
 
     void Init();
-
+    void SetCampState(CAMP_STATE _eCampState) {
+        m_eCampState = _eCampState;
+    }
     void SetSecondTower(CGameObject* _pGameObject);
     void SetFirstTower(CGameObject* _pGameObject);
     void SetNexus(CGameObject* _pObject);

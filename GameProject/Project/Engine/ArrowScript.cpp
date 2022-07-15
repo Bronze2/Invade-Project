@@ -92,8 +92,8 @@ void CArrowScript::SkillCheck()
 		m_pParticle->SetActive(true);
 	}
 	else {
-		return;
 		m_pParticle->SetActive(false);
+		return;
 	}
 
 }

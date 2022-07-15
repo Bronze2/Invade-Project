@@ -3,10 +3,18 @@
 #include <iostream>
 
 
+enum class FIND_STATE {
+    NONE,
+    SENSOR_FIRST,
+    RAY_FIRST,
+    END,
+};
+
 class CMinionScript :
     public CScript
 {
     MINION_STATE m_eState;
+    FIND_STATE m_eFindState;
     float m_fSpeed;
     float m_fRange;
     CAMP_STATE m_eCamp;
@@ -33,6 +41,20 @@ class CMinionScript :
     void CreateProjectile(const wstring& _Layer);
     bool m_bProjectile;
     CGameObject* m_pProjectile;
+
+
+    CGameObject* m_InterSectObject;
+    SimpleMath::Ray* m_pRay;
+    SimpleMath::Ray* GetRay() { return m_pRay; }
+    //Ray
+    float m_fStartXValue;
+    float m_fMinStartX;
+    float m_fMaxStartX;
+    bool m_bDetection;
+    float m_fPrevXValue;
+
+    CGameObject* m_pFirstTower;
+    CGameObject* m_pSecondTower;
 public:
     void CheckHp();
     CLONE(CMinionScript)
@@ -64,10 +86,10 @@ public:
     float GetRange() { return m_fAttackRange; }
 
     void CheckRange();
-
-
+    void InterSectsObject(CCollider3D* _pCollider);
+    void RayCollision(const CLayer* _pLayer);
     void FindNearObject(const vector<CGameObject*>& _pObject);
-    
+    void CheckObstacle();
     
     
     void m_FFind();

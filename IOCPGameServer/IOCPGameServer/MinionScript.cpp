@@ -3,6 +3,9 @@
 #include "TimeMgr.h"
 #include "Sensor.h"
 #include "Server.h"
+#include "SceneMgr.h"
+#include "Collider3D.h"
+#include "PlayerScript.h"
 
 void CMinionScript::Init()
 {
@@ -38,22 +41,48 @@ void CMinionScript::Init()
 void CMinionScript::Update()
 {
 	CheckHp();
+	//CheckObstacle();
 	if (m_eState == MINION_STATE::DIE) {
 		return;
 	}
 
 	FindNearObject(m_arrEnemy);
 	CheckRange();
+
+
 	Vec3 vPos = Transform()->GetWorldPos(); 
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
-	if (nullptr != m_pTarget&&!m_bAllienceCol) {
-		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-		float rotate = angle * 0.0174532925f; //0.0174532925f
-		vRot.y = rotate;
 
+
+	if (nullptr != m_pTarget && !m_bAllienceCol) {
+		Vec3 vTargetPos;
+		if (!m_pTarget->IsDead()) {
+
+			if (FIND_STATE::RAY_FIRST == m_eFindState) {
+				float angle = atan2(vPos.x - m_fStartXValue, vPos.z - vPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+
+			}
+			else {
+				vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+			}
+		}
 	}
+
+
+
+	//if (nullptr != m_pTarget&&!m_bAllienceCol) {
+	//	Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+	//	float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+	//	float rotate = angle * 0.0174532925f; //0.0174532925f
+	//	vRot.y = rotate;
+
+	//}
 	if (m_bAllienceCol&&!m_bSeparate && !SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
 		if (m_bRotate) {
 			if (m_eCamp == CAMP_STATE::RED) {
@@ -67,7 +96,28 @@ void CMinionScript::Update()
 	}
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
-	//
+	if (FIND_STATE::RAY_FIRST == m_eFindState)
+	{
+		if ((m_fMinStartX < vLocalPos.x) && (m_fMaxStartX > vLocalPos.x)) {
+			m_eFindState = FIND_STATE::NONE;
+			if (!m_pFirstTower->IsDead())
+			{
+
+				m_pTarget = m_pFirstTower;
+
+			}
+			else if (!m_pSecondTower->IsDead()) {
+
+				m_pTarget = m_pSecondTower;
+
+			}
+			else
+				m_pTarget = m_pNexus;
+			m_arrEnemy.clear();
+		}
+
+
+	}
 
 	switch (m_eState)
 	{
@@ -120,11 +170,79 @@ void CMinionScript::Update()
 
 	//SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
 	//std::cout << GetObj()->GetId() << endl;
-	CServer::GetInst()->send_move_minion_packet(m_GetId());
+	CServer::GetInst()->send_move_minion_packet(m_GetId(),index);
 	//
 
 }
 
+
+void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
+{
+	Vec3 vWorldPos = Transform()->GetWorldPos();
+	vWorldPos.y += Collider3D()->GetOffsetPos().y;
+
+	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+
+	if (nullptr == m_pTarget)
+		return;
+	if (nullptr == m_pTarget->GetScript<CPlayerScript>())
+		return;
+
+
+	Vec3 target = m_pTarget->Transform()->GetWorldPos();
+	target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+	m_pRay->position = vWorldPos;
+	m_pRay->direction = vDir;
+	float min = INFINITE;
+	if (_pCollider->GetObj()->GetName() != L"Obstacle")
+	{
+
+	}
+	if (m_pRay->Intersects(_pCollider->GetBox(), min)) {
+		Vec3 target = m_pTarget->Transform()->GetWorldPos();
+
+		target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+		float distance = Vec3::Distance(target, vWorldPos);
+		Vec3 vPos2 = Vec3();
+
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
+		if (min > distance)
+			return;
+		if (_pCollider->GetObj()->GetName() == L"obstacle") {
+			m_InterSectObject = _pCollider->GetObj();
+
+			m_eFindState = FIND_STATE::RAY_FIRST;
+
+			m_fPrevXValue = vWorldPos.x;
+
+		}
+
+	}
+}
+
+void CMinionScript::CheckObstacle()
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);
+
+	RayCollision(pCurScene->FindLayer(L"Obstacle"));
+}
+
+void CMinionScript::RayCollision(const CLayer* _pLayer)
+{
+	const vector<CGameObject*>& vecObj = _pLayer->GetObjects();
+
+	map<DWORD_PTR, bool>::iterator iter;
+	for (size_t i = 0; i < vecObj.size(); ++i) {
+		CCollider3D* pCollider = vecObj[i]->Collider3D();
+		if (nullptr == pCollider)
+			continue;
+		InterSectsObject(pCollider);
+	}
+
+
+
+}
 
 
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
@@ -229,7 +347,7 @@ void CMinionScript::CheckRange()
 
 			}
 			
-			CServer::GetInst()->send_anim_minion_packet(m_GetId());
+			CServer::GetInst()->send_anim_minion_packet(m_GetId(),index);
 
 			SHARED_DATA::g_minion[m_GetId()].m_during_attack = true;
 			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time++;

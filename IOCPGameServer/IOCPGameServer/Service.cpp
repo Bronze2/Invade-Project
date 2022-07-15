@@ -20,7 +20,7 @@ void CService::update_minion()
 
 
 			SHARED_DATA::g_minion[i].m_cLock.lock();
-			CServer::GetInst()->send_move_minion_packet(i);
+			//CServer::GetInst()->send_move_minion_packet(i,index);
 			SHARED_DATA::g_minion[i].m_cLock.unlock();
 
 	}
