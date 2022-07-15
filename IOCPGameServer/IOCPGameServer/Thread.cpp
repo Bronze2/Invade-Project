@@ -322,8 +322,11 @@ void CThread::process_packet(int user_id, char* buf)
 
 		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
 			if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
-			else
-				CServer::GetInst()->send_enter_lobby_packet(user_id, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);	
+			else {
+				CServer::GetInst()->send_enter_lobby_packet(user_id, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);
+				CServer::GetInst()->send_lobby_change_skill_pacekt(SHARED_DATA::g_clients[user_id].room_id, SHARED_DATA::g_clients[CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]].skill, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);
+
+			}
 		}
 		//들어와 있는 놈들이 방금 들어온놈 확인
 		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {

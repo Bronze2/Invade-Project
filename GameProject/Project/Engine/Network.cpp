@@ -139,6 +139,7 @@ void Network::ProcessPacket(char* ptr)
 			m_Client.pos.y = my_packet->pos.y;
 			m_Client.pos.z = my_packet->pos.z;
 			m_Client.camp = my_packet->camp;
+			m_Client.skill = (ELEMENT_TYPE)my_packet->skill;
 		}
 		else {
 			m_otherClients[my_packet->id].pos.x = my_packet->pos.x;
@@ -146,6 +147,8 @@ void Network::ProcessPacket(char* ptr)
 			m_otherClients[my_packet->id].pos.z = my_packet->pos.z;
 			m_otherClients[my_packet->id].camp = my_packet->camp;
 			m_otherClients[my_packet->id].id = my_packet->id;
+			m_otherClients[my_packet->id].skill = (ELEMENT_TYPE)my_packet->id;
+
 			//CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
 		current_enter_count++;

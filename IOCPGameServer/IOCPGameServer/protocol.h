@@ -152,6 +152,7 @@ struct sc_packet_enter {
 	int id;
 	char name[MAX_ID_LEN];
 	char o_type;
+	PACKET_ELEMENT_TYPE skill;
 	p_Vec3 pos;
 	//char camp;
 	CAMP_STATE camp;

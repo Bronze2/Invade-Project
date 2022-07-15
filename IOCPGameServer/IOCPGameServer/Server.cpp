@@ -164,6 +164,7 @@ void CServer::send_enter_packet(int user_id, int o_id)
 	p.pos.y = SHARED_DATA::g_clients[o_id].Pos.y;
 	p.pos.z = SHARED_DATA::g_clients[o_id].Pos.z;
 	p.camp = SHARED_DATA::g_clients[o_id].m_camp;
+	p.skill = SHARED_DATA::g_clients[o_id].skill;
 	strcpy_s(p.name, SHARED_DATA::g_clients[o_id].m_name);
 	p.o_type = O_PLAYER;
 

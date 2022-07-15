@@ -39,6 +39,7 @@ struct CLIENT {
 	p_Vec3 pos;
 	p_Vec3 rot;
 	p_Vec3 dir;
+	ELEMENT_TYPE skill;
 };
 
 struct OTHER_CLINET {
@@ -48,6 +49,8 @@ struct OTHER_CLINET {
 	p_Vec3 pos;
 	p_Vec3 rot;
 	p_Vec3 dir;
+	ELEMENT_TYPE skill;
+
 };
 
 
