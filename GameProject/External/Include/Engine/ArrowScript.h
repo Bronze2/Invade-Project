@@ -43,6 +43,7 @@ private:
     CGameObject* m_pTrail;
     float m_fAngle;
     float m_fRotateAngle;
+    Vec3 m_vXZDir;
 
     ARROW_STATE m_eState;
     Vec3 m_vRestorePos;
@@ -82,6 +83,7 @@ public:
     float GetAngle() { return m_fAngle; }
     float GetRotateAngle() { return m_fRotateAngle; }
     Vec3 GetDir() { return m_vDir; }
+    Vec3 GetXZDir() { return m_vXZDir; }
 
     void SetQtrnRotAxis(Vec3 _Axis) { m_vQtrnRotAxis = _Axis; }
 

@@ -10,6 +10,7 @@ struct TrailPoint
 	Vec3						vPos;
 	float						fCurTime;			// 생성 후 경과 시간
 	float						fLifeTime;			// 생존 시간
+	int							iIdx;
 };
 
 

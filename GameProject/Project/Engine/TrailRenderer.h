@@ -5,11 +5,35 @@
 #include "Mesh.h"
 #include "Script.h"
 
+//struct TrailPoint
+//{
+//	Vec3						vPos;
+//	float						fCurTime;			// 생성 후 경과 시간
+//	float						fLifeTime;			// 생존 시간
+//	int							iIdx;
+//};
+
 struct TrailPoint
 {
-	Vec3						vPos;
-	float						fCurTime;			// 생성 후 경과 시간
-	float						fLifeTime;			// 생존 시간
+	Vec3						vPosLeft;
+	Vec3						vPosRight;
+};
+
+class CatmullRomSpline
+{
+private:
+	vector<Vec3> m_vControlPoints;
+public:
+	CatmullRomSpline(const vector<Vec3>& data);
+	virtual ~CatmullRomSpline() = default;
+	CatmullRomSpline(const CatmullRomSpline&) = delete;
+	CatmullRomSpline& operator=(const CatmullRomSpline&) = delete;
+	CatmullRomSpline(CatmullRomSpline&&) noexcept = delete;
+	CatmullRomSpline& operator=(CatmullRomSpline&&) noexcept = delete;
+
+	const size_t segment_count;
+	void interpolate(vector<Vec3>& interpolated_data, size_t steps);
+	void interpolate(size_t segment, vector<Vec3>& interpolated_data, size_t steps);
 };
 
 
@@ -48,6 +72,11 @@ private:
 	Ptr<CMaterial>				m_pMtrl;
 	int							m_iCount;
 
+	vector<Vec3>				m_vecPosLeft;
+	vector<Vec3>				m_vecPosRight;
+	vector<Vec3>				m_vecVtxLeft;
+	vector<Vec3>				m_vecVtxRight;
+
 public:
 	void Init(Ptr<CTexture> _pTex);
 	virtual void Update();
@@ -63,6 +92,8 @@ public:
 
 	void EmitPoint(Vec3 _vPos, float _fAngle);
 	void ErasePoint();
+
+	void Interpolate(size_t steps);
 
 public:
 	virtual void SaveToScene(FILE* _pFile);

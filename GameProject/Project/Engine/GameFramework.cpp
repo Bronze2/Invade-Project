@@ -66,12 +66,12 @@ void CGameFramework::Progress()
 
 	CTimeMgr::GetInst()->Update();
 	CSound::g_pFMOD->update();
-	CEventMgr::GetInst()->Clear();
 
+	CEventMgr::GetInst()->Update();
 	CSceneMgr::GetInst()->Update();
 	CRenderMgr::GetInst()->Render();
 
-	CEventMgr::GetInst()->Update();
+	CEventMgr::GetInst()->Clear();
 	CInstancingMgr::GetInst()->Clear();
 }
 

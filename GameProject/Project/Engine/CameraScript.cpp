@@ -101,9 +101,10 @@ void CCameraScript::Update()
 
 Vec3& CCameraScript::CameraShake(Vec3 _vPos, float _DamageTime, float _fDamageSize)
 {
-    float fShakeFactor = 5.f;
+    float fShakeFactor = 2.f;
     if (m_fShakeNum < _DamageTime * PI * fShakeFactor)
     {
+        _vPos.x = m_vRestorePos.x + _fDamageSize * -sin(m_fShakeNum);
         _vPos.y = m_vRestorePos.y + _fDamageSize * sin(m_fShakeNum);
         _vPos.z = m_vRestorePos.z + _fDamageSize * -sin(m_fShakeNum);
 

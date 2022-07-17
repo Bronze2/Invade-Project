@@ -139,7 +139,8 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 	string strName = _pFbxMesh->GetName();
 	Container.strName = wstring(strName.begin(), strName.end());
 
-	int iVtxCnt = _pFbxMesh->GetControlPointsCount();
+	int iVtxCnt = _pFbxMesh->GetControlPointsCount();		// 삼각형 개수 (메쉬의 모든 폴리곤 삼각형)
+
 	Container.Resize(iVtxCnt);
 
 	FbxVector4* pFbxPos = _pFbxMesh->GetControlPoints();
@@ -149,7 +150,7 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		Container.vecPos[i].x = (float)pFbxPos[i].mData[0];
 		Container.vecPos[i].y = (float)pFbxPos[i].mData[2];
 		Container.vecPos[i].z = (float)pFbxPos[i].mData[1];
-	}
+	}	// 정점의 위치 리스트 (제어점으로부터 위치 뽑아냄)
 
 	// 폴리곤 개수
 	int iPolyCnt = _pFbxMesh->GetPolygonCount();
@@ -168,27 +169,12 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 	UINT arrIdx[3] = {};
 	UINT iVtxOrder = 0; // 폴리곤 순서로 접근하는 순번
 
-	//int iVtxCnt = iPolyCnt * iPolySize;
-	//Container.Resize(iVtxCnt);
-
-	// FbxVector4* pFbxPos = _pFbxMesh->GetControlPoints();
-
-	//for (int i = 0; i < iVtxCnt; ++i)
-	//{
-	//	Container.vecPos[i].x = (float)pFbxPos[i].mData[0];
-	//	Container.vecPos[i].y = (float)pFbxPos[i].mData[2];
-	//	Container.vecPos[i].z = (float)pFbxPos[i].mData[1];
-	//}
-
-	Container.Resize(iVtxCnt);
-
-
 	for (int i = 0; i < iPolyCnt; ++i)
 	{
 
 		for (int j = 0; j < iPolySize; ++j)
 		{
-			// i 번째 폴리곤에, j 번째 정점
+			// i 번째 폴리곤에, j 번째 정점 (제어점(controlPoint) 인덱스)
 			int iControlPointIdx = _pFbxMesh->GetPolygonVertex(i, j);
 			arrIdx[j] = iControlPointIdx;
 

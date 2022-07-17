@@ -76,10 +76,10 @@ void CArrowScript::Awake()
 	m_pTrail->AddComponent(new CTransform);
 	m_pTrail->AddComponent(new CMeshRender);
 	m_pTrail->AddComponent(new CTrailRenderer);
-	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"PlayerRed"));
+	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"UIButtonGameStart"));
 	m_pTrail->TrailRenderer()->SetColor(Vec4(1.f, 0.f, 0.f, 1.f));
-	m_pTrail->TrailRenderer()->SetMaxWidth(500.f);
-	m_pTrail->TrailRenderer()->SetMinWidth(100.f);
+	m_pTrail->TrailRenderer()->SetMaxWidth(50.f);
+	m_pTrail->TrailRenderer()->SetMinWidth(10.f);
 	m_pTrail->TrailRenderer()->SetEmit(false);
 	m_pTrail->SetActive(true);
 	m_pTrail->FrustumCheck(false);
@@ -161,9 +161,9 @@ void CArrowScript::Update()
 			Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
 			float fDegree = XMConvertToDegrees(vCamRot.x);
 
-			Vec3 vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
-			vXZDir.Normalize();
-			m_fAngle = acos(Dot(m_vDir, vXZDir));
+			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
+			m_vXZDir.Normalize();
+			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
 			//m_fSpeed = 1000;
 
 			m_fTime += DT;
@@ -174,8 +174,8 @@ void CArrowScript::Update()
 			//vRot.z = fAngle * 180 / PI;
 
 			//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
-			vPos.z = m_vStartPos.z + vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-			vPos.x = m_vStartPos.x + vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+			vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+			vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
 
 			//vPos = m_vDir 
 			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
