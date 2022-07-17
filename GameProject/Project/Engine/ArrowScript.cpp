@@ -76,18 +76,21 @@ void CArrowScript::Awake()
 	m_pTrail->AddComponent(new CTransform);
 	m_pTrail->AddComponent(new CMeshRender);
 	m_pTrail->AddComponent(new CTrailRenderer);
-	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"UIButtonGameStart"));
-	m_pTrail->TrailRenderer()->SetColor(Vec4(1.f, 0.f, 0.f, 1.f));
-	m_pTrail->TrailRenderer()->SetMaxWidth(50.f);
-	m_pTrail->TrailRenderer()->SetMinWidth(10.f);
+	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Sparks"));
+	m_pTrail->TrailRenderer()->SetColor(Vec4(0.8f, 0.f, 0.f, 0.1f));
+	m_pTrail->TrailRenderer()->SetMaxWidth(3.f);
+	m_pTrail->TrailRenderer()->SetMinWidth(1.f);
 	m_pTrail->TrailRenderer()->SetEmit(false);
 	m_pTrail->SetActive(true);
 	m_pTrail->FrustumCheck(false);
+	m_pTrail->MeshRender()->SetDynamicShadow(false);
 	//Vec3 vTrailPos = Vec3(0.f, 0.f, 0.f) - GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 40.f;
 	//m_pTrail->Transform()->SetLocalPos(vTrailPos);
 	//m_pTrail->Transform()->SetBillBoard(true);
 	//m_pTrail->Transform()->SetCamera(dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0]);
-	GetObj()->AddChild(m_pTrail);
+	//GetObj()->AddChild(m_pTrail);
+	m_pTrail->TrailRenderer()->SetTargetObj(GetObj());
+	pCurScene->FindLayer(L"Default")->AddGameObject(m_pTrail);
 
 	m_eState = ARROW_STATE::IDLE;
 

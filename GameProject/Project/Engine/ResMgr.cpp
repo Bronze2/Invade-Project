@@ -815,15 +815,11 @@ void CResMgr::CreateDefaultShader()
 	//pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
 	pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
 
-	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND); // 알파 블랜드 사용
+	pShader->SetBlendState(BLEND_TYPE::ONEBLEND); // 알파 블랜드 사용
 	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
 
-	pShader->Create(SHADER_POV::TRAIL);
+	pShader->Create(SHADER_POV::FORWARD);
 
-	//pShader->Create(SHADER_POV::FORWARD);
-
-	//pShader->AddShaderParam(tShaderParam{ L"Width", SHADER_PARAM::FLOAT_0 });
-	pShader->AddShaderParam(tShaderParam{ L"Color", SHADER_PARAM::VEC4_0 });
 	pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
 
 	AddRes(L"TrailShader", pShader);

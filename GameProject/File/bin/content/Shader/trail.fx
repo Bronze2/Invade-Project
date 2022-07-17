@@ -23,12 +23,14 @@ struct VTX_TRAIL_IN
 {
     float3 vPos : POSITION;
     float2 vUV : TEXCOORD;
+    float4 vColor : COLOR;
 };
 
 struct VTX_TRAIL_OUT
 {
-    float4 vViewPos : POSITION;
+    float4 vPos : SV_POSITION;
     float2 vUV : TEXCOORD;
+    float4 vColor : COLOR;
 };
 
 //struct GS_TRAIL_OUT
@@ -57,9 +59,12 @@ struct VTX_TRAIL_OUT
 VTX_TRAIL_OUT VS_Trail(VTX_TRAIL_IN _in)
 {
     VTX_TRAIL_OUT output = (VTX_TRAIL_OUT)0.f;
-    float3 vWorldPos = mul(float4(_in.vPos, 1.f), g_matWorld).xyz;
-    output.vViewPos = mul(float4(vWorldPos, 1.f), g_matView);
+
+    //float3 vWorldPos = mul(float4(_in.vPos, 1.f), g_matWorld).xyz;
+    //output.vViewPos = mul(float4(vWorldPos, 1.f), g_matView);
+    output.vPos = mul(float4(_in.vPos, 1.f), g_matWVP);
     output.vUV = _in.vUV;
+    output.vColor = _in.vColor;
     //output.iInstID = _in.iID;
     return output;
 }
@@ -114,12 +119,12 @@ VTX_TRAIL_OUT VS_Trail(VTX_TRAIL_IN _in)
 
 float4 PS_Trail(VTX_TRAIL_OUT _in) : SV_Target
 {
-    float4 vColor;
+    float4 vResult;
     if (tex_0)
-        vColor = g_tex_0.Sample(g_sam_0, _in.vUV) * g_vec4_0;
+        vResult = g_tex_0.Sample(g_sam_0, _in.vUV) * _in.vColor;
     else
-        vColor = g_vec4_0;
-    return vColor;
+        vResult = _in.vColor;
+    return vResult;
 }
 
 // ===============

@@ -67,6 +67,7 @@ void CButtonScript::Execute()
 		}
 		break;
 	case BUTTON_TYPE::GAMESTART:
+		cout << "게임스타트라고" << endl;
 		ChangeScene(SCENE_TYPE::INGAME);
 		break;
 	case BUTTON_TYPE::SELECT_WATER:

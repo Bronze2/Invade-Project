@@ -308,7 +308,7 @@ void CSceneMgr::Init()
 
 	// 로비씬
 	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
-	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	
 	//m_pCurScene = new CLobbyScene;
 	//m_pCurScene->SetType(SCENE_TYPE::LOBBY);

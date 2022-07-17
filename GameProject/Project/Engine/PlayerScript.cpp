@@ -677,14 +677,14 @@ void CPlayerScript::Update()
 		// 화살 발사
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-	
+
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 			m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 			// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
 			vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);	// 5.f 더 회전시킬건지?
 
 			// 화살 위아래 애니메이션
-			if (fCamRotDegree <= -3.f ){
+			if (fCamRotDegree <= -3.f) {
 				m_eState = PLAYER_STATE::ATTACK_READY_HIGH_5;
 			}
 			else if (fCamRotDegree <= -1.f) {
@@ -813,10 +813,10 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 	{
 	case ELEMENT_TYPE::WATER:
 	{
-		m_tESkill =CSkillMgr::GetInst()->FindSkill(0);
+		m_tESkill = CSkillMgr::GetInst()->FindSkill(0);
 		m_tZSkill = CSkillMgr::GetInst()->FindSkill(1);
 	}
-		break;
+	break;
 	case ELEMENT_TYPE::DARK:
 	{
 		m_tESkill = CSkillMgr::GetInst()->FindSkill(4);
@@ -845,9 +845,9 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 	default:
 		break;
 	}
-	
-		
-		
+
+
+
 }
 void CPlayerScript::SkillCoolTimeCheck()
 {
@@ -891,7 +891,7 @@ void CPlayerScript::StatusCheck()
 				break;
 			}
 		}
-		if (!m_bFlameCheck ) {
+		if (!m_bFlameCheck) {
 			m_pFlameParticle->SetActive(false);
 		}
 
@@ -965,15 +965,15 @@ void CPlayerScript::UseSkill()
 				DamageBySkill(m_tZSkill);
 				break;
 			default:
-			{	
+			{
 				if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
 					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tZSkill);
 				}
 			}
-				
-				break;
+
+			break;
 			}
-			
+
 
 		}
 
@@ -1025,14 +1025,14 @@ void CPlayerScript::GetDamage()
 			if (TickCheck(m_arrSkill[i]->StartTime, m_arrSkill[i]->Count) != m_arrSkill[i]->Count) {
 				m_iCurHp -= m_arrSkill[i]->DotDamage;
 				m_arrSkill[i]->Sum += m_arrSkill[i]->DotDamage;
-				
+
 				m_arrSkill[i]->Count += 1;
 			}
-			
+
 			if (m_arrSkill[i]->Count >= (int)m_arrSkill[i]->fDuration) {
 				m_arrSkill[i]->bFinal = true;
 				m_iCurHp += m_arrSkill[i]->Sum;
-				
+
 				//m_iCurHp -= 0.01f;
 			}
 		}
@@ -1045,7 +1045,7 @@ void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 	if (m_bColCheck) {
 		for (int i = 0; i < m_arrColObject.size(); ++i) {
 			Vec3 vTargetPos = m_arrColObject[i]->Transform()->GetWorldPos();
-			m_bMoveCheck=lengthCompare(_vBeforePos, _vAfterPos,GetObj(), vTargetPos);
+			m_bMoveCheck = lengthCompare(_vBeforePos, _vAfterPos, GetObj(), vTargetPos);
 			if (m_bMoveCheck) {
 				return;
 			}
@@ -1076,7 +1076,7 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 				}
 			}
 
-			
+
 		}
 	}
 }
@@ -1092,11 +1092,11 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 
 	}
 	else {
-		
+
 		m_arrColObject.erase(std::remove(m_arrColObject.begin(), m_arrColObject.end(), _pOther->GetObj()), m_arrColObject.end());
-		
+
 	}
-	
+
 
 }
 
@@ -1105,7 +1105,7 @@ void CPlayerScript::OnDetectionEnter(CGameObject* _pOther)
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
 	}
 	else {
-		if(nullptr!=_pOther->GetScript<CPlayerScript>())
+		if (nullptr != _pOther->GetScript<CPlayerScript>())
 			m_arrAlliance.push_back(_pOther);
 	}
 
@@ -1119,8 +1119,8 @@ void CPlayerScript::OnDetection(CGameObject* _pOther)
 void CPlayerScript::OnDetectionExit(CGameObject* _pOther)
 {
 	vector<CGameObject*>::iterator iter = m_arrAlliance.begin();
-	m_arrAlliance.erase(std::remove(m_arrAlliance.begin(), m_arrAlliance.end(),_pOther), m_arrAlliance.end());
-	
+	m_arrAlliance.erase(std::remove(m_arrAlliance.begin(), m_arrAlliance.end(), _pOther), m_arrAlliance.end());
+
 }
 
 CPlayerScript::CPlayerScript() :CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT), m_bCheckStartMousePoint(false)

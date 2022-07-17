@@ -29,7 +29,7 @@ struct VS_STD3D_INPUT
     row_major matrix matWVP : WVP;
     int iRowIdx : ROWINDEX;
     uint iInstanceID:SV_InstanceID;
-    
+   
 };
 
 struct VS_STD3D_OUTPUT
@@ -114,8 +114,6 @@ PS_STD3D_OUTPUT PS_Std3D(VS_STD3D_OUTPUT _in)
     {
         output.vTarget3 = g_tex_2.Sample(g_sam_0, _in.vUV);
     }
-    else
-        output.vTarget3 = float4(0.f, 0.f, 0.f, 1.f);
 
     output.vTarget1.xyz = vViewNormal;
     output.vTarget2.xyz = _in.vViewPos;

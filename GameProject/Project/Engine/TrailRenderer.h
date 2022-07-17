@@ -5,14 +5,6 @@
 #include "Mesh.h"
 #include "Script.h"
 
-//struct TrailPoint
-//{
-//	Vec3						vPos;
-//	float						fCurTime;			// 생성 후 경과 시간
-//	float						fLifeTime;			// 생존 시간
-//	int							iIdx;
-//};
-
 struct TrailPoint
 {
 	Vec3						vPosLeft;
@@ -41,9 +33,6 @@ class CTrailRenderer
 	: public CComponent
 {
 private:
-	//Ptr<CMesh>					m_pMesh;
-	//vector<Ptr<CMesh>>			m_pMesh;
-	//vector<Ptr<CMaterial>>		m_pMtrl;
 	Ptr<CTexture>				m_pTex;
 
 	Vec3						m_vColor;
@@ -53,11 +42,9 @@ private:
 	bool						m_bEmit;			// 정점 생성 여부
 
 	float						m_fCurTime;			// 정점 생성 후 경과 시간
+	float						m_fClearCurTime;
 	float						m_fEmitTime;		// 정점 생성 기준 시간
 	float						m_fLifeTime;		// 정점 생존 시간
-
-	//vector<TrailPoint>			m_vecVtx;
-	//vector<UINT>				m_vecIdx;
 
 	vector<TrailPoint>			m_pTrails;
 	int							m_iMaxTrail;
@@ -77,6 +64,8 @@ private:
 	vector<Vec3>				m_vecVtxLeft;
 	vector<Vec3>				m_vecVtxRight;
 
+	CGameObject*				m_pObj;
+
 public:
 	void Init(Ptr<CTexture> _pTex);
 	virtual void Update();
@@ -87,10 +76,12 @@ public:
 	void SetMinWidth(float _fWidth) { m_fMinWidth = _fWidth; }
 	void SetLifeTime(float _fLifeTime) { m_fLifeTime = _fLifeTime; }
 
+	void SetTargetObj(CGameObject* _pObj) { m_pObj = _pObj; }
+
 	bool GetEmit() { return m_bEmit; }
 	void SetEmit(bool _bTrue) { m_bEmit = _bTrue; }
 
-	void EmitPoint(Vec3 _vPos, float _fAngle);
+	void EmitPoint(Vec3 _vPos);
 	void ErasePoint();
 
 	void Interpolate(size_t steps);
