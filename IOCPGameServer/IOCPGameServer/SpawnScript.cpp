@@ -29,6 +29,9 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
     pObject->GetScript<CMinionScript>()->m_SetId(SHARED_DATA::g_minionindex);
 	pObject->GetScript<CMinionScript>()->Init();
     pObject->GetScript<CMinionScript>()->SetIndex(index);
+    pObject->GetScript<CMinionScript>()->SetFirstTower(m_pFirstTower);
+    pObject->GetScript<CMinionScript>()->SetSecondTower(m_pSecondTower);
+
 
     CServer::GetInst()->send_spawn_minion_packet(SHARED_DATA::g_minionindex, pObject->Transform()->GetLocalPos().x,
         pObject->Transform()->GetLocalPos().y, pObject->Transform()->GetLocalPos().z, _eAttackRange,_eCamp);

@@ -16,17 +16,18 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos,
 {
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_strKey, _strKey);
 	CGameObject* pObject = pMeshData->Instantiate();
+    pObject->SetName(L"Minion");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMinionScript);
-	pObject->AddComponent(new CSensor);
+	//pObject->AddComponent(new CSensor);
 	//pObject->Sensor()->SetRadius(300.f);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(Vec3(70.f, 150.f, 70.f));
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0,0,100));
-	pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+	pObject->Transform()->SetLocalPos(_vLocalPos);
+	pObject->Transform()->SetLocalScale(_vLocalScale);
    // if (CAMP_STATE::BLUE == _eCamp)
    //     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-180.f), 0.f, 0.f));
     pObject->MeshRender()->SetDynamicShadow(true);
@@ -150,7 +151,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
     default:
         break;
     }
-
+    cout << "Spawn" << endl;
 }
 void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
 {

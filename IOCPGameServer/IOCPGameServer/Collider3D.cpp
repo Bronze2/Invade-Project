@@ -16,6 +16,7 @@ void CCollider3D::FinalUpdate()
 		return;
 
 	Vec3 vFinalPos = m_vOffsetPos;
+
 	vFinalPos = vFinalPos / Transform()->GetWorldScale();
 	Matrix matTranslation = XMMatrixTranslation(vFinalPos.x, vFinalPos.y, vFinalPos.z);
 	Matrix matScale = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
@@ -28,7 +29,6 @@ void CCollider3D::FinalUpdate()
 	XMFLOAT3 corners[8] = {};
 	m_bBound.GetCorners(corners);
 }
-
 
 void CCollider3D::OnCollisionEnter(CCollider3D* _pOther)
 {

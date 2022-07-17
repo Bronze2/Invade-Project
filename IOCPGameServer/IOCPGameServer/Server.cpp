@@ -241,7 +241,7 @@ void CServer::send_move_minion_packet(int minion_id, int room_id)
 	packet.rot.z = SHARED_DATA::g_minion[minion_id].Rot.z;
 	packet.state = (int)SHARED_DATA::g_minion[minion_id].State;
 	//cout << "["<<packet.state<<"]" << endl;
-	cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
+	//cout <<"id[" << packet.id <<"]:"<< packet.pos.x << "," << packet.pos.y << "," << packet.pos.z << endl;
 
 
 	for (auto& cl : SHARED_DATA::g_clients) {
@@ -358,6 +358,7 @@ void CServer::send_update_animation(int client_id, int state)
 
 void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)
 {
+	//cout << "Move Send ID -" << arrow_id << endl;
 	sc_packet_arrow packet;
 	packet.size = sizeof(packet);
 	packet.type = S2C_MOVE_ARROW;

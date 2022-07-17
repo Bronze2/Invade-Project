@@ -267,6 +267,7 @@ void CBowScript::Init()
 
 void CBowScript::DeleteArrow(int ArrowId)
 {
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
 	//m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);
 	//m_pArrow[ArrowId]->Transform()->SetLocalPos(Vec3(1000, 1000, 1000));
 	//m_pArrow[ArrowId]->SetActive(false);
@@ -294,8 +295,7 @@ void CBowScript::Awake()
 		m_pArrow[i]->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
 		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f,0.f,0.f));
-
-
+		
 		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		pCurScene->FindLayer(L"Blue")->AddGameObject(m_pArrow[i]);
 		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);

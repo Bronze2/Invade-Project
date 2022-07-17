@@ -58,10 +58,7 @@ void CMinionScript::Update()
 	}
 	Vec3 vPos;
 	Vec3 vRot;
-	//cout << "GetLocal	";
-	//cout << Transform()->GetLocalPos().x << ",";
-	//cout << Transform()->GetLocalPos().y << ",";
-	//cout << Transform()->GetLocalPos().z << endl;
+
 
 	//cout << "GPos	";
 	//cout << CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos.x << ",";
@@ -100,6 +97,7 @@ void CMinionScript::Update()
 	}
 	break;
 	case MINION_STATE::DIE:
+		cout << " DIE" << endl;
 		break;
 	default:
 		break;

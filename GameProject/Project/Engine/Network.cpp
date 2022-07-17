@@ -147,7 +147,7 @@ void Network::ProcessPacket(char* ptr)
 			m_otherClients[my_packet->id].pos.z = my_packet->pos.z;
 			m_otherClients[my_packet->id].camp = my_packet->camp;
 			m_otherClients[my_packet->id].id = my_packet->id;
-			m_otherClients[my_packet->id].skill = (ELEMENT_TYPE)my_packet->id;
+			m_otherClients[my_packet->id].skill = (ELEMENT_TYPE)my_packet->skill;
 
 			//CSceneMgr::GetInst()->net_enterClient(id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		}
@@ -220,6 +220,8 @@ void Network::ProcessPacket(char* ptr)
 	case S2C_MOVE_MINION:
 	{
 		sc_packet_move_minion* my_packet = reinterpret_cast<sc_packet_move_minion*>(ptr);
+
+		//cout << "Move ID [" << my_packet->id << "]-" << my_packet->pos.x << "," << my_packet->pos.y << ","<< my_packet->pos.z << endl;
 		CSceneMgr::GetInst()->net_moveMinion(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z,
 			my_packet->rot.x, my_packet->rot.y, my_packet->rot.z,my_packet->state);
 	}
@@ -527,6 +529,7 @@ void Network::send_game_start_packet()
 }
 void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill)
 {
+	cout << "Arrow Send ID - " << ArrowId << endl;
 	cs_packet_arrow m_packet;
 	m_packet.type = C2S_CREATE_ARROW;
 	m_packet.size = sizeof(m_packet);

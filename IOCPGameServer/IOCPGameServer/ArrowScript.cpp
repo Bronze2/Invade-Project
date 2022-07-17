@@ -57,7 +57,7 @@ void CArrowScript::Awake()
 
 	//GetObj()->AddChild(m_pParticle);
 
-	m_eState = ARROW_STATE::IDLE;
+	m_eState = ARROW_STATE::ATTACK;
 }
 
 
@@ -69,7 +69,6 @@ void CArrowScript::Update()
 	// 추후에 카메라 위아래 움직임에 따라 발사 방향 바꿀 때 필요
 	//CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	//CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-
 	switch (m_eState)
 	{
 	case ARROW_STATE::IDLE:
@@ -78,6 +77,7 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK_READY:
 	{
+
 		//if (!m_bMaxCharged) {
 		//	Vec3 vRestorePos = vPos;
 		//	vPos.x += 30.f;
@@ -87,12 +87,16 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
+		cout << " UPDATE Arrow - " << m_id << endl;
+
 		if (Transform()->GetLocalPos().y < 0.f)
 		{
-			GetObj()->SetActive(false);
+			cout << " Arrow Delete Server ID - " << m_id << endl;
 			Init();
-			m_eState = ARROW_STATE::IDLE;
+			//m_eState = ARROW_STATE::ATTACK;
 			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,0,0,0, m_PacketSkill);
+			//GetObj()->SetActive(false);
+			m_eState = ARROW_STATE::IDLE;
 		}
 
 		m_vRestorePos = vPos;
@@ -151,8 +155,7 @@ void CArrowScript::Init()
 	Transform()->SetQuaternion(Vec4(0.f, 0.f, 0.f, 1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
-
-	//m_pBow->AddChild(GetObj());
+	m_pParent->AddChild(index,GetObj());
 }
 #include "Collider3D.h"
 #include "MinionScript.h"
@@ -163,9 +166,10 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != GetCamp())
 			{
 				_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(500);
-				GetObj()->SetActive(false);
 				Init();
 				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,2, _pOther->GetObj()->GetScript<CMinionScript>()->m_GetId(),500, m_PacketSkill);
+				 GetObj()->SetActive(false);
+				
 			}
 		}
 
@@ -178,9 +182,9 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 				cout << _pOther->GetObj()->Transform()->GetLocalPos().y << endl;
 				//cout << _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
 				_pOther->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
-				GetObj()->SetActive(false);
 				Init();
 				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,1, _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId(),500, m_PacketSkill);
+				GetObj()->SetActive(false);
 			}
 		}
 
@@ -188,9 +192,9 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr) {
 		if (nullptr != _pOther->GetObj()) {
-			GetObj()->SetActive(false);
 			Init();
 			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id, 3, 0, 500, m_PacketSkill);
+			GetObj()->SetActive(false);
 
 		}
 

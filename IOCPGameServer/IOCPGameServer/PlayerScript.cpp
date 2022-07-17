@@ -12,6 +12,8 @@ void CPlayerScript::Init()
 void CPlayerScript::Awake()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);
+
+
 	for (int i = 0; i < 20; ++i) {
 		m_pArrow[i] = new CGameObject;
 		m_pArrow[i]->SetName(L"Arrow");
@@ -31,6 +33,9 @@ void CPlayerScript::Awake()
 		m_pArrow[i]->AddComponent(new CArrowScript(ELEMENT_TYPE::AllElements));
 		m_pArrow[i]->GetScript<CArrowScript>()->SetCamp(GetCamp());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetIndex(index);
+		m_pArrow[i]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);
+		m_pArrow[i]->GetScript<CArrowScript>()->m_SetId(i);
+
 
 
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
@@ -49,13 +54,14 @@ void CPlayerScript::Update()
 
 void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power,PACKET_SKILL skill)
 {
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParent(GetObj());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetIndex(index);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSpeed(Power*2);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetDir(Dir);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetParentId(m_GetId());
-	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
+	//m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetCamp(GetCamp());
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetAttackDamge(Power/7);
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetPacketSkill(skill);

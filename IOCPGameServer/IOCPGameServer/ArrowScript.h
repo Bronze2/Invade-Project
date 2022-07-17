@@ -45,7 +45,7 @@ private:
     Vec3 m_vDeltaPos;
     PACKET_SKILL m_PacketSkill;
 
-    CGameObject* m_pBow;
+    CGameObject* m_pParent;
     int m_ParentId;
     int m_id;
 
@@ -77,7 +77,7 @@ public:
 
     void SetRestorePos(const Vec3 _vPos) { m_vRestorePos = _vPos; }
 
-    void SetBow(CGameObject* _Obj) { m_pBow = _Obj; }
+    void SetParent(CGameObject* _Obj) { m_pParent = _Obj; }
 
     void SetParentId(int _pid) { m_ParentId = _pid; }
     int GetParentId() { return m_ParentId; }

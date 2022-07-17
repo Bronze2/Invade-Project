@@ -52,6 +52,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_LOBBY_TEAM 22
 #define S2C_LOBBY_READY 23
 #define S2C_LOBBY_CHAGNE_SKILL 24
+#define S2C_LOBBY2INGAME 25
 
 
 
@@ -330,6 +331,8 @@ struct sc_packet_arrow {
 
 ////////////////// Lobby ///////////////////////////////////
 
+
+
 struct cs_packet_lobby_ready {
 	char size;
 	char type;
@@ -402,6 +405,13 @@ struct cs_packet_lobby_gamestart {
 	char size;
 	char type;
 	int id;
+};
+
+struct sc_packet_lobby2ingame {
+	char size;
+	char type;
+	int id;
+
 };
 
 

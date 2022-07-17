@@ -56,8 +56,12 @@ class CMinionScript :
     CGameObject* m_pFirstTower;
     CGameObject* m_pSecondTower;
 public:
+
+    void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
+    void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
+
+
     void CheckHp();
-    CLONE(CMinionScript)
     void Init();
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
     
@@ -106,5 +110,8 @@ public:
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
     virtual void OnCollision3D(CCollider3D* _pOther);
     virtual void OnCollision3DExit(CCollider3D* _pOther);
+
+    CLONE(CMinionScript)
+
 };
 

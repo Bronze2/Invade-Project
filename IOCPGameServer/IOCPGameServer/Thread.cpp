@@ -396,6 +396,7 @@ void CThread::process_packet(int user_id, char* buf)
 	case C2S_CREATE_ARROW:
 	{
 		cs_packet_arrow* packet = reinterpret_cast<cs_packet_arrow*>(buf);
+		cout << "Arrow Create Packet Recv ID - " << packet->Arrow_id << endl;
 		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->room_id ,packet->Clinet_id, packet->Arrow_id,
 			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
 			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, packet->camp , packet->skill);

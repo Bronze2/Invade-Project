@@ -23,9 +23,9 @@ void CScript::CreateObject(CGameObject* _pNewObject, int _iLayerIdx)
 void CScript::CreateObject(CGameObject* _pNewObject, const wstring& _strLayerName)
 {
 	CLayer* pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(_strLayerName);
-	if (nullptr == pLayer)
+	if (nullptr == pLayer) {
 		assert(nullptr);
-
+	}
 	tEvent evt = {};
 	evt.eType = EVENT_TYPE::CREATE_OBJECT;
 	evt.wParam = (DWORD_PTR)_pNewObject;

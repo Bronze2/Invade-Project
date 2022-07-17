@@ -87,9 +87,10 @@ void CService::enter_game(int user_id)
 	//}
 
 	for (auto& cl : SHARED_DATA::g_clients) {
-		if (cl.second.m_id != user_id)
-			CServer::GetInst()->send_enter_packet(cl.second.m_id, user_id);
-
+		if (cl.second.m_id != user_id) {
+			//CServer::GetInst()->send_enter_packet(cl.second.m_id, user_id);
+			CServer::GetInst()->send_enter_packet(user_id, cl.second.m_id);
+		}
 	}
 }
 
