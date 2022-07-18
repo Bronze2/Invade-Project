@@ -34,6 +34,9 @@ public:
 
     BoundingBox GetBox() { return m_bBound; }
 
+    // 콜라이더
+    Ptr<CMesh> GetColMesh() { return m_pColMesh;  }
+
     const Vec3& GetOffsetPos() { return m_vOffsetPos; }
     const Vec3& GetOffsetScale() { return m_vOffsetScale; }
     COLLIDER3D_TYPE GetColliderType() { return m_eType; }

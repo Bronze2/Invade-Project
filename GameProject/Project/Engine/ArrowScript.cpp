@@ -77,7 +77,7 @@ void CArrowScript::Awake()
 	m_pTrail->AddComponent(new CMeshRender);
 	m_pTrail->AddComponent(new CTrailRenderer);
 	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Sparks"));
-	m_pTrail->TrailRenderer()->SetColor(Vec4(0.8f, 0.f, 0.f, 0.1f));
+	m_pTrail->TrailRenderer()->SetColor(Vec4(0.8f, 0.f, 0.f, 0.1f));	// 레드 0.8f, 0.f, 0.f, 0.1f // 블루 0.f, 0.f, 0.8f, 0.1f
 	m_pTrail->TrailRenderer()->SetMaxWidth(3.f);
 	m_pTrail->TrailRenderer()->SetMinWidth(1.f);
 	m_pTrail->TrailRenderer()->SetEmit(false);

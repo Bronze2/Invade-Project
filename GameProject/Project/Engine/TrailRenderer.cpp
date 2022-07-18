@@ -5,6 +5,7 @@
 #include "ArrowScript.h"
 #include "Device.h"
 #include "MeshRender.h"
+#include "Collider3D.h"
 
 CatmullRomSpline::CatmullRomSpline(const vector<Vec3>& data) : segment_count(data.size() - 1)
 {

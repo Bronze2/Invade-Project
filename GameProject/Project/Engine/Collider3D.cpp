@@ -30,6 +30,10 @@ void CCollider3D::FinalUpdate()
 	m_bBound.Transform(m_bBound, m_matColWorld);
 	XMFLOAT3 corners[8] = {};
 	m_bBound.GetCorners(corners);
+
+	//wcout << GetObj()->GetName();
+	//cout << m_bBound.Center.x << ", " << m_bBound.Center.y << ", " << m_bBound.Center.z << endl;
+	//cout << m_bBound.Extents.x << ", " << m_bBound.Extents.y << ", " << m_bBound.Extents.z << endl;
 }
 
 void CCollider3D::Render()

@@ -224,13 +224,46 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -50.f));		// -300, 130, -50
+	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -30.f));		// -300, 130, -50
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));		// -15.f
 	pMainCam->GetScript<CCameraScript>()->Init();
 
 	pEmptyPlayer->AddChild(pMainCam);
 
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer);
+
+
+	//// Monster0, 50, -5.72205e-06
+	////32, 100, 32
+
+	//// 플레이어랑 똑같이 fbx없이 하나 &&	위의 값으로 하나 돌려보기
+
+	//pObject = new CGameObject;
+	//pObject->SetName(L"Monster Col 1");
+	//pObject->AddComponent(new CCollider3D);
+	//pObject->AddComponent(new CTransform);
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+	//pObject->Transform()->SetLocalPos(Vec3(-0.f, 0.f, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
+	//pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
+	//FindLayer(L"Terrain")->AddGameObject(pObject);
+
+
+	////pObject = new CGameObject;
+	////pObject->SetName(L"Monster Col 2");
+	////pObject->AddComponent(new CCollider3D);
+	////pObject->AddComponent(new CTransform);
+	////pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	////pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
+	////pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+	////pObject->Transform()->SetLocalPos(Vec3(-0.f, 0.f, 0.f));
+	////pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
+	////pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
+	////FindLayer(L"Terrain")->AddGameObject(pObject);
+
+	//////////////
 
 //-----------------------------------------------------------------------------------------------
 // 맵 (baseMap + 타워 + 넥서스)
@@ -1257,110 +1290,6 @@ void CInGameScene::Init()
 		pObject->Light3D()->SetLightRange(1000.f);
 		FindLayer(L"Default")->AddGameObject(pObject);
 	}	
-
-//-----------------------------------------------------------------------------------------------
-// 트레일 메시매ㅔ시
-//-----------------------------------------------------------------------------------------------
-
-	CGameObject* pTemp = new CGameObject;
-	pTemp->AddComponent(new CTransform);
-	pTemp->AddComponent(new CMeshRender);
-
-	VTX v = {};
-	vector<VTX> vecVTX;
-	vector<UINT> vecIdx;
-
-	v.vPos = Vec3(-16.5252, 169.41, -66.7204);
-	v.vUV = Vec2(0.f, 0.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(-6.52517, 169.41, -66.7204);
-	v.vUV = Vec2(1.f, 0.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(35.668, 250.044, -136.349);
-	v.vUV = Vec2(0.f, 0.33f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(45.668, 250.044, -136.349);
-	v.vUV = Vec2(1.f, 0.33f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(87.9284, 298.519, -206.066);
-	v.vUV = Vec2(0.f, 0.66f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(97.9284, 298.519, -206.066);
-	v.vUV = Vec2(1.f, 0.66f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(115.946, 314.601, -270.125);
-	v.vUV = Vec2(0.f, 1.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(165.946, 314.601, -270.125);
-	v.vUV = Vec2(1.f, 1.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(164.242, 303.286, -334.553);
-	v.vUV = Vec2(0.f, 0.33f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(214.242, 303.286, -334.553);
-	v.vUV = Vec2(1.f, 0.33f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(192.529, 264.409, -398.97);
-	v.vUV = Vec2(0.f, 0.66f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(282.529, 264.409, -398.97);
-	v.vUV = Vec2(1.f, 0.66f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(244.641, 191.531, -468.491);
-	v.vUV = Vec2(0.f, 1.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(334.641, 191.531, -468.491);
-	v.vUV = Vec2(1.f, 1.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(272.803, 95.6354, -532.741);
-	v.vUV = Vec2(0.f, 1.f);
-	vecVTX.push_back(v);
-
-	v.vPos = Vec3(402.803, 95.6354, -532.741);
-	v.vUV = Vec2(1.f, 1.f);
-	vecVTX.push_back(v);
-
-	vecIdx.push_back(1); vecIdx.push_back(0); vecIdx.push_back(2);
-	vecIdx.push_back(1); vecIdx.push_back(2); vecIdx.push_back(3);
-	vecIdx.push_back(3); vecIdx.push_back(2); vecIdx.push_back(4);
-	vecIdx.push_back(3); vecIdx.push_back(4); vecIdx.push_back(5);
-	vecIdx.push_back(5); vecIdx.push_back(4); vecIdx.push_back(6);
-	vecIdx.push_back(5); vecIdx.push_back(6); vecIdx.push_back(7);
-	vecIdx.push_back(7); vecIdx.push_back(6); vecIdx.push_back(8);
-	vecIdx.push_back(7); vecIdx.push_back(8); vecIdx.push_back(9);
-	vecIdx.push_back(9); vecIdx.push_back(8); vecIdx.push_back(10);
-	vecIdx.push_back(9); vecIdx.push_back(10); vecIdx.push_back(11);
-	vecIdx.push_back(11); vecIdx.push_back(10); vecIdx.push_back(12);
-	vecIdx.push_back(11); vecIdx.push_back(12); vecIdx.push_back(13);
-	vecIdx.push_back(13); vecIdx.push_back(12); vecIdx.push_back(14);
-	vecIdx.push_back(13); vecIdx.push_back(14); vecIdx.push_back(15);
-
-
-	Ptr<CMesh> pMesh = new CMesh;
-	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data(), DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
-
-	pTemp->MeshRender()->SetMesh(pMesh);
-	pTemp->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	Ptr<CTexture> pTempTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
-	pTemp->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTempTex.GetPointer());
-
-	FindLayer(L"Default")->AddGameObject(pTemp);
-
-	////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------------------------
 // 충돌 처리

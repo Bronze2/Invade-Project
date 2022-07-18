@@ -63,11 +63,12 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 
+		Vec3 vPlayerPos = pPlayer->Transform()->GetWorldPos();
 		Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
 		//Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
-		Vec3 vArrowPos = pPlayer->Transform()->GetWorldPos() + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -50.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y, 0.f);
+		Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		// -30.f´Â pMainCamÀÇ GetLocalPos.z
 		Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 
 		Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
