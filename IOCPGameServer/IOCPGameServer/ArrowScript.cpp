@@ -87,7 +87,6 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-		cout << " UPDATE Arrow - " << m_id << endl;
 
 		if (Transform()->GetLocalPos().y < 0.f)
 		{

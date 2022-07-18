@@ -339,12 +339,12 @@ void CSceneMgr::Update()
 {
 
 
-	m_pCurScene->Update();
-	m_pCurScene->LateUpdate();
 
 	// rendermgr 카메라 초기화
 	CRenderMgr::GetInst()->ClearCamera();
 	//CRenderMgr::GetInst()->RegisterCamera(CRenderMgr::GetInst()->GetCamera());
+	m_pCurScene->Update();
+	m_pCurScene->LateUpdate();
 
 	m_pCurScene->FinalUpdate();
 
@@ -704,4 +704,14 @@ void CSceneMgr::net_animUpdate(int id, int state)
 		}
 	}
 	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[id]->GetScript<CPlayerScript>()->
+}
+
+void CSceneMgr::net_playerHelmetUpdate(int id,Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot)
+{
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->GetScript<CPlayerScript>()->UpdateHelmet(LocalPos, Quaternion, LocalRot, RevolutionRot);
+			break;
+		}
+	}
 }

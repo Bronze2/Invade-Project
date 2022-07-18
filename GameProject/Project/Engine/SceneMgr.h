@@ -79,7 +79,7 @@ public:
 	void net_deleteArrow(int client_id, int arrow_id);
 	void net_DamagedByArrow(int coll_type, int coll_id, int damage);
 	void net_deletProjectile(int id);
-
+	void net_playerHelmetUpdate(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 
 
 	

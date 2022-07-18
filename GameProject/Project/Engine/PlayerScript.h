@@ -127,12 +127,15 @@ public:
     SKILL* GetSkill_Z() { return m_tZSkill; }
     SKILL* GetCurrentSkill() { return m_currentSkill; }
 
+
+    void UpdateHelmet(Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
+
     //Lobby
     void SetReady(bool _bTrue) { m_bReady = _bTrue; }
     bool GetReady() { return m_bReady; }
     void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
     PLAYER_STATE GetAnimaionState() { return m_eState; }
-
+    
 
     CLONE(CPlayerScript);
 };

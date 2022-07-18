@@ -351,6 +351,18 @@ void Network::ProcessPacket(char* ptr)
 	}
 	break;
 
+	case S2C_PLAYER_HELMET:
+	{
+		sc_packet_update_player_helmet* my_packet = reinterpret_cast<sc_packet_update_player_helmet*>(ptr);
+		Vec3 LocalPos = Vec3(my_packet->LocalPos.x, my_packet->LocalPos.y, my_packet->LocalPos.z);
+		Vec4 Quaternion  = Vec4(my_packet->Quaternion.x, my_packet->Quaternion.y, my_packet->Quaternion.z, my_packet->Quaternion.w);
+		Vec3 LocalRot = Vec3(my_packet->LocalRot.x, my_packet->LocalRot.y, my_packet->LocalRot.z);
+		Vec3 RevolutionRot = Vec3(my_packet->RevolutionRot.x, my_packet->RevolutionRot.y, my_packet->RevolutionRot.z);
+
+		CSceneMgr::GetInst()->net_playerHelmetUpdate(my_packet->id, LocalPos, Quaternion, LocalRot, RevolutionRot);
+	}
+	break;
+
 	//case S2C_LEAVE:
 	//{
 	//	sc_packet_leave* my_packet = reinterpret_cast<sc_packet_leave*>(ptr);
@@ -550,6 +562,31 @@ void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float
 	m_packet.skill = skill;
 	send_packet(&m_packet);
 
+}
+
+void Network::send_player_helemt(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot)
+{
+	cs_packet_player_helmet m_packet;
+	m_packet.type = C2S_PLAYER_HELMET;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	m_packet.LocalPos.x = LocalPos.x;
+	m_packet.LocalPos.y = LocalPos.y;
+	m_packet.LocalPos.z = LocalPos.z;
+
+	m_packet.Quaternion.x = Quaternion.x;
+	m_packet.Quaternion.y = Quaternion.y;
+	m_packet.Quaternion.z = Quaternion.z;
+	m_packet.Quaternion.w = Quaternion.w;
+
+	m_packet.LocalRot.x = LocalRot.x;
+	m_packet.LocalRot.y = LocalRot.y;
+	m_packet.LocalRot.z = LocalRot.z;
+
+	m_packet.RevolutionRot.x = RevolutionRot.x;
+	m_packet.RevolutionRot.y = RevolutionRot.y;
+	m_packet.RevolutionRot.z = RevolutionRot.z;
+	send_packet(&m_packet);
 }
 
 void Network::debug_checkclient()

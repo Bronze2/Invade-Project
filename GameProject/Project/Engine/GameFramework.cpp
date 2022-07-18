@@ -66,19 +66,15 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 void CGameFramework::Progress()
 {
 
-	CEventMgr::GetInst()->Clear();
 	Network::GetInst()->RecvData();
-
 	CKeyMgr::GetInst()->Update();
-
 	CTimeMgr::GetInst()->Update();
 	CSound::g_pFMOD->update();
-
 	CSceneMgr::GetInst()->Update();
 	//CRenderMgr::GetInst()->Render();
 	CEventMgr::GetInst()->Update();
 	CInstancingMgr::GetInst()->Clear();
-
+	CEventMgr::GetInst()->Clear();
 
 }
 

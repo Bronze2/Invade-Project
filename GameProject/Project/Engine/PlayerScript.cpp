@@ -403,9 +403,9 @@ void CPlayerScript::Update()
 {
 
 // Z-up To Y-up
-	AttachHelmet();
 	
-	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
+	AttachHelmet();
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {	
 		SkillCoolTimeCheck();
 		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -1097,9 +1097,17 @@ void CPlayerScript::SetDamage(const int& _Damage)
 }
 
 
+void CPlayerScript::UpdateHelmet(Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot)
+{
+	m_pHelmetObject->Transform()->SetLocalPos(LocalPos);
+	m_pHelmetObject->Transform()->SetQuaternion(Quaternion);
+	m_pHelmetObject->Transform()->SetLocalRot(LocalRot);
+	m_pHelmetObject->Transform()->SetRevolutionRot(RevolutionRot);
+}
+
 void CPlayerScript::AttachHelmet()
 {
-	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME && isMain) {
 		CGameObject* pCamera = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
@@ -1129,6 +1137,10 @@ void CPlayerScript::AttachHelmet()
 		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
 		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f));
 		m_pHelmetObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
+
+		Network::GetInst()->send_player_helemt(m_id, vTrans, qHatRot,
+			Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f), Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
+
 	}
 	else if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::LOBBY) {
 		// 로비씬

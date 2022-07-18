@@ -410,6 +410,12 @@ void CThread::process_packet(int user_id, char* buf)
 		SHARED_DATA::g_clients[packet->id].Pos.z = packet->Pos.z;
 	}
 	break;
+	case C2S_PLAYER_HELMET:
+	{
+		cs_packet_player_helmet* packet = reinterpret_cast<cs_packet_player_helmet*>(buf);
+		CServer::GetInst()->send_update_player_helmet(user_id, SHARED_DATA::g_clients[user_id].room_id,packet->LocalPos, packet->Quaternion, packet->LocalRot, packet->RevolutionRot);
+	}
+	break;
 	default:
 		cout << "unknown packet type error \n";
 

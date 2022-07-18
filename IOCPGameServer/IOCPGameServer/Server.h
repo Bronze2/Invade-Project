@@ -57,6 +57,9 @@ public:
 	void send_lobby_ready_pacekt(int room_id, bool _isReady , int id);
 
 	void send_lobby_change_skill_pacekt(int room_id, PACKET_ELEMENT_TYPE skill, int id);
+
+	void send_update_player_helmet(int id,int room_id, p_Vec3 LocalPos, p_Vec4 Quaternion, p_Vec3 LocalRot, p_Vec3 RevolutionRot);
+
 private:
 
 };

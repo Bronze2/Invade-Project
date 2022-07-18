@@ -398,6 +398,26 @@ void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_typ
 		send_packet(i, &packet);
 }
 
+void CServer::send_update_player_helmet(int id, int room_id ,p_Vec3 LocalPos, p_Vec4 Quaternion, p_Vec3 LocalRot, p_Vec3 RevolutionRot)
+{
+	sc_packet_update_player_helmet packet;
+	packet.size = sizeof(packet);
+	packet.id = id;
+	packet.type = S2C_PLAYER_HELMET;
+	packet.LocalPos = LocalPos;
+	packet.Quaternion = Quaternion;
+	packet.LocalRot = LocalRot;
+	packet.RevolutionRot = RevolutionRot;
+
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == id) continue;
+		else if (cl.second.room_id == room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+}
+
 ///
 
 void CServer::send_lobby_team_packet(int room_id, int client_id)

@@ -24,6 +24,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_ENTER_ROOM 10
 #define C2S_LOBBY_READY 11
 #define C2S_LOBBY_CHAGNE_SKILL 12
+#define C2S_PLAYER_HELMET 13
 
 
 #define S2C_LOGIN_OK		1
@@ -53,7 +54,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_LOBBY_READY 23
 #define S2C_LOBBY_CHAGNE_SKILL 24
 #define S2C_LOBBY2INGAME 25
-
+#define S2C_PLAYER_HELMET 26
 
 
 enum class  MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
@@ -71,6 +72,13 @@ struct p_Vec3 {
 	float x;
 	float y;
 	float z;
+};
+
+struct p_Vec4 {
+	float x;
+	float y;
+	float z;
+	float w;
 };
 
 enum class CAMP_STATE {
@@ -141,6 +149,28 @@ struct sc_packet_near {
 	int id;
 	p_Vec3 pos;
 	unsigned move_time;
+};
+
+struct cs_packet_player_helmet {
+	char size;
+	char type;
+	int id;
+	p_Vec3 LocalPos;
+	p_Vec4 Quaternion;
+	p_Vec3 LocalRot;
+	p_Vec3 RevolutionRot;
+
+};
+
+struct sc_packet_update_player_helmet {
+	char size;
+	char type;
+	int id;
+	p_Vec3 LocalPos;
+	p_Vec4 Quaternion;
+	p_Vec3 LocalRot;
+	p_Vec3 RevolutionRot;
+
 };
 
 //OBJECT TYPE

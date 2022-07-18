@@ -54,10 +54,11 @@ void CInGameScene::Init(int index)
 			pObject->Sensor()->SetRadius(300.f);
 
 			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-			pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));    // 80.f, 200.f, 80.f ?????
+			pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 			pObject->GetScript<CPlayerScript>()->m_SetId(cl.second.m_id);
-			pObject->Transform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
+			pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
+			pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 			pObject->GetScript<CPlayerScript>()->Init();
 			pObject->GetScript<CPlayerScript>()->SetIndex(index);
 			if (cl.second.m_camp == CAMP_STATE::BLUE) {
@@ -244,6 +245,67 @@ void CInGameScene::Init(int index)
 	FindLayer(L"Red")->AddGameObject(pRedSpawnPlace);
 
 
+
+	CGameObject* pObstacle;
+	Quaternion qRot;
+
+	for (int i = 0; i < 8; ++i) {
+		pObstacle = new CGameObject;
+		pObstacle->AddComponent(new CCollider3D);
+		pObstacle->AddComponent(new CTransform);
+		pObstacle->SetName(L"obstacle");
+		pObstacle->FrustumCheck(false);
+		pObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 500.f));
+		pObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 250.f));
+		pObstacle->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObstacle->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
+
+		switch (i) {
+		case 0:
+			// R2 菊
+			pObstacle->Transform()->SetLocalPos(Vec3(1000.f, 80.f, 4400.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-39.f));
+			break;
+		case 1:
+			// R1 菊
+			pObstacle->Transform()->SetLocalPos(Vec3(-1975.f, 80.f, 2100.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-43.f));
+			break;
+		case 2:
+			// B1 菊
+			pObstacle->Transform()->SetLocalPos(Vec3(875.f, 80.f, 1000.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-35.f));
+			break;
+		case 3:
+			// B2 菊
+			pObstacle->Transform()->SetLocalPos(Vec3(-2725.f, 80.f, -900.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(31.f));
+			break;
+		case 4:
+			// R2 第
+			pObstacle->Transform()->SetLocalPos(Vec3(1400.f, 80.f, 6600.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(75.f));
+			break;
+		case 5:
+			// R1 第
+			pObstacle->Transform()->SetLocalPos(Vec3(-2170.f, 80.f, 4200.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(72.f));
+			break;
+		case 6:
+			// B1 第
+			pObstacle->Transform()->SetLocalPos(Vec3(1080.f, 80.f, -1000.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(60.f));
+			break;
+		case 7:
+			// B2 第
+			pObstacle->Transform()->SetLocalPos(Vec3(-2800.f, 80.f, -3000.f));
+			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-27.f));
+			break;
+		}
+		pObstacle->Transform()->SetQuaternion(qRot);
+		FindLayer(L"Obstacle")->AddGameObject(pObstacle);
+	}
 
 
 
