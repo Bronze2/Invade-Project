@@ -61,6 +61,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 }
 void CGameFramework::Progress()
 {
+	CInstancingMgr::GetInst()->Clear();
 	CKeyMgr::GetInst()->Update();
 
 	CTimeMgr::GetInst()->Update();
@@ -71,7 +72,7 @@ void CGameFramework::Progress()
 	CRenderMgr::GetInst()->Render();
 
 	CEventMgr::GetInst()->Update();
-	CInstancingMgr::GetInst()->Clear();
+	
 
 }
 

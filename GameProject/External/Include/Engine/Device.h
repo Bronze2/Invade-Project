@@ -12,7 +12,17 @@ public:
 	bool m_bWindowed;
 
 private:
-	
+	ComPtr<ID3D11Device> d3d11Device;
+	ComPtr<ID3D11DeviceContext> m_d3d11DeviceContext;
+	ComPtr <ID3D11On12Device> m_d3d11On12Device;
+	ComPtr<ID2D1Factory3> m_d2dFactory;
+	ComPtr<ID2D1Device> m_d2dDevice;
+	ComPtr<ID2D1DeviceContext> m_d2dDeviceContext;
+	ComPtr<IDWriteFactory> m_dWriteFactory;
+	ComPtr<ID3D11Resource> m_wrappedBackBuffers[2];
+	D2D1_BITMAP_PROPERTIES1 m_bitmapProperties;
+	ComPtr<ID2D1Bitmap1> m_d2dRenderTargets[2];
+	//위에 폰트
 	ComPtr<ID3D12Device> m_pDevice;
 	ComPtr<ID3D12CommandQueue> m_pCmdQueue;
 	
@@ -91,6 +101,12 @@ private:
 	void CreateSamplerDesc();
 
 public:
+	ComPtr<ID2D1Bitmap1> GetD2DRenderTarget(const UINT& _Index) { return m_d2dRenderTargets[_Index]; }
+	D2D1_BITMAP_PROPERTIES1 GetBitMapProPerties() { return m_bitmapProperties; }
+	ComPtr<ID2D1DeviceContext> GetD2DDeviceContext() { return m_d2dDeviceContext; }
+	ComPtr<ID3D11Resource> GetBackBuffer(const UINT& _Index) { return m_wrappedBackBuffers[_Index]; }
+	ComPtr <ID3D11On12Device> GetD11OnD12Device() { return m_d3d11On12Device; }
+	ComPtr<ID3D12CommandAllocator> GetCommandAlloc(){ return m_pCmdAlloc; }
 	ComPtr<ID3D12GraphicsCommandList>GetCmdList() {return m_pCmdListGraphic;}
 	ComPtr<ID3D12GraphicsCommandList>GetCmdListRes() { return m_pCmdListRes; }
 	ComPtr<ID3D12GraphicsCommandList>GetCmdListCompute() { return m_pCmdListCompute; }

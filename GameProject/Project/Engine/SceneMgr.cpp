@@ -120,7 +120,7 @@ void CSceneMgr::Init()
 
 	Ptr<CTexture> pBaseLine = CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
 
-	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
+//	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
 //	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
 	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
@@ -155,8 +155,6 @@ void CSceneMgr::Init()
 	pPM = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	pPM->SetData(SHADER_PARAM::TEX_2, pSky01.GetPointer());
 
-	Ptr<CTexture> pTreeTex1 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex1", L"Texture\\Tree01.png");
-	Ptr<CTexture> pTreeTex2 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex2", L"Texture\\Tree02.png");
 	Ptr<CTexture> pLobbyTex = CResMgr::GetInst()->Load<CTexture>(L"LobbyTex", L"Texture\\Lobby.png");
 	Ptr<CTexture> pTransparency = CResMgr::GetInst()->Load<CTexture>(L"Transparency", L"Texture\\Transparency.png");
 	Ptr<CMaterial> pMtrl = new CMaterial;
@@ -176,7 +174,7 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load3D<CSound>(L"MainMusic", L"Sound\\MainMusic.wav");
 	CResMgr::GetInst()->Load3D<CSound>(L"PlayerDie", L"Sound\\PlayerDie.wav");
 	CResMgr::GetInst()->Load3D<CSound>(L"PlayerHit", L"Sound\\PlayerHit.wav");
-
+	Ptr<CTexture> pSkillTex = CResMgr::GetInst()->Load<CTexture>(L"Water0", L"Texture\\Skill\\Water1.png");
 	SKILL* Skill= new SKILL;
 	Skill->Name = L"Water0";
 	Skill->Code =0;

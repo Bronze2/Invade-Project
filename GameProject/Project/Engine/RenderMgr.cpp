@@ -153,25 +153,85 @@ void CRenderMgr::CreateMRT()
 	wchar_t szRTVName[50] = {};
 	tRT arrRT[2] = {};
 
+	//CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetRTV()->GetCPUDescriptorHandleForHeapStart());
+//	D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+//	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetRTV()->GetCPUDescriptorHandleForHeapStart());
+	//<-¿©±â¼­ ÅÍÁü
+
 	for (UINT i = 0; i < 2; ++i)
 	{
 		wsprintf(szRTVName, L"SwapchainTargetTex_%d", i);
 		ComPtr<ID3D12Resource> pTarget;
 		CDevice::GetInst()->GetSwapChain()->GetBuffer(i, IID_PPV_ARGS(&pTarget));
+	//	DEVICE->CreateRenderTargetView(pTarget.Get(), nullptr, rtvHandle);
+
+		m_pTarget[i] = pTarget;
 		arrRT[i].pTarget = CResMgr::GetInst()->CreateTextureFromResource(szRTVName, pTarget);
+	//	HRESULT HR = CDevice::GetInst()->GetD11OnD12Device()->CreateWrappedResource(
+	//		m_pTarget[i].Get(), &d3d11Flags, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT,
+	//		IID_PPV_ARGS(&CDevice::GetInst()->GetBackBuffer(i))
+	//	);
+	//	if (FAILED(HR))
+	//		assert(nullptr);
+	//
+	//	ComPtr<IDXGISurface> SURFACE;
+	//	HR = CDevice::GetInst()->GetBackBuffer(i).As(&SURFACE);
+	//	if (FAILED(HR))
+	//		assert(nullptr);
+	//	D2D1_BITMAP_PROPERTIES1 properties=   CDevice::GetInst()->GetBitMapProPerties();
+	//	HR = CDevice::GetInst()->GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
+	//		SURFACE.Get(), &properties,
+	//		&CDevice::GetInst()->GetD2DRenderTarget(i)
+	//	);
+	//	if (FAILED(HR))
+	//		assert(nullptr);
+	//	rtvHandle.Offset(1, m_iRTVHeapSize);
 	}
+
 
 	Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"DepthStencilTex"
 		, (UINT)m_tResolution.fWidth, (UINT)m_tResolution.fHeight
 		, DXGI_FORMAT_D32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 		, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
-
+	
 
 
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN] = new CMRT;
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->Create(2, arrRT, pDSTex);
 
-
+	D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetRTV()->GetCPUDescriptorHandleForHeapStart());
+	//
+//	for (UINT i = 0; i < 2; ++i)
+//	{
+//		ComPtr<ID3D12Resource> pTarget;
+//		CDevice::GetInst()->GetSwapChain()->GetBuffer(i, IID_PPV_ARGS(&m_pTarget[i]));
+//		DEVICE->CreateRenderTargetView(pTarget.Get(), nullptr, rtvHandle);
+//		ComPtr<ID3D11Resource> p=CDevice::GetInst()->GetBackBuffer(i);
+//		ComPtr<ID3D11On12Device> A=  CDevice::GetInst()->GetD11OnD12Device();
+//		//	m_pTarget[i] = pTarget;
+//		//arrRT[i].pTarget = CResMgr::GetInst()->CreateTextureFromResource(szRTVName, pTarget);
+//			HRESULT HR = CDevice::GetInst()->GetD11OnD12Device()->CreateWrappedResource(
+//				m_pTarget[i].Get(), &d3d11Flags, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT,
+//				IID_PPV_ARGS(&p)
+//			);
+//		if (FAILED(HR))
+//				assert(nullptr);
+//		//
+//			ComPtr<IDXGISurface> surface;
+//			HR = p.As(&surface);
+//			if (FAILED(HR))
+//				assert(nullptr);
+//			D2D1_BITMAP_PROPERTIES1 properties=   CDevice::GetInst()->GetBitMapProPerties();
+//			HR = CDevice::GetInst()->GetD2DDeviceContext()->CreateBitmapFromDxgiSurface(
+//				surface.Get(), &properties,
+//				&CDevice::GetInst()->GetD2DRenderTarget(i)
+//			);
+//			if (FAILED(HR))
+//				assert(nullptr);
+//			rtvHandle.Offset(1, m_iRTVHeapSize);
+//	}
+	
 	// ============
 	// Deferred MRT
 	// ============

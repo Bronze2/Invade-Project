@@ -20,7 +20,7 @@ private:
 
 	tResolution m_tResolution;
 	CMRT* m_arrMRT[(UINT)MRT_TYPE::END];
-
+	ComPtr< ID3D12Resource> m_pTarget[2];
 
 
 

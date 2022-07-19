@@ -3,6 +3,7 @@
 #include "Device.h"
 #include "PathMgr.h"
 
+static bool bTrue = false;
 #include <wincodec.h>
 void CTexture::Load(const wstring& _strFullPath)
 {
@@ -325,6 +326,7 @@ void CTexture::Create (UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat, const 
 		srvDesc.Texture2D.MipLevels = 1;
 		DEVICE->CreateShaderResourceView(m_pTex2D.Get(), &srvDesc, m_pSRV->GetCPUDescriptorHandleForHeapStart());
 	}
+	
 }
 
 void CTexture::CreateFromResource(ComPtr<ID3D12Resource> _pTex2D)

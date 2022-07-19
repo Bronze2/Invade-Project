@@ -30,6 +30,9 @@ public:
     void Clear();
     void Clear(UINT _iRTIdx);
 
+    ComPtr<ID3D12DescriptorHeap> GetRTV() { return m_pRTV; }
+
+
     Ptr<CTexture> GetRTTex(UINT _iIdx) { return m_arrRT[_iIdx].pTarget; }
     Ptr<CTexture> GetDSTex() { return m_pDSTex; }
 
