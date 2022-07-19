@@ -38,6 +38,9 @@ private:
 
     wstring m_CampName;
 
+    //에이치피바
+    CGameObject* m_pHPBar;
+
 public:
     void SetCampState(CAMP_STATE _eCampState) { 
         m_eCampState = _eCampState;

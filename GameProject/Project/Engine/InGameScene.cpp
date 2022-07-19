@@ -158,7 +158,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -269,7 +269,7 @@ void CInGameScene::Init()
 // 맵 (baseMap + 타워 + 넥서스)
 //-----------------------------------------------------------------------------------------------
 	//기본 성 fbx
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\testmap01.fbx");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\testmap01.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 
@@ -314,6 +314,7 @@ void CInGameScene::Init()
 	pRedFirstTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
 	pRedFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedFirstTower->FrustumCheck(false);
+	pRedFirstTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::RED);		// 에이치피바
 	pRedFirstTower->GetScript<CTowerScript>()->Init();
 	pRedFirstTower->MeshRender()->SetDynamicShadow(true);
 
@@ -337,6 +338,7 @@ void CInGameScene::Init()
 	pRedSecondTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
 	pRedSecondTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pRedSecondTower->FrustumCheck(false);
+	pRedSecondTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::RED);
 	pRedSecondTower->GetScript<CTowerScript>()->Init();
 	pRedSecondTower->MeshRender()->SetDynamicShadow(true);
 
@@ -361,6 +363,7 @@ void CInGameScene::Init()
 	pBlueFirstTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pBlueFirstTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 	pBlueFirstTower->MeshRender()->SetDynamicShadow(true);
+	pBlueFirstTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
 	pBlueFirstTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueFirstTower);
 
@@ -382,6 +385,7 @@ void CInGameScene::Init()
 	pBlueSecondTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	pBlueSecondTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 	pBlueSecondTower->MeshRender()->SetDynamicShadow(true);
+	pBlueSecondTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
 	pBlueSecondTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
@@ -442,8 +446,8 @@ void CInGameScene::Init()
 	pRedSpawnPlace->FrustumCheck(false);
 	pRedSpawnPlace->Transform()->SetLocalPos(Vec3(-625.f, 0.f, 8000.f));
 	pRedSpawnPlace->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-
 	pRedSpawnPlace->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::RED);
+
 	pBlueSpawnPlace->GetScript<CSpawnScript>()->SetEnemyNexus(pRedNexus);
 	pRedSpawnPlace->GetScript<CSpawnScript>()->SetEnemyNexus(pBlueNexus);
 
@@ -454,7 +458,8 @@ void CInGameScene::Init()
 //-----------------------------------------------------------------------------------------------
 
 	CGameObject* pObstacle;
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\obstacle.mdat", L"MeshData\\obstacle.mdat");
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\obstacle_vertexbreak.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\obstacle.mdat", L"MeshData\\obstacle.mdat");
 	Quaternion qRot;
 
 	for (int i = 0; i < 8; ++i) {
@@ -1214,7 +1219,7 @@ void CInGameScene::Init()
 	pUICrossHair->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pCrossHairMtrl = new CMaterial;
 	pCrossHairMtrl->DisableFileSave();
-	pCrossHairMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pCrossHairMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	pUICrossHair->MeshRender()->SetMaterial(pCrossHairMtrl);
 	pUICrossHair->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TexMtrl"));
 	Ptr<CTexture> pCrossHairTex = CResMgr::GetInst()->FindRes<CTexture>(L"BaseLine");
@@ -1239,7 +1244,7 @@ void CInGameScene::Init()
 	pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
 	pDarkUIMtrl->DisableFileSave();
-	pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+	pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
 	Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
 	pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
@@ -1252,7 +1257,7 @@ void CInGameScene::Init()
 
 
 	m_pArrow->AddComponent(new CTransform);
-	m_pArrow->Transform()->SetLocalPos(Vec3(50.f, 50.f, 50.f));
+	m_pArrow->Transform()->SetLocalPos(Vec3(-50.f, 50.f, -50.f));
 	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
 	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
 	m_pArrow->AddComponent(new CMeshRender);

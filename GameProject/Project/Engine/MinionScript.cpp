@@ -56,6 +56,30 @@ void CMinionScript::Init()
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
 
+	// 에이치피바
+	m_pHPBar = new CGameObject;
+	m_pHPBar->SetName(L"Minion HPBar");
+	m_pHPBar->AddComponent(new CTransform);
+	m_pHPBar->AddComponent(new CMeshRender);
+	m_pHPBar->FrustumCheck(false);
+	m_pHPBar->MeshRender()->SetDynamicShadow(false);
+
+	Vec3 vHPBarScale = Vec3(60.f, 10.f, 1.f);
+	m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
+	m_pHPBar->Transform()->SetLocalPos(Vec3(0.f, GetObj()->Collider3D()->GetOffsetPos().y + GetObj()->Collider3D()->GetOffsetScale().y + 30.f, 0.f));
+	if (m_eCamp == CAMP_STATE::BLUE)
+		m_pHPBar->Transform()->SetLocalRot(Vec3(XMConvertToRadians(180.f), 0.f, 0.f));
+	else
+		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	m_pHPBar->Transform()->SetBillBoard(true);
+	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
+
+	m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+	pUIHPBarMtrl->DisableFileSave();
+	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
+	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+	GetObj()->AddChild(m_pHPBar);
 }
 
 
@@ -93,12 +117,7 @@ void CMinionScript::Update()
 	}
 	if (m_bAllienceCol&&!m_bSeparate) {
 		if (m_bRotate) {
-			if (m_eCamp == CAMP_STATE::RED) {
-				vRot.y -= PI / 2;
-			}
-			else {
-				vRot.y += PI / 2;
-			}
+			vRot.y += PI / 2;
 			m_bRotate = false;
 		}
 	}
@@ -134,6 +153,9 @@ void CMinionScript::Update()
 	}
 	Transform()->SetLocalPos(vLocalPos);
 	Transform()->SetLocalRot(vRot);
+
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_uiMaxHp);
 }
 
 #include "PlayerScript.h"
@@ -470,6 +492,7 @@ void CMinionScript::m_FAnimation()
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) || m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
 						//DeleteObject(GetObj());
 						GetObj()->MeshRender()->SetRender(false);
+						DeleteObject(m_pHPBar);
 					}
 				}
 			}
@@ -526,7 +549,12 @@ void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 			m_bRotate = true;
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
 				float Value=_pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
-				if (Value >= 0) {
+				Vec3 Value3 = _pOther->Transform()->GetLocalPos() - Transform()->GetLocalPos();
+				Vec3 Up = Transform()->GetLocalDir(DIR_TYPE::UP);
+				Vec3 F = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+				Vec3 Value2 = F * Value3;
+				float DotValue = Dot(Up, Value2);
+				if (DotValue >= 0) {
 					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
 					GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
 				}

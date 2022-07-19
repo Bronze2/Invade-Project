@@ -604,11 +604,11 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"TexShader", pShader);   
 
 	// ==============
-	// Texture Shader
+	// HPBar Shader (에이치피바)
 	// ==============
 	pShader = new CShader;
-	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
-	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_DarkTex", "ps_5_0");
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_HPTex", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_HPTex", "ps_5_0");
 
 	// BlendState 설정
 	pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
@@ -617,11 +617,12 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
 
 	// Shader Parameter 알림
-	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+	pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
+	pShader->AddShaderParam(tShaderParam{ L"MaxHp", SHADER_PARAM::INT_1 });
 
 	pShader->Create(SHADER_POV::FORWARD);
 
-	AddRes(L"DarkTexShader", pShader);
+	AddRes(L"HPBarShader", pShader);
 
 	// =================
 	// Collider2D Shader
@@ -1129,7 +1130,7 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 
 	pMeshData = CMeshData::LoadFromFBX(_strPath);
 	pMeshData->SetName(strName);
-	pMeshData->SetPath(strName);
+	pMeshData->SetPath(strName); 
 	m_mapRes[(UINT)RES_TYPE::MESHDATA].insert(make_pair(strName, pMeshData.GetPointer()));
 
 	return pMeshData;

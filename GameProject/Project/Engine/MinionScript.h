@@ -47,6 +47,8 @@ class CMinionScript :
     wstring m_CampName;
   //  CGameObject* m_pProjectile;
 
+    // 에이치비바
+    CGameObject* m_pHPBar;
 
 public:
     void CheckHp();

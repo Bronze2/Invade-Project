@@ -165,16 +165,42 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
     return vColor;
 }
 
-float4 PS_DarkTex(TEX_OUTPUT _input) : SV_Target
+// =================
+// HPBar Shader (에이치피바)
+
+// g_vec4_0 : CurHP
+// g_int_1 : MaxHP
+// g_int_2 : 
+// =================
+
+TEX_OUTPUT VS_HPTex(TEX_INPUT _input)
+{
+    TEX_OUTPUT output = (TEX_OUTPUT)0;
+
+    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
+    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
+    float4 vViewPos = mul(vWorldPos, g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    output.vOutPos = vProjPos;
+    output.vUV = _input.vUV;
+
+    return output;
+}
+
+float4 PS_HPTex(TEX_OUTPUT _input) : SV_Target
 {
     float4 vColor = (float4) 0.f;
+    
 
-    if (tex_0)
-        vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
-    else
-        vColor = float4(1.f, 0.f, 1.f, 1.f);
+    float fRatio = (float)g_int_0 / (float)g_int_1;
 
-    clip(vColor.a - 0.9f);
+    if (_input.vUV.x >= fRatio) {
+        vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+    }
+    else {
+        vColor = float4(1.f, 0.f, 0.f, 1.f);
+    }
 
     return vColor;
 }

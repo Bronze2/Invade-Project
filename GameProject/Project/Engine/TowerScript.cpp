@@ -7,6 +7,7 @@
 #include "Collider3D.h"
 #include "PlayerScript.h"
 #include "ProjectileScript.h"
+#include "MeshRender.h"
 
 void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 {
@@ -80,7 +81,32 @@ void CTowerScript::Init()
 		break;
 	}
 
+	// 에이치피바
 
+	m_pHPBar = new CGameObject;
+	m_pHPBar->SetName(L"Tower HPBar");
+	m_pHPBar->AddComponent(new CTransform);
+	m_pHPBar->AddComponent(new CMeshRender);
+	m_pHPBar->FrustumCheck(false);
+	m_pHPBar->MeshRender()->SetDynamicShadow(false);
+
+	Vec3 vHPBarScale = Vec3(60.f, 10.f, 1.f);
+	m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
+	m_pHPBar->Transform()->SetLocalPos(Vec3(0.f, 300.f, 0.f));
+	if (m_eCampState == CAMP_STATE::BLUE)
+		m_pHPBar->Transform()->SetLocalRot(Vec3(XMConvertToRadians(180.f), 0.f, 0.f));
+	else
+		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	m_pHPBar->Transform()->SetBillBoard(true);
+	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
+
+	m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+	pUIHPBarMtrl->DisableFileSave();
+	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
+	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+	GetObj()->AddChild(m_pHPBar);
+	wcout << m_CampName << endl;
 }
 
 void CTowerScript::SetSecondTower(CGameObject* _pGameObject)
@@ -155,6 +181,9 @@ void CTowerScript::Update()
 	FindNearObject(m_arrEnemy);
 	m_FRotate();
 	m_FAttack();
+
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_uiCurHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
 }
 
 void CTowerScript::FinalUpdate()

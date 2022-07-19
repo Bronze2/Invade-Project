@@ -344,7 +344,7 @@ CArrowScript::~CArrowScript()
 void CArrowScript::WaterSkill0(CCollider3D* _pColldier) {
 
 	_pColldier->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
-	//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+	Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 
 }
 

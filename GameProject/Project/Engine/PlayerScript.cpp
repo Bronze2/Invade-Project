@@ -460,7 +460,7 @@ void CPlayerScript::Awake()
 		m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
 		pDarkUIMtrl->DisableFileSave();
-		pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"DarkTexShader"));
+		pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 		m_pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
 		Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
 		m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
@@ -487,10 +487,10 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\thunderhead.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\firehead.fbx");
 			break;
 		}
 	}
@@ -506,10 +506,10 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\thunderhead.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\firehead.fbx");
 			break;
 		}
 	}
