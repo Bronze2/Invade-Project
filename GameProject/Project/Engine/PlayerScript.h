@@ -83,6 +83,7 @@ public:
     virtual void Update();
     void SetType(ELEMENT_TYPE _iType);
     void SetMain() { isMain = true; }
+    bool GetIsMain() { return isMain; }
     void SetState(int state);
     void m_SetId(int id) { m_id = id; }
     int m_GetId() { return m_id; }

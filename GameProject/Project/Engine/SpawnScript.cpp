@@ -61,7 +61,8 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat",
             Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 10.f, 0.f), Vec3(70.f, 100.f, 70.f),
             MINION_ATTACK_TYPE::MELEE, pNewAnimation, CAMP_STATE::RED);
-        pObject->SetId(id);
+        pObject->GetScript<CMinionScript>()->m_SetId(id);
+
         CreateObject(pObject, L"Red");
     }
         break;
@@ -74,7 +75,8 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", 
             Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 10.f, 0.f), Vec3(70.f, 100.f, 70.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
-        pObject->SetId(id);
+        pObject->GetScript<CMinionScript>()->m_SetId(id);
+
         CreateObject(pObject, L"Red");
     }
         break;
@@ -87,7 +89,8 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", 
             Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 10.f, 0.f), Vec3(70.f, 100.f, 70.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
-        pObject->SetId(id);
+        pObject->GetScript<CMinionScript>()->m_SetId(id);
+
         CreateObject(pObject, L"Red");
     }
         break;
@@ -116,7 +119,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
         CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", Pos, 
             Vec3(1.f, 1.f, 1.f), Vec3(0.f, 20.f, 0.f), Vec3(70.f, 100.f, 70.f), 
             MINION_ATTACK_TYPE::MELEE, pNewAnimation, CAMP_STATE::BLUE);
-        pObject->SetId(id);
+        pObject->GetScript<CMinionScript>()->m_SetId(id);
         CreateObject(pObject, L"Blue");
     }
         break;
@@ -130,7 +133,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", Pos, 
             Vec3(1.f, 1.f, 1.f), Vec3(0.f, 25.f, 0.f), Vec3(70.f, 100.f, 70.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::BLUE);
-        pObject->SetId(id);
+        pObject->GetScript<CMinionScript>()->m_SetId(id);
         CreateObject(pObject, L"Blue");
     }
         break;
@@ -144,7 +147,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min.mdat", Pos, 
             Vec3(1.f, 1.f, 1.f), Vec3(0.f, 25.f, 0.f), Vec3(70.f, 100.f, 70.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::BLUE);
-        pObject->SetId(id);
+        pObject->GetScript<CMinionScript>()->m_SetId(id);
         CreateObject(pObject, L"Blue");
     }
         break;

@@ -42,6 +42,8 @@ class CMinionScript :
 
     MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
+
+    int m_id;
 public:
     void CheckHp();
     CLONE(CMinionScript)
@@ -58,8 +60,8 @@ public:
     const CAMP_STATE& GetCamp()const { return m_eCamp; }
 
     void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
-
-    
+    int m_GetId() { return m_id; }
+    void m_SetId(int id) { m_id = id; }
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);
     virtual void OnDetectionExit(CGameObject* _pOther);

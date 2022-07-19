@@ -25,6 +25,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_LOBBY_READY 11
 #define C2S_LOBBY_CHAGNE_SKILL 12
 #define C2S_PLAYER_HELMET 13
+#define C2S_UPDATE_ARROW_MOVE 14
+#define C2S_COLLISION_ARROW 15
 
 
 #define S2C_LOGIN_OK		1
@@ -55,10 +57,14 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_LOBBY_CHAGNE_SKILL 24
 #define S2C_LOBBY2INGAME 25
 #define S2C_PLAYER_HELMET 26
+#define S2C_UPDATE_ARROW 27
+#define S2C_COLLISION_ARROW 28
+
 
 
 enum class  MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
 enum class PACKET_SKILL { E_WATER = 0, Z_WATER, E_FIRE,  Z_FIRE, E_THUNDER, Z_TUNDER, E_DARK, Z_DARK, E_WIND,Z_WIND ,NONE};
+enum class PACKET_COLLTYPE { PLAYER = 0 , MONSTER =1 , TOWER =2 , NEXSUS =3 , WALL = 4 };
 enum class PACKET_ELEMENT_TYPE {
 
 	START = -1,
@@ -171,6 +177,46 @@ struct sc_packet_update_player_helmet {
 	p_Vec3 LocalRot;
 	p_Vec3 RevolutionRot;
 
+};
+
+struct cs_packet_update_arrow_move
+{
+	char size;
+	char type;
+	int arrow_id;
+	p_Vec3 LocalPos;
+	p_Vec4 Quaternion;
+};
+
+struct sc_packet_update_arrow_move
+{
+	char size;
+	char type;
+	int id;
+	int arrow_id;
+	p_Vec3 LocalPos;
+	p_Vec4 Quaternion;
+};
+
+struct cs_packet_collsion_arrow
+{
+	char size;
+	char type;
+	int arrow_id;
+	int coll_id;
+	CAMP_STATE camp;
+	PACKET_COLLTYPE coll_type;
+};
+
+
+struct sc_packet_collsion_arrow
+{
+	char size;
+	char type;
+	int id;
+	int arrow_id;
+	int coll_id;
+	PACKET_COLLTYPE coll_type;
 };
 
 //OBJECT TYPE

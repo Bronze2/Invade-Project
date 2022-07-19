@@ -257,6 +257,7 @@ void Network::ProcessPacket(char* ptr)
 
 	case S2C_CREATE_ARROW:
 	{
+		cout << "Recv Arrow" << endl;
 		//오류 날수 있음 -> int 강제 변환형
 		sc_packet_arrow* my_packet = reinterpret_cast<sc_packet_arrow*>(ptr);
 		CSceneMgr::GetInst()->net_initArrow(my_packet->Clinetid, my_packet->Arrowid,
@@ -290,10 +291,18 @@ void Network::ProcessPacket(char* ptr)
 
 	case S2C_DELETE_ARROW:
 	{
-		sc_packet_delete_arrow* my_packet = reinterpret_cast<sc_packet_delete_arrow*>(ptr);
-		CSceneMgr::GetInst()->net_deleteArrow(my_packet->client_id, my_packet->arrow_id);
-		CSceneMgr::GetInst()->net_DamagedByArrow(my_packet->coll_type, my_packet->coll_id, my_packet->damage);
-		cout << (int)my_packet->skill << endl;
+		//sc_packet_delete_arrow* my_packet = reinterpret_cast<sc_packet_delete_arrow*>(ptr);
+		//CSceneMgr::GetInst()->net_deleteArrow(my_packet->client_id, my_packet->arrow_id);
+		//CSceneMgr::GetInst()->net_DamagedByArrow(my_packet->coll_type, my_packet->coll_id, my_packet->damage);
+		//cout << (int)my_packet->skill << endl;
+	}
+	break;
+
+	case S2C_COLLISION_ARROW:
+	{
+		sc_packet_collsion_arrow* my_packet = reinterpret_cast<sc_packet_collsion_arrow*>(ptr);
+		CSceneMgr::GetInst()->net_deleteArrow(my_packet->id, my_packet->arrow_id);
+		CSceneMgr::GetInst()->net_DamagedByArrow((int)my_packet->coll_type, my_packet->coll_id ,500);
 	}
 	break;
 	case S2C_DELETE_PROJECTILE:
@@ -360,6 +369,16 @@ void Network::ProcessPacket(char* ptr)
 		Vec3 RevolutionRot = Vec3(my_packet->RevolutionRot.x, my_packet->RevolutionRot.y, my_packet->RevolutionRot.z);
 
 		CSceneMgr::GetInst()->net_playerHelmetUpdate(my_packet->id, LocalPos, Quaternion, LocalRot, RevolutionRot);
+	}
+	break;
+
+	case S2C_UPDATE_ARROW:
+	{
+		sc_packet_update_arrow_move* my_packet = reinterpret_cast<sc_packet_update_arrow_move*>(ptr);
+		Vec3 LocalPos = Vec3(my_packet->LocalPos.x, my_packet->LocalPos.y, my_packet->LocalPos.z);
+		Vec4 Quaternion = Vec4(my_packet->Quaternion.x, my_packet->Quaternion.y, my_packet->Quaternion.z, my_packet->Quaternion.w);
+
+		CSceneMgr::GetInst()->net_updateArrow(my_packet->id, my_packet->arrow_id, LocalPos, Quaternion);
 	}
 	break;
 
@@ -539,26 +558,29 @@ void Network::send_game_start_packet()
 	cout << "Send Enter Packet" << endl;
 
 }
-void Network::send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill)
+
+
+//(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill)
+void Network::send_arrow_packet(int id, PACKET_SKILL skill)
 {
-	cout << "Arrow Send ID - " << ArrowId << endl;
 	cs_packet_arrow m_packet;
 	m_packet.type = C2S_CREATE_ARROW;
 	m_packet.size = sizeof(m_packet);
-	m_packet.Clinet_id = m_Client.id;
-	m_packet.Arrow_id = ArrowId;
-	m_packet.Pos.x = Pos.x;
-	m_packet.Pos.y = Pos.y;
-	m_packet.Pos.z = Pos.z;
-	m_packet.Rot.x = Rot.x;
-	m_packet.Rot.y = Rot.y;
-	m_packet.Rot.z = Rot.z;
-	m_packet.Dir.x = Dir.x;
-	m_packet.Dir.y = Dir.y;
-	m_packet.Dir.z = Dir.z;
-	m_packet.Power = Power;
+	cout << "화살 send Client "<< id << endl;
+	m_packet.Clinet_id = id;
+	m_packet.Arrow_id = 0;
+	m_packet.Pos.x =0;
+	m_packet.Pos.y =0;
+	m_packet.Pos.z =0;
+	m_packet.Rot.x =0;
+	m_packet.Rot.y =0;
+	m_packet.Rot.z =0;
+	m_packet.Dir.x =0;
+	m_packet.Dir.y =0;
+	m_packet.Dir.z =0;
+	m_packet.Power =0;
 	m_packet.room_id = my_room_id;
-	m_packet.camp = camp;
+	m_packet.camp = CAMP_STATE::BLUE;
 	m_packet.skill = skill;
 	send_packet(&m_packet);
 
@@ -588,6 +610,38 @@ void Network::send_player_helemt(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 Lo
 	m_packet.RevolutionRot.z = RevolutionRot.z;
 	send_packet(&m_packet);
 }
+
+void Network::send_update_arrow_move(int arrow_id , Vec3 LocalPos, Vec4 Quaternion)
+{
+	cs_packet_update_arrow_move m_packet;
+	m_packet.type = C2S_UPDATE_ARROW_MOVE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.arrow_id = arrow_id;
+	m_packet.LocalPos.x = LocalPos.x;
+	m_packet.LocalPos.y = LocalPos.y;
+	m_packet.LocalPos.z = LocalPos.z;
+
+	m_packet.Quaternion.x = Quaternion.x;
+	m_packet.Quaternion.y = Quaternion.y;
+	m_packet.Quaternion.z = Quaternion.z;
+	m_packet.Quaternion.w = Quaternion.w;
+	send_packet(&m_packet);
+
+}
+
+void Network::send_collision_arrow(int arrow_id, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE camp)
+{
+	cs_packet_collsion_arrow m_packet;
+	m_packet.type = C2S_COLLISION_ARROW;
+	m_packet.size = sizeof(m_packet);
+	m_packet.arrow_id = arrow_id;
+	m_packet.coll_id = coll_id;
+	m_packet.coll_type = coll_type;
+	m_packet.camp = camp;
+	send_packet(&m_packet);
+
+}
+
 
 void Network::debug_checkclient()
 {

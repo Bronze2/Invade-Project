@@ -60,6 +60,10 @@ public:
 
 	void send_update_player_helmet(int id,int room_id, p_Vec3 LocalPos, p_Vec4 Quaternion, p_Vec3 LocalRot, p_Vec3 RevolutionRot);
 
+	void send_update_arrow(int client_id, int arrow_id, p_Vec3 LocalPos, p_Vec4 Quaternion);
+
+	void send_collision_arrow(int client_id, int arrow_id, int coll_id, PACKET_COLLTYPE coll_type);
+
 private:
 
 };

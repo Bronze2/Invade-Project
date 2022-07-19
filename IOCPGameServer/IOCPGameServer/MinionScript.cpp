@@ -14,20 +14,20 @@ void CMinionScript::Init()
 	{
 	case MINION_ATTACK_TYPE::MELEE:
 	{
-		SetAttackRange(50);
-		m_uiMaxHp = 450; m_uiAttackDamage = 30;
+		SetAttackRange(150);
+		m_uiMaxHp = 950; m_uiAttackDamage = 30;
 	}
 		break;
 
 	case MINION_ATTACK_TYPE::RANGE: {
-		SetAttackRange(150);
-		m_uiMaxHp = 300; m_uiAttackDamage = 20;
+		SetAttackRange(200);
+		m_uiMaxHp = 900; m_uiAttackDamage = 20;
 	}
 	 break;
 
 	case MINION_ATTACK_TYPE::CANON: {
-		SetAttackRange(150);
-		m_uiMaxHp = 550; m_uiAttackDamage = 60;
+		SetAttackRange(250);
+		m_uiMaxHp = 1550; m_uiAttackDamage = 60;
 	}
 	 break;
 
@@ -131,8 +131,8 @@ void CMinionScript::Init()
 
 void CMinionScript::Update()
 {
-	//CheckHp();
-	CheckObstacle();
+	CheckHp();
+	//CheckObstacle();
 	if (m_eState == MINION_STATE::DIE) {
 		return;
 	}
@@ -187,28 +187,28 @@ void CMinionScript::Update()
 	}
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
-	if (FIND_STATE::RAY_FIRST == m_eFindState)
-	{
-		if ((m_fMinStartX < vLocalPos.x) && (m_fMaxStartX > vLocalPos.x)) {
-			m_eFindState = FIND_STATE::NONE;
-			if (!m_pFirstTower->IsDead())
-			{
+	//if (FIND_STATE::RAY_FIRST == m_eFindState)
+	//{
+	//	if ((m_fMinStartX < vLocalPos.x) && (m_fMaxStartX > vLocalPos.x)) {
+	//		m_eFindState = FIND_STATE::NONE;
+	//		if (!m_pFirstTower->IsDead())
+	//		{
 
-				m_pTarget = m_pFirstTower;
+	//			m_pTarget = m_pFirstTower;
 
-			}
-			else if (!m_pSecondTower->IsDead()) {
+	//		}
+	//		else if (!m_pSecondTower->IsDead()) {
 
-				m_pTarget = m_pSecondTower;
+	//			m_pTarget = m_pSecondTower;
 
-			}
-			else
-				m_pTarget = m_pNexus;
-			m_arrEnemy.clear();
-		}
+	//		}
+	//		else
+	//			m_pTarget = m_pNexus;
+	//		m_arrEnemy.clear();
+	//	}
 
 
-	}
+	//}
 
 	switch (m_eState)
 	{

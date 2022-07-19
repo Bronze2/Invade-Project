@@ -17,15 +17,21 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
     pObject->SetName(L"Minion");
 	pObject->Sensor()->SetRadius(300.f);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(120.f, 100.f, 120.f));
-	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
 	pObject->Transform()->SetLocalPos(_vLocalPos);
+//	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
+//	pObject->Collider3D()->SetOffsetScale(Vec3(120.f, 100.f, 120.f));
+
+
 
     //if(CAMP_STATE::BLUE == _eCamp)
     //pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-180.f), 0.f, 0.f));
 	
-    pObject->Transform()->SetLocalScale(_vLocalScale);
-	pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
+    //pObject->Transform()->SetLocalScale(_vLocalScale);
+    pObject->Transform()->SetLocalScale(Vec3(1.f,1.f,1.f));
+    pObject->Collider3D()->SetOffsetPos(Vec3(0,10,0));
+    pObject->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 150.f));
+
+    pObject->GetScript<CMinionScript>()->SetNexus(m_pNexus);
 	pObject->GetScript<CMinionScript>()->SetAttackType(_eAttackRange);
 	pObject->GetScript<CMinionScript>()->SetCamp(_eCamp);
     pObject->GetScript<CMinionScript>()->m_SetId(SHARED_DATA::g_minionindex);
@@ -35,8 +41,8 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
     pObject->GetScript<CMinionScript>()->SetSecondTower(m_pSecondTower);
 
 
-    CServer::GetInst()->send_spawn_minion_packet(SHARED_DATA::g_minionindex, pObject->Transform()->GetLocalPos().x,
-        pObject->Transform()->GetLocalPos().y, pObject->Transform()->GetLocalPos().z, _eAttackRange,_eCamp);
+    CServer::GetInst()->send_spawn_minion_packet(SHARED_DATA::g_minionindex, _vLocalPos.x,
+        _vLocalPos.y, _vLocalPos.z, _eAttackRange,_eCamp);
 
     SHARED_DATA::g_minionindex++;
 	return pObject;

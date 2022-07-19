@@ -72,7 +72,12 @@ public:
 	void send_rotation_packet(Vec3 Rot);
 	void send_game_start_packet();
 	void send_attack_ready_packet(int id,int state);
-	void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill);
+	
+
+	//void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill);
+	void send_arrow_packet(int ArrowId, PACKET_SKILL skill);
+	void send_update_arrow_move(int arrow_id, Vec3 LocalPos, Vec4 Quaternion);
+	void send_collision_arrow(int arrow_id, int coll_id, PACKET_COLLTYPE coll_type , CAMP_STATE camp);
 	void send_move_block_packet(int Client_id, Vec3 Pos);
 	void send_player_helemt(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 	//Room

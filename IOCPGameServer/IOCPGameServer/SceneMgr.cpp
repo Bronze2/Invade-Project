@@ -171,5 +171,29 @@ void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 P
 	}
 }
 
+#include "MinionScript.h"
+void CSceneMgr::collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE Arrow_camp)
+{
+	if (coll_type == PACKET_COLLTYPE::MONSTER) {
+		if (Arrow_camp == CAMP_STATE::RED) {
+			for (auto &obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
+				if (obj->GetScript<CMinionScript>() != nullptr && obj->GetScript<CMinionScript>()->m_GetId() == coll_id) {
+					obj->GetScript<CMinionScript>()->GetDamage(500);
+					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
+					break;
+				}
+			}
+		}
 
+		if (Arrow_camp == CAMP_STATE::BLUE) {
+			for (auto &obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
+				if (obj->GetScript<CMinionScript>() != nullptr &&  obj->GetScript<CMinionScript>()->m_GetId() == coll_id) {
+					obj->GetScript<CMinionScript>()->GetDamage(500);
+					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
+					break;
 
+				}
+			}
+		}
+	}
+}

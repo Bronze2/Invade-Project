@@ -396,12 +396,38 @@ void CThread::process_packet(int user_id, char* buf)
 	case C2S_CREATE_ARROW:
 	{
 		cs_packet_arrow* packet = reinterpret_cast<cs_packet_arrow*>(buf);
-		cout << "Arrow Create Packet Recv ID - " << packet->Arrow_id << endl;
-		CSceneMgr::GetInst()->InitArrowByPlayerId(packet->room_id ,packet->Clinet_id, packet->Arrow_id,
-			Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
-			Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, packet->camp , packet->skill);
+		//cout << "Arrow Create Packet Recv ID - " << packet->Arrow_id << endl;
+		cout << "Send Client - " << packet->Clinet_id << endl;
+		CServer::GetInst()->send_create_arrow_packet(packet->Clinet_id, 0, Vec3(0,0,0), Vec3(0, 0, 0), packet->skill);
+
+		//CSceneMgr::GetInst()->InitArrowByPlayerId(packet->room_id ,packet->Clinet_id, packet->Arrow_id,
+		//	Vec3(packet->Pos.x, packet->Pos.y, packet->Pos.z), Vec3(packet->Rot.x, packet->Rot.y, packet->Rot.z),
+		//	Vec3(packet->Dir.x, packet->Dir.y, packet->Dir.z), packet->Power, packet->camp , packet->skill);
 	}
 	break;
+
+	case C2S_UPDATE_ARROW_MOVE:
+	{
+		cs_packet_update_arrow_move* packet = reinterpret_cast<cs_packet_update_arrow_move*>(buf);
+		
+		CServer::GetInst()->send_update_arrow(user_id,packet->arrow_id,packet->LocalPos,packet->Quaternion);
+
+	}
+	break;
+
+	case C2S_COLLISION_ARROW:
+	{
+		cout << "COLL Send" << endl;
+		cs_packet_collsion_arrow* packet = reinterpret_cast<cs_packet_collsion_arrow*>(buf);
+
+		CSceneMgr::GetInst()->collisionArrow(SHARED_DATA::g_clients[user_id].room_id, packet->coll_id, packet->coll_type, packet->camp);
+
+		CServer::GetInst()->send_collision_arrow(user_id, packet->arrow_id, packet->coll_id, packet->coll_type);
+		//_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(500);
+		//CServer::GetInst()->send_delete_arrow_packet(user_id, packet->arrow_id,2, _pOther->GetObj()->GetScript<CMinionScript>()->m_GetId(),500, m_PacketSkill);
+	}
+	break;
+
 	case C2S_MOVE_BLOCK:
 	{
 		cs_packet_move_block* packet = reinterpret_cast<cs_packet_move_block*>(buf);

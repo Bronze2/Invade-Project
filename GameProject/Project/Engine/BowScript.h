@@ -56,6 +56,10 @@ public:
     void SetCamp(CAMP_STATE camp) { m_camp = camp; }
     void SetState(BOW_STATE _eState) { m_eState = _eState; }
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill);
+
+    void CreateArrow(PACKET_SKILL skill);
+    void UpdateArrow(int ArrowId, Vec3 LocalPos, Vec4 Quaternion);
+
     void DeleteArrow(int ArrowId);
     CBowScript();
     virtual ~CBowScript();

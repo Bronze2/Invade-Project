@@ -6,7 +6,9 @@
 #include "ParticleSystem.h"
 #include "SceneMgr.h"
 #include "SkillMgr.h"
+#include "TrailRenderer.h"
 #include <math.h>
+#include "Network.h"
 
 void CArrowScript::SetSkill(SKILL* _pSkill)
 {
@@ -82,6 +84,23 @@ void CArrowScript::Awake()
 
 
 	m_eState = ARROW_STATE::IDLE;
+
+	m_pTrail = new CGameObject;
+	m_pTrail->SetName(L"ArrowTrail");
+	m_pTrail->AddComponent(new CTransform);
+	m_pTrail->AddComponent(new CMeshRender);
+	m_pTrail->AddComponent(new CTrailRenderer);
+	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Sparks"));
+	m_pTrail->TrailRenderer()->SetColor(Vec4(0.8f, 0.f, 0.f, 0.1f));	// 레드 0.8f, 0.f, 0.f, 0.1f // 블루 0.f, 0.f, 0.8f, 0.1f
+	m_pTrail->TrailRenderer()->SetMaxWidth(3.f);
+	m_pTrail->TrailRenderer()->SetMinWidth(1.f);
+	m_pTrail->TrailRenderer()->SetEmit(false);
+	m_pTrail->SetActive(true);
+	m_pTrail->FrustumCheck(false);
+	m_pTrail->MeshRender()->SetDynamicShadow(false);
+	m_pTrail->TrailRenderer()->SetTargetObj(GetObj());
+	pCurScene->FindLayer(L"Default")->AddGameObject(m_pTrail);
+
 }
 
 
@@ -113,9 +132,8 @@ void CArrowScript::Update()
 	{
 	case ARROW_STATE::IDLE:
 	{
-		Init();
-		GetObj()->Transform()->SetLocalPos(Vec3(1000, 1000, 1000));
-		GetObj()->SetActive(false);
+		//Init();
+		//GetObj()->SetActive(false);
 	}
 	break;
 	case ARROW_STATE::ATTACK_READY:
@@ -129,64 +147,129 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK:
 	{
-		//if (Transform()->GetLocalPos().y < 0.f)
-		//{
-		//	GetObj()->SetActive(false);
-		//	Init();
-		//	m_eState = ARROW_STATE::IDLE;
-		//}
-		vPos = Vec3::Lerp(vPos,CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id),DT *10.f);
-		vRot = Vec3::Lerp(vRot, CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id), DT * 10.f);
-		if (CSceneMgr::GetInst()->get_arrowSkill(m_ParentId, m_id)) {
-			EnterSkill(vPos);
-			CSceneMgr::GetInst()->set_arrowSkill(m_ParentId, m_id, false);
+
+		if (m_isMain) {
+
+			if (Transform()->GetWorldPos().y < 2.f)
+			{
+				m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
+
+				if (nullptr != m_pSkill)
+				{
+					delete m_pSkill;
+					m_pSkill = nullptr;
+				}
+				m_eState = ARROW_STATE::IDLE;
+				Network::GetInst()->send_collision_arrow(m_id,999, PACKET_COLLTYPE::WALL, m_eCamp);
+
+				//vPos.y = 5.f;
+				//Transform()->SetLocalPos(vPos);
+				//Transform()->SetLocalRot(vRot);
+			}
+
+			m_vRestorePos = vPos;
+
+			Vec4 vDir = Vec4(m_vDir, 1.f);
+			m_pParticle->ParticleSystem()->SetDir(vDir);
+
+			// 트레일
+			m_pTrail->TrailRenderer()->SetEmit(true);
+
+			// 화살 기존 코드
+			CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
+			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+			Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
+			float fDegree = XMConvertToDegrees(vCamRot.x);
+
+			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
+			m_vXZDir.Normalize();
+			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
+			//m_fSpeed = 1000;
+
+			m_fTime += DT;
+
+			//m_fMaxTime = m_fSpeed * sin(fAngle) / GRAVITY * 30 * DT;
+			//m_fMaxTime 
+			//cout << fAngle * 180 / PI <<"최고점 시간" << m_fMaxTime <<endl;
+			//vRot.z = fAngle * 180 / PI;
+
+			//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
+			vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+			vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+
+			//vPos = m_vDir 
+			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+			//처음 화살 Update
+			if (m_fVelocityY == 5000) {
+				//  현재 포물선 운동을 하고 있는 Y값
+				// 
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+
+				//최고점 높이 == velocity가 0이되는 지점. 
+				m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
+				m_fPerRotate = m_fHighest / m_fAngle;
+
+			}
+			else {
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				float fHigh = m_fHighest - m_fVelocityY;
+				m_fRotateAngle = fHigh / m_fPerRotate;
+				if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
+					m_fDir = -1;
+				}
+				m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
+				Transform()->SetQuaternion(m_qRot);
+				
+			}
+
+			Transform()->SetLocalPos(vPos);
+			Network::GetInst()->send_update_arrow_move(m_id, vPos, m_qRot);
+
 		}
-		//cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
-		Transform()->SetLocalPos(vPos);
-		Transform()->SetLocalRot(vRot);
+		else {
+
+			LerpUpdate();
 
 
-		//if (nullptr != m_pSkill) {
-		//	if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
-		//		if (vPos.y <= 1.f) {
-		//			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-		//			vPos3.y = 1.f;
-		//			CreateThunderObject(vPos3, m_iLayerIdx);
-		//			Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-		//		}
-		//	}
-		//	else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
-		//		if (vPos.y <= 1.f) {
-		//			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-		//			vPos3.y = 1.f;
-		//			CreateBoomParticleObject(vPos3, L"smokeparticle");
-		//			//Collision();
-		//			Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-		//		}
-		//	}
-		//}
+			//vPos = Vec3::Lerp(vPos, CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id), DT * 10.f);
+			//vRot = Vec3::Lerp(vRot, CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id), DT * 10.f);
+			//if (CSceneMgr::GetInst()->get_arrowSkill(m_ParentId, m_id)) {
+			//	EnterSkill(vPos);
+			//	CSceneMgr::GetInst()->set_arrowSkill(m_ParentId, m_id, false);
+			//}
+			////cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
 
-		//cout<<"화살 주인은" <<GetObj()->GetParent()->GetParent()->GetScript<CPlayerScript>()->m_GetId() <<endl;
-		//cout << "화살 주인은" << GetParentId() << endl;
-		
-		//float value = XMConvertToRadians(90.f * DT * 10);
 
-		//float vDotValue = Dot(vDir, m_vTargetDir);
-		//Vec3 vCrossValue = Cross(m_vTargetDir, m_vDir);
+			//Transform()->SetLocalPos(vPos);
+			//Transform()->SetLocalRot(vRot);
+		}
 
-		//Vec3 vCrossValue = Cross(m_vDir, vDir);
-
-		//XMVECTOR xmmatrix = XMQuaternionRotationAxis(XMLoadFloat3(&vCrossValue), value);
-		//Transform()->SetQuaternion(XMQuaternionMultiply(Transform()->GetQuaternion(), xmmatrix));
-		//Transform()->SetQuaternion(Vec4(fAngle, 0.f, 0.f, 1.f));
 	}
 	break;
 	}
 }
 
+void CArrowScript::LerpUpdate()
+{
+	Vec3 vPos = Transform()->GetLocalPos();
+	Vec3 vRot = Transform()->GetLocalRot();
+	m_pTrail->TrailRenderer()->SetEmit(true);
+
+	vPos = Vec3::Lerp(vPos, m_LerpPos, DT * 10.f);
+	m_qRot = Vec4::Lerp(m_qRot, m_LerpQut, DT * 10.f);
+	//if (CSceneMgr::GetInst()->get_arrowSkill(m_ParentId, m_id)) {
+	//	EnterSkill(vPos);
+	//	CSceneMgr::GetInst()->set_arrowSkill(m_ParentId, m_id, false);
+	//}
+	//cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
+
+
+	Transform()->SetLocalPos(vPos);
+	Transform()->SetQuaternion(m_qRot);
+}
+
 void CArrowScript::EnterSkill(Vec3 vPos)
 {
-	cout << "EnterSKill" << endl;
 	if (nullptr != m_pSkill) {
 		if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
 				Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
@@ -209,23 +292,62 @@ void CArrowScript::EnterSkill(Vec3 vPos)
 
 void CArrowScript::Init()
 {
+	if (nullptr == GetObj()->GetParent()) {
+		m_pBow->AddChild(GetObj());
+	}
+
+	//m_pTrail->TrailRenderer()->SetEmit(false);
+	
 	m_bSetDotValue = false;
-	m_fVelocityY = 0.f;
+	m_fVelocityY = 5000;
 	m_fFallSpeed = 0.f;
 	m_bMaxCharged = false;
-	Transform()->SetQuaternion(Vec4(0.f, 0.f, 0.f, 1.f));
+	m_fTime = 0.f;
+	m_fDir = 1;
+	m_fHighest = 0;
+	m_fPerRotate = 1;
+	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
-	GetObj()->SetActive(false);
+	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
+
+
+	//---수정전
+	//m_bSetDotValue = false;
+	//m_fVelocityY = 0.f;
+	//m_fFallSpeed = 0.f;
+	//m_bMaxCharged = false;
+	//Transform()->SetQuaternion(Vec4(0.f, 0.f, 0.f, 1.f));
+	//Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+	//Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
+	// --- 수정전
+	
+	//GetObj()->SetActive(false);
+	//SetState(ARROW_STATE::IDLE);
+
 	m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
+#include "MinionScript.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-	if (L"Temp" == _pColldier->GetObj()->GetName())
-	{
-		GetObj()->SetActive(false);
-		Init();
+	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>() && GetObj()->Transform()->GetLocalPos().y <150 && m_eState == ARROW_STATE::ATTACK) {
+		if (_pColldier->GetObj()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
+			cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
+			m_eState = ARROW_STATE::IDLE;
+			m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
+			GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+			_pColldier->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
+			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER , m_eCamp);
+		}
+	}
+	else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>() && m_eState == ARROW_STATE::ATTACK) {
+		if (_pColldier->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_eCamp) {
+			cout << " Coll Other Camp Minion Index - " << _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId() << endl;
+			m_eState = ARROW_STATE::IDLE;
+			m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
+			GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId(), PACKET_COLLTYPE::MONSTER, m_eCamp);
+		}
 	}
 }
 

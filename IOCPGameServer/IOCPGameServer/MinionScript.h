@@ -98,8 +98,8 @@ public:
     
     void m_FFind();
     
-    void m_SetId(int id) { m_id = id; };
-    int m_GetId() { return m_id; };
+    void m_SetId(int id) { m_id = id; }
+    int m_GetId() { return m_id; }
    
     CMinionScript();
     CMinionScript(float _fSpeed,float _fRange,MINION_STATE _eState, CAMP_STATE _eCamp);

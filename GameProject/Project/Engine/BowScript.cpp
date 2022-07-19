@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "BowScript.h"
 #include "MeshRender.h"
 #include "Animator3D.h"
@@ -44,7 +44,7 @@ void CBowScript::Update()
 		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetLocalPos();
 
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed = 200.f;
+			m_fArrowSpeed = 500.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 			m_pArrow[m_iCurArrow]->SetActive(true);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
@@ -52,38 +52,66 @@ void CBowScript::Update()
 
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 			m_fArrowSpeed += 2000.f * DT;
-			if (m_fArrowSpeed > 700.f) {
-				m_fArrowSpeed = 700.f;
+			if (m_fArrowSpeed > 1000.f) {
+				m_fArrowSpeed = 1000.f;
 				m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 			}
 		}
 
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 			CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
+			CGameObject* pPlayer = GetObj()->GetParent();
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetParentId(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId());
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->m_SetId(m_iCurArrow);
 
-			Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
-			Vec3 vStartPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
+			Vec3 vCrossHairDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
+			Vec3 vCrossHairPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
+
+			//Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
+			//Vec3 vStartPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
 
 
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
-			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
+			//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
-			Vec3 vBowRot = GetObj()->GetParent()->Transform()->GetLocalRot();
-			Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
-			Vec3 vArrowRot = Vec3(vBowRot.x, XMConvertToRadians(XMConvertToDegrees(vBowRot.y) + 80.f), vBowRot.z);
+			Vec3 vPlayerPos = pPlayer->Transform()->GetWorldPos();
+			Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
+			Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
+			float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
+			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		
+			Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 
+			Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
+			vArrowDir.y = vCrossHairDir.y;
+			vArrowDir.Normalize();
 			m_pArrow[m_iCurArrow]->ClearParent();
-
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
-			CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), m_iCurArrow, vArrowPos);
-			CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), m_iCurArrow, vArrowRot);
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartPos(vArrowPos);
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vCrossHairDir);
+			Vec3 vQtrnDir = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetQtrnRotAxis(vQtrnDir);
 
-			Network::GetInst()->send_arrow_packet(m_iCurArrow, vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp,
+
+
+
+			//Vec3 vBowRot = GetObj()->GetParent()->Transform()->GetLocalRot();
+			//Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
+			//Vec3 vArrowRot = Vec3(vBowRot.x, XMConvertToRadians(XMConvertToDegrees(vBowRot.y) + 80.f), vBowRot.z);
+			//m_pArrow[m_iCurArrow]->ClearParent();
+
+			//m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
+			//m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
+			//CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), m_iCurArrow, vArrowPos);
+			//CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), m_iCurArrow, vArrowRot);
+
+
+			/*Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(), vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp,
+				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());*/
+
+			Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(), 
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
 
 			m_iCurArrow++;
@@ -127,6 +155,50 @@ void CBowScript::Update()
 	}
 }
 #include "SkillMgr.h"
+
+
+void CBowScript::CreateArrow(PACKET_SKILL skill)
+{
+	cout << "ìƒì„± - " << m_iCurArrow  <<endl;
+	CGameObject* pPlayer = GetObj()->GetParent();
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetParentId(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId());
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->m_SetId(m_iCurArrow);
+	//Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
+	//Vec3 vStartPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
+	if (skill == PACKET_SKILL::Z_FIRE)
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill(9));
+	if (skill == PACKET_SKILL::Z_TUNDER)
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill(7));
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetisMain(false);
+	//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
+
+	Vec3 vPlayerPos = pPlayer->Transform()->GetWorldPos();
+	Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
+	Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
+
+	Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
+	vArrowDir.Normalize();
+	m_pArrow[m_iCurArrow]->ClearParent();
+	m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
+	m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vPlayerPos);
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetLerp(vPlayerPos,Vec4(0,0,0,0));
+
+	m_pArrow[m_iCurArrow]->SetActive(true);
+
+	Vec3 vQtrnDir = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+
+	m_iCurArrow++;
+	m_iPower = 1;
+	if (m_iCurArrow > 19) {
+		m_iCurArrow = 0;
+
+	}
+	m_bMaxCharged = false;
+
+}
 void CBowScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)
 {
 
@@ -140,27 +212,16 @@ void CBowScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)
 		m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill(9));
 	if (skill == PACKET_SKILL::Z_TUNDER)
 		m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill(7));
-		//case ELEMENT_TYPE::THUNDER:
-		//{
-		//	m_tESkill = CSkillMgr::GetInst()->FindSkill(6);
-		//	m_tZSkill = CSkillMgr::GetInst()->FindSkill(7);
-		//}
-		//break;
-		//case ELEMENT_TYPE::FIRE:
-		//{
-		//	m_tESkill = CSkillMgr::GetInst()->FindSkill(8);
-		//	m_tZSkill = CSkillMgr::GetInst()->FindSkill(9);
-		//}
-		//bre
-
 	m_pArrow[ArrowId]->ClearParent();
 	m_pArrow[ArrowId]->Transform()->SetLocalPos(Pos);
 	m_pArrow[ArrowId]->Transform()->SetLocalRot(Rot);
+
 	CSceneMgr::GetInst()->set_arrowPos(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), ArrowId, Pos);
 	CSceneMgr::GetInst()->set_arrowRot(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId(), ArrowId, Rot);
-	m_pArrow[ArrowId]->SetActive(true);
 
-	//cout << "È­»ì »ý¼º -other"<< m_pArrow[ArrowId]->GetScript<CArrowScript>()->GetParentId()<<"¿¡¼­ ¹Þ¾Æ¿È" << endl;
+	//m_pArrow[ArrowId]->SetActive(true);
+
+	//cout << "í™”ì‚´ ìƒì„± -other"<< m_pArrow[ArrowId]->GetScript<CArrowScript>()->GetParentId()<<"ì—ì„œ ë°›ì•„ì˜´" << endl;
 
 }
 
@@ -267,10 +328,17 @@ void CBowScript::Init()
 
 void CBowScript::DeleteArrow(int ArrowId)
 {
-	m_pArrow[ArrowId]->GetScript<CArrowScript>()->Init();
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);
+	m_pArrow[ArrowId]->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+
 	//m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);
 	//m_pArrow[ArrowId]->Transform()->SetLocalPos(Vec3(1000, 1000, 1000));
 	//m_pArrow[ArrowId]->SetActive(false);
+}
+
+void CBowScript::UpdateArrow(int ArrowId , Vec3 LocalPos, Vec4 Quaternion)
+{
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetLerp(LocalPos, Quaternion);
 }
 
 
@@ -297,7 +365,6 @@ void CBowScript::Awake()
 		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f,0.f,0.f));
 		
 		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-		pCurScene->FindLayer(L"Blue")->AddGameObject(m_pArrow[i]);
 		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj());
@@ -305,7 +372,12 @@ void CBowScript::Awake()
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPacketSkill(PACKET_SKILL::NONE);
+		m_pArrow[i]->GetScript<CArrowScript>()->SetisMain(m_pPlayer->GetScript<CPlayerScript>()->GetIsMain());
+		m_pArrow[i]->GetScript<CArrowScript>()->SetCamp(m_pPlayer->GetScript<CPlayerScript>()->GetCamp());
+
 		m_pArrow[i]->GetScript<CArrowScript>()->Awake();
+
+		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 
 
 

@@ -54,7 +54,7 @@ void CInGameScene::Init(int index)
 			pObject->Sensor()->SetRadius(300.f);
 
 			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-			pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 200.f));    // 80.f, 200.f, 80.f ?????
+			pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));    // 80.f, 200.f, 80.f ?????
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 			pObject->GetScript<CPlayerScript>()->m_SetId(cl.second.m_id);
 			pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
@@ -65,7 +65,9 @@ void CInGameScene::Init(int index)
 				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 				FindLayer(L"Blue")->AddGameObject(pObject, false);
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 500.f));
+				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+				cl.second.Pos = Vec3(0.f, 0.f, 1125.f);
+
 				cout << "BLUE - " << cl.second.m_id << endl;
 
 			}
@@ -73,7 +75,8 @@ void CInGameScene::Init(int index)
 				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 				FindLayer(L"Red")->AddGameObject(pObject, false);
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
+				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+				cl.second.Pos = Vec3(0.f, 0.f, 5800.f);
 				cout << "RED - " << cl.second.m_id << endl;
 
 

@@ -31,6 +31,6 @@ public:
 	void EnterGame(int index);
 	void FindGameObjectByTag(int index , const wstring& _strTag, vector<CGameObject*>& _vecFindObj);
 	void InitArrowByPlayerId(int index, int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp , PACKET_SKILL skill);
-
+	void collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE camp);
 };
 

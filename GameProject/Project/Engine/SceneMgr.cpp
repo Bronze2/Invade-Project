@@ -341,16 +341,19 @@ void CSceneMgr::Update()
 
 
 	// rendermgr 카메라 초기화
-	CRenderMgr::GetInst()->ClearCamera();
 	//CRenderMgr::GetInst()->RegisterCamera(CRenderMgr::GetInst()->GetCamera());
+	CRenderMgr::GetInst()->ClearCamera();
+	Network::GetInst()->RecvData();
+
 	m_pCurScene->Update();
 	m_pCurScene->LateUpdate();
 
 	m_pCurScene->FinalUpdate();
 
-
 	CSensorMgr::GetInst()->Update();
+	CCollisionMgr::GetInst()->Update();
 	// 충돌 처리
+	
 	CRenderMgr::GetInst()->Render();
 
 	//if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
@@ -637,9 +640,10 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot, int skil
 
 	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 		if (cl->GetScript<CPlayerScript>()->m_GetId() == parentid) {
+			cout << ">>" << endl;
 			cl->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
-			cl->GetChild()[0]->GetScript<CBowScript>()->InitArrow(id, pos, rot, (PACKET_SKILL)skill);
-
+			//cl->GetChild()[0]->GetScript<CBowScript>()->InitArrow(id, pos, rot, (PACKET_SKILL)skill);
+			cl->GetChild()[0]->GetScript<CBowScript>()->CreateArrow((PACKET_SKILL)skill);
 			break;
 		}
 	}
@@ -657,21 +661,22 @@ void CSceneMgr::net_deleteArrow(int client_id, int arrow_id)
 			break;
 		}
 	}
-	m_arrow[client_id][arrow_id].Pos = Vec3(1000,1000,1000);
+	m_arrow[client_id][arrow_id].Pos = Vec3(-1000,-1000,-1000);
 	//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[client_id]->GetChild()[0]->
 	//	GetScript<CBowScript>()->DeleteArrow(arrow_id);
 }
 
 void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 {
+
 	//0 자기자신 return
 
 	// 1플레이어
 	// 2미니언
 	// 3 tower;
-	if (coll_type == 0) return;
-	else if (coll_type == 1) {
-		cout << "PlayerArrow Coll" << endl;
+	if ((PACKET_COLLTYPE)coll_type == PACKET_COLLTYPE::WALL) return;
+	else if ((PACKET_COLLTYPE)coll_type == PACKET_COLLTYPE::PLAYER) {
+		cout << "PlayerArrow Coll -" <<coll_id << endl;
 		for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 			if (cl->GetScript<CPlayerScript>()->m_GetId() == coll_id) {
 				cl->GetScript<CPlayerScript>()->GetDamage(damage);
@@ -680,12 +685,12 @@ void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 		}
 		//m_pCurScene->FindLayer(L"Blue")->GetParentObj()[coll_id]->GetScript<CPlayerScript>()->GetDamage(damage);
 	}
-	else if (coll_type == 2) {
+	//else if (coll_type == 2) {
 
-	}
-	else if (coll_type == 3) {
+	//}
+	//else if (coll_type == 3) {
 
-	}
+	//}
 
 
 }
@@ -711,6 +716,16 @@ void CSceneMgr::net_playerHelmetUpdate(int id,Vec3 LocalPos, Vec4 Quaternion, Ve
 	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
 			cl->GetScript<CPlayerScript>()->UpdateHelmet(LocalPos, Quaternion, LocalRot, RevolutionRot);
+			break;
+		}
+	}
+}
+
+void CSceneMgr::net_updateArrow(int id, int arrow_id , Vec3 LocalPos, Vec4 Quaternion)
+{
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+			cl->GetChild()[0]->GetScript<CBowScript>()->UpdateArrow(arrow_id, LocalPos, Quaternion);
 			break;
 		}
 	}

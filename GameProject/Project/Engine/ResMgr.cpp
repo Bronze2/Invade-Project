@@ -888,6 +888,21 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"ParticleShader", pShader);
 
+	
+	/// 트레일
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\trail.fx", "VS_Trail", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
+
+	pShader->SetBlendState(BLEND_TYPE::ONEBLEND); // 알파 블랜드 사용
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	pShader->AddShaderParam(tShaderParam{ L"Trail Texture", SHADER_PARAM::TEX_0 });
+
+	AddRes(L"TrailShader", pShader);
+
 
 
 	// ======================
@@ -962,6 +977,13 @@ void CResMgr::CreateDefaultMaterial()
 {
 
 	Ptr<CMaterial> pMtrl = nullptr;
+
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"TrailShader"));
+	AddRes(L"TrailMtrl", pMtrl);
+
 
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();

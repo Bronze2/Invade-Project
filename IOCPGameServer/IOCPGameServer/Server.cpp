@@ -340,10 +340,60 @@ void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Ve
 	packet.Rot.z = Rot.z;
 	packet.skill = skill;
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i)
-		if (i == client_id) continue;
-		else send_packet(i, &packet);
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
+			if (cl.second.m_id == client_id) 
+				continue;
+			else
+				send_packet(cl.second.m_id, &packet);
+		}
+
+	}
+
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i)
+	//	if (i == client_id) continue;
+	//	else send_packet(i, &packet);
 }
+
+void CServer::send_update_arrow(int client_id, int arrow_id, p_Vec3 LocalPos, p_Vec4 Quaternion)
+{
+	sc_packet_update_arrow_move packet;
+	packet.size = sizeof(packet);
+	packet.id = client_id;
+	packet.arrow_id = arrow_id;
+	packet.type = S2C_UPDATE_ARROW;
+	packet.LocalPos = LocalPos;
+	packet.Quaternion = Quaternion;
+
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == client_id) continue;
+		else if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+}
+
+void CServer::send_collision_arrow(int client_id, int arrow_id, int coll_id, PACKET_COLLTYPE coll_type)
+{
+	sc_packet_collsion_arrow packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_COLLISION_ARROW;
+	packet.id = client_id;
+	packet.arrow_id = arrow_id;
+	packet.coll_id = coll_id;
+	packet.coll_type = coll_type;
+
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == client_id) continue;
+		else if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+}
+
+
 void CServer::send_update_animation(int client_id, int state)
 {
 	sc_packet_change_anim packet;
@@ -374,8 +424,14 @@ void CServer::send_move_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3
 	packet.Rot.z = Rot.z;
 	packet.skill = skill;
 
-	for (int i = 0; i < SHARED_DATA::current_user; ++i)
-		send_packet(i, &packet);
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id)
+			send_packet(cl.second.m_id, &packet);
+
+	}
+	//for (int i = 0; i < SHARED_DATA::current_user; ++i)
+	//	send_packet(i, &packet);
 }
 
 void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type, int coll_id, int damage, PACKET_SKILL skill)
@@ -394,8 +450,11 @@ void CServer::send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_typ
 	packet.coll_id = coll_id;
 	packet.damage = damage;
 	packet.skill = skill;
-	for (int i = 0; i < SHARED_DATA::current_user; ++i)
-		send_packet(i, &packet);
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == SHARED_DATA::g_clients[clinet_id].room_id)
+			send_packet(cl.second.m_id, &packet);
+
+	}
 }
 
 void CServer::send_update_player_helmet(int id, int room_id ,p_Vec3 LocalPos, p_Vec4 Quaternion, p_Vec3 LocalRot, p_Vec3 RevolutionRot)

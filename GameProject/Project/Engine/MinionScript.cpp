@@ -49,8 +49,8 @@ void CMinionScript::Init()
 void CMinionScript::Update()
 {
 	//CheckHp();
-	if(m_eState != CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).state)
-		m_eState = CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).state;
+	if(m_eState != CSceneMgr::GetInst()->get_minioninfo(m_id).state)
+		m_eState = CSceneMgr::GetInst()->get_minioninfo(m_id).state;
 
 	m_FAnimation();
 	if (m_eState == MINION_STATE::DIE) {
@@ -69,29 +69,29 @@ void CMinionScript::Update()
 		Transform()->GetLocalPos().y == 0 &&
 		Transform()->GetLocalPos().z == 0 )
 	{
-		Transform()->SetLocalPos(CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos);
+		Transform()->SetLocalPos(CSceneMgr::GetInst()->get_minioninfo(m_id).pos);
 	}
 	switch (m_eState)
 	{
 	case MINION_STATE::WALK: {
-		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos, DT * 10.f);
-		vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).rot, DT * 10.f);
+		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(m_id).pos, DT * 10.f);
+		vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
 
 		Transform()->SetLocalPos(vPos);
-		Transform()->SetLocalRot(CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).rot);
+		Transform()->SetLocalRot(CSceneMgr::GetInst()->get_minioninfo(m_id).rot);
 
 	}
 	break;
 	case MINION_STATE::ATTACK:
 	{
-		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos, DT * 10.f);
-		vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).rot, DT * 10.f);
+		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(m_id).pos, DT * 10.f);
+		vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
 
 		Transform()->SetLocalPos(vPos);
 		Transform()->SetLocalRot(vRot);
 
 		if (m_bFinishAnimation) {
-			CSceneMgr::GetInst()->set_minioninfoState(GetObj()->GetId(), MINION_STATE::WALK);
+			CSceneMgr::GetInst()->set_minioninfoState(m_id, MINION_STATE::WALK);
 			m_eState = MINION_STATE::WALK;
 		}
 	}

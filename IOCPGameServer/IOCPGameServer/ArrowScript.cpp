@@ -90,12 +90,12 @@ void CArrowScript::Update()
 
 		if (Transform()->GetLocalPos().y < 0.f)
 		{
-			cout << " Arrow Delete Server ID - " << m_id << endl;
-			Init();
-			//m_eState = ARROW_STATE::ATTACK;
-			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,0,0,0, m_PacketSkill);
-			//GetObj()->SetActive(false);
-			m_eState = ARROW_STATE::IDLE;
+			//cout << " Arrow Delete Server ID - " << m_id << endl;
+			//Init();
+			////m_eState = ARROW_STATE::ATTACK;
+			//CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,0,0,0, m_PacketSkill);
+			////GetObj()->SetActive(false);
+			//m_eState = ARROW_STATE::IDLE;
 		}
 
 		m_vRestorePos = vPos;
@@ -164,36 +164,43 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pOther)
 		if (nullptr != _pOther->GetObj()) {
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != GetCamp())
 			{
-				_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(500);
-				Init();
-				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,2, _pOther->GetObj()->GetScript<CMinionScript>()->m_GetId(),500, m_PacketSkill);
-				 GetObj()->SetActive(false);
-				
+				//_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(500);
+				//Init();
+				//CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,2, _pOther->GetObj()->GetScript<CMinionScript>()->m_GetId(),500, m_PacketSkill);
+				// //GetObj()->SetActive(false);
+				//m_eState = ARROW_STATE::IDLE;
+
+				//cout << " Minion Coll" << endl;
+
 			}
 		}
 
 	}
 
-	if (_pOther->GetObj()->GetScript<CPlayerScript>() != nullptr) {
-		if (nullptr != _pOther->GetObj()) {
-			if (_pOther->GetObj()->GetScript<CPlayerScript>()->GetCamp() != GetCamp())
-			{
-				cout << _pOther->GetObj()->Transform()->GetLocalPos().y << endl;
-				//cout << _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
-				_pOther->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
-				Init();
-				CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,1, _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId(),500, m_PacketSkill);
-				GetObj()->SetActive(false);
-			}
-		}
+	//if (_pOther->GetObj()->GetScript<CPlayerScript>() != nullptr) {
+	//	if (nullptr != _pOther->GetObj()) {
+	//		if (_pOther->GetObj()->GetScript<CPlayerScript>()->GetCamp() != GetCamp())
+	//		{
+	//			cout << _pOther->GetObj()->Transform()->GetLocalPos().y << endl;
+	//			//cout << _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
+	//			_pOther->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
+	//			Init();
+	//			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id,1, _pOther->GetObj()->GetScript<CPlayerScript>()->m_GetId(),500, m_PacketSkill);
+	//			//GetObj()->SetActive(false);
+	//			m_eState = ARROW_STATE::IDLE;
+	//			cout << " Player Coll" << endl;
 
-	}
+	//		}
+	//	}
+
+	//}
 
 	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr) {
 		if (nullptr != _pOther->GetObj()) {
-			Init();
-			CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id, 3, 0, 500, m_PacketSkill);
-			GetObj()->SetActive(false);
+			//Init();
+			//CServer::GetInst()->send_delete_arrow_packet(m_ParentId, m_id, 3, 0, 500, m_PacketSkill);
+			////GetObj()->SetActive(false);
+			//m_eState = ARROW_STATE::IDLE;
 
 		}
 

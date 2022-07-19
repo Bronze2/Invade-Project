@@ -328,6 +328,9 @@
     <ClInclude Include="ButtonScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="TrailRenderer.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -559,6 +562,9 @@
     <ClCompile Include="ButtonScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
+    <ClCompile Include="TrailRenderer.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -597,6 +603,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="light.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="trail.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

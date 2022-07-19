@@ -45,6 +45,7 @@
 #include "EmptyCameraScript.h"
 #include "CrossHairScript.h"
 #include "Network.h"
+
 void CInGameScene::Init()
 {
 	ShowCursor(false);
@@ -57,6 +58,7 @@ void CInGameScene::Init()
 	GetLayer(5)->SetName(L"Cover");
 	GetLayer(6)->SetName(L"Arrow");
 	GetLayer(7)->SetName(L"Terrain");
+
 
 	GetLayer(8)->SetName(L"BlueSpawnPlace");
 	GetLayer(9)->SetName(L"RedSpawnPlace");
@@ -169,8 +171,9 @@ void CInGameScene::Init()
 
 
 	if (Network::GetInst()->getMainClient().camp == CAMP_STATE::BLUE) {
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
-		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 0));
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125));
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125));
+
 		//pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
 		cout << "메인클라 블루  [" << Network::GetInst()->getMainClient().id<<"]" << endl;
 		//pObject->GetScript<CPlayerScript>()->SetType(Network::GetInst()->getMainClient().skill);
@@ -179,8 +182,8 @@ void CInGameScene::Init()
 	}
 
 	else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
-		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 0));
+		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800));
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800));
 		//pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
 		cout << "메인클라 레드  [" << Network::GetInst()->getMainClient().id << "]" << endl;
 		pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
@@ -194,16 +197,21 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->GetScript<CPlayerScript>()->m_SetId(Network::GetInst()->getMainClient().id);
-
+	
+	
 	CAnimation* pNewAnimation = new CAnimation;
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
 	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);
 	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
-	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 220, 235);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_1", 202, 207);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_2", 202, 208);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_3", 202, 209);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_4", 202, 210);
+	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_5", 202, 212);
 	pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
-	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261      
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261
 	pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
@@ -296,15 +304,16 @@ void CInGameScene::Init()
 
 
 		if (cl.second.camp == CAMP_STATE::BLUE) {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+
 			cout << "[ID" << cl.second.id << "] 블루"<< endl;
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
 		}
 		else if (cl.second.camp == CAMP_STATE::RED) {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
 			cout << "[ID" << cl.second.id << "] 레드" << endl;
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 		}
@@ -323,11 +332,14 @@ void CInGameScene::Init()
 		pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
 		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
 		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
-		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH", 220, 235);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_1", 202, 207);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_2", 202, 208);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_3", 202, 209);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_4", 202, 210);
+		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_5", 202, 212);
 		pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
-		pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261      
+		pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261
 		pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
-		//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
 		pObject->Animator3D()->SetAnimation(pNewAnimation);
 		pObject->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
@@ -1074,11 +1086,14 @@ void CInGameScene::Init()
 	CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
 
 
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
-	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Red");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Cover");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
+
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
 
 
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Monster", L"Blue");
