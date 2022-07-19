@@ -77,6 +77,9 @@ private:
 
 
 public:
+
+    SKILL* GetESkill() { return m_tESkill; }
+    SKILL* GetZSkill() { return m_tZSkill; }
     void m_FAnimation();
 
 

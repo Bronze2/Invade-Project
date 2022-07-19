@@ -174,7 +174,6 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load3D<CSound>(L"MainMusic", L"Sound\\MainMusic.wav");
 	CResMgr::GetInst()->Load3D<CSound>(L"PlayerDie", L"Sound\\PlayerDie.wav");
 	CResMgr::GetInst()->Load3D<CSound>(L"PlayerHit", L"Sound\\PlayerHit.wav");
-	Ptr<CTexture> pSkillTex = CResMgr::GetInst()->Load<CTexture>(L"Water0", L"Texture\\Skill\\Water1.png");
 	SKILL* Skill= new SKILL;
 	Skill->Name = L"Water0";
 	Skill->Code =0;
@@ -186,8 +185,8 @@ void CSceneMgr::Init()
 	Skill->fDamage = 0.f;
 	Skill->bUse = false;
 	Skill->Sum = 50.f;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Water0", L"Texture\\Skill\\Water1.png");
 	CSkillMgr::GetInst()->AddSkill(0, Skill);
-
 	Skill = new SKILL;
 	Skill->Name = L"Water1";
 	Skill->Code = 1;
@@ -199,6 +198,7 @@ void CSceneMgr::Init()
 	Skill->fDamage = 0.f;
 	Skill->bUse = false;
 	Skill->Sum = 100.f;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Water1", L"Texture\\Skill\\Water2.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
@@ -211,6 +211,7 @@ void CSceneMgr::Init()
 	Skill->fDamage = 20.f;
 	Skill->DotDamage =0.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Wind1", L"Texture\\Skill\\Wind1.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
@@ -223,6 +224,7 @@ void CSceneMgr::Init()
 	Skill->fDamage = 32.f;
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Wind2", L"Texture\\Skill\\Wind2.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
@@ -235,6 +237,7 @@ void CSceneMgr::Init()
 	Skill->fDamage = 20.f;
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Dark1", L"Texture\\Skill\\Dark1.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
 	Skill->Name = L"Dark1";
 	Skill->Code = 5;
@@ -245,6 +248,7 @@ void CSceneMgr::Init()
 	Skill->fDamage = 0.f;
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Dark2", L"Texture\\Skill\\Dark2.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 	Skill = new SKILL;
 	Skill->Name = L"Thunder0";
@@ -256,6 +260,7 @@ void CSceneMgr::Init()
 	Skill->fDamage = 15.f;
 	Skill->DotDamage = 0.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Thunder1", L"Texture\\Skill\\Thunder1.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 	Skill = new SKILL;
 	Skill->Name = L"Thunder1";
@@ -268,6 +273,7 @@ void CSceneMgr::Init()
 	Skill->bUse = false;
 	Skill->DotDamage = 24.f;
 	Skill->Sum = -72.f;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Thunder2", L"Texture\\Skill\\Thunder2.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 	Skill = new SKILL;
@@ -281,6 +287,7 @@ void CSceneMgr::Init()
 	Skill->DotDamage = 5.f;
 	Skill->Sum = -25.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Fire1", L"Texture\\Skill\\Fire1.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
 	Skill->Name = L"Fire1";
 	Skill->Code = 9;
@@ -292,6 +299,7 @@ void CSceneMgr::Init()
 	Skill->DotDamage = 10.f;
 	Skill->Sum = -40.f;
 	Skill->bUse = false;
+	Skill->pTex = CResMgr::GetInst()->Load<CTexture>(L"Fire2", L"Texture\\Skill\\Fire2.png");
 	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill);
 
 

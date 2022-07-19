@@ -160,6 +160,11 @@ void CInGameScene::Init()
     pObject->Sensor()->SetRadius(500.f);
     pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
+
+    //스킬
+  
+
+
     CGameObject* pPlayer = pObject;
     pObject->GetScript<CPlayerScript>()->SetCurHp(50);
     // pMainCam->Transform()->SetLocalPos(Vec3(0.f, 100.f, 130.f));
@@ -1475,6 +1480,54 @@ void CInGameScene::Init()
         pObject->Light3D()->SetLightRange(1000.f);
         FindLayer(L"Default")->AddGameObject(pObject);
     }
+
+
+     CGameObject* pUISkill = new CGameObject;
+   pUISkill->SetName(L"UISkill1");
+   pUISkill->FrustumCheck(false);
+   pUISkill->AddComponent(new CTransform);
+   pUISkill->AddComponent(new CMeshRender);
+ 
+   tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+   Vec3 vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
+ 
+   pUISkill->Transform()->SetLocalPos(Vec3(0.f, res1.fHeight / 4, 1.f));
+   pUISkill->Transform()->SetLocalScale(vScale1);
+ 
+   pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+   Ptr<CMaterial> pSkillMtrl = new CMaterial;
+   pSkillMtrl->DisableFileSave();
+   pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+   CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
+   pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+   pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, 
+       pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
+ 
+   FindLayer(L"UI")->AddGameObject(pUISkill);
+
+   pUISkill = new CGameObject;
+    pUISkill->SetName(L"UISkill2");
+    pUISkill->FrustumCheck(false);
+    pUISkill->AddComponent(new CTransform);
+    pUISkill->AddComponent(new CMeshRender);
+ 
+    res1 = CRenderMgr::GetInst()->GetResolution();
+    vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
+ 
+    pUISkill->Transform()->SetLocalPos(Vec3(0.f, res1.fHeight / 4+100.f, 1.f));
+    pUISkill->Transform()->SetLocalScale(vScale1);
+ 
+    pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+    pSkillMtrl = new CMaterial;
+    pSkillMtrl->DisableFileSave();
+    pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+    CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
+    pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+    pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+        pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex.GetPointer());
+ 
+    FindLayer(L"UI")->AddGameObject(pUISkill);
+
 
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
