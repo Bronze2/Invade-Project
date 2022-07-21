@@ -361,7 +361,8 @@ void CInGameScene::Init()
     pBlueSecondTower->GetScript<CTowerScript>()->SetFirstTower(pBlueFirstTower);
     pBlueFirstTower->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
     FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
-
+    
+   
 
     // 블루 넥서스
     CGameObject* pBlueNexus;
@@ -441,6 +442,28 @@ void CInGameScene::Init()
     pRedSpawnPlace->GetScript<CSpawnScript>()->SetSecondTower(pBlueSecondTower);
     FindLayer(L"Red")->AddGameObject(pRedSpawnPlace);
 
+
+    //BigDoor 추가
+    // 
+    // 
+//    CGameObject* pBigDoor;
+//    pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\BigDoor.fbx");
+//   // pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
+//    pMeshData->Save(pMeshData->GetPath());
+//    pBigDoor = pMeshData->Instantiate();
+//    
+    
+    
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
     //-----------------------------------------------------------------------------------------------
     // 장애물
     //-----------------------------------------------------------------------------------------------
@@ -1480,6 +1503,7 @@ void CInGameScene::Init()
         pObject->Light3D()->SetLightRange(1000.f);
         FindLayer(L"Default")->AddGameObject(pObject);
     }
+    //스킬 ui 추가
 
 
      CGameObject* pUISkill = new CGameObject;
@@ -1491,18 +1515,18 @@ void CInGameScene::Init()
    tResolution res1 = CRenderMgr::GetInst()->GetResolution();
    Vec3 vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
  
-   pUISkill->Transform()->SetLocalPos(Vec3(0.f, res1.fHeight / 4, 1.f));
+   pUISkill->Transform()->SetLocalPos(Vec3(0.f+100.F, res1.fHeight / 4, 1.f));
    pUISkill->Transform()->SetLocalScale(vScale1);
  
    pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
    Ptr<CMaterial> pSkillMtrl = new CMaterial;
    pSkillMtrl->DisableFileSave();
-   pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+   pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
    CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
    pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
    pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, 
-       pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
- 
+   pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
+   pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
    FindLayer(L"UI")->AddGameObject(pUISkill);
 
    pUISkill = new CGameObject;
@@ -1514,19 +1538,20 @@ void CInGameScene::Init()
     res1 = CRenderMgr::GetInst()->GetResolution();
     vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
  
-    pUISkill->Transform()->SetLocalPos(Vec3(0.f, res1.fHeight / 4+100.f, 1.f));
+    pUISkill->Transform()->SetLocalPos(Vec3(0.f+100.f, res1.fHeight / 4-vScale.y, 1.f));
     pUISkill->Transform()->SetLocalScale(vScale1);
  
     pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
     pSkillMtrl = new CMaterial;
     pSkillMtrl->DisableFileSave();
-    pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+    pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
     CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
     pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
     pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
         pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex.GetPointer());
- 
+    pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
     FindLayer(L"UI")->AddGameObject(pUISkill);
+
 
 
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");

@@ -65,7 +65,9 @@ private:
 
     vector<SKILL*> m_arrSkill;
    
-  
+    
+
+
 
     CGameObject* m_pBowObject;
 
@@ -82,7 +84,8 @@ public:
     SKILL* GetZSkill() { return m_tZSkill; }
     void m_FAnimation();
 
-
+    void SetESkillObj( CGameObject* _pObj) { m_pESkillObject = _pObj; }
+    void SetZSkillObj( CGameObject* _pObj) { m_pZSkillObject = _pObj; }
     bool MoveCheck(const Vec3& _vPos);
     void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
     void Init();

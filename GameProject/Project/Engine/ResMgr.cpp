@@ -701,6 +701,29 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"TexShader", pShader);
 
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_TexUI", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexUI", "ps_5_0");
+
+	// BlendState 설정
+	// pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+	// DSState
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+
+
+	pShader->AddShaderParam(tShaderParam{ L"Ratio",SHADER_PARAM::FLOAT_0 });
+	pShader->AddShaderParam(tShaderParam{ L"StartColor", SHADER_PARAM::VEC4_0 });
+	pShader->AddShaderParam(tShaderParam{ L"EndColor", SHADER_PARAM::VEC4_1 });
+
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"TexUIShader", pShader);
+
+
 	// =================
 	// Collider2D Shader
 	// =================

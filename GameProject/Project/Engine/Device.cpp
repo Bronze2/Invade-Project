@@ -155,46 +155,6 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	CreateRootSignature();
 
 
-	//font
-	{
-		
-	
-		HRESULT hr = D3D11On12CreateDevice(m_pDevice.Get(), d3d11DeviceFlags, nullptr, 0, reinterpret_cast<IUnknown**>
-			(m_pCmdQueue.GetAddressOf()), 1, 0, &d3d11Device, &m_d3d11DeviceContext, nullptr);
-		if (FAILED(hr))
-			assert(nullptr);
-		hr = d3d11Device.As(&m_d3d11On12Device);
-
-		if (FAILED(hr))
-			assert(nullptr);
-
-		D2D1_DEVICE_CONTEXT_OPTIONS deviceOptions = D2D1_DEVICE_CONTEXT_OPTIONS_NONE;
-		hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory3), &d2dFactoryOptions, &m_d2dFactory);
-		if (FAILED(hr))
-			assert(nullptr);
-		ComPtr<IDXGIDevice> dxgiDevice;
-		hr = m_d3d11On12Device.As(&dxgiDevice);
-		if (FAILED(hr))
-			assert(nullptr);
-		hr = m_d2dFactory->CreateDevice(dxgiDevice.Get(), &m_d2dDevice);
-		if (FAILED(hr))
-			assert(nullptr);
-		hr = m_d2dDevice->CreateDeviceContext(deviceOptions, &m_d2dDeviceContext);
-		if (FAILED(hr))
-			assert(nullptr);
-		hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &m_dWriteFactory);
-		if (FAILED(hr))
-			assert(nullptr);
-		float dpi = GetDpiForWindow(_hWnd);
-		m_bitmapProperties = D2D1::BitmapProperties1(
-			D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED)
-			, dpi, dpi
-		);
-
-	
-
-	}
 
 	return S_OK;
 }

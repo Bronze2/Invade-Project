@@ -617,17 +617,41 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 }
 void CPlayerScript::SkillCoolTimeCheck()
 {
+	
+	Vec4 vStartColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	Vec4 vEndColor = Vec4(1.f, 0.f, 0.f, 1.f);
+	float Value = m_tESkill->fCoolTime / m_tESkill->fCoolTime;
 	if (m_tESkill->bUse) {
+		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tESkill->StartTime;
+		Value = sec.count();
+		Value = Value / m_tESkill->fCoolTime;
 		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
+			
 			m_tESkill->bUse = false;
 		}
+		
+	
+		
 	}
+	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Value);
+	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &vStartColor);
+	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_1, &vEndColor);
+	Value = m_tZSkill->fCoolTime / m_tZSkill->fCoolTime;
+	float v = 1.f / 25.f;
 	if (m_tZSkill->bUse) {
+		std::chrono::duration<float>sec=std::chrono::system_clock::now() - m_tZSkill->StartTime;
+		Value = sec.count();
+		Value = Value / m_tZSkill->fCoolTime;
+
+		
 		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;
 		}
+		
 	}
-
+	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Value);
+	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &vStartColor);
+	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_1, &vEndColor);
 
 }
 void CPlayerScript::StatusCheck()
