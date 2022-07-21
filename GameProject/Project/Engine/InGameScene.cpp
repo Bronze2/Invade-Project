@@ -45,6 +45,7 @@
 #include "WaterSkill0Script.h"
 #include "SkillMgr.h" 
 #include "CrossHairScript.h"
+#include "Font.h"
 
 void CInGameScene::Init()
 {
@@ -139,8 +140,8 @@ void CInGameScene::Init()
 	// 플레이어 
 	//-----------------------------------------------------------------------------------------------
 
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_red.fbx");
-	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
+	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_red.fbx");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 
 	pObject = new CGameObject;
@@ -158,7 +159,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -232,70 +233,37 @@ void CInGameScene::Init()
 
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer);
 
-
-	//// Monster0, 50, -5.72205e-06
-	////32, 100, 32
-
-	//// 플레이어랑 똑같이 fbx없이 하나 &&	위의 값으로 하나 돌려보기
-
-	//pObject = new CGameObject;
-	//pObject->SetName(L"Monster Col 1");
-	//pObject->AddComponent(new CCollider3D);
-	//pObject->AddComponent(new CTransform);
-	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
-	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
-	//pObject->Transform()->SetLocalPos(Vec3(-0.f, 0.f, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
-	//pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
-	//FindLayer(L"Terrain")->AddGameObject(pObject);
-
-
-	////pObject = new CGameObject;
-	////pObject->SetName(L"Monster Col 2");
-	////pObject->AddComponent(new CCollider3D);
-	////pObject->AddComponent(new CTransform);
-	////pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	////pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
-	////pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
-	////pObject->Transform()->SetLocalPos(Vec3(-0.f, 0.f, 0.f));
-	////pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
-	////pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
-	////FindLayer(L"Terrain")->AddGameObject(pObject);
-
-	//////////////
-
 //-----------------------------------------------------------------------------------------------
 // 맵 (baseMap + 타워 + 넥서스)
 //-----------------------------------------------------------------------------------------------
 	//기본 성 fbx
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\testmap01.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_map001.fbx");
+	////pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 
-	pObject = pMeshData->Instantiate();
+	//pObject = pMeshData->Instantiate();
 
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));		//0.f, 370.f, 0.f
-	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-	pObject->MeshRender()->SetDynamicShadow(true);
+	//pObject->FrustumCheck(false);
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));		//0.f, 370.f, 0.f
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
+	//pObject->MeshRender()->SetDynamicShadow(true);
 
-	FindLayer(L"Default")->AddGameObject(pObject);
+	//FindLayer(L"Default")->AddGameObject(pObject);
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	////pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
+	////pMeshData->Save(pMeshData->GetPath());
 
-	pObject = pMeshData->Instantiate();
+	//pObject = pMeshData->Instantiate();
 
-	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));		//0.f, 370.f, 0.f
-	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-	pObject->MeshRender()->SetDynamicShadow(false);
+	//pObject->FrustumCheck(false);
+	//pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));		//0.f, 370.f, 0.f
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	//pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
+	//pObject->MeshRender()->SetDynamicShadow(false);
 
-	FindLayer(L"Default")->AddGameObject(pObject);
+	//FindLayer(L"Default")->AddGameObject(pObject);
 
 	// 레드 1차타워
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
@@ -1252,6 +1220,11 @@ void CInGameScene::Init()
 	FindLayer(L"UI")->AddGameObject(pDarkUI);
 
 
+//-----------------------------------------------------------------------------------------------
+// Arrow Test
+//-----------------------------------------------------------------------------------------------
+
+
 	CGameObject* m_pArrow = new CGameObject;
 	m_pArrow->SetName(L"Arrow");
 
@@ -1277,10 +1250,38 @@ void CInGameScene::Init()
 	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
 
 
+//-----------------------------------------------------------------------------------------------
+// Animation2D Test
+//-----------------------------------------------------------------------------------------------
+
+	//CGameObject* pAnim2DTest = new CGameObject;
+	//pAnim2DTest->SetName(L"TestAnim2D");
+	//pAnim2DTest->AddComponent(new CTransform);
+	//pAnim2DTest->AddComponent(new CMeshRender);
+
+	//pAnim2DTest->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	//pAnim2DTest->Transform()->SetLocalScale(Vec3(1000.f, 1000.f, 1.f));
+
+	//pAnim2DTest->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//Ptr<CMaterial> pAnim2DMtrl = new CMaterial;
+	//pAnim2DMtrl->DisableFileSave();
+	//pAnim2DMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	//pAnim2DTest->MeshRender()->SetMaterial(pAnim2DMtrl);
+	//Ptr<CTexture> pUIReadyTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
+	//Ptr<CTexture> pAnim2DTex = CResMgr::GetInst()->FindRes<CTexture>(L"TestAnim2D");
+	////pAnim2DTest->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyTex.GetPointer());
+	//pAnim2DTest->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pAnim2DTex.GetPointer());
+
+	////CAnimator2D* pAnimator = new CAnimator2D;
+	////pAnim2DTest->AddComponent(new CAnimator2D);
+	////pAnimator->AddAnimation(L"TestAnim2D", pAnim2DTex, Vec2(0.f, 100.f), Vec2(10.f, 100.f), 120, 30.f);
+	////pAnimator->PlayAnimation(L"TestAnim2D", true);
+
+	//FindLayer(L"UI")->AddGameObject(pAnim2DTest);
 
 //-----------------------------------------------------------------------------------------------
 // 조명 추가
-//-----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------0-------------------------
 
 	for (int i = 0; i < 2; i++) {
 		pObject = new CGameObject;

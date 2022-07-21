@@ -32,6 +32,9 @@ using namespace Microsoft::WRL;
 #include <d3d11on12.h>
 #include <fbxsdk.h>
 
+// Font
+#include <fstream>
+
 #include <dxgi1_4.h>
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>

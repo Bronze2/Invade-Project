@@ -51,6 +51,8 @@
 #include "EmptyPlayerScript.h"
 #include "LoginScene.h"
 #include "TitleScene.h"
+#include "Font.h"
+#include "FontMgr.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -121,10 +123,15 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init()
 {
+	// 글씨쓰기
+	CFontMgr::GetInst()->SetFont(CResMgr::GetInst()->Load<CFont>(L"Font", L"Font03.fnt"));
+	CFontMgr::GetInst()->GetFont()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FontMtrl"));
+
 	// 로비씬
 	CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
 	CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
 	CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\splash.png");
+	CResMgr::GetInst()->Load<CTexture>(L"TestAnim2D", L"Texture\\font02_0.png");
 	CResMgr::GetInst()->Load<CTexture>(L"UIButtonGameStart", L"Texture\\UIButtonGameStart.png");
 	CResMgr::GetInst()->Load<CTexture>(L"UIReadyBar", L"Texture\\UIReadyBar.png");
 	CResMgr::GetInst()->Load<CTexture>(L"UIReadyPressed", L"Texture\\UIReadyPressed.png");
@@ -140,7 +147,7 @@ void CSceneMgr::Init()
 	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"TestTex", L"Texture\\Health.png");
 	Ptr<CTexture> pExplosionTex = CResMgr::GetInst()->Load<CTexture>(L"Explosion", L"Texture\\Explosion\\Explosion80.png");
 	Ptr<CTexture> pBlackTex = CResMgr::GetInst()->Load<CTexture>(L"Black", L"Texture\\asd.png");
-	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky01.png");
+	Ptr<CTexture> pSky01 = CResMgr::GetInst()->Load<CTexture>(L"Sky01", L"Texture\\Skybox\\Sky03.png");
 	Ptr<CTexture> pSky02 = CResMgr::GetInst()->Load<CTexture>(L"Sky02", L"Texture\\Skybox\\Sky02.jpg");
 	CResMgr::GetInst()->Load<CTexture>(L"Snow", L"Texture\\Particle\\Snow50px.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Bubble50", L"Texture\\Particle\\Bubbles50px.png");

@@ -42,10 +42,6 @@ public:
 	void Render_Particle(UINT _iInstanceCount, UINT _iSubset = 0);
 	void Render_Instancing(UINT _iSubset, CInstancingBuffer* _pInstBuffer);
 
-	// ∆Æ∑π¿œ
-	void CreateTrail(UINT _iVtxSize, UINT _iVtxCount, BYTE* _pVtxSysMem);
-	void RenderTrail(UINT _iInstanceCount, UINT _iSubset = 0);
-
 	CMesh();
 	virtual ~CMesh();
 

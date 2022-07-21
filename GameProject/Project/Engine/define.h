@@ -90,6 +90,7 @@ enum class RES_TYPE
 	TEXTURE,
 	SOUND,
 	SHADER,
+	FONT,
 	END,
 };
 

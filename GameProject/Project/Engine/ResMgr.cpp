@@ -604,7 +604,7 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"TexShader", pShader);   
 
 	// ==============
-	// HPBar Shader (에이치피바)
+	// HPBar Shader (에이치비바)
 	// ==============
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_HPTex", "vs_5_0");
@@ -613,12 +613,10 @@ void CResMgr::CreateDefaultShader()
 	// BlendState 설정
 	pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
 
-	// DSState
-	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
-
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"MaxHp", SHADER_PARAM::INT_1 });
+	pShader->AddShaderParam(tShaderParam{ L"CampState", SHADER_PARAM::INT_3 });
 
 	pShader->Create(SHADER_POV::FORWARD);
 
@@ -813,10 +811,9 @@ void CResMgr::CreateDefaultShader()
 	// 트레일
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\trail.fx", "VS_Trail", "vs_5_0");
-	//pShader->CreateGeometryShader(L"Shader\\trail.fx", "GS_Trail", "gs_5_0");
 	pShader->CreatePixelShader(L"Shader\\trail.fx", "PS_Trail", "ps_5_0");
 
-	pShader->SetBlendState(BLEND_TYPE::ONEBLEND); // 알파 블랜드 사용
+	pShader->SetBlendState(BLEND_TYPE::ONEBLEND);
 	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
 
 	pShader->Create(SHADER_POV::FORWARD);
@@ -825,9 +822,21 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"TrailShader", pShader);
 
-	//pShader = new CShader;
-	//pShader->CreateComputeShader(L"Shader\\trail.fx", "CS_TrailUpdate", "cs_5_0");
-	//AddRes(L"TrailUpdateShader", pShader);
+
+	// 글씨쓰기
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\font.fx", "VS_FONT", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\font.fx", "PS_FONT", "ps_5_0");
+
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	pShader->AddShaderParam(tShaderParam{ L"Font Texture", SHADER_PARAM::TEX_0 });
+
+	AddRes(L"FontShader", pShader);
+
+
 
 	// ======================
 	// Particle Update Shader
@@ -1066,10 +1075,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CShader>(L"TrailShader"));
 	AddRes(L"TrailMtrl", pMtrl);
 
-	//pMtrl = new CMaterial;
-	//pMtrl->DisableFileSave();
-	//pMtrl->SetShader(FindRes<CShader>(L"TrailUpdateShader"));
-	//AddRes(L"TrailUpdateMtrl", pMtrl);
+	// 글씨쓰기
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"FontShader"));
+	AddRes(L"FontMtrl", pMtrl);
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype
@@ -1135,3 +1145,4 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 
 	return pMeshData;
 }
+

@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "ResMgr.h"
 #include "Animator3D.h"
+#include "Animator2D.h"
 
 
 CMeshRender::CMeshRender()
@@ -49,6 +50,12 @@ void CMeshRender::Render()
 			a = 1;
 			m_vecMtrl[i]->SetData(SHADER_PARAM::INT_0, &a); // Animation Mesh ¾Ë¸®±â
 		}
+
+		if (Animator2D())
+		{
+			Animator2D()->UpdateData();
+		}
+
 		m_vecMtrl[i]->UpdateData();
 		m_pMesh->Render((UINT)i);
 		a = 0;

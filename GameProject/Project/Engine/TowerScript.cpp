@@ -9,6 +9,8 @@
 #include "ProjectileScript.h"
 #include "MeshRender.h"
 
+#include "FontMgr.h"
+
 void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 {
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_Key, _Key);
@@ -184,10 +186,13 @@ void CTowerScript::Update()
 
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_uiCurHp);
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCampState);
 }
 
 void CTowerScript::FinalUpdate()
 {
+
+	CFontMgr::GetInst()->RenderText(L"FONTTEST", Vec3(0.f, 0.f, 1.f), Vec3(1.f, 1.f, 1.f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 }
 
 void CTowerScript::OnDetectionEnter(CGameObject* _pOther)

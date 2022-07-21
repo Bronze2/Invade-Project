@@ -191,6 +191,8 @@ call EngineCopy.bat</Command>
     <ClInclude Include="EmptyCameraScript.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontMgr.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="IMGUIMgr.h" />
@@ -293,6 +295,8 @@ call EngineCopy.bat</Command>
     <ClCompile Include="EmptyCameraScript.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontMgr.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="IMGUIMgr.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
@@ -398,6 +402,7 @@ call EngineCopy.bat</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="font.fx" />
     <FxCompile Include="func.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

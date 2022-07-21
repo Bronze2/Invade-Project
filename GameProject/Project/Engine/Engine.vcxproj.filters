@@ -37,6 +37,9 @@
     <FxCompile Include="trail.fx">
       <Filter>FX</Filter>
     </FxCompile>
+    <FxCompile Include="font.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation3D.cpp">
@@ -302,6 +305,12 @@
     </ClCompile>
     <ClCompile Include="Trail.cpp">
       <Filter>Object\Component\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="FontMgr.cpp">
+      <Filter>Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +592,12 @@
     </ClInclude>
     <ClInclude Include="Trail.h">
       <Filter>Object\Component\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="FontMgr.h">
+      <Filter>Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

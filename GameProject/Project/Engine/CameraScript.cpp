@@ -15,7 +15,15 @@ void CCameraScript::Update()
         Vec3 vRot = Transform()->GetLocalRot();
 
         if (KEY_TAB(KEY_TYPE::KEY_NUM0)) {
-            Init();
+            if (m_tEffectType == CAMERA_EFFECT_TYPE::ZOOMIN) {
+                vPos = m_vRestorePos;
+                m_vRestorePos = vPos;
+                m_vZoomRestoreFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+                m_fShakeNum = 1.0f;
+            }
+            else {
+                Init();
+            }
             m_tEffectType = CAMERA_EFFECT_TYPE::SHAKING;
         }
 

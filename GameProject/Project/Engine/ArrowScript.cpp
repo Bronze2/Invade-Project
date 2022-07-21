@@ -167,6 +167,7 @@ void CArrowScript::Update()
 			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			m_vXZDir.Normalize();
 			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
+			m_fAngle -= PI / 9;
 			//m_fSpeed = 1000;
 
 			m_fTime += DT;

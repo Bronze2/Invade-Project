@@ -487,10 +487,11 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\thunderhead.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\firehead.fbx");
+			//CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
 		}
 	}
@@ -506,10 +507,10 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\thunderhead.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\firehead.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
 		}
 	}

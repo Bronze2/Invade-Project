@@ -45,9 +45,12 @@ void CBowScript::Update()
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 2000.f * DT;
-		if (m_fArrowSpeed > 1000.f) {
-			m_fArrowSpeed = 1000.f;
+		m_fArrowSpeed += 3000.f * DT;
+		if (m_fArrowSpeed < 1500.f) {
+			m_fArrowSpeed = 1500.f;
+		}
+		else if (m_fArrowSpeed > 3000.f) {
+			m_fArrowSpeed = 3000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
 	}
@@ -70,10 +73,6 @@ void CBowScript::Update()
 		//Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
 		Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		// -30.f´Â pMainCamÀÇ GetLocalPos.z
 		Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
-
-		Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
-		vArrowDir.y = vCrossHairDir.y;
-		vArrowDir.Normalize();
 	
 		m_pArrow[m_iCurArrow]->ClearParent();
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);

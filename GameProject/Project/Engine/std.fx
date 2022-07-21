@@ -191,15 +191,25 @@ TEX_OUTPUT VS_HPTex(TEX_INPUT _input)
 float4 PS_HPTex(TEX_OUTPUT _input) : SV_Target
 {
     float4 vColor = (float4) 0.f;
-    
+
 
     float fRatio = (float)g_int_0 / (float)g_int_1;
 
-    if (_input.vUV.x >= fRatio) {
-        vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+    if (g_int_2 == 0) {
+        if (_input.vUV.x >= fRatio) {
+            vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+        }
+        else {
+            vColor = float4(1.f, 0.f, 0.f, 1.f);
+        }
     }
     else {
-        vColor = float4(1.f, 0.f, 0.f, 1.f);
+        if ((1.f - _input.vUV.x) >= fRatio) {
+            vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+        }
+        else {
+            vColor = float4(1.f, 0.f, 0.f, 1.f);
+        }
     }
 
     return vColor;
