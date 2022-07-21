@@ -342,11 +342,13 @@ void CSceneMgr::Update()
 
 	// rendermgr 카메라 초기화
 	//CRenderMgr::GetInst()->RegisterCamera(CRenderMgr::GetInst()->GetCamera());
-	CRenderMgr::GetInst()->ClearCamera();
 	Network::GetInst()->RecvData();
 
 	m_pCurScene->Update();
 	m_pCurScene->LateUpdate();
+
+	//CIMGUIMgr::GetInst()->Progress();
+	CRenderMgr::GetInst()->ClearCamera();
 
 	m_pCurScene->FinalUpdate();
 

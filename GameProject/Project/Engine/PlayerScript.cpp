@@ -714,7 +714,8 @@ void CPlayerScript::Awake()
 	if (m_eCamp == CAMP_STATE::BLUE) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\head_vertex.fbx");
+			
 			break;
 		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");

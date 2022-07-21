@@ -604,14 +604,16 @@ void CInGameScene::Init()
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\baseMap.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\lowpolyTet.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(-150.f, -200.f, -150.f));
+//	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(0, PI / 2, 0.f));
+
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
 	FindLayer(L"Default")->AddGameObject(pObject);

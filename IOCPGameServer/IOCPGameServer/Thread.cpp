@@ -312,7 +312,6 @@ void CThread::process_packet(int user_id, char* buf)
 	{	cs_packet_enter_room* packet = reinterpret_cast<cs_packet_enter_room*>(buf);
 		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
 		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
-		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::RED;
 		//ÆÀ Á¤º¸ °»½Å
 		CServer::GetInst()->send_lobby_team_packet(packet->room_id, user_id);
 

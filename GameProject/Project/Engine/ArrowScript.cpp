@@ -150,7 +150,7 @@ void CArrowScript::Update()
 
 		if (m_isMain) {
 
-			if (Transform()->GetWorldPos().y < 2.f)
+			if (Transform()->GetWorldPos().y < 0.f)
 			{
 				m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 
@@ -184,6 +184,17 @@ void CArrowScript::Update()
 			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			m_vXZDir.Normalize();
 			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
+			//cout <<"전" <<m_fAngle << endl;
+
+			m_fAngle -= PI / 8;
+			
+			m_fAngle = 0.05f;
+
+			//cout << "후" << m_fAngle << endl;
+
+			//m_fAngle = 0;
+
+			
 			//m_fSpeed = 1000;
 
 			m_fTime += DT;
@@ -222,6 +233,26 @@ void CArrowScript::Update()
 				
 			}
 
+			if (nullptr != m_pSkill) {
+				if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+					if (vPos.y <= 1.f) {
+
+						Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
+						vPos3.y = 1.f;
+						CreateThunderObject(vPos3, m_iLayerIdx);
+						Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+					}
+				}
+				else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+					if (vPos.y <= 1.f) {
+						Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+						vPos3.y = 1.f;
+						CreateBoomParticleObject(vPos3, L"smokeparticle");
+						//Collision();
+						Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+					}
+				}
+			}
 			Transform()->SetLocalPos(vPos);
 			Network::GetInst()->send_update_arrow_move(m_id, vPos, m_qRot);
 

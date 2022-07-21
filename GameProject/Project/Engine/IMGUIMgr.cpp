@@ -151,10 +151,10 @@ void CIMGUIMgr::Init()
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 255.0f;
     }
 
-    ImFont* mdFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
+    ImFont* mdFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\HancomEQN.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
     
     // create descriptor heap
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
@@ -184,7 +184,7 @@ void CIMGUIMgr::Init()
     GPU_Handle = m_pHeap->GetGPUDescriptorHandleForHeapStart();
     GPU_Handle.ptr += (handleIncrement * descriptor_index);
 
-    m_pTexture->Load(L"Texture\\background.png", cpu_handle);
+    m_pTexture->Load(L"Texture\\BackGround_Test.png", cpu_handle);
 
     show_login = true;
 
@@ -193,8 +193,8 @@ void CIMGUIMgr::load_styles()
 {
     ImVec4* colors = ImGui::GetStyle().Colors;
     {
-        colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f,0.50f);  //윈도우 배경 색깔
-
+        //colors[ImGuiCol_WindowBg] = ImVec4(255.06f, 255.06f, 0.06f, 200.50f);  //윈도우 배경 색깔
+        colors[ImGuiCol_WindowBg] = ImColor(11, 11, 11, 123); //윈도우 배경 색깔
         colors[ImGuiCol_FrameBg] = ImColor(11, 11, 11, 123);    //Frame 배경 색깔
         colors[ImGuiCol_FrameBgHovered] = ImColor(11, 11, 11, 123);
 
@@ -207,7 +207,7 @@ void CIMGUIMgr::load_styles()
         //    colors[ImGuiCol_ButtonActive] = ImColor(255, 0, 46, SUserInformaions.button_opacity);
         //    colors[ImGuiCol_ButtonHovered] = ImColor(255, 0, 46, SUserInformaions.button_opacity);
         colors[ImGuiCol_TextDisabled] = ImVec4(1.f, 1.f, 1.f, 1.00f);
-        colors[ImGuiCol_Text] = ImVec4(0.f, 0.f, 0.f, 1.00f);
+        colors[ImGuiCol_Text] = ImVec4(255.f, 255.f, 255.f, 1.00f);
     }
 
     ImGuiStyle* style = &ImGui::GetStyle();
@@ -219,9 +219,13 @@ void CIMGUIMgr::load_styles()
         style->FrameRounding = 3.f;
         style->FrameBorderSize = 1.f;
     }
-    if (SCENE_TYPE::INGAME == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
+    if (SCENE_TYPE::LOBBY == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
         ImGuiIO& io = ImGui::GetIO();
         
+    }
+    else if (SCENE_TYPE::INGAME == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
+        ImGuiIO& io = ImGui::GetIO();
+
     }
 }
 
@@ -256,43 +260,43 @@ void CIMGUIMgr::Progress()
                     if (show_login)
                     {
                         ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
-                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 170, m_tResloution.fHeight / 2 - 200));//35
-                        ImGui::Text("Log into your account");
+                        //ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 170, m_tResloution.fHeight / 2 - 200));//35
+                       // ImGui::Text("Log into your account");
 
                         ImGui::PushItemWidth(260.f);
                         {
-                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, m_tResloution.fHeight / 2 - 148));
+                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155 , m_tResloution.fHeight / 2 + 38));
                             ImGui::TextDisabled("Username");
 
-                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 223, m_tResloution.fHeight / 2 - 128));//95
+                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 153 , m_tResloution.fHeight / 2 + 58));//95
                             ImGui::InputText("##Username", UserInformations.m_cUserName, IM_ARRAYSIZE(UserInformations.m_cUserName));
                         }
                         ImGui::PopItemWidth();
 
                         ImGui::PushItemWidth(260.f);
                         {
-                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, m_tResloution.fHeight / 2 - 77));//130
+                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 108));//130
                             ImGui::TextDisabled("Password");
 
 
-                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 223, m_tResloution.fHeight / 2 - 57));
+                            ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 153, m_tResloution.fHeight / 2 + 128));
                             //ImGui::SetCursorPos(ImVec2(20, 146));
                             ImGui::InputText("##Passowrd", UserInformations.m_cUserPassWord, IM_ARRAYSIZE(UserInformations.m_cUserPassWord));
                         }
                         ImGui::PopItemWidth();
-                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, m_tResloution.fHeight / 2 + 10));//130
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 220));//130
                //         ImGui::SetCursorPos(ImVec2(22, 190));
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                         {
                             //로그인 버튼  클릭시
                             show_login = false;
-                            m_pTextureLobby->Load(L"Texture\\bow_big.png", cpu_handle);
+                            //m_pTextureLobby->Load(L"Texture\\bow_big.png", cpu_handle);
 
                             Network::GetInst()->send_login_packet(UserInformations.m_cUserName, UserInformations.m_cUserPassWord);
                         }
                         ImGui::PopStyleVar();
-                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 225, m_tResloution.fHeight / 2 + 50));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 280));
                         //ImGui::SetCursorPos(ImVec2(22, 220));
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Register", ImVec2(260.f, 30.f)))
@@ -477,57 +481,67 @@ void CIMGUIMgr::Progress()
 
         ImGui::End();
     }
-    else if (SCENE_TYPE::INGAME == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
+    else if (SCENE_TYPE::LOBBY == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
         if (!doOnce)
         {
             load_styles();
             doOnce = true;
         }
-        ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth/3-200, m_tResloution.fHeight/3+10));
-        ImGui::SetNextWindowPos(ImVec2(50, m_tResloution.fHeight/2+100));
+        //ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth/3-200, m_tResloution.fHeight/3+10));
+        //ImGui::SetNextWindowPos(ImVec2(50, m_tResloution.fHeight/2+100));
+
+        //ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth / 3 - 200, m_tResloution.fHeight/2));
+       //ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth , m_tResloution.fHeight));
+
+       // ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth / 3 - 200, m_tResloution.fHeight / 3 + 10));
+        ImGui::SetNextWindowPos(ImVec2(50, m_tResloution.fHeight / 2 + 100));
         bool bOpen = true;
         if (ImGui::Begin("Chat", &bOpen, iw.window_flags)) {
             ImGui::BeginChild("Chat", ImVec2(300, 300));
-  // 채팅치면 위에 그려주는듯?          ImGui::Text(chatItems);
-          //  Ptr<CTexture> Images = CResMgr::GetInst()->FindRes<CTexture>(L"TestTex");
-           // ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
+            // 채팅치면 위에 그려주는듯?          ImGui::Text(chatItems);
+                    //  Ptr<CTexture> Images = CResMgr::GetInst()->FindRes<CTexture>(L"TestTex");
+                     // ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
 
 
             ImGui::EndChild();
             bool reclaim_focus = false;
-            ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
+            //ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
             if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
-              
+
                 if (!bChat) {
-                    ImGui::SetKeyboardFocusHere(0);
+                    if (!ImGui::IsAnyItemActive())
+                        ImGui::SetKeyboardFocusHere(0);
                     bChat = true;
-                  
+
                 }
                 else {
                     bChat = false;
-           
-                  
-                  
+                    ImGui::SetItemDefaultFocus();
+
+                    ImGui::SetKeyboardFocusHere(-1);
                 }
-               
+
             }
 
             if (bChat) {
                 if (ImGui::InputText("", buffer, IM_ARRAYSIZE(buffer)))
                 {
-                    //          ImGui::SetKeyboardFocusHere(-1);
-                }
 
+                }
+                //     ImGui::SetKeyboardFocusHere(-1);
             }
 
-            ImGui::SetKeyboardFocusHere(-1);
-           
+
+
 
         }
         ImGui::End();
 
+
+
     }
-    else if (SCENE_TYPE::LOBBY == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
+    else if (SCENE_TYPE::INGAME == CSceneMgr::GetInst()->GetCurScene()->GetCurScene()) {
     }
 
     CMDLIST->SetDescriptorHeaps(1, &m_pHeap);
