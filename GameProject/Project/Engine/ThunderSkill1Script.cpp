@@ -24,19 +24,19 @@ void CThunderSkill1Script::Collision()
 			if (Radius < 400.f)
 			{
 				if (TickCheck(m_pSkill->StartTime, m_pSkill->Count) != m_pSkill->Count) {
-					if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
+					if (nullptr != vecObj[j]->GetScript<CPlayerScript>())
 					{
-						if (m_eCampState!=vecObj[i]->GetScript<CPlayerScript>()->GetCampState()) {
-							vecObj[i]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
+						if (m_eCampState!=vecObj[j]->GetScript<CPlayerScript>()->GetCampState()) {
+							vecObj[j]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
 						}
 						
 
 					}
-					else if (nullptr != vecObj[i]->GetScript<CMinionScript>()) {
-						if (m_eCampState != vecObj[i]->GetScript<CMinionScript>()->GetCamp()) {
-							vecObj[i]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+					else if (nullptr != vecObj[j]->GetScript<CMinionScript>()) {
+						if (m_eCampState != vecObj[j]->GetScript<CMinionScript>()->GetCamp()) {
+							vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
 						}
-						
+						vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
 					}
 				}
 			}
