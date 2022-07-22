@@ -12,7 +12,7 @@ struct VTX_FONT_INPUT
 
 struct VTX_FONT_OUTPUT
 {
-	float4 vPos : SV_POSITION;
+	float4 vPos : SV_Position;
 	float2 vUV : TEXCOORD;
 	float4 vColor : COLOR;
 };
@@ -24,6 +24,13 @@ VTX_FONT_OUTPUT VS_FONT(VTX_FONT_INPUT _input, uint vertexID : SV_VertexID)
 	float2 uv = float2(vertexID & 1, (vertexID >> 1) & 1);
 
 	output.vPos = float4(_input.vPos.x + (_input.vPos.z * uv.x), _input.vPos.y - (_input.vPos.w * uv.y), 0, 1);
+	////float4 vTempPos = flaoat4(_input.vPos.x + (_input.vPos.z * uv.x), _input.vPos.y - (_input.vPos.w * uv.y), 0, 1));
+	//float4 vTempPos = float4(0.f, 0.f, 0.f, 1.f);
+	//float4 vWorldPos = mul(vTempPos, g_matWorld);
+	//float4 vViewPos = mul(vWorldPos, g_matView);
+	//float4 vProjPos = mul(vViewPos, g_matProj);
+	//output.vPos = vProjPos;
+	
 	output.vColor = _input.vColor;
 
 	output.vUV = float2(_input.vUV.x + (_input.vUV.z * uv.x), _input.vUV.y + (_input.vUV.w * uv.y));
@@ -35,6 +42,7 @@ float4 PS_FONT(VTX_FONT_OUTPUT _input) : SV_Target
 {
 	float4 vColor = (float4)0.f;
 	vColor = (_input.vColor.rgb, _input.vColor.a * g_tex_0.Sample(g_sam_0, _input.vUV).a);
+	//vColor = float4(1.f, 0.f, 1.f, 1.f);
 	return vColor;
 }
 

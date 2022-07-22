@@ -11,6 +11,7 @@
 #include "EventMgr.h"
 #include "InstancingMgr.h"
 #include "MRT.h"
+#include "FontMgr.h"
 
 CGameFramework::CGameFramework():m_hMainhWnd(nullptr) {
 
@@ -54,6 +55,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 
 	CSceneMgr::GetInst()->Init();
 	
+	CFontMgr::GetInst()->Init();
 
 	CEventMgr::GetInst()->Init();
 	CIMGUIMgr::GetInst()->Init();

@@ -124,8 +124,13 @@ CSceneMgr::~CSceneMgr()
 void CSceneMgr::Init()
 {
 	// 글씨쓰기
-	CFontMgr::GetInst()->SetFont(CResMgr::GetInst()->Load<CFont>(L"Font", L"Font03.fnt"));
-	CFontMgr::GetInst()->GetFont()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FontMtrl"));
+	//CFontMgr::GetInst()->SetFont(CResMgr::GetInst()->Load<CFont>(L"Font", L"Font03.fnt"));
+	//CFontMgr::GetInst()->GetFont()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FontMtrl"));
+	//Ptr<CTexture> pFontTex = CResMgr::GetInst()->Load<CTexture>(L"FontTex", L"Font03.png");
+	//CFontMgr::GetInst()->GetFont()->SetTexture(pFontTex);
+	//CFontMgr::GetInst()->GetFont()->GetMaterial()->SetData(SHADER_PARAM::TEX_0, pFontTex.GetPointer());
+	//CFontMgr::GetInst()->GetFont()->CreateVB();
+	//cout << "FontTex Load Complete!" << endl;
 
 	// 로비씬
 	CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
@@ -344,7 +349,6 @@ void CSceneMgr::Update()
 	CSensorMgr::GetInst()->Update();
 	// �浹 ó��
 	CCollisionMgr::GetInst()->Update();
-
 }
 
 void CSceneMgr::Update_Tool()

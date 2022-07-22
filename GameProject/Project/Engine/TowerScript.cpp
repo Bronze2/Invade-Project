@@ -108,7 +108,6 @@ void CTowerScript::Init()
 	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
 	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 	GetObj()->AddChild(m_pHPBar);
-	wcout << m_CampName << endl;
 }
 
 void CTowerScript::SetSecondTower(CGameObject* _pGameObject)
@@ -191,8 +190,6 @@ void CTowerScript::Update()
 
 void CTowerScript::FinalUpdate()
 {
-
-	CFontMgr::GetInst()->RenderText(L"FONTTEST", Vec3(0.f, 0.f, 1.f), Vec3(1.f, 1.f, 1.f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 }
 
 void CTowerScript::OnDetectionEnter(CGameObject* _pOther)

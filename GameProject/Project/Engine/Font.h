@@ -25,11 +25,20 @@ private:
 	float m_fBottomPadding;
 
 	int m_iMaxNumTextCharacters;			// 프레임당 그릴 최대 글자 수
-	ComPtr<ID3D12Resource> m_pTextVB[3];
-	D3D12_VERTEX_BUFFER_VIEW m_tTextVtxView[3];
-	UINT8* m_TextVBGPUAddress[3];
+	ComPtr<ID3D12Resource> m_pTextBuffer;
+	D3D12_VERTEX_BUFFER_VIEW m_tTextVtxView;
+	UINT8* m_TextVBGPUAddress;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvHandle; // the font srv
 
 	Ptr<CMaterial> m_pMtrl;
+	Ptr<CTexture> m_pTex;
+
+	UINT srvHandleSize;
+
+	ComPtr<ID3D12Resource> textVertexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW textVertexBufferView; // a view for our text vertex buffer
+	UINT8* textVBGPUAddress; // this is a pointer to each of the text constant buffers
+
 
 public:
 	CFont();
@@ -39,10 +48,15 @@ public:
 	tFontChar* GetChar(wchar_t c);
 
 	void LoadFont(LPCWSTR filename);
-	void Render(wstring text, Vec3 vPos, Vec3 vScale, Vec2 vPadding, Vec4 vColor);
+	void Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor);
+
+	void CreateVB();
+	void CreateSrv();
 
 	void SetMaterial(Ptr<CMaterial> _pMtrl) { m_pMtrl = _pMtrl; }
 	Ptr<CMaterial> GetMaterial() { return m_pMtrl; }
+	void SetTexture(Ptr<CTexture> _pTex) { m_pTex = _pTex; }
+	Ptr<CTexture> GetTexture() { return m_pTex; }
 
 	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath);

@@ -10,35 +10,9 @@ void CFont::Load(const wstring& _strFullPath)
     LoadFont(_strFullPath.c_str());
     cout << "Font Load Complete!" << endl;
 
-    CResMgr::GetInst()->Load<CTexture>(L"FontTex", m_fontImage);
-    cout << "FontTex Load Complete!" << endl;
-
-    // 정점버퍼 만들기
-
-    for (int i = 0; i < 3; ++i) {
-        ID3D12Resource* vBufferUploadHeap;
-        CD3DX12_HEAP_PROPERTIES value = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-        CD3DX12_RESOURCE_DESC value2 = CD3DX12_RESOURCE_DESC::Buffer(m_iMaxNumTextCharacters * sizeof(TextVTX));
-        DEVICE->CreateCommittedResource(
-            &value, // upload heap
-            D3D12_HEAP_FLAG_NONE, // no flags
-            &value2, // resource description for a buffer
-            D3D12_RESOURCE_STATE_GENERIC_READ, // GPU will read from this buffer and copy its contents to the default heap
-            nullptr,
-            IID_PPV_ARGS(&m_pTextVB[i]));
-
-        m_pTextVB[i]->SetName(L"Text Vertex Buffer Upload Resource Heap");
-
-        UINT8* pVertexDataBegin = nullptr;
-        D3D12_RANGE readRange{ 0, 0 };
-        m_pTextVB[i]->Map(0, &readRange, reinterpret_cast<void**>(&m_TextVBGPUAddress[i]));
-    }
-
-    for (int i = 0; i < 3; ++i) {
-        m_tTextVtxView[i].BufferLocation = m_pTextVB[i]->GetGPUVirtualAddress();
-        m_tTextVtxView[i].StrideInBytes = sizeof(TextVTX);
-        m_tTextVtxView[i].SizeInBytes = m_iMaxNumTextCharacters * sizeof(TextVTX);
-    }
+    //Ptr<CTexture> pFontTex = CResMgr::GetInst()->Load<CTexture>(L"FontTex", m_fontImage);
+    //m_pMtrl->SetData(SHADER_PARAM::TEX_0, &pFontTex);
+    //cout << "FontTex Load Complete!" << endl;
 }
 
 void CFont::Save(const wstring& _strPath)
@@ -211,7 +185,202 @@ void CFont::LoadFont(LPCWSTR filename)
     }
 }
 
-void CFont::Render(wstring text, Vec3 vPos, Vec3 vScale, Vec2 vPadding, Vec4 vColor)
+void CFont::CreateVB()
+{
+    // 정점버퍼 만들기
+
+    /*
+    for (int i = 0; i < 3; ++i) {
+        ID3D12Resource* vBufferUploadHeap;
+        CD3DX12_HEAP_PROPERTIES value = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        CD3DX12_RESOURCE_DESC value2 = CD3DX12_RESOURCE_DESC::Buffer(m_iMaxNumTextCharacters * sizeof(TextVTX));
+        DEVICE->CreateCommittedResource(
+            &value, // upload heap
+            D3D12_HEAP_FLAG_NONE, // no flags
+            &value2, // resource description for a buffer
+            D3D12_RESOURCE_STATE_GENERIC_READ, // GPU will read from this buffer and copy its contents to the default heap
+            nullptr,
+            IID_PPV_ARGS(&m_pTextVB[i]));
+
+        m_pTextVB[i]->SetName(L"Text Vertex Buffer Upload Resource Heap");
+
+        D3D12_RANGE readRange{ 0, 0 };
+        m_pTextVB[i]->Map(0, &readRange, reinterpret_cast<void**>(&m_TextVBGPUAddress[i]));
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        m_tTextVtxView[i].BufferLocation = m_pTextVB[i]->GetGPUVirtualAddress();
+        m_tTextVtxView[i].StrideInBytes = sizeof(TextVTX);
+        m_tTextVtxView[i].SizeInBytes = m_iMaxNumTextCharacters * sizeof(TextVTX);
+    }
+    */
+
+    /*
+    D3D12_RESOURCE_DESC fontTextureDesc;
+    int fontImageBytesPerRow;
+    BYTE* fontImageData;
+    int fontImageSize = LoadImageDataFromFile(&fontImageData, fontTextureDesc, m_fontImage.c_str(), fontImageBytesPerRow);
+
+    // create the font texture resource
+    DEVICE->CreateCommittedResource(
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        D3D12_HEAP_FLAG_NONE,
+        &fontTextureDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        nullptr,
+        IID_PPV_ARGS(&m_pTextBuffer));
+   
+    m_pTextBuffer->SetName(L"Font Texture Buffer Resource Heap");
+
+    ComPtr<ID3D12Resource> fontTextureBufferUploadHeap;
+    UINT64 fontTextureUploadBufferSize;
+    DEVICE->GetCopyableFootprints(&fontTextureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &fontTextureUploadBufferSize);
+
+    // create an upload heap to copy the texture to the gpu
+    DEVICE->CreateCommittedResource(
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+        D3D12_HEAP_FLAG_NONE, // no flags
+        &CD3DX12_RESOURCE_DESC::Buffer(fontTextureUploadBufferSize),
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&fontTextureBufferUploadHeap));
+   
+    fontTextureBufferUploadHeap->SetName(L"Font Texture Buffer Upload Resource Heap");
+
+    // store font image in upload heap
+    D3D12_SUBRESOURCE_DATA fontTextureData = {};
+    fontTextureData.pData = &fontImageData[0]; // pointer to our image data
+    fontTextureData.RowPitch = fontImageBytesPerRow; // size of all our triangle vertex data
+    fontTextureData.SlicePitch = fontImageBytesPerRow * fontTextureDesc.Height; // also the size of our triangle vertex data
+
+    // Now we copy the upload buffer contents to the default heap
+    UpdateSubresources(CMDLIST_RES.Get(), m_pTextBuffer.Get(), fontTextureBufferUploadHeap.Get(), 0, 0, 1, &fontTextureData);
+
+
+    // transition the texture default heap to a pixel shader resource (we will be sampling from this heap in the pixel shader to get the color of pixels)
+    CMDLIST->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_pTextBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+    // create an srv for the font
+    D3D12_SHADER_RESOURCE_VIEW_DESC fontsrvDesc = {};
+    fontsrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    fontsrvDesc.Format = fontTextureDesc.Format;
+    fontsrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    fontsrvDesc.Texture2D.MipLevels = 1;
+
+    // we need to get the next descriptor location in the descriptor heap to store this srv
+    srvHandleSize = DEVICE->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    srvHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(DEVICE->Get->GetGPUDescriptorHandleForHeapStart(), 1, srvHandleSize);
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE srvHandle(mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 1, srvHandleSize);
+    DEVICE->CreateShaderResourceView(m_pTextBuffer.Get(), &fontsrvDesc, srvHandle);
+
+    // create text vertex buffer committed resources
+
+    for (int i = 0; i < 2; ++i)
+    {
+        // create upload heap. We will fill this with data for our text
+        ID3D12Resource* vBufferUploadHeap;
+        DEVICE->CreateCommittedResource(
+            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // upload heap
+            D3D12_HEAP_FLAG_NONE, // no flags
+            &CD3DX12_RESOURCE_DESC::Buffer(m_iMaxNumTextCharacters * sizeof(TextVTX)), // resource description for a buffer
+            D3D12_RESOURCE_STATE_GENERIC_READ, // GPU will read from this buffer and copy its contents to the default heap
+            nullptr,
+            IID_PPV_ARGS(&textVertexBuffer[i]));
+        
+        textVertexBuffer[i]->SetName(L"Text Vertex Buffer Upload Resource Heap");
+
+        CD3DX12_RANGE readRange(0, 0);    // We do not intend to read from this resource on the CPU. (so end is less than or equal to begin)
+
+        // map the resource heap to get a gpu virtual address to the beginning of the heap
+        textVertexBuffer[i]->Map(0, &readRange, reinterpret_cast<void**>(&m_TextVBGPUAddress[i]));
+    }
+    */
+
+    ID3D12Resource* vBufferUploadHeap;
+    CD3DX12_HEAP_PROPERTIES value = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC value2 = CD3DX12_RESOURCE_DESC::Buffer(m_iMaxNumTextCharacters * sizeof(TextVTX));
+    DEVICE->CreateCommittedResource(
+        &value, // upload heap
+        D3D12_HEAP_FLAG_NONE, // no flags
+        &value2, // resource description for a buffer
+        D3D12_RESOURCE_STATE_GENERIC_READ, // GPU will read from this buffer and copy its contents to the default heap
+        nullptr,
+        IID_PPV_ARGS(&textVertexBuffer));
+
+   // textVertexBuffer->SetName(L"Text Vertex Buffer Upload Resource Heap");
+
+    D3D12_RANGE readRange{ 0, 0 };
+    textVertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_TextVBGPUAddress));
+
+    m_tTextVtxView.BufferLocation = textVertexBuffer->GetGPUVirtualAddress();
+    m_tTextVtxView.StrideInBytes = sizeof(TextVTX);
+    m_tTextVtxView.SizeInBytes = m_iMaxNumTextCharacters * sizeof(TextVTX);
+}
+
+void CFont::CreateSrv()
+{
+    //// Load the image from file
+    //D3D12_RESOURCE_DESC fontTextureDesc;
+    //int fontImageBytesPerRow;
+    //BYTE* fontImageData;
+    //int fontImageSize = LoadImageDataFromFile(&fontImageData, fontTextureDesc, arialFont.fontImage.c_str(), fontImageBytesPerRow);
+
+    //// create the font texture resource
+    //DEVICE->CreateCommittedResource(
+    //    &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+    //    D3D12_HEAP_FLAG_NONE,
+    //    &fontTextureDesc,
+    //    D3D12_RESOURCE_STATE_COPY_DEST,
+    //    nullptr,
+    //    IID_PPV_ARGS(&textureBuffer));
+   
+
+    //textureBuffer->SetName(L"Font Texture Buffer Resource Heap");
+
+    //ID3D12Resource* fontTextureBufferUploadHeap;
+    //UINT64 fontTextureUploadBufferSize;
+    //DEVICE->GetCopyableFootprints(&fontTextureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &fontTextureUploadBufferSize);
+
+    //// create an upload heap to copy the texture to the gpu
+    //DEVICE->CreateCommittedResource(
+    //    &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+    //    D3D12_HEAP_FLAG_NONE, // no flags
+    //    &CD3DX12_RESOURCE_DESC::Buffer(fontTextureUploadBufferSize),
+    //    D3D12_RESOURCE_STATE_GENERIC_READ,
+    //    nullptr,
+    //    IID_PPV_ARGS(&fontTextureBufferUploadHeap));
+
+    //fontTextureBufferUploadHeap->SetName(L"Font Texture Buffer Upload Resource Heap");
+
+    //// store font image in upload heap
+    //D3D12_SUBRESOURCE_DATA fontTextureData = {};
+    //fontTextureData.pData = &fontImageData[0]; // pointer to our image data
+    //fontTextureData.RowPitch = fontImageBytesPerRow; // size of all our triangle vertex data
+    //fontTextureData.SlicePitch = fontImageBytesPerRow * fontTextureDesc.Height; // also the size of our triangle vertex data
+
+    //// Now we copy the upload buffer contents to the default heap
+    //UpdateSubresources(CMDLIST, arialFont.textureBuffer, fontTextureBufferUploadHeap, 0, 0, 1, &fontTextureData);
+
+    //// transition the texture default heap to a pixel shader resource (we will be sampling from this heap in the pixel shader to get the color of pixels)
+    //CMDLIST->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(arialFont.textureBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+    //// create an srv for the font
+    //D3D12_SHADER_RESOURCE_VIEW_DESC fontsrvDesc = {};
+    //fontsrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    //fontsrvDesc.Format = fontTextureDesc.Format;
+    //fontsrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    //fontsrvDesc.Texture2D.MipLevels = 1;
+
+    //// we need to get the next descriptor location in the descriptor heap to store this srv
+    //srvHandleSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    //arialFont.srvHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(mainDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), 1, srvHandleSize);
+
+    //CD3DX12_CPU_DESCRIPTOR_HANDLE srvHandle(mainDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 1, srvHandleSize);
+    //DEVICE->CreateShaderResourceView(arialFont.textureBuffer, &fontsrvDesc, srvHandle);
+}
+
+void CFont::Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor)
 {
     if (nullptr == m_pMtrl || nullptr == m_pMtrl->GetShader())
         return;
@@ -220,7 +389,9 @@ void CFont::Render(wstring text, Vec3 vPos, Vec3 vScale, Vec2 vPadding, Vec4 vCo
 
     CDevice::GetInst()->UpdateTable();
 
-    CMDLIST->IASetVertexBuffers(0, 1, &m_tTextVtxView[0]);
+    CMDLIST->IASetVertexBuffers(0, 1, &m_tTextVtxView);
+
+    //CMDLIST->SetGraphicsRootDescriptorTable(1, m_pTex->GetSRV()->GetGPUDescriptorHandleForHeapStart());
 
     // Update
     int numCharacters = 0;
@@ -235,7 +406,7 @@ void CFont::Render(wstring text, Vec3 vPos, Vec3 vScale, Vec2 vPadding, Vec4 vCo
     float verticalPadding = (m_fTopPadding + m_fBottomPadding) * vPadding.y;
 
     // cast the gpu virtual address to a textvertex, so we can directly store our vertices there
-    TextVTX* vert = (TextVTX*)m_TextVBGPUAddress[0];
+    TextVTX* vert = (TextVTX*)m_TextVBGPUAddress;
 
     wchar_t lastChar = -1; // no last character to start with
 
@@ -280,6 +451,10 @@ void CFont::Render(wstring text, Vec3 vPos, Vec3 vScale, Vec2 vPadding, Vec4 vCo
 
         lastChar = c;
     }
+
+    //for (int i = 0; i < m_iNumCharacters; ++i) {
+    //    cout << vert[i].vPos.x << ", " << vert[i].vPos.y << ", " << vert[i].vPos.z << ", " << vert[i].vPos.w << endl;
+    //}
 
     CMDLIST->DrawInstanced(4, m_iNumCharacters, 0, 0);
 }

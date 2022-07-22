@@ -46,6 +46,7 @@
 #include "SkillMgr.h" 
 #include "CrossHairScript.h"
 #include "Font.h"
+#include "FontMgr.h"
 
 void CInGameScene::Init()
 {
@@ -159,7 +160,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -1278,6 +1279,12 @@ void CInGameScene::Init()
 	////pAnimator->PlayAnimation(L"TestAnim2D", true);
 
 	//FindLayer(L"UI")->AddGameObject(pAnim2DTest);
+
+
+	// 글씨쓰기
+	CFontMgr::GetInst()->AddText(L"FoNtTEST123", Vec2(0.01f, 0.f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+	CFontMgr::GetInst()->AddText(L"220723", Vec2(0.1f, 0.7f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 0.f, 1.f));
+	CFontMgr::GetInst()->AddText(L"0123456789", Vec2(0.8f, 0.8f), Vec2(2.f, 2.f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 
 //-----------------------------------------------------------------------------------------------
 // 조명 추가

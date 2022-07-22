@@ -47,6 +47,9 @@ public:
     void CreateHullShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateDomainShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
 
+    // ±Û¾¾¾²±â
+    void CreateFontShader(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopology);
+
 
     void SetBlendState(BLEND_TYPE _eType) { m_eBlendType = _eType; }
     void SetDepthStencilType(DEPTH_STENCIL_TYPE _eType) { m_eDSType = _eType; }

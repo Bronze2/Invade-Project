@@ -830,7 +830,7 @@ void CResMgr::CreateDefaultShader()
 
 	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
-	pShader->Create(SHADER_POV::FORWARD);
+	pShader->CreateFontShader(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	pShader->AddShaderParam(tShaderParam{ L"Font Texture", SHADER_PARAM::TEX_0 });
 

@@ -124,8 +124,9 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 	Ptr<T> pRes = FindRes<T>(_strKey);
 
 	// 중복키 문제
-	if (nullptr != pRes)
+	if (nullptr != pRes && RES_TYPE::FONT != GetType<T>())
 		return pRes;
+
 	pRes = new T;
 	wstring strFullPath = CPathMgr::GetResPath();
 
