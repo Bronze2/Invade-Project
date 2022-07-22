@@ -12,13 +12,13 @@ public:
 	bool m_bWindowed;
 
 private:
-	
+
 	ComPtr<ID3D12Device> m_pDevice;
 	ComPtr<ID3D12CommandQueue> m_pCmdQueue;
-	
+
 	ComPtr<ID3D12CommandAllocator> m_pCmdAlloc;
 	ComPtr<ID3D12GraphicsCommandList> m_pCmdListGraphic;
-	
+
 	ComPtr<ID3D12CommandAllocator> m_pCmdAllocRes;
 	ComPtr<ID3D12GraphicsCommandList> m_pCmdListRes;
 
@@ -61,7 +61,7 @@ public:
 	void Render_Start(float(&_arrFloat)[4]);
 	void Render_Present();
 	void WaitForFenceEvent();
-	
+
 	void WaitForFenceEvent_CS();
 	void ClearDummyDescriptorHeap_CS();
 	void UpdateTable_CS();
@@ -91,7 +91,7 @@ private:
 	void CreateSamplerDesc();
 
 public:
-	ComPtr<ID3D12GraphicsCommandList>GetCmdList() {return m_pCmdListGraphic;}
+	ComPtr<ID3D12GraphicsCommandList>GetCmdList() { return m_pCmdListGraphic; }
 	ComPtr<ID3D12GraphicsCommandList>GetCmdListRes() { return m_pCmdListRes; }
 	ComPtr<ID3D12GraphicsCommandList>GetCmdListCompute() { return m_pCmdListCompute; }
 	ComPtr<ID3D12Device> GetDevice() { return m_pDevice; }
