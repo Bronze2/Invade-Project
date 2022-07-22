@@ -15,6 +15,7 @@
 
 #include "InGameScene.h"
 #include "Collider3D.h"
+#include "RenderMgr.h"
 #include "CollisionMgr.h"
 
 void CPlayerScript::m_FAnimation()
@@ -378,6 +379,29 @@ void CPlayerScript::Awake()
 		m_eCampState = CAMP_STATE::RED;
 	}
 
+
+	CGameObject* pDeadEffect = new CGameObject;
+	pDeadEffect->SetName(L"UISkill1");
+	pDeadEffect->FrustumCheck(false);
+	pDeadEffect->AddComponent(new CTransform);
+	pDeadEffect->AddComponent(new CMeshRender);
+
+	tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+	Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
+
+	pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.3f));
+	pDeadEffect->Transform()->SetLocalScale(vScale1);
+
+	pDeadEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pSkillMtrl = new CMaterial;
+	pSkillMtrl->DisableFileSave();
+	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexEffectShader"));
+	CResMgr::GetInst()->AddRes(L"TexEffectMtrl", pSkillMtrl);
+	pDeadEffect->MeshRender()->SetMaterial(pSkillMtrl);
+
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pDeadEffect);
+
 }
 
 void CPlayerScript::Update()
@@ -634,7 +658,7 @@ void CPlayerScript::SkillCoolTimeCheck()
 		vEndColor = Vec4(0.9f, 0.f, 0.f, 1.f);
 		break;
 	case ELEMENT_TYPE::DARK:
-		vEndColor = Vec4(75.f/255.f, 0.f, 130.f/255.f, 1.f);
+		vEndColor = Vec4(0.3f, 0.3f, 0.3f, 1.f);
 		break;
 	case ELEMENT_TYPE::THUNDER:
 		vEndColor = Vec4(0.9f, 0.9f, 0.f, 1.f);
@@ -938,6 +962,8 @@ void CPlayerScript::SetDamage(const int& _Damage)
 
 
 		m_iCurHp = 0;
+		
+
 	}
 	if (m_iCurHp > m_iMaxHp)
 		m_iCurHp = m_iMaxHp;

@@ -701,6 +701,24 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"TexShader", pShader);
 
+
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_TexEffect", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexEffect", "ps_5_0");
+
+	// BlendState 설정
+	// pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+	// DSState
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"TexEffectShader", pShader);
+
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_TexUI", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexUI", "ps_5_0");
