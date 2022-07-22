@@ -13,6 +13,7 @@ void CThunderSkill1Script::Collision()
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 
 
+	//º¯°æ
 	for (int i = (UINT)INGAME_LAYER::BLUE; i < (UINT)INGAME_LAYER::RED + 1; ++i) {
 		const vector<CGameObject*>& vecObj = pCurScene->GetLayer(i)->GetObjects();
 		for (int j = 0; j < vecObj.size(); ++j) {

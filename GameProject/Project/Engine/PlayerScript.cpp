@@ -624,9 +624,29 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 void CPlayerScript::SkillCoolTimeCheck()
 {
 	//추가 7.22
-	
+	Vec4 vEndColor;
+	switch (m_iType)
+	{
+	case ELEMENT_TYPE::WATER:
+		vEndColor = Vec4(0.f, 0.f, 0.9f, 1.f);
+		break;
+	case ELEMENT_TYPE::FIRE:
+		vEndColor = Vec4(0.9f, 0.f, 0.f, 1.f);
+		break;
+	case ELEMENT_TYPE::DARK:
+		vEndColor = Vec4(75.f/255.f, 0.f, 130.f/255.f, 1.f);
+		break;
+	case ELEMENT_TYPE::THUNDER:
+		vEndColor = Vec4(0.9f, 0.9f, 0.f, 1.f);
+		break;
+	case ELEMENT_TYPE::WIND:
+		vEndColor = Vec4(0.f, 0.9f, 0.f, 1.f);
+		break;
+	default:
+		break;
+	}
 	Vec4 vStartColor = Vec4(1.f, 1.f, 1.f, 1.f);
-	Vec4 vEndColor = Vec4(1.f, 0.f, 0.f, 1.f);
+
 	float Value = m_tESkill->fCoolTime / m_tESkill->fCoolTime;
 	if (m_tESkill->bUse) {
 		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tESkill->StartTime;

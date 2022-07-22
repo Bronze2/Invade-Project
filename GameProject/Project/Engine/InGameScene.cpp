@@ -158,7 +158,7 @@ void CInGameScene::Init()
     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
     pObject->MeshRender()->SetDynamicShadow(true);
     pObject->Sensor()->SetRadius(500.f);
-    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
+    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
 
 
     //스킬
@@ -1529,6 +1529,8 @@ void CInGameScene::Init()
    pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
    pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
    FindLayer(L"UI")->AddGameObject(pUISkill);
+
+   //add 추가
    pMtrl = new CMaterial;
    pMtrl->DisableFileSave();
    pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
