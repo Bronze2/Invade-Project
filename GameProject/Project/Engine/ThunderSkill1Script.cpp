@@ -7,47 +7,44 @@
 #include "Layer.h"
 #include "MinionScript.h"
 #include "SkillMgr.h"
+#include "InGameScene.h"
 void CThunderSkill1Script::Collision()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	CLayer* pLayer = nullptr;
-	if (L"Red" == pCurScene->GetLayer(m_iLayerIdx)->GetName())
-	{
-		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue");
-	}
-	else if (L"Blue" == pCurScene->GetLayer(m_iLayerIdx)->GetName()) {
-		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Red");
-	}
-	if (nullptr == pLayer)
-		return;
 
-	const vector<CGameObject*>& vecObj = pLayer->GetObjects();
-	for (int i = 0; i < vecObj.size(); ++i) {
-		CGameObject* pObject1 = vecObj[i];
-		CGameObject* pObject2 = GetObj();
-		Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
-		Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
-		float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
-		
 
-		if (Radius < 400.f)
-		{
-			if (TickCheck(m_pSkill->StartTime, m_pSkill->Count) != m_pSkill->Count) {
-				if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
-				{
-					vecObj[i]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
+	for (int i = (UINT)INGAME_LAYER::BLUE; i < (UINT)INGAME_LAYER::RED + 1; ++i) {
+		const vector<CGameObject*>& vecObj = pCurScene->GetLayer(i)->GetObjects();
+		for (int j = 0; j < vecObj.size(); ++j) {
+			CGameObject* pObject1 = vecObj[j];
+			CGameObject* pObject2 = GetObj();
+			Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+			Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+			float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+			if (Radius < 400.f)
+			{
+				if (TickCheck(m_pSkill->StartTime, m_pSkill->Count) != m_pSkill->Count) {
+					if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
+					{
+						if (m_eCampState!=vecObj[i]->GetScript<CPlayerScript>()->GetCampState()) {
+							vecObj[i]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
+						}
+						
 
-				}
-				else if (nullptr != vecObj[i]->GetScript<CMinionScript>()) {
-					vecObj[i]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+					}
+					else if (nullptr != vecObj[i]->GetScript<CMinionScript>()) {
+						if (m_eCampState != vecObj[i]->GetScript<CMinionScript>()->GetCamp()) {
+							vecObj[i]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+						}
+						
+					}
 				}
 			}
 		}
-				
 
-		
 	}
-	
+
+
 
 	
 	

@@ -17,7 +17,7 @@ private:
 	UINT m_iLayerIdx;
 	bool m_bStart = false;
 	Ptr<CSound> m_pSound;
-
+	CAMP_STATE m_eCampState;
 
 public:
 	void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }
@@ -26,7 +26,7 @@ public:
 	virtual ~CThunderSkill1Script();
 
 	void SetLayer(const UINT& _iLayerIdx) { m_iLayerIdx = _iLayerIdx; }
-
+	void SetCampState(const CAMP_STATE& _eState) { m_eCampState = _eState; }
 	virtual void Update();
 	virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 	void SetSound(Ptr<CSound> _pSound) { m_pSound = _pSound; }

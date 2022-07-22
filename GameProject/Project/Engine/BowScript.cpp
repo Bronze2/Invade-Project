@@ -7,7 +7,7 @@
 #include "EmptyCameraScript.h"
 #include "CrossHairScript.h"
 #include "Collider3D.h"
-
+#include "InGameScene.h"
 void CBowScript::Update()
 {
 	m_FAnimation();
@@ -187,6 +187,14 @@ void CBowScript::Init()
 	strFullPath += strPath;
 	m_pSound = new CSound;
 	m_pSound->Load3D(strFullPath);
+
+	//Ãß°¡
+	if ((UINT)INGAME_LAYER::BLUE==(UINT)GetObj()->GetLayerIdx()) {
+		m_eCampState = CAMP_STATE::BLUE;
+	}
+	else if ((UINT)INGAME_LAYER::RED == GetObj()->GetLayerIdx()) {
+		m_eCampState = CAMP_STATE::RED;
+	}
 }
 
 void CBowScript::Awake()
@@ -222,6 +230,7 @@ void CBowScript::Awake()
 		m_pArrow[i]->SetActive(false);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetLayerIdx(GetObj()->GetLayerIdx());
+		m_pArrow[i]->GetScript<CArrowScript>()->SetCamp(m_eCampState);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetType((UINT)(m_pPlayer->GetScript<CPlayerScript>()->GetType()));
 		GetObj()->AddChild(m_pArrow[i]);

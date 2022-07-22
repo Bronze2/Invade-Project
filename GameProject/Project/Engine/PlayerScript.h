@@ -76,10 +76,10 @@ private:
 
     CSound* m_pErrorSound;
 
-
+    CAMP_STATE m_eCampState;
 
 public:
-
+    CAMP_STATE GetCampState() { return m_eCampState; }
     SKILL* GetESkill() { return m_tESkill; }
     SKILL* GetZSkill() { return m_tZSkill; }
     void m_FAnimation();

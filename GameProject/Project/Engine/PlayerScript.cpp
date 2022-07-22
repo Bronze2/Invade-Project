@@ -371,6 +371,12 @@ void CPlayerScript::Awake()
 	
 
 	m_fMoveSpeed = 500.f;
+	if ((UINT)INGAME_LAYER::BLUE == GetObj()->GetLayerIdx()) {
+		m_eCampState = CAMP_STATE::BLUE;
+	}
+	else {
+		m_eCampState = CAMP_STATE::RED;
+	}
 
 }
 
@@ -617,6 +623,7 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 }
 void CPlayerScript::SkillCoolTimeCheck()
 {
+	//추가 7.22
 	
 	Vec4 vStartColor = Vec4(1.f, 1.f, 1.f, 1.f);
 	Vec4 vEndColor = Vec4(1.f, 0.f, 0.f, 1.f);

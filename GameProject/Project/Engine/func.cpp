@@ -419,7 +419,65 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
+	Ptr<CMaterial> pMtrl=nullptr;
 	if (3 == _iLayerIdx) {
+		pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00");
+		pObject->MeshRender()->SetMaterial(pMtrl);
+	}
+	else {
+		pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"Texture01");
+		pObject->MeshRender()->SetMaterial(pMtrl);
+	}
+	pObject->MeshRender()->SetMaterial(pMtrl);
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pMagicTexture.GetPointer());
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetTarget(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetLayer(_iLayerIdx);
+	pThunderObject->Transform()->SetLocalPos(_Pos);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
+	
+}
+
+void CreateThunderObject(const Vec3& _Pos, const CAMP_STATE& _iLayerIdx)
+{
+	CGameObject* pThunderObject = new CGameObject;
+	pThunderObject->AddComponent(new CTransform);
+	pThunderObject->AddComponent(new CParticleSystem);
+	pThunderObject->AddComponent(new CThunderSkill1Script);
+	pThunderObject->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate5Mtrl");
+	pThunderObject->ParticleSystem()->SetStartColor(Vec4(0.8f, 0.8f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pThunderObject->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
+	pThunderObject->ParticleSystem()->SetStartScale(10.f);
+	pThunderObject->ParticleSystem()->SetEndScale(10.f);
+	pThunderObject->ParticleSystem()->SetMinLifeTime(1.f);
+	pThunderObject->ParticleSystem()->SetMaxLifeTime(3.f);
+	pThunderObject->FrustumCheck(false);
+	pThunderObject->SetActive(true);
+	Ptr<CTexture> pMagicTexture = nullptr;
+	if (3 == (UINT)_iLayerIdx) {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle");
+	}
+	else {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle2");
+	}
+
+	//
+
+
+	Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"SparkSound");
+	m_pSound->PlaySound3D(_Pos, 1000.f);
+
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetSound(m_pSound);
+
+
+	CGameObject* pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetLocalPos(Vec3(_Pos.x, 2.f, _Pos.z));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
+	if (3 == (UINT)_iLayerIdx) {
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
 	}
 	else {
@@ -429,10 +487,10 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pMagicTexture.GetPointer());
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
 	pThunderObject->GetScript<CThunderSkill1Script>()->SetTarget(pObject);
-	pThunderObject->GetScript<CThunderSkill1Script>()->SetLayer(_iLayerIdx);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetCampState(_iLayerIdx);
 	pThunderObject->Transform()->SetLocalPos(_Pos);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
-	
+
 }
 
 void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos)

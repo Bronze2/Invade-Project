@@ -48,11 +48,12 @@ private:
     UINT m_iDamage;
     SKILL* m_pSkill;
     CGameObject* m_pPlayer;
-
+    
     //»ç¿îµå
     CSound* m_pSound;
- 
+    CAMP_STATE m_eCampState;
 public:
+    void SetCamp(const CAMP_STATE& _eState) { m_eCampState = _eState; }
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }
     void SetSkill(SKILL* _pSkill); 

@@ -43,8 +43,9 @@ private:
 
     CGameObject* m_pPlayer;
     CSound* m_pSound;
+    CAMP_STATE m_eCampState;
 public:
-
+    void SetCampState(const CAMP_STATE& _eState) { m_eCampState = _eState; }
     CGameObject* GetCurArrow() { return m_pArrow[m_iCurArrow]; }
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     

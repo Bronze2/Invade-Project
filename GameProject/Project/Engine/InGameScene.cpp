@@ -158,7 +158,7 @@ void CInGameScene::Init()
     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
     pObject->MeshRender()->SetDynamicShadow(true);
     pObject->Sensor()->SetRadius(500.f);
-    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 
 
     //스킬
@@ -218,8 +218,9 @@ void CInGameScene::Init()
 
     pBow->Animator3D()->SetAnimation(pNewAnimation);
     pBow->Animator3D()->SetAnimClip(pNewAnimation->GetAnimClip());
-    pBow->GetScript<CBowScript>()->Init();
+
     pObject->AddChild(pBow);
+    pBow->GetScript<CBowScript>()->Init();
     pBow->GetScript<CBowScript>()->SetPlayer(pObject);
     pObject->GetScript<CPlayerScript>()->SetBowObject(pBow);
 
@@ -1528,7 +1529,14 @@ void CInGameScene::Init()
    pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
    pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
    FindLayer(L"UI")->AddGameObject(pUISkill);
-
+   pMtrl = new CMaterial;
+   pMtrl->DisableFileSave();
+   pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+   CResMgr::GetInst()->AddRes(L"Texture00", pMtrl);
+  pMtrl = new CMaterial;
+   pMtrl->DisableFileSave();
+   pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+   CResMgr::GetInst()->AddRes(L"Texture01", pMtrl);
    pUISkill = new CGameObject;
     pUISkill->SetName(L"UISkill2");
     pUISkill->FrustumCheck(false);

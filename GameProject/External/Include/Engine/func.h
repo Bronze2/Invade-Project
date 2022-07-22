@@ -69,6 +69,9 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey);
 
 void CreateThunderObject(const Vec3& _Pos,const UINT& _iLayerIdx);
 
+//Ãß°¡
+void CreateThunderObject(const Vec3& _Pos, const CAMP_STATE& _iLayerIdx);
+
 void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);
 
 void SetListener(const Vec3& _vFrontDir,const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);

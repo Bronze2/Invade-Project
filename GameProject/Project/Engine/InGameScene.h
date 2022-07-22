@@ -3,8 +3,8 @@
 enum class INGAME_LAYER {
    
     DEFAULT = 0,//GetLayer(0)->SetName(L"Default");
-   //GetLayer(3)->SetName(L"Blue");
-   //GetLayer(4)->SetName(L"Red");
+   BLUE=3,//GetLayer(3)->SetName(L"Blue");
+   RED=4,//GetLayer(4)->SetName(L"Red");
   COVER=5, //GetLayer(5)->SetName(L"Cover");
    //GetLayer(6)->SetName(L"Arrow");
    //GetLayer(7)->SetName(L"Terrain");

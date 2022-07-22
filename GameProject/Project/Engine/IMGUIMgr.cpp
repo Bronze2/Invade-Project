@@ -145,7 +145,7 @@ void CIMGUIMgr::Init()
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
-    ImFont* mdFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\HancomEQN.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
+    ImFont* mdFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
     
     // create descriptor heap
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
