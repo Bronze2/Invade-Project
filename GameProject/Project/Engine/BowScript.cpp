@@ -32,7 +32,7 @@ void CBowScript::Update()
 	Transform()->SetLocalRot(vRot);
 
 
-	if (isMain)	{
+	if (isMain) {
 		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 		CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
@@ -50,10 +50,21 @@ void CBowScript::Update()
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
 		}
 
+		//if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
+		//	m_fArrowSpeed += 2000.f * DT;
+		//	if (m_fArrowSpeed > 1500.f) {
+		//		m_fArrowSpeed = 1500.f;
+		//		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
+		//	}
+		//}
+
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed += 2000.f * DT;
-			if (m_fArrowSpeed > 1500.f) {
+			m_fArrowSpeed += 3000.f * DT;
+			if (m_fArrowSpeed < 1500.f) {
 				m_fArrowSpeed = 1500.f;
+			}
+			else if (m_fArrowSpeed > 3000.f) {
+				m_fArrowSpeed = 3000.f;
 				m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 			}
 		}
@@ -80,7 +91,7 @@ void CBowScript::Update()
 			Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 			Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 			float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		
+			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);
 			Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 
 			Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
@@ -111,7 +122,7 @@ void CBowScript::Update()
 			/*Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(), vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp,
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());*/
 
-			Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(), 
+			Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
 
 			m_iCurArrow++;
@@ -159,7 +170,7 @@ void CBowScript::Update()
 
 void CBowScript::CreateArrow(PACKET_SKILL skill)
 {
-	cout << "생성 - " << m_iCurArrow  <<endl;
+	cout << "생성 - " << m_iCurArrow << endl;
 	CGameObject* pPlayer = GetObj()->GetParent();
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetParentId(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId());
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->m_SetId(m_iCurArrow);
@@ -184,7 +195,7 @@ void CBowScript::CreateArrow(PACKET_SKILL skill)
 	m_pArrow[m_iCurArrow]->ClearParent();
 	m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 	m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vPlayerPos);
-	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetLerp(vPlayerPos,Vec4(0,0,0,0));
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetLerp(vPlayerPos, Vec4(0, 0, 0, 0));
 
 	m_pArrow[m_iCurArrow]->SetActive(true);
 
@@ -208,7 +219,7 @@ void CBowScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->m_SetId(ArrowId);
 
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK);
-	if(skill == PACKET_SKILL::Z_FIRE)
+	if (skill == PACKET_SKILL::Z_FIRE)
 		m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill(9));
 	if (skill == PACKET_SKILL::Z_TUNDER)
 		m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill(7));
@@ -336,7 +347,7 @@ void CBowScript::DeleteArrow(int ArrowId)
 	//m_pArrow[ArrowId]->SetActive(false);
 }
 
-void CBowScript::UpdateArrow(int ArrowId , Vec3 LocalPos, Vec4 Quaternion)
+void CBowScript::UpdateArrow(int ArrowId, Vec3 LocalPos, Vec4 Quaternion)
 {
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetLerp(LocalPos, Quaternion);
 }
@@ -358,12 +369,12 @@ void CBowScript::Awake()
 		m_pArrow[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
 		m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
-		
+
 		m_pArrow[i]->AddComponent(new CCollider3D);
 		m_pArrow[i]->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
-		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f,0.f,0.f));
-		
+		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+
 		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 		//pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
 		m_pArrow[i]->SetActive(false);

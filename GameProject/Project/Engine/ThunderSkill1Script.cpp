@@ -22,6 +22,7 @@ void CThunderSkill1Script::Collision()
 		return;
 
 	const vector<CGameObject*>& vecObj = pLayer->GetObjects();
+
 	for (int i = 0; i < vecObj.size(); ++i) {
 		CGameObject* pObject1 = vecObj[i];
 		CGameObject* pObject2 = GetObj();
@@ -29,14 +30,12 @@ void CThunderSkill1Script::Collision()
 		Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
 		float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
 		
-
 		if (Radius < 400.f)
 		{
 			if (TickCheck(m_pSkill->StartTime, m_pSkill->Count) != m_pSkill->Count) {
 				if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
 				{
 					vecObj[i]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
-
 				}
 				else if (nullptr != vecObj[i]->GetScript<CMinionScript>()) {
 					vecObj[i]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
@@ -47,10 +46,6 @@ void CThunderSkill1Script::Collision()
 
 		
 	}
-	
-
-	
-	
 
 }
 CThunderSkill1Script::CThunderSkill1Script() :CScript((UINT)SCRIPT_TYPE::THUNDERSKILL1), m_bStart(false), m_bTickCheck(false)
@@ -78,10 +73,7 @@ CThunderSkill1Script::~CThunderSkill1Script()
 		delete m_pSkill;
 		m_pSkill = nullptr;
 	}
-
 }
-
-
 
 void CThunderSkill1Script::Update()
 {

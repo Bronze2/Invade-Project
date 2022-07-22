@@ -1,4 +1,3 @@
-
 #include "pch.h"
 #include "ArrowScript.h"
 #include "MeshRender.h"
@@ -26,7 +25,7 @@ void CArrowScript::SetSkill(SKILL* _pSkill)
 	m_pSkill->bFinal = false;
 	m_pSkill->Count = 0;
 	m_pSkill->Sum = _pSkill->Sum;
-	
+
 }
 void CArrowScript::Awake()
 {
@@ -150,7 +149,7 @@ void CArrowScript::Update()
 
 		if (m_isMain) {
 
-			if (Transform()->GetWorldPos().y < 2.f)
+			if (Transform()->GetWorldPos().y < 0.f)
 			{
 				m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 
@@ -160,7 +159,7 @@ void CArrowScript::Update()
 					m_pSkill = nullptr;
 				}
 				m_eState = ARROW_STATE::IDLE;
-				Network::GetInst()->send_collision_arrow(m_id,999, PACKET_COLLTYPE::WALL, m_eCamp);
+				Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
 
 				//vPos.y = 5.f;
 				//Transform()->SetLocalPos(vPos);
@@ -184,6 +183,17 @@ void CArrowScript::Update()
 			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			m_vXZDir.Normalize();
 			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
+			//cout <<"전" <<m_fAngle << endl;
+
+			m_fAngle -= PI / 8;
+
+			m_fAngle = 0.05f;
+
+			//cout << "후" << m_fAngle << endl;
+
+			//m_fAngle = 0;
+
+
 			//m_fSpeed = 1000;
 
 			m_fTime += DT;
@@ -219,9 +229,29 @@ void CArrowScript::Update()
 				}
 				m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
 				Transform()->SetQuaternion(m_qRot);
-				
+
 			}
 
+			if (nullptr != m_pSkill) {
+				if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+					if (vPos.y <= 1.f) {
+
+						Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
+						vPos3.y = 1.f;
+						CreateThunderObject(vPos3, m_iLayerIdx);
+						Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+					}
+				}
+				else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+					if (vPos.y <= 1.f) {
+						Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+						vPos3.y = 1.f;
+						CreateBoomParticleObject(vPos3, L"smokeparticle");
+						//Collision();
+						Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+					}
+				}
+			}
 			Transform()->SetLocalPos(vPos);
 			Network::GetInst()->send_update_arrow_move(m_id, vPos, m_qRot);
 
@@ -272,17 +302,17 @@ void CArrowScript::EnterSkill(Vec3 vPos)
 {
 	if (nullptr != m_pSkill) {
 		if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
-				Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-				vPos.y = 1.f;
-				CreateThunderObject(vPos, m_iLayerIdx);
-				//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+			vPos.y = 1.f;
+			CreateThunderObject(vPos, m_iLayerIdx);
+			//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 		}
 		else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
-				Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-				vPos.y = 1.f;
-				CreateBoomParticleObject(vPos, L"smokeparticle");
-				//Collision();
-				//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+			vPos.y = 1.f;
+			CreateBoomParticleObject(vPos, L"smokeparticle");
+			//Collision();
+			//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 		}
 	}
 
@@ -297,7 +327,7 @@ void CArrowScript::Init()
 	}
 
 	//m_pTrail->TrailRenderer()->SetEmit(false);
-	
+
 	m_bSetDotValue = false;
 	m_fVelocityY = 5000;
 	m_fFallSpeed = 0.f;
@@ -306,7 +336,7 @@ void CArrowScript::Init()
 	m_fDir = 1;
 	m_fHighest = 0;
 	m_fPerRotate = 1;
-	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
+	Transform()->SetQuaternion(Vec4(0.f, 0.f, 0.f, 1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
 
@@ -320,7 +350,7 @@ void CArrowScript::Init()
 	//Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	//Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
 	// --- 수정전
-	
+
 	//GetObj()->SetActive(false);
 	//SetState(ARROW_STATE::IDLE);
 
@@ -330,14 +360,14 @@ void CArrowScript::Init()
 #include "MinionScript.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>() && GetObj()->Transform()->GetLocalPos().y <150 && m_eState == ARROW_STATE::ATTACK) {
+	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>() && GetObj()->Transform()->GetLocalPos().y < 150 && m_eState == ARROW_STATE::ATTACK) {
 		if (_pColldier->GetObj()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
 			cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
 			m_eState = ARROW_STATE::IDLE;
 			m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 			GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
 			_pColldier->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
-			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER , m_eCamp);
+			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
 		}
 	}
 	else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>() && m_eState == ARROW_STATE::ATTACK) {
