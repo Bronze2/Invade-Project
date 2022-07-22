@@ -163,6 +163,10 @@ void CRenderMgr::CreateMRT()
 		wsprintf(szRTVName, L"SwapchainTargetTex_%d", i);
 		ComPtr<ID3D12Resource> pTarget;
 		CDevice::GetInst()->GetSwapChain()->GetBuffer(i, IID_PPV_ARGS(&pTarget));
+		
+		//추가
+		//m_pTarget[i] = pTarget;
+		
 		arrRT[i].pTarget = CResMgr::GetInst()->CreateTextureFromResource(szRTVName, pTarget);
 	}
 
@@ -176,6 +180,9 @@ void CRenderMgr::CreateMRT()
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN] = new CMRT;
 	m_arrMRT[(UINT)MRT_TYPE::SWAPCHAIN]->Create(2, arrRT, pDSTex);
 
+	//추가
+	//D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+	//CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->GetRTV()->GetCPUDescriptorHandleForHeapStart());
 
 	// ============
 	// Deferred MRT

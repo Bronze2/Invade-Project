@@ -290,9 +290,9 @@ void CIMGUIMgr::Progress()
                         if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                         {
                             //로그인 버튼  클릭시
-                            show_login = false;
                             //m_pTextureLobby->Load(L"Texture\\bow_big.png", cpu_handle);
 
+                            show_login = false;
                             Network::GetInst()->send_login_packet(UserInformations.m_cUserName, UserInformations.m_cUserPassWord);
                         }
                         ImGui::PopStyleVar();

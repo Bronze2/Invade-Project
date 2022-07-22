@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Device.h"
+
 #include "StructuredBuffer.h"
 #include "ConstantBuffer.h"
 #include "Texture.h"
@@ -7,6 +8,9 @@
 #include "ResMgr.h"
 #include "RenderMgr.h"
 #include "MRT.h"
+
+//콘솔용 잠깐
+#include <iostream>
 
 CDevice::CDevice()
 	: m_pDevice(nullptr)
@@ -16,8 +20,8 @@ CDevice::CDevice()
 	, m_hFenceEvent(nullptr)
 	, m_iFenceValue(0)
 	, m_iCurDummyIdx(0)
-	, m_bWindowed(false),m_hWnd(),m_iCBVIncreSize(),m_iRTVHeapSize(),m_tResolution{}
-	
+	, m_bWindowed(false), m_hWnd(), m_iCBVIncreSize(), m_iRTVHeapSize(), m_tResolution{}
+
 {
 	m_vecCB.resize((UINT)CONST_REGISTER::END);
 }
@@ -45,15 +49,15 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 
 	UINT iFlag = 0;
 
-//#ifdef _DEBUG
-//	D3D12GetDebugInterface(IID_PPV_ARGS(&m_pDbgCtrl));
-//	m_pDbgCtrl->EnableDebugLayer();
-//#endif	
-//
-//	CreateDXGIFactory(IID_PPV_ARGS(&m_pFactory));
-//
-//	// CreateDevice
-//	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
+	//#ifdef _DEBUG
+	//	D3D12GetDebugInterface(IID_PPV_ARGS(&m_pDbgCtrl));
+	//	m_pDbgCtrl->EnableDebugLayer();
+	//#endif	
+	//
+	//	CreateDXGIFactory(IID_PPV_ARGS(&m_pFactory));
+	//
+	//	// CreateDevice
+	//	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
 
 
 #if _DEBUG
@@ -90,8 +94,10 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	{
 		pAdapter->GetDesc(&adapterDesc);
 		comparison_videoMemory = adapterDesc.DedicatedVideoMemory + adapterDesc.SharedSystemMemory;
-		cout << "GPU SEARCH" << endl;
-		cout << "Comparison_VedeoM: "<<comparison_videoMemory << "	ui64VideoM:" << ui64VideoMemory <<endl;
+		std::cout << "GPU SEARCH" << std::endl;
+
+		std::cout << " 현재 gpuID: " << gpu_idx << " Comparison_VedeoM: " << comparison_videoMemory << "	ui64VideoM:" << ui64VideoMemory << std::endl;
+		
 		if (comparison_videoMemory > ui64VideoMemory)
 		{
 			ui64VideoMemory = comparison_videoMemory;
@@ -99,11 +105,12 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 		}
 		++gpu_idx;
 	}
+	std::cout << "선택한 gpuID" << select << std::endl;
 
 	m_pFactory->EnumAdapters(select, &pAdapter);
 
 	// Try to create hardware device.
-	HRESULT hardwareResult = D3D12CreateDevice(pAdapter.Get(),D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
+	HRESULT hardwareResult = D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
 	//D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_pDevice));
 
 	// CreateFence
@@ -149,6 +156,7 @@ int CDevice::Init(HWND _hWnd, const tResolution& _res, bool _bWindow)
 	// RootSignature 만들기
 	CreateRootSignature();
 
+
 	return S_OK;
 }
 
@@ -193,7 +201,7 @@ void CDevice::Render_Present()
 	// Indicate that the back buffer will now be used to present.
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE; 
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = pSwapChainMRT->GetRTTex(m_iCurTargetIdx)->GetTex2D().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;	// 백버퍼에서
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;			// 다시 출력으로 지정
@@ -211,7 +219,7 @@ void CDevice::Render_Present()
 	WaitForFenceEvent();
 
 
-	
+
 	// 상수버퍼 오프셋 초기화
 	for (size_t i = 0; i < m_vecCB.size(); ++i)
 	{
@@ -256,7 +264,7 @@ void CDevice::ClearDummyDescriptorHeap_CS()
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE hDescHandle = m_pDummyDescriptorCompute->GetCPUDescriptorHandleForHeapStart();
 	hDescHandle.ptr;
-	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle =m_pInitDescriptor->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = m_pInitDescriptor->GetCPUDescriptorHandleForHeapStart();
 	hSrcHandle.ptr;
 
 	UINT iDestRange = (UINT)TEXTURE_REGISTER::END;
@@ -354,12 +362,11 @@ void CDevice::CreateSwapChain()
 
 	tDesc.OutputWindow = m_hWnd;	// 출력 윈도우
 	tDesc.Windowed = !m_bWindowed;   // 창 모드 or 전체화면 모드
-	tDesc.SampleDesc.Count = 2;		// 멀티 샘플 사용 안함
+	tDesc.SampleDesc.Count = 1;		// 멀티 샘플 사용 안함
 	tDesc.SampleDesc.Quality = 0;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_FLIP_DISCARD; // 전면 후면 버퍼 교체 시 이전 프레임 정보 버림
 
 	HRESULT hr = m_pFactory->CreateSwapChain(m_pCmdQueue.Get(), &tDesc, &m_pSwapChain);
-
 }
 
 
@@ -455,7 +462,7 @@ void CDevice::CreateRootSignature()
 	sigDesc.NumParameters = 1;
 	sigDesc.pParameters = &slotParam;
 	sigDesc.NumStaticSamplers = 0;
-	sigDesc.pStaticSamplers=nullptr;
+	sigDesc.pStaticSamplers = nullptr;
 	sigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
 	pSignature = nullptr;
 	pError = nullptr;
@@ -571,7 +578,7 @@ void CDevice::SetTextureToRegister(CTexture* _pTex, TEXTURE_REGISTER _eRegisterN
 		CMDLIST_CS->ResourceBarrier(1, &value);
 		_pTex->SetResState(D3D12_RESOURCE_STATE_COMMON);
 	}
-	
+
 }
 
 void CDevice::ClearDummyDescriptorHeap(UINT _iDummyIndex)
@@ -663,7 +670,7 @@ void CDevice::SetBufferToUAVRegister_CS(CStructuredBuffer* _pBuffer, UAV_REGISTE
 	D3D12_CPU_DESCRIPTOR_HANDLE hSrcHandle = _pBuffer->GetUAV()->GetCPUDescriptorHandleForHeapStart();
 	m_pDevice->CopyDescriptors(1, &hDescHandle, &iDestRange, 1, &hSrcHandle, &iSrcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	if (_pBuffer->GetResState() == D3D12_RESOURCE_STATE_COMMON) {
-		CD3DX12_RESOURCE_BARRIER value = CD3DX12_RESOURCE_BARRIER::Transition(_pBuffer->GetBuffer().Get(), D3D12_RESOURCE_STATE_COMMON , D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+		CD3DX12_RESOURCE_BARRIER value = CD3DX12_RESOURCE_BARRIER::Transition(_pBuffer->GetBuffer().Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 		CMDLIST_CS->ResourceBarrier(1, &value);
 		_pBuffer->SetResState(D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	}

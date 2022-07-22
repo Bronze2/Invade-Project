@@ -24,21 +24,18 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 {
 	m_hMainhWnd = _hWnd;
 	ChangeWindowSize(m_hMainhWnd, _resolution);
+	m_tResolution = _resolution;
 	ShowWindow(_hWnd, true);
 	if (FAILED(CDevice::GetInst()->Init(_hWnd, _resolution, _bWindow)))
 		return E_FAIL;
-	m_tResolution = _resolution;
 
 	//임시 로그인 Network Init() 안에서 추후 수정
-	Network::GetInst()->Init();
-
-
 	CRenderMgr::GetInst()->Init(_hWnd, _resolution, _bWindow);
 	CDevice::GetInst()->CreateConstantBuffer(L"TRANSFORM_MATRIX", sizeof(tTransform), 512, CONST_REGISTER::b0);
 	CDevice::GetInst()->CreateConstantBuffer(L"MATERIAL_PARAM", sizeof(tMtrlParam), 512, CONST_REGISTER::b1);
 	CDevice::GetInst()->CreateConstantBuffer(L"ANIM2D", sizeof(tMtrlParam), 512, CONST_REGISTER::b2);
-	
-	CDevice::GetInst()->CreateConstantBuffer(L"LIGHT2D", sizeof(tLight2DInfo), 1, CONST_REGISTER::b3,true);
+
+	CDevice::GetInst()->CreateConstantBuffer(L"LIGHT2D", sizeof(tLight2DInfo), 1, CONST_REGISTER::b3, true);
 	CDevice::GetInst()->CreateConstantBuffer(L"LIGHT3D", sizeof(tLight3DInfo), 1, CONST_REGISTER::b4, true);
 	CDevice::GetInst()->CreateConstantBuffer(L"GLOBAL VALUE", sizeof(tGlobalValue), 1, CONST_REGISTER::b5);
 
@@ -52,7 +49,7 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 	CPathMgr::Init();
 	CKeyMgr::GetInst()->Init();
 	CTimeMgr::GetInst()->Init();
-	//Network::GetInst()->Init();
+	Network::GetInst()->Init();
 	CResMgr::GetInst()->Init();
 	CSceneMgr::GetInst()->Init();
 	CEventMgr::GetInst()->Init();
@@ -86,24 +83,12 @@ void CGameFramework::ProcessInput()
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);
-	RECT rtClient;
 	RECT rtWindow;
+	RECT rtClient;
 	GetWindowRect(CRenderMgr::GetInst()->GethWnd(),&rtWindow);
 	GetClientRect(CRenderMgr::GetInst()->GethWnd(), &rtClient);
 	LONG CursorPosy = ptCursorPos2.y;
 	ScreenToClient(CRenderMgr::GetInst()->GethWnd(), &ptCursorPos);
-	//if (rtWindow.right - 10 < ptCursorPos.x) {
-	//	ptCursorPos.x = rtWindow.left + 13;
-	//	
-	//	m_ptOldCursorPos.x = rtWindow.left + 10;
-	//	SetCursorPos(ptCursorPos.x, CursorPosy);
-	//}
-	//if (2 >= ptCursorPos.x) {
-	//	ptCursorPos.x = rtWindow.right - 13;
-	//	m_ptOldCursorPos.x = rtWindow.right - 10;
-
-	//	SetCursorPos(ptCursorPos.x, CursorPosy);
-	//}
 	if (rtWindow.right - 3 <= ptCursorPos.x) {
 		ptCursorPos.x = rtWindow.left + 3;
 		m_ptOldCursorPos.x = rtWindow.left;
@@ -115,19 +100,6 @@ void CGameFramework::ProcessInput()
 		SetCursorPos(ptCursorPos.x, CursorPosy);
 	}
 	 
-//	if (rt.bottom < ptCursorPos.y) {
-//		ptCursorPos.y = rt.bottom;
-//		m_ptOldCursorPos.y = rt.bottom;
-//		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
-//	}
-//	if (rt.top >= ptCursorPos.y) {
-//		ptCursorPos.y = rt.top+5;
-//		m_ptOldCursorPos.y = rt.top+5;
-//		SetCursorPos(ptCursorPos.x, ptCursorPos.y);
-//	}
-
-
-
 
 	m_vMouseMove.x = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.f;
 	m_vMouseMove.y = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.f;
