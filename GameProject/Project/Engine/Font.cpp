@@ -8,11 +8,6 @@
 void CFont::Load(const wstring& _strFullPath)
 {
     LoadFont(_strFullPath.c_str());
-    cout << "Font Load Complete!" << endl;
-
-    //Ptr<CTexture> pFontTex = CResMgr::GetInst()->Load<CTexture>(L"FontTex", m_fontImage);
-    //m_pMtrl->SetData(SHADER_PARAM::TEX_0, &pFontTex);
-    //cout << "FontTex Load Complete!" << endl;
 }
 
 void CFont::Save(const wstring& _strPath)

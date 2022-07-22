@@ -17,13 +17,15 @@ class CFontMgr
 	SINGLE(CFontMgr);
 private:
 	Ptr<CFont> m_pFont;
-	vector<tTextInfo> m_vecText;
+	unordered_map<wstring, tTextInfo> m_mapText;
 
 public:
-	void Init();
+	void Clear();
 
-	void AddText(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor);
+	void AddText(wstring key, wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor);
 	void RenderText();
+	void DeleteText(wstring key);
+
 	void SetFont(Ptr<CFont> _pFont) { m_pFont = _pFont; }
 	Ptr<CFont> GetFont() { return m_pFont; }
 };

@@ -12,24 +12,21 @@ CFontMgr::~CFontMgr()
 
 }
 
-void CFontMgr::Init()
+void CFontMgr::Clear()
 {
-
+	m_mapText.clear();
 }
 
 void CFontMgr::RenderText()
 {
 	// Mtrl이든 셰이더든 설정해줘야함
-	for (auto& f : m_vecText)
+	for (auto& f : m_mapText)
 	{
-		wcout << f.text << endl;
-		f.pFont->Render(f.text, f.vPos, f.vScale, f.vPadding, f.vColor);
+		f.second.pFont->Render(f.second.text, f.second.vPos, f.second.vScale, f.second.vPadding, f.second.vColor);
 	}
-
-	//m_pFont->Render(text, vPos, vScale, vPadding, vColor);
 }
 
-void CFontMgr::AddText(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor)
+void CFontMgr::AddText(wstring key, wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor)
 {
 	tTextInfo Info{};
 	Info.pFont = CResMgr::GetInst()->Load<CFont>(L"Font", L"Font03.fnt");
@@ -39,8 +36,6 @@ void CFontMgr::AddText(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4
 	pFontMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"FontShader"));
 	pFontMtrl->SetData(SHADER_PARAM::TEX_0, pFontTex.GetPointer());
 	Info.pFont->SetMaterial(pFontMtrl);
-	//Info.pFont->SetTexture(pFontTex);
-	//Info.pFont->GetMaterial()->SetData(SHADER_PARAM::TEX_0, pFontTex.GetPointer());
 	Info.pFont->CreateVB();
 
 	Info.text = text;
@@ -49,5 +44,12 @@ void CFontMgr::AddText(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4
 	Info.vPadding = vPadding;
 	Info.vColor = vColor;
 
-	m_vecText.emplace_back(Info);
+	m_mapText[key] = Info;
+}
+
+void CFontMgr::DeleteText(wstring key)
+{
+	if (m_mapText.find(key) != m_mapText.end()) {
+		m_mapText.erase(key);
+	}
 }

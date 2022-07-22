@@ -1252,39 +1252,55 @@ void CInGameScene::Init()
 
 
 //-----------------------------------------------------------------------------------------------
-// Animation2D Test
+// 파티창 
 //-----------------------------------------------------------------------------------------------
+	
+	Vec3 vPlayerTexScale = Vec3(res.fWidth / 25.f, res.fHeight / 14.f, 1.f);
+	Vec3 vHPBarScale = Vec3(res.fWidth / 15.f, res.fHeight / 42.f, 1.f);
+	CGameObject* pPlayerInfoTex;
+	CGameObject* pHpBar;
 
-	//CGameObject* pAnim2DTest = new CGameObject;
-	//pAnim2DTest->SetName(L"TestAnim2D");
-	//pAnim2DTest->AddComponent(new CTransform);
-	//pAnim2DTest->AddComponent(new CMeshRender);
+	for (int i = 0; i < 3; ++i) {
+		// 사진
+		pPlayerInfoTex = new CGameObject;
+		pPlayerInfoTex->SetName(L"PlayerInfoTex");
+		pPlayerInfoTex->FrustumCheck(false);
+		pPlayerInfoTex->AddComponent(new CTransform);
+		pPlayerInfoTex->AddComponent(new CMeshRender);
 
-	//pAnim2DTest->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
-	//pAnim2DTest->Transform()->SetLocalScale(Vec3(1000.f, 1000.f, 1.f));
+		pPlayerInfoTex->Transform()->SetLocalPos(Vec3(-res.fWidth / 2.f + vPlayerTexScale.x / 2 + 10.f, 0.f + vPlayerTexScale.y/2 - res.fHeight/11 * i, 1.f));
+		pPlayerInfoTex->Transform()->SetLocalScale(vPlayerTexScale);
 
-	//pAnim2DTest->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//Ptr<CMaterial> pAnim2DMtrl = new CMaterial;
-	//pAnim2DMtrl->DisableFileSave();
-	//pAnim2DMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-	//pAnim2DTest->MeshRender()->SetMaterial(pAnim2DMtrl);
-	//Ptr<CTexture> pUIReadyTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
-	//Ptr<CTexture> pAnim2DTex = CResMgr::GetInst()->FindRes<CTexture>(L"TestAnim2D");
-	////pAnim2DTest->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyTex.GetPointer());
-	//pAnim2DTest->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pAnim2DTex.GetPointer());
+		pPlayerInfoTex->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+		Ptr<CMaterial> pPlayerTexMtrl = new CMaterial;
+		pPlayerTexMtrl->DisableFileSave();
+		pPlayerTexMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+		pPlayerInfoTex->MeshRender()->SetMaterial(pPlayerTexMtrl);
+		Ptr<CTexture> pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyWater");
+		pPlayerInfoTex->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
+		FindLayer(L"UI")->AddGameObject(pPlayerInfoTex);
 
-	////CAnimator2D* pAnimator = new CAnimator2D;
-	////pAnim2DTest->AddComponent(new CAnimator2D);
-	////pAnimator->AddAnimation(L"TestAnim2D", pAnim2DTex, Vec2(0.f, 100.f), Vec2(10.f, 100.f), 120, 30.f);
-	////pAnimator->PlayAnimation(L"TestAnim2D", true);
+		// 플레이어 id
+		CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 
-	//FindLayer(L"UI")->AddGameObject(pAnim2DTest);
-
-
-	// 글씨쓰기
-	CFontMgr::GetInst()->AddText(L"FoNtTEST123", Vec2(0.01f, 0.f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
-	CFontMgr::GetInst()->AddText(L"220723", Vec2(0.1f, 0.7f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 0.f, 1.f));
-	CFontMgr::GetInst()->AddText(L"0123456789", Vec2(0.8f, 0.8f), Vec2(2.f, 2.f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+		// 에이치피바
+		pHpBar = new CGameObject;
+		pHpBar->SetName(wstring(L"UI HPBar ") + to_wstring(i));
+		pHpBar->AddComponent(new CTransform);
+		pHpBar->AddComponent(new CMeshRender);
+		pHpBar->FrustumCheck(false);
+		pHpBar->MeshRender()->SetDynamicShadow(false);
+		
+		pHpBar->Transform()->SetLocalScale(vHPBarScale);
+		pHpBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x / 2 + vPlayerTexScale.x + 15.f, 0.f + vPlayerTexScale.y / 2 - res.fHeight / 11 * i - 15.f, 1.f));
+		pHpBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+		pUIHPBarMtrl->DisableFileSave();
+		pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
+		pHpBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+		pPlayer->GetScript<CPlayerScript>()->AddUIHpBarObj(pHpBar);
+		FindLayer(L"UI")->AddGameObject(pHpBar);
+	}
 
 //-----------------------------------------------------------------------------------------------
 // 조명 추가

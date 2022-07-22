@@ -399,8 +399,8 @@ void CPlayerScript::Init()
 void CPlayerScript::Awake()
 {
 	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
-		m_iMaxHp = 200;
-		m_iCurHp = 50;
+		m_iMaxHp = 200.f;
+		m_iCurHp = 50.f;
 
 		m_fMoveSpeed = 300.f;
 
@@ -449,12 +449,13 @@ void CPlayerScript::Awake()
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
 		GetObj()->AddChild(m_pThunderParticle);
 
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+
 		m_pDarkUI = new CGameObject;
 		m_pDarkUI->SetName(L"UIDark");
 		m_pDarkUI->FrustumCheck(false);
 		m_pDarkUI->AddComponent(new CTransform);
 		m_pDarkUI->AddComponent(new CMeshRender);
-		tResolution res = CRenderMgr::GetInst()->GetResolution();
 		m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
 		m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
 		m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -466,6 +467,23 @@ void CPlayerScript::Awake()
 		m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
 		m_pDarkUI->SetActive(false);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
+
+		// 에이치비바
+		m_pHPBar = new CGameObject;
+		m_pHPBar->SetName(L"MainClient HPBar");
+		m_pHPBar->AddComponent(new CTransform);
+		m_pHPBar->AddComponent(new CMeshRender);
+		m_pHPBar->FrustumCheck(false);
+		m_pHPBar->MeshRender()->SetDynamicShadow(false);
+		Vec3 vHPBarScale = Vec3(res.fWidth / 8.f, res.fHeight / 20.f, 1.f);
+		m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
+		m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x/2 + 10.f, res.fHeight / 2 - vHPBarScale.y / 2 - 10.f, 1.f));
+		m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+		pUIHPBarMtrl->DisableFileSave();
+		pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
+		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
 
 		// Run
 		m_fMoveSpeed = 500.f;
@@ -490,7 +508,6 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			//CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
 		}
@@ -739,6 +756,26 @@ void CPlayerScript::Update()
 
 	AttachHelmet();
 	m_FAnimation();
+
+	// 본인 에이치피바
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+
+	// 아군 에이치피바
+	//for (int i = 0; i < 3; ++i) {
+	//	int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+	//	m_arrAlliance[i]->GetChild()[5]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+	//	m_arrAlliance[i]->GetChild()[5]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+	//}
+
+	// 파티창 에이치피바
+	for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
+		//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+		int iCurHp = 100 + 30 * i;
+		m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+		m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+	}
+
 }
 
 // 헬멧 플레이어 고개 까딱

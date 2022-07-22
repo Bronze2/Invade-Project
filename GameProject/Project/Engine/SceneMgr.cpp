@@ -123,18 +123,9 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init()
 {
-	// 글씨쓰기
-	//CFontMgr::GetInst()->SetFont(CResMgr::GetInst()->Load<CFont>(L"Font", L"Font03.fnt"));
-	//CFontMgr::GetInst()->GetFont()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"FontMtrl"));
-	//Ptr<CTexture> pFontTex = CResMgr::GetInst()->Load<CTexture>(L"FontTex", L"Font03.png");
-	//CFontMgr::GetInst()->GetFont()->SetTexture(pFontTex);
-	//CFontMgr::GetInst()->GetFont()->GetMaterial()->SetData(SHADER_PARAM::TEX_0, pFontTex.GetPointer());
-	//CFontMgr::GetInst()->GetFont()->CreateVB();
-	//cout << "FontTex Load Complete!" << endl;
-
 	// 로비씬
 	CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
-	CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\base_line.png");
+	CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\Crosshair\\UnknownsCircleFull2048.png");
 	CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\splash.png");
 	CResMgr::GetInst()->Load<CTexture>(L"TestAnim2D", L"Texture\\font02_0.png");
 	CResMgr::GetInst()->Load<CTexture>(L"UIButtonGameStart", L"Texture\\UIButtonGameStart.png");
@@ -344,7 +335,6 @@ void CSceneMgr::Update()
 	//CRenderMgr::GetInst()->RegisterCamera(CRenderMgr::GetInst()->GetCamera());
 
 	m_pCurScene->FinalUpdate();
-
 
 	CSensorMgr::GetInst()->Update();
 	// �浹 ó��

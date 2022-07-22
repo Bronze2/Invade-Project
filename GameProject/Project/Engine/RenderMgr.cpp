@@ -57,7 +57,6 @@ void CRenderMgr::Render()
 	m_vecCam[0]->Render_Forward(); // skybox, grid, ui
 
 	// ±Û¾¾¾²±â
-	//CFontMgr::GetInst()->RenderText(L"FONTTEST", Vec3(0.1f, 0.f, 1.f), Vec3(1.5f, 1.5f, 1.f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 	CFontMgr::GetInst()->RenderText();
 
 	for (auto i = 1; i < m_vecCam.size(); i++) {

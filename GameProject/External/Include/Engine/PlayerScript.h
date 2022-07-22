@@ -31,7 +31,7 @@ private:
     PLAYER_STATE m_eState;
     
     UINT m_iMaxHp;
-    float m_iCurHp;
+    UINT m_iCurHp;
     CGameObject* m_pHealParticle;
     CGameObject* m_pFlameParticle;
     CGameObject* m_pThunderParticle;
@@ -74,6 +74,10 @@ private:
     // 헬멧 플레이어 고개 까딱
     CGameObject* m_pHelmetObject;
 
+    // 에이치피바
+    CGameObject* m_pHPBar;
+    vector<CGameObject*> m_vecUIHpBar;
+
     // 로비씬
     bool m_bReady;
 public:
@@ -103,9 +107,11 @@ public:
     void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
     PLAYER_STATE GetAnimaionState() { return m_eState; }
 
-
+    // 에이치피바
+    UINT GetCurHp() { return m_iCurHp; }
     void SetCurHp(int _hp) { m_iCurHp = _hp; }
     void m_FColCheck(Vec3 _vBeforePos,Vec3 _vAfterPos);
+    void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
     virtual void OnCollision3D(CCollider3D* _pOther);

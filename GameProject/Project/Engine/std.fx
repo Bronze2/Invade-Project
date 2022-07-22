@@ -168,9 +168,9 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
 // =================
 // HPBar Shader (에이치피바)
 
-// g_vec4_0 : CurHP
+// g_int_0 : CurHP
 // g_int_1 : MaxHP
-// g_int_2 : 
+// g_int_2 : camp (0 red  / 1 blue)
 // =================
 
 TEX_OUTPUT VS_HPTex(TEX_INPUT _input)
@@ -210,6 +210,22 @@ float4 PS_HPTex(TEX_OUTPUT _input) : SV_Target
         else {
             vColor = float4(1.f, 0.f, 0.f, 1.f);
         }
+    }
+
+    return vColor;
+}
+
+float4 PS_UIHPTex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    float fRatio = (float)g_int_0 / (float)g_int_1;
+
+    if (_input.vUV.x >= fRatio) {
+        vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+    }
+    else {
+        vColor = float4(1.f, 0.f, 0.f, 1.f);
     }
 
     return vColor;

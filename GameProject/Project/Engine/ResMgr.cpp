@@ -616,11 +616,24 @@ void CResMgr::CreateDefaultShader()
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"MaxHp", SHADER_PARAM::INT_1 });
-	pShader->AddShaderParam(tShaderParam{ L"CampState", SHADER_PARAM::INT_3 });
+	pShader->AddShaderParam(tShaderParam{ L"CampState", SHADER_PARAM::INT_2 });
 
 	pShader->Create(SHADER_POV::FORWARD);
 
 	AddRes(L"HPBarShader", pShader);
+
+
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_HPTex", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_UIHPTex", "ps_5_0");
+
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
+	pShader->AddShaderParam(tShaderParam{ L"MaxHp", SHADER_PARAM::INT_1 });
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"UIHPBarShader", pShader);
 
 	// =================
 	// Collider2D Shader

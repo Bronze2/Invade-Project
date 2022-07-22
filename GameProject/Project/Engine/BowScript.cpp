@@ -8,6 +8,8 @@
 #include "Collider3D.h"
 #include "Camera.h"
 
+#include "FontMgr.h"
+
 void CBowScript::Update()
 {
 	m_FAnimation();
@@ -42,6 +44,7 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
+		CFontMgr::GetInst()->AddText(L"BowTest", L"BBBow~", Vec2(0.9f, 0.f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
@@ -57,6 +60,7 @@ void CBowScript::Update()
 
 	// 크로스헤어
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+		CFontMgr::GetInst()->DeleteText(L"BowTest");
 		CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
 		CGameObject* pPlayer = GetObj()->GetParent();
 		Vec3 vCrossHairDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
