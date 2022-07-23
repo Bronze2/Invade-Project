@@ -380,8 +380,8 @@ void CPlayerScript::Awake()
 	}
 
 
-	CGameObject* pDeadEffect = new CGameObject;
-	pDeadEffect->SetName(L"UISkill1");
+	pDeadEffect = new CGameObject;
+	pDeadEffect->SetName(L"DeadEffect");
 	pDeadEffect->FrustumCheck(false);
 	pDeadEffect->AddComponent(new CTransform);
 	pDeadEffect->AddComponent(new CMeshRender);
@@ -389,7 +389,7 @@ void CPlayerScript::Awake()
 	tResolution res1 = CRenderMgr::GetInst()->GetResolution();
 	Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
 
-	pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.3f));
+	pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
 	pDeadEffect->Transform()->SetLocalScale(vScale1);
 
 	pDeadEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -397,8 +397,10 @@ void CPlayerScript::Awake()
 	pSkillMtrl->DisableFileSave();
 	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexEffectShader"));
 	CResMgr::GetInst()->AddRes(L"TexEffectMtrl", pSkillMtrl);
+	Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"DeadEffect", L"Texture\\DeadEffect.png");
 	pDeadEffect->MeshRender()->SetMaterial(pSkillMtrl);
-
+	pDeadEffect->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+		pTex.GetPointer());
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(pDeadEffect);
 

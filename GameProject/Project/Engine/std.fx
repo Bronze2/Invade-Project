@@ -185,9 +185,10 @@ float4 PS_TexEffect(TEX_OUTPUT _input) : SV_Target
     float4 vColor = (float4) 0.f;
 
 
-    vColor = float4(0.3f, 0.3f, 0.3f, 0.3f);
-
+    if (tex_0)
+        vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
     
+    vColor.a = 0.6f;
 
     return vColor;
 }

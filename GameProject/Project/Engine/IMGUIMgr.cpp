@@ -231,8 +231,8 @@ void CIMGUIMgr::Progress()
             doOnce = true;
         }
 
-        ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight));
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight-32));
+        ImGui::SetNextWindowPos(ImVec2(0, -32));
         bool bOpen = true;
         ImGui::Begin("Login Scene", &bOpen, iw.window_flags);
         {
@@ -370,7 +370,7 @@ void CIMGUIMgr::Progress()
             doOnce = true;
         }
         ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth/3-200, m_tResloution.fHeight/3+10));
-        ImGui::SetNextWindowPos(ImVec2(50, m_tResloution.fHeight/2+100));
+        ImGui::SetNextWindowPos(ImVec2(50, m_tResloution.fHeight/2+100-32));
         bool bOpen = true;
         if (ImGui::Begin("Chat", &bOpen, iw.window_flags)) {
             ImGui::BeginChild("Chat", ImVec2(300, 300));
