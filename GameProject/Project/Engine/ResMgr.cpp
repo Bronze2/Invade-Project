@@ -128,7 +128,16 @@ void CResMgr::CreateDefaultMesh()
 		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 
 	AddRes(L"Rect2Mesh", pMesh);
+	pMesh = new CMesh;
 
+	vecIdx.clear();
+	vecIdx.push_back(0); vecIdx.push_back(1);
+	vecIdx.push_back(2); vecIdx.push_back(3); vecIdx.push_back(0);
+
+	pMesh->Create(sizeof(VTX), (UINT)vecVTX.size(), (BYTE*)vecVTX.data()
+		, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data()); //D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
+
+	AddRes(L"ColRect2Mesh", pMesh);
 
 	//				       3
 	// ===========	//    /

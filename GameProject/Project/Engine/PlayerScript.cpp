@@ -379,13 +379,14 @@ void CPlayerScript::Awake()
 		m_eCampState = CAMP_STATE::RED;
 	}
 
+	//추가
 
 	pDeadEffect = new CGameObject;
 	pDeadEffect->SetName(L"DeadEffect");
 	pDeadEffect->FrustumCheck(false);
 	pDeadEffect->AddComponent(new CTransform);
 	pDeadEffect->AddComponent(new CMeshRender);
-
+	pDeadEffect->SetActive(false);
 	tResolution res1 = CRenderMgr::GetInst()->GetResolution();
 	Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
 

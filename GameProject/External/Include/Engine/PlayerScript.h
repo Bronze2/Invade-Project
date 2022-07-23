@@ -76,8 +76,9 @@ private:
 
     CSound* m_pErrorSound;
 
+    //Ãß°¡
     CAMP_STATE m_eCampState;
-
+    CGameObject* pDeadEffect;
 public:
     CAMP_STATE GetCampState() { return m_eCampState; }
     SKILL* GetESkill() { return m_tESkill; }
