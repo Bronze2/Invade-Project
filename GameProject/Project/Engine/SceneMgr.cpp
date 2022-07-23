@@ -53,6 +53,7 @@
 #include "TitleScene.h"
 #include "Font.h"
 #include "FontMgr.h"
+#include "ResultScene.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -89,10 +90,10 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
 		m_pCurScene = new CLobbyScene;
 		break;
 	case SCENE_TYPE::INGAME:
-		//m_pCurScene = m_arrScene[(UINT)_Type];
 		m_pCurScene = new CInGameScene;
 		break;
 	case SCENE_TYPE::RESULT:
+		m_pCurScene = new CResultScene;				// 결과씬
 		break;
 	case SCENE_TYPE::END:
 		assert(false);
@@ -128,9 +129,14 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"BaseLine", L"Texture\\Crosshair\\UnknownsCircleFull2048.png");
 	CResMgr::GetInst()->Load<CTexture>(L"DarkUITex", L"Texture\\splash.png");
 	CResMgr::GetInst()->Load<CTexture>(L"TestAnim2D", L"Texture\\font02_0.png");
-	CResMgr::GetInst()->Load<CTexture>(L"UIButtonGameStart", L"Texture\\UIButtonGameStart.png");
-	CResMgr::GetInst()->Load<CTexture>(L"UIReadyBar", L"Texture\\UIReadyBar.png");
-	CResMgr::GetInst()->Load<CTexture>(L"UIReadyPressed", L"Texture\\UIReadyPressed.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIButtonGameStart", L"Texture\\UI\\START.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIReadyBar", L"Texture\\UI\\READY.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UIReadyPressed", L"Texture\\UI\\READY_PRESSED.png");
+
+	// 결과씬
+	CResMgr::GetInst()->Load<CTexture>(L"UIWIN", L"Texture\\UI\\WIN.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UILOSE", L"Texture\\UI\\LOSE.png");
+	CResMgr::GetInst()->Load<CTexture>(L"UILOCK", L"Texture\\UI\\lock.png");
 
 	CResMgr::GetInst()->Load<CTexture>(L"PlayerBlue", L"Texture\\ArchersTextureBlue.png");
 	CResMgr::GetInst()->Load<CTexture>(L"PlayerRed", L"Texture\\ArchersTextureRed.png");
@@ -311,13 +317,17 @@ void CSceneMgr::Init()
 
 	// 로비씬
 	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
-	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
+	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	
 	//m_pCurScene = new CLobbyScene;
 	//m_pCurScene->SetType(SCENE_TYPE::LOBBY);
 
-	m_pCurScene = new CInGameScene;
-	m_pCurScene->SetType(SCENE_TYPE::INGAME);
+	//m_pCurScene = new CInGameScene;
+	//m_pCurScene->SetType(SCENE_TYPE::INGAME);
+
+	m_pCurScene = new CResultScene;
+	m_pCurScene->SetType(SCENE_TYPE::RESULT);
 	
 	m_pCurScene->Init();
 	m_pCurScene->Awake();
@@ -339,6 +349,31 @@ void CSceneMgr::Update()
 	CSensorMgr::GetInst()->Update();
 	// �浹 ó��
 	CCollisionMgr::GetInst()->Update();
+
+	if (KEY_TAB(KEY_TYPE::KEY_NUM7)) {
+		if (m_pCurScene->GetCurScene() != SCENE_TYPE::LOBBY) {
+			tEvent evn = {};
+			evn.wParam = (DWORD_PTR)SCENE_TYPE::LOBBY;
+			evn.eType = EVENT_TYPE::CHANGE_SCENE;
+			CEventMgr::GetInst()->AddEvent(evn);
+		}
+	}
+	if (KEY_TAB(KEY_TYPE::KEY_NUM8)) {
+		if (m_pCurScene->GetCurScene() != SCENE_TYPE::INGAME) {
+			tEvent evn = {};
+			evn.wParam = (DWORD_PTR)SCENE_TYPE::INGAME;
+			evn.eType = EVENT_TYPE::CHANGE_SCENE;
+			CEventMgr::GetInst()->AddEvent(evn);
+		}
+	}
+	if (KEY_TAB(KEY_TYPE::KEY_NUM9)) {
+		if (m_pCurScene->GetCurScene() != SCENE_TYPE::RESULT) {
+			tEvent evn = {};
+			evn.wParam = (DWORD_PTR)SCENE_TYPE::RESULT;
+			evn.eType = EVENT_TYPE::CHANGE_SCENE;
+			CEventMgr::GetInst()->AddEvent(evn);
+		}
+	}
 }
 
 void CSceneMgr::Update_Tool()

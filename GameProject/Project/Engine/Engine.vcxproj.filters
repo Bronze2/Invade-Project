@@ -312,6 +312,9 @@
     <ClCompile Include="FontMgr.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="ResultScene.cpp">
+      <Filter>Scene\In</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -598,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="FontMgr.h">
       <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultScene.h">
+      <Filter>Scene\In</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

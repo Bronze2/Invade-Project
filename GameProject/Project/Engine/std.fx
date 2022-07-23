@@ -155,13 +155,30 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
 {
     float4 vColor = (float4) 0.f;
 
-    if (tex_0)
+    if (tex_0) {
         vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    }
     else
         vColor = float4(1.f, 0.f, 1.f, 1.f);
 
     clip(vColor.a - 0.9f);
     
+    return vColor;
+}
+
+// 잠금버튼
+float4 PS_ColorTex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    if (tex_0) {
+        vColor = g_tex_0.Sample(g_sam_0, _input.vUV) * g_vec4_0;
+    }
+    else
+        vColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    clip(vColor.a - 0.9f);
+
     return vColor;
 }
 

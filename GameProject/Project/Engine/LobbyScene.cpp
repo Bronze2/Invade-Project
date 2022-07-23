@@ -316,17 +316,42 @@ void CLobbyScene::Init()
 	Ptr<CTexture> pWindTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyWind");
 	Ptr<CTexture> pThunderTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyThunder");
 	Ptr<CTexture> pFireTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyFire");
+	Ptr<CTexture> pLockTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOCK");
 	CGameObject* pUIButtonProperty;
+	CGameObject* pUIButtonLock;
+	Vec4 vLockColor = Vec4(1.f, 1.f, 0.f, 0.9f);
+	Ptr<CMaterial> pUIButtonLockMtrl = new CMaterial;
+	pUIButtonLockMtrl->DisableFileSave();
+	pUIButtonLockMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"ColorTexShader"));
 
 	for (int i = 0; i < 5; i++) {
+		// 잠금버튼
+		pUIButtonLock = new CGameObject;
+		pUIButtonLock->SetName(L"LockTex");
+		pUIButtonLock->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+		pUIButtonLock->AddComponent(new CTransform);
+		pUIButtonLock->AddComponent(new CMeshRender);
+		pUIButtonLock->AddComponent(new CButtonScript);
+		pUIButtonLock->MeshRender()->SetRender(false);
+
+		pUIButtonLock->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIProPertyButtonScale.x / 2 - vUIProPertyButtonScale.x * i, res.fHeight / 2 - vUIProPertyButtonScale.y / 2, 1.f));
+		pUIButtonLock->Transform()->SetLocalScale(vUIProPertyButtonScale);
+
+		pUIButtonLock->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pUIButtonLock->MeshRender()->SetMaterial(pUIButtonLockMtrl);
+		pUIButtonLock->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pLockTex.GetPointer());
+		pUIButtonLock->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::VEC4_0, &vLockColor);
+		FindLayer(L"UI")->AddGameObject(pUIButtonLock);
+
+
 		pUIButtonProperty = new CGameObject;
 		pUIButtonProperty->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		pUIButtonProperty->AddComponent(new CTransform);
 		pUIButtonProperty->AddComponent(new CMeshRender);
 		pUIButtonProperty->AddComponent(new CButtonScript);
 
-		pUIButtonProperty->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIProPertyButtonScale.x / 2 - vUIProPertyButtonScale.x * i, res.fHeight / 2 - vUIProPertyButtonScale.y / 2, 1.f));
-		pUIButtonProperty->Transform()->SetLocalScale(vUIProPertyButtonScale);
+		pUIButtonProperty->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+		pUIButtonProperty->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 		pUIButtonProperty->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pUIButtonStartMtrl = new CMaterial;
@@ -336,33 +361,34 @@ void CLobbyScene::Init()
 
 		switch (i) {
 		case 0:
-			pUIButtonProperty->SetName(L"FirePropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFireTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_FIRE);
-			break;
-		case 1:
-			pUIButtonProperty->SetName(L"ThunderPropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pThunderTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_THUNDER);
-			break;
-		case 2:
-			pUIButtonProperty->SetName(L"WindPropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pWindTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WIND);
-			break;
-		case 3:
-			pUIButtonProperty->SetName(L"DarkPropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_DARK);
-			break;
-		case 4:
 			pUIButtonProperty->SetName(L"WaterPropertyButton");
 			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pWaterTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WATER);
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WATER);
+			break;
+		case 1:
+			pUIButtonProperty->SetName(L"FirePropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFireTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_FIRE);
+			break;
+		case 2:
+			pUIButtonProperty->SetName(L"DarkPropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_DARK);
+			break;
+		case 3:
+			pUIButtonProperty->SetName(L"ThunderPropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pThunderTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_THUNDER);
+			break;
+		case 4:
+			pUIButtonProperty->SetName(L"WindPropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pWindTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WIND);
 			break;
 		}
 
-		FindLayer(L"UI")->AddGameObject(pUIButtonProperty);
+		pUIButtonLock->AddChild(pUIButtonProperty);
+		//FindLayer(L"UI")->AddGameObject(pUIButtonProperty);
 	}
 
 //-----------------------------------------------------------------------------------------------

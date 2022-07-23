@@ -77,7 +77,8 @@ void CCameraScript::Update()
     }
 
 
-    if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE && pCurScene->GetCurScene() == SCENE_TYPE::LOBBY)
+    // °á°ú¾À
+    if (GetObj()->Camera()->GetProjType() == PROJ_TYPE::PERSPECTIVE && pCurScene->GetCurScene() != SCENE_TYPE::INGAME)
     {
         if (KEY_TAB(KEY_TYPE::KEY_Z)) {
             m_bMoveLobbyCam = !m_bMoveLobbyCam;

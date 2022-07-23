@@ -591,7 +591,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Tex", "ps_5_0");
 
 	// BlendState 설정
-	// pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	// DSState
 	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
@@ -602,6 +602,27 @@ void CResMgr::CreateDefaultShader()
 	pShader->Create(SHADER_POV::FORWARD);
 
 	AddRes(L"TexShader", pShader);   
+
+	// ==============
+	// ColorTex Shader (잠금버튼)
+	// ==============
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Tex", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_ColorTex", "ps_5_0");
+
+	// BlendState 설정
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+	// DSState
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"Color", SHADER_PARAM::VEC4_0 });
+	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"ColorTexShader", pShader);
 
 	// ==============
 	// HPBar Shader (에이치비바)

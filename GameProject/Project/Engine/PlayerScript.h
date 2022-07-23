@@ -107,6 +107,9 @@ public:
     void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
     PLAYER_STATE GetAnimaionState() { return m_eState; }
 
+    // 결과씬
+    void SetResultAnim(bool _bWin);
+
     // 에이치피바
     UINT GetCurHp() { return m_iCurHp; }
     void SetCurHp(int _hp) { m_iCurHp = _hp; }

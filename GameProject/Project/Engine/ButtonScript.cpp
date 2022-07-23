@@ -58,16 +58,23 @@ void CButtonScript::Execute()
 			GetObj()->MeshRender()->SetMaterial(m_pReadyPressedMtrl);
 			GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyPressedTex.GetPointer());
 			m_pPlayerObj->GetScript<CPlayerScript>()->SetReady(true);
+			// 잠금버튼
+			UINT iType = m_pPlayerObj->GetScript<CPlayerScript>()->GetType();
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->GetParentObj()[2 + iType]->MeshRender()->SetRender(true);
+
 		}
 		else {
 			m_pReadyBar->SetActive(false);
 			GetObj()->MeshRender()->SetMaterial(m_pReadyNonePressedMtrl);
 			GetObj()->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pReadyNonePressedTex.GetPointer());
 			m_pPlayerObj->GetScript<CPlayerScript>()->SetReady(false);
+
+			UINT iType = m_pPlayerObj->GetScript<CPlayerScript>()->GetType();
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->GetParentObj()[2 + iType]->MeshRender()->SetRender(false);
+
 		}
 		break;
 	case BUTTON_TYPE::GAMESTART:
-		cout << "게임스타트라고" << endl;
 		ChangeScene(SCENE_TYPE::INGAME);
 		break;
 	case BUTTON_TYPE::SELECT_WATER:
@@ -77,6 +84,7 @@ void CButtonScript::Execute()
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
 			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx")->GetMesh());
 		}
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 		break;
 	case BUTTON_TYPE::SELECT_DARK:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
@@ -85,6 +93,7 @@ void CButtonScript::Execute()
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
 			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx")->GetMesh());
 		}
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
 		break;
 	case BUTTON_TYPE::SELECT_WIND:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
@@ -93,6 +102,7 @@ void CButtonScript::Execute()
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
 			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx")->GetMesh());
 		}
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WIND);
 		break;
 	case BUTTON_TYPE::SELECT_THUNDER:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
@@ -101,6 +111,7 @@ void CButtonScript::Execute()
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
 			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx")->GetMesh());
 		}
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 		break;
 	case BUTTON_TYPE::SELECT_FIRE:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
@@ -109,6 +120,7 @@ void CButtonScript::Execute()
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
 			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx")->GetMesh());
 		}
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 		break;
 	}
 }

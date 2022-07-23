@@ -377,11 +377,13 @@ enum class ELEMENT_TYPE {
 	THUNDER = 3,
 	WIND = 4
 };
-// 로비씬 RUN과 JUMP 순서 바꿈
+
+// 결과씬
 enum class PLAYER_STATE {
 	IDLE,
 	WALK,
 	JUMP,
+	DIE,
 	ATTACK_READY,
 	ATTACK,
 	ATTACK_READY_HIGH_1,
@@ -390,7 +392,6 @@ enum class PLAYER_STATE {
 	ATTACK_READY_HIGH_4,
 	ATTACK_READY_HIGH_5,
 	DEMAGED,
-	DIE,
 	RUN,
 	END,
 };
