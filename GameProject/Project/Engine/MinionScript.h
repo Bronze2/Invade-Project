@@ -68,7 +68,7 @@ class CMinionScript :
     float m_fStartXValue;
     float m_fMinStartX;
     float m_fMaxStartX;
-    bool m_bDetection;
+    int m_bDetection;
     float m_fPrevXValue;
 
 

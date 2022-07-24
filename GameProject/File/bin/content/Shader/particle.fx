@@ -124,6 +124,8 @@ void GS_Particle(point VTX_OUT _in[1], inout TriangleStream<GS_OUT> OutputStream
     OutputStream.RestartStrip();
 }
 
+
+
 float4 PS_Particle(GS_OUT _in) : SV_Target
 {
     float fRatio = tData[_in.iInstID].m_fCurTime / tData[_in.iInstID].m_fLifeTime;

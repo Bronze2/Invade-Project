@@ -261,6 +261,9 @@
     <ClCompile Include="StructuredBuffer.cpp">
       <Filter>Device</Filter>
     </ClCompile>
+    <ClCompile Include="SafeZone.cpp">
+      <Filter>Script\SAFEZONE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -509,6 +512,9 @@
     <ClInclude Include="StructuredBuffer.h">
       <Filter>Device</Filter>
     </ClInclude>
+    <ClInclude Include="SafeZone.h">
+      <Filter>Script\SAFEZONE</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -621,6 +627,9 @@
     </Filter>
     <Filter Include="IMGUI\Mgr">
       <UniqueIdentifier>{98d75b2a-b3cf-4e97-8948-70230f9835b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\SAFEZONE">
+      <UniqueIdentifier>{9625e533-d3da-45e4-b41e-d87227f4ab6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

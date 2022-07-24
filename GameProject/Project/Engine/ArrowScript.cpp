@@ -157,7 +157,8 @@ void CArrowScript::Update()
 
 					Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
 					vPos3.y = 1.f;
-					CreateThunderObject(vPos3, m_iLayerIdx);
+					//CreateThunderObject(vPos3, m_eCampState);
+					CreateThunderObject(vPos3, CAMP_STATE::BLUE);
 					Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 				}
 			}
@@ -400,7 +401,7 @@ void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
 {
 	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 	vPos.y = 1.f;
-	CreateThunderObject(vPos, m_eCampState);
+	CreateThunderObject(vPos, CAMP_STATE::BLUE);
 	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
 		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));

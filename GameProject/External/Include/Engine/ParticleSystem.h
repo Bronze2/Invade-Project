@@ -32,6 +32,9 @@ private:
 	Vec4				m_vEndColor;    // 파티클 최종 색상
 	Vec4				m_vDir;
 
+	Vec4 m_vStartScale;
+	Vec4 m_vEndScale;
+
 	Vec2 m_vTime;
 	int m_iCount;
 	UINT m_iAdd;

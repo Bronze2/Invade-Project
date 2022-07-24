@@ -42,6 +42,7 @@
 #include "TowerScript.h"
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
+#include "SafeZone.h"
 
 #include "SkillMgr.h" 
 #include "CrossHairScript.h"
@@ -158,7 +159,7 @@ void CInGameScene::Init()
     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
     pObject->MeshRender()->SetDynamicShadow(true);
     pObject->Sensor()->SetRadius(500.f);
-    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
+    pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 
 
     //스킬
@@ -1562,17 +1563,21 @@ void CInGameScene::Init()
     pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
     FindLayer(L"UI")->AddGameObject(pUISkill);
 
-//   CGameObject* pRangeObject = new CGameObject;
-//   pRangeObject->AddComponent(new CTransform);
-//   pRangeObject->AddComponent(new CMeshRender);
-//   pRangeObject->AddComponent(new CParticleSystem);
-//   pRangeObject->SetName(L"Range");
-//   pRangeObject->Transform()->SetLocalPos(Vec3(0.f, 5.f, 0.f));
-//   pRangeObject->Transform()->SetLocalScale(Vec3(100.f, 1.f, 100.f));
-//   pRangeObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"ColRect2Mesh"));
-//   pRangeObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"RangeMtrl"));
-//   CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pRangeObject);
-
+   CGameObject* pRangeObject = new CGameObject;
+   pRangeObject->AddComponent(new CTransform);
+   pRangeObject->AddComponent(new CMeshRender);
+   pRangeObject->AddComponent(new CCollider3D);
+   pRangeObject->AddComponent(new CSafeZone);
+   pRangeObject->SetName(L"Range");
+   pRangeObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+   pRangeObject->Transform()->SetLocalPos(Vec3(0.f, 5.f, 0.f));
+   pRangeObject->Transform()->SetLocalScale(Vec3(100.f, 1.f, 100.f));
+   pRangeObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+   pRangeObject->Collider3D()->SetOffsetScale(Vec3(1.f, 100.f, 1.f));
+   pRangeObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"ColRect2Mesh"));
+   pRangeObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"RangeMtrl"));
+   pRangeObject->GetScript<CSafeZone>()->SetCampState(CAMP_STATE::RED);
+   FindLayer(L"Default")->AddGameObject(pRangeObject);
 
 
     //해야 할일 화살 파티클 지정 사운드 지정

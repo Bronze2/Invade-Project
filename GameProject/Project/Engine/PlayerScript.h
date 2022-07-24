@@ -79,7 +79,9 @@ private:
     //Ãß°¡
     CAMP_STATE m_eCampState;
     CGameObject* pDeadEffect;
+    bool m_bCanAttack;
 public:
+    void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
     CAMP_STATE GetCampState() { return m_eCampState; }
     SKILL* GetESkill() { return m_tESkill; }
     SKILL* GetZSkill() { return m_tZSkill; }

@@ -38,6 +38,8 @@ enum class SCRIPT_TYPE {
     EMPTYCAMERASCRIPT,
     CROSSHAIRSCRIPT,
     PARTICLE,
+
+    SAFEZONE,
     END,
 };
 

@@ -456,7 +456,7 @@ void CSpawnScript::Update()
 							
 								CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min.mdat", vPos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 50.f, 0.f), Vec3(60.f, 100.f, 60.f), MINION_ATTACK_TYPE::CANON, pNewAnimation, m_eCampState);
 								CreateObject(pObject, L"Blue");
-								m_uiCount += 1;
+								m_uiCount += 8;
 								m_uiSpawnStart = m_uiSpawnEnd;
 							}
 

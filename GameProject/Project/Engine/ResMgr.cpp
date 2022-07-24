@@ -935,10 +935,8 @@ void CResMgr::CreateDefaultShader()
 	pShader->AddShaderParam(tShaderParam{ L"Start Color", SHADER_PARAM::VEC4_0 });
 	pShader->AddShaderParam(tShaderParam{ L"End Color", SHADER_PARAM::VEC4_1 });
 	pShader->AddShaderParam(tShaderParam{ L"Particle Texture", SHADER_PARAM::TEX_0 });
-	pShader->AddShaderParam(tShaderParam{ L"Is Scale Detail" , SHADER_PARAM::INT_0 });
-	pShader->AddShaderParam(tShaderParam{ L"Start ScaleV", SHADER_PARAM::VEC4_2 });
-	pShader->AddShaderParam(tShaderParam{ L"End ScaleV", SHADER_PARAM::VEC4_3 });
 	AddRes(L"ParticleShader", pShader);
+
 
 
 

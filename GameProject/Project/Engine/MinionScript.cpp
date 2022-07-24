@@ -137,7 +137,7 @@ void CMinionScript::Update()
 			}
 			else
 				m_pTarget = m_pNexus;
-			m_arrEnemy.clear();
+			
 		}
 
 	
@@ -162,7 +162,7 @@ void CMinionScript::Update()
 				float rotate = angle * 0.0174532925f;
 				vRot.y = rotate;
 				m_eState = MINION_STATE::WALK;
-				m_arrEnemy.clear();
+				m_eFindState = FIND_STATE::RAY_FIRST;
 			}
 			else {
 				Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
@@ -270,7 +270,7 @@ void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
 		m_arrEnemy.push_back(_pOther);
 		m_bFindNear = true;
-		m_bDetection = true;
+		m_bDetection = 1;
 		if (nullptr != _pOther->GetScript<CPlayerScript>())
 		{
 			
@@ -410,10 +410,8 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {
 	if (FIND_STATE::RAY_FIRST == m_eFindState) {
 
-
 		return;
 	}
-
 
 
 
@@ -442,7 +440,7 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 	}
 
 
-	if (0 == _pObject.size()||!m_bFindNear)return;
+
 	for (int i = 0; i < _pObject.size(); ++i) {
 		if (i == 0) {
 			m_pTarget = _pObject[i];
@@ -597,6 +595,9 @@ void CMinionScript::m_FAnimation()
 							}
 							else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
 								m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+							}
+							else if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
+								m_pTarget->GetScript<CPlayerScript>()->SetDamage(m_uiAttackDamage);
 							}
 					}
 					if (m_eAttackType != MINION_ATTACK_TYPE::MELEE) {
