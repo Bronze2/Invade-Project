@@ -319,7 +319,7 @@ void CLobbyScene::Init()
 	Ptr<CTexture> pLockTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOCK");
 	CGameObject* pUIButtonProperty;
 	CGameObject* pUIButtonLock;
-	Vec4 vLockColor = Vec4(1.f, 1.f, 0.f, 0.9f);
+	Vec4 vLockColor = Vec4(1.f, 1.f, 1.f, 0.9f);
 	Ptr<CMaterial> pUIButtonLockMtrl = new CMaterial;
 	pUIButtonLockMtrl->DisableFileSave();
 	pUIButtonLockMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"ColorTexShader"));

@@ -3,7 +3,7 @@
 #include "MinionScript.h"
 
 #define PATTERNINTEVAL 10
-#define SPAWNINTEVAL 1
+#define SPAWNINTEVAL 3
 class CAnimation;
 class CSpawnScript :
     public CScript
@@ -28,12 +28,16 @@ private:
 
 
 
+    CGameObject* m_pFirstTower;
+    CGameObject* m_pSecondTower;
     
     CAMP_STATE m_eCampState;
 private:
     CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange ,CAnimation* _pAnimation,CAMP_STATE _eState);
 public:
 
+    void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
+    void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
     void SetSpawnState(CAMP_STATE _eState) { m_eCampState = _eState; }
     virtual void Update();
 

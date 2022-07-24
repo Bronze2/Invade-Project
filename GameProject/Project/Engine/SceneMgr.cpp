@@ -138,6 +138,18 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"UILOSE", L"Texture\\UI\\LOSE.png");
 	CResMgr::GetInst()->Load<CTexture>(L"UILOCK", L"Texture\\UI\\lock.png");
 
+	// 에이치피바
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_01_Blue", L"Texture\\helmet\\helmet_01_blue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_02_Blue", L"Texture\\helmet\\helmet_02_blue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_03_Blue", L"Texture\\helmet\\helmet_03_blue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_04_Blue", L"Texture\\helmet\\helmet_04_blue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_05_Blue", L"Texture\\helmet\\helmet_05_blue.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_01_Red", L"Texture\\helmet\\helmet_01_red.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_02_Red", L"Texture\\helmet\\helmet_02_red.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_03_Red", L"Texture\\helmet\\helmet_03_red.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_04_Red", L"Texture\\helmet\\helmet_04_red.png");
+	CResMgr::GetInst()->Load<CTexture>(L"helmet_05_Red", L"Texture\\helmet\\helmet_05_red.png");
+
 	CResMgr::GetInst()->Load<CTexture>(L"PlayerBlue", L"Texture\\ArchersTextureBlue.png");
 	CResMgr::GetInst()->Load<CTexture>(L"PlayerRed", L"Texture\\ArchersTextureRed.png");
 	CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\property_water.png");
@@ -320,14 +332,14 @@ void CSceneMgr::Init()
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	//m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	
-	//m_pCurScene = new CLobbyScene;
-	//m_pCurScene->SetType(SCENE_TYPE::LOBBY);
+	m_pCurScene = new CLobbyScene;
+	m_pCurScene->SetType(SCENE_TYPE::LOBBY);
 
 	//m_pCurScene = new CInGameScene;
 	//m_pCurScene->SetType(SCENE_TYPE::INGAME);
 
-	m_pCurScene = new CResultScene;
-	m_pCurScene->SetType(SCENE_TYPE::RESULT);
+	//m_pCurScene = new CResultScene;
+	//m_pCurScene->SetType(SCENE_TYPE::RESULT);
 	
 	m_pCurScene->Init();
 	m_pCurScene->Awake();

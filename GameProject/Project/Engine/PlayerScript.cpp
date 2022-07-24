@@ -258,6 +258,7 @@ void CPlayerScript::m_FAnimation()
 							GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 							GetObj()->Animator3D()->SetCurTime(0.f);
 							GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+							GetObj()->Animator3D()->SetAnimationSpeed(0.7f);
 						}
 					}
 				}
@@ -511,18 +512,19 @@ void CPlayerScript::Awake()
 		case ELEMENT_TYPE::WATER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx");
 			break;
-		case ELEMENT_TYPE::DARK:
+		case ELEMENT_TYPE::FIRE:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
 			break;
-		case ELEMENT_TYPE::WIND:
+		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx");
 			break;
-		case ELEMENT_TYPE::FIRE:
+		case ELEMENT_TYPE::WIND:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx");
 			break;
+
 		}
 	}
 	else if (GetObj()->GetLayerIdx() == 4) {
@@ -530,16 +532,16 @@ void CPlayerScript::Awake()
 		case ELEMENT_TYPE::WATER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx");
 			break;
-		case ELEMENT_TYPE::DARK:
+		case ELEMENT_TYPE::FIRE:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx");
 			break;
-		case ELEMENT_TYPE::WIND:
+		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx");
 			break;
-		case ELEMENT_TYPE::FIRE:
+		case ELEMENT_TYPE::WIND:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx");
 			break;
 		}
@@ -759,6 +761,11 @@ void CPlayerScript::Update()
 			m_eState = PLAYER_STATE::DIE;
 		}
 
+		if (KEY_TAB(KEY_TYPE::KEY_Q))
+		{
+			cout << "Player Position : " << vPos.x << ", " << vPos.y << ", " << vPos.z << endl;
+		}
+
 		UseSkill();
 		StatusCheck();
 		GetDamage();
@@ -768,13 +775,6 @@ void CPlayerScript::Update()
 		// 본인 에이치피바
 		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
 		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-
-		// 아군 에이치피바
-		//for (int i = 0; i < 3; ++i) {
-		//	int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
-		//	m_arrAlliance[i]->GetChild()[5]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
-		//	m_arrAlliance[i]->GetChild()[5]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-		//}
 
 		// 파티창 에이치피바
 		for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
@@ -868,7 +868,7 @@ void CPlayerScript::SetResultAnim(bool _bWin)
 			GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 			GetObj()->Animator3D()->SetCurTime(0.f);
 			GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-			m_eState = PLAYER_STATE::JUMP;
+			GetObj()->Animator3D()->SetAnimationSpeed(0.7f);
 			m_ePrevState = PLAYER_STATE::JUMP;
 		}
 	}
@@ -880,7 +880,6 @@ void CPlayerScript::SetResultAnim(bool _bWin)
 			GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
 			GetObj()->Animator3D()->SetCurTime(0.f);
 			GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-			m_eState = PLAYER_STATE::DIE;
 			m_ePrevState = PLAYER_STATE::DIE;
 		}
 	}

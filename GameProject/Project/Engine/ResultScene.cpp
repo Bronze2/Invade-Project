@@ -143,12 +143,12 @@ void CResultScene::Init()
 		if (i < 4) {
 			pPlayerObj = pPlayerBlueMeshData->Instantiate();
 			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
-			pPlayerObj->Transform()->SetLocalPos(Vec3(-300.f + i * 200.f, 0.f, 700.f));
+			pPlayerObj->Transform()->SetLocalPos(Vec3(-400.f + i * 300.f, 0.f, 900.f));
 		}
 		else {
 			pPlayerObj = pPlayerRedMeshData->Instantiate();
 			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
-			pPlayerObj->Transform()->SetLocalPos(Vec3(-1000.f + i * 200.f, 0.f, 1300.f));
+			pPlayerObj->Transform()->SetLocalPos(Vec3(-200.f + (i - 4) * 150.f, 0.f, 500.f));
 		}
 
 		pPlayerObj->SetName(L"Monster");
@@ -161,7 +161,7 @@ void CResultScene::Init()
 		CAnimation* pPlayerAnimation = new CAnimation;
 		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);
 		pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
-		pPlayerAnimation->InsertAnimClip(L"JUMP", 290, 298);		// 81, 100
+		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 104);		// 81, 100
 		pPlayerAnimation->InsertAnimClip(L"DIE", 242, 261);
 
 		pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);

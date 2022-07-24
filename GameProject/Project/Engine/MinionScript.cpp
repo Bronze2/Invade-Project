@@ -14,6 +14,10 @@
 
 void CMinionScript::Init()
 {
+	m_bDetection = false;
+	m_fMinStartX = 990;
+	m_fMaxStartX = 1010;
+	m_fStartXValue = Transform()->GetLocalPos().x;
 	m_eState = MINION_STATE::WALK;
 	if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK")) {
 		m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK");
@@ -26,35 +30,37 @@ void CMinionScript::Init()
 	}
 	switch (m_eAttackType)
 	{
-	case MINION_ATTACK_TYPE::MELEE:{
-		SetAttackRange(50);
+	case MINION_ATTACK_TYPE::MELEE: {
+		SetAttackRange(180);
 		m_uiMaxHp = 450; m_uiAttackDamage = 30;
-		}
-		break;
+	}
+	break;
 
 	case MINION_ATTACK_TYPE::RANGE: {
-		SetAttackRange(150);
+		SetAttackRange(200);
 		m_uiMaxHp = 300; m_uiAttackDamage = 20;
-	//	if (CAMP_STATE::BLUE == m_eCamp) {
-	//		m_pProjectile = new CGameObject;
-	//		m_pProjectile->AddComponent(new CTransform);
-	//		m_pProjectile->AddComponent(new CMeshRender);
-	//		m_pProjectile->AddComponent(new CProjectileScript);
-	//		m_pProjectile->GetScript<CProjectileScript>()->SetObject(GetObj());
-	//		CreateObject(m_pProjectile, L"Blue");
-	//	}
+		//	if (CAMP_STATE::BLUE == m_eCamp) {
+		//		m_pProjectile = new CGameObject;
+		//		m_pProjectile->AddComponent(new CTransform);
+		//		m_pProjectile->AddComponent(new CMeshRender);
+		//		m_pProjectile->AddComponent(new CProjectileScript);
+		//		m_pProjectile->GetScript<CProjectileScript>()->SetObject(GetObj());
+		//		CreateObject(m_pProjectile, L"Blue");
+		//	}
 	}
-	 break;
+	break;
 
 	case MINION_ATTACK_TYPE::CANON: {
-		SetAttackRange(350);
+		SetAttackRange(300);
 		m_uiMaxHp = 550; m_uiAttackDamage = 60;
 	}
-	 break;
+	break;
 
 	}
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
+	m_pRay = new SimpleMath::Ray;
+	m_fSpeed = 200.f;
 
 	// 에이치피바
 	m_pHPBar = new CGameObject;
@@ -67,10 +73,12 @@ void CMinionScript::Init()
 	Vec3 vHPBarScale = Vec3(60.f, 10.f, 1.f);
 	m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
 	m_pHPBar->Transform()->SetLocalPos(Vec3(0.f, GetObj()->Collider3D()->GetOffsetPos().y + GetObj()->Collider3D()->GetOffsetScale().y + 30.f, 0.f));
-	if (m_eCamp == CAMP_STATE::BLUE)
+	if (m_eCamp == CAMP_STATE::BLUE) {
 		m_pHPBar->Transform()->SetLocalRot(Vec3(XMConvertToRadians(180.f), 0.f, 0.f));
-	else
+	}
+	else{
 		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	}
 	m_pHPBar->Transform()->SetBillBoard(true);
 	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
 
@@ -85,6 +93,7 @@ void CMinionScript::Init()
 
 void CMinionScript::Update()
 {
+	CheckObstacle();
 
 	if (KEY_HOLD(KEY_TYPE::KEY_1)) {
 		m_eState = MINION_STATE::IDLE;
@@ -106,25 +115,59 @@ void CMinionScript::Update()
 	Vec3 vPos = Transform()->GetWorldPos(); 
 	Vec3 vTargetPos;
 	Vec3 vRot = Transform()->GetLocalRot();
-	if (nullptr != m_pTarget&&!m_bAllienceCol) {
+	if (nullptr != m_pTarget && !m_bAllienceCol) {
 		Vec3 vTargetPos;
 		if (!m_pTarget->IsDead()) {
-			vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-			float rotate = angle * 0.0174532925f;
-			vRot.y = rotate;
+
+			if (FIND_STATE::RAY_FIRST == m_eFindState) {
+				float angle = atan2(vPos.x - m_fStartXValue, vPos.z - vPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+
+			}
+			else {
+				vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+			}
 		}
 	}
-	if (m_bAllienceCol&&!m_bSeparate) {
+	if (m_bAllienceCol && !m_bSeparate) {
 		if (m_bRotate) {
+
 			vRot.y += PI / 2;
+
 			m_bRotate = false;
 		}
 	}
 
 
+
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	
+	if (FIND_STATE::RAY_FIRST == m_eFindState)
+	{
+		if ((m_fMinStartX < vLocalPos.x) && (m_fMaxStartX > vLocalPos.x)) {
+			m_eFindState = FIND_STATE::NONE;
+			if (!m_pFirstTower->IsDead())
+			{
+
+				m_pTarget = m_pFirstTower;
+
+			}
+			else if (!m_pSecondTower->IsDead()) {
+
+				m_pTarget = m_pSecondTower;
+
+			}
+			else
+				m_pTarget = m_pNexus;
+			m_arrEnemy.clear();
+		}
+
+
+	}
 
 	switch (m_eState)
 	{
@@ -139,10 +182,20 @@ void CMinionScript::Update()
 	case MINION_STATE::ATTACK:
 	{
 		if (m_ePrevState != m_eState) {
-			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-			float rotate = angle * 0.0174532925f;
-			vRot.y = rotate;
+
+			if (FIND_STATE::RAY_FIRST == m_eFindState) {
+				float angle = atan2(vPos.x - m_fStartXValue, vPos.z - vPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+				m_eState = MINION_STATE::WALK;
+				m_arrEnemy.clear();
+			}
+			else {
+				Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+				float rotate = angle * 0.0174532925f;
+				vRot.y = rotate;
+			}
 		}
 	}
 		break;
@@ -197,6 +250,52 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 	CreateObject(pObject, _Layer);
 }
 
+void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
+{
+	Vec3 vWorldPos = Transform()->GetWorldPos();
+	vWorldPos.y += Collider3D()->GetOffsetPos().y;
+
+	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
+
+
+	if (nullptr == m_pTarget)
+		return;
+	if (nullptr == m_pTarget->GetScript<CPlayerScript>())
+		return;
+
+
+	Vec3 target = m_pTarget->Transform()->GetWorldPos();
+	target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+	m_pRay->position = vWorldPos;
+	m_pRay->direction = vDir;
+	float min = INFINITE;
+	if (_pCollider->GetObj()->GetName() != L"Obstacle")
+	{
+
+	}
+	if (m_pRay->Intersects(_pCollider->GetBox(), min)) {
+		Vec3 target = m_pTarget->Transform()->GetWorldPos();
+
+		target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+		float distance = Vec3::Distance(target, vWorldPos);
+		Vec3 vPos2 = Vec3();
+
+		float distance2 = Vec3::Distance(_pCollider->GetObj()->Transform()->GetWorldPos(), vWorldPos);
+		if (min > distance)
+			return;
+		if (_pCollider->GetObj()->GetName() == L"obstacle") {
+			m_InterSectObject = _pCollider->GetObj();
+
+			m_eFindState = FIND_STATE::RAY_FIRST;
+
+			m_fPrevXValue = vWorldPos.x;
+
+		}
+
+	}
+}
+
+
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 {
 	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
@@ -210,23 +309,61 @@ void CMinionScript::OnDetection(CGameObject* _pOther)
 	
 }
 
+void CMinionScript::CheckObstacle()
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+
+	RayCollision(pCurScene->FindLayer(L"Obstacle"));
+
+}
+
 void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 {
-	vector<CGameObject*>::iterator iter=m_arrEnemy.begin();
-	for (int i=0; iter != m_arrEnemy.end(); ++iter,++i) {
+	vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
+	for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
 		if (m_arrEnemy[i] == _pOther) {
 			m_arrEnemy.erase(iter);
 			if (Sensor()->GetDetectionCount() == 0) {
 				m_bFindNear = false;
-				m_pTarget = m_pNexus;
+				if (!m_pFirstTower->IsDead())
+				{
+
+					m_pTarget = m_pFirstTower;
+
+				}
+				else if (!m_pSecondTower->IsDead()) {
+
+					m_pTarget = m_pSecondTower;
+
+				}
+				else
+					m_pTarget = m_pNexus;
 			}
 			else {
+
 				FindNearObject(m_arrEnemy);
 			}
 			return;
 		}
-		
+
 	}
+
+
+}
+
+void CMinionScript::RayCollision(const CLayer* _pLayer)
+{
+	const vector<CGameObject*>& vecObj = _pLayer->GetObjects();
+
+	map<DWORD_PTR, bool>::iterator iter;
+	for (size_t i = 0; i < vecObj.size(); ++i) {
+		CCollider3D* pCollider = vecObj[i]->Collider3D();
+		if (nullptr == pCollider)
+			continue;
+		InterSectsObject(pCollider);
+	}
+
+
 
 }
 
@@ -247,53 +384,91 @@ void CMinionScript::CheckHp()
 #include "GameObject.h"
 void CMinionScript::CheckRange()
 {
-	
 	if (m_pTarget == nullptr)return;
 	if (m_pTarget->IsDead())return;
-	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
+
+	Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
-	if (m_fAttackRange >= length) {
-		m_eState = MINION_STATE::ATTACK;
+	if (m_pTarget->GetScript<CTowerScript>()) {
+		float m_fTowerAttackRange = m_fAttackRange + 100.f;
+
+		if (m_fTowerAttackRange >= length) {
+			m_eState = MINION_STATE::ATTACK;
+		}
+		else {
+			if (m_bFinishAnimation) {
+				m_eState = MINION_STATE::WALK;
+			}
+		}
 	}
 	else {
-		if (m_bFinishAnimation) {
-			
-			
-			m_eState = MINION_STATE::WALK;
-			
-			
+		if (m_fAttackRange >= length) {
+			m_eState = MINION_STATE::ATTACK;
 		}
-		
+		else {
+			if (m_bFinishAnimation) {
+				m_eState = MINION_STATE::WALK;
+			}
+		}
 	}
 }
 
 void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {
-	if (m_arrEnemy.size() == 0) {
-		m_pTarget = m_pNexus;
+	if (FIND_STATE::RAY_FIRST == m_eFindState) {
+
+
+		return;
 	}
 
-	if (0 == _pObject.size()||!m_bFindNear)return;
+	if (0 == _pObject.size() || !m_bFindNear)return;
 	for (int i = 0; i < _pObject.size(); ++i) {
 		if (i == 0) {
 			m_pTarget = _pObject[i];
 		}
 		else {
+			if (L"Obstacle" == _pObject[i]->GetName())
+				continue;
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 			Vec3 vPos = Transform()->GetWorldPos();
-			float length1= sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
+			float length1 = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 
 			Vec3 vTargetPos2 = _pObject[i]->Transform()->GetWorldPos();
 			float length2 = sqrt(pow(vTargetPos2.x - vPos.x, 2) + pow(vTargetPos2.z - vPos.z, 2));
 			if (length1 > length2) {
 				m_pTarget = _pObject[i];
+
+				if (nullptr != m_pTarget->GetScript<CPlayerScript>())
+					m_eFindState = FIND_STATE::SENSOR_FIRST;
+
 			}
 		}
 	}
 
+	if (m_arrEnemy.size() == 0) {
 
+		if (!m_bDetection)
+		{
+			m_pTarget = m_pNexus;
+		}
+		else {
+			if (!m_pFirstTower->IsDead())
+			{
 
+				m_pTarget = m_pFirstTower;
+
+			}
+			else if (!m_pSecondTower->IsDead()) {
+
+				m_pTarget = m_pSecondTower;
+
+			}
+			else
+				m_pTarget = m_pNexus;
+		}
+
+	}
 }
 
 void CMinionScript::m_FAnimation()
@@ -491,7 +666,7 @@ void CMinionScript::m_FAnimation()
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) || m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
-						//DeleteObject(GetObj());
+						DeleteObject(GetObj());
 						GetObj()->MeshRender()->SetRender(false);
 						DeleteObject(m_pHPBar);
 					}
@@ -542,14 +717,19 @@ static bool iSeparate=true;
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
-	
+		if (nullptr != _pOther->GetObj()->GetScript<CTowerScript>()) {
+			if ((UINT)_pOther->GetObj()->GetScript<CTowerScript>()->GetCamp() != (UINT)m_eCamp) {
+				m_eState = MINION_STATE::ATTACK;
+				m_pTarget = _pOther->GetObj();
+			}
+		}
 	}
 	else {
-		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp&&m_eState==MINION_STATE::WALK) {
+		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp && m_eState == MINION_STATE::WALK) {
 			m_bAllienceCol = true;
 			m_bRotate = true;
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
-				float Value=_pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
+				float Value = _pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
 				Vec3 Value3 = _pOther->Transform()->GetLocalPos() - Transform()->GetLocalPos();
 				Vec3 Up = Transform()->GetLocalDir(DIR_TYPE::UP);
 				Vec3 F = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -557,17 +737,17 @@ void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 				float DotValue = Dot(Up, Value2);
 				if (DotValue >= 0) {
 					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
-					GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
+					SetSeparate(true);
 				}
 				else {
-					GetObj()->GetScript<CMinionScript>()->SetSeparate(false);
+					SetSeparate(false);
 					_pOther->GetObj()->GetScript<CMinionScript>()->SetSeparate(true);
 				}
-			
-				}
+
 			}
-			m_iAllienceCol += 1;
 		}
+		m_iAllienceCol += 1;
+	}
 }
 
 

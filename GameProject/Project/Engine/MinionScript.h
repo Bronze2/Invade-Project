@@ -8,10 +8,18 @@ enum class MINION_ATTACK_TYPE {
     CANON//200
 };
 
+enum class FIND_STATE {
+    NONE,
+    SENSOR_FIRST,
+    RAY_FIRST,
+    END,
+};
+
 class CMinionScript :
     public CScript
 {
     MINION_STATE m_eState;
+    FIND_STATE m_eFindState;
     float m_fSpeed;
     float m_fRange;
     CAMP_STATE m_eCamp;
@@ -19,6 +27,7 @@ class CMinionScript :
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
     CGameObject* m_pTarget;
+
     CGameObject* m_pNexus;
     float m_fFindRange;
     float m_fAttackRange;
@@ -47,13 +56,35 @@ class CMinionScript :
     wstring m_CampName;
   //  CGameObject* m_pProjectile;
 
+    CGameObject* m_InterSectObject;
+    Ptr<CSound> m_pMeleeSound;
+    Ptr<CSound> m_pRangeSound;
+    SimpleMath::Ray* m_pRay;
+    SimpleMath::Ray* GetRay() { return m_pRay; }
+
+
     // 에이치비바
     CGameObject* m_pHPBar;
+
+    //Ray
+    float m_fStartXValue;
+    float m_fMinStartX;
+    float m_fMaxStartX;
+    bool m_bDetection;
+    float m_fPrevXValue;
+
+
+    CGameObject* m_pFirstTower;
+    CGameObject* m_pSecondTower;
 
 public:
     void CheckHp();
     CLONE(CMinionScript)
     void Init();
+    void InterSectsObject(CCollider3D* _pCollider);
+
+    void CheckObstacle();
+    void RayCollision(const CLayer* _pLayer);
 
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp;
     if (m_eCamp == CAMP_STATE::RED)
@@ -93,7 +124,8 @@ public:
     void SetDamage(const int& _Damage);
     void FindNearObject(const vector<CGameObject*>& _pObject);
     
-    
+    void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
+    void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
     
     void m_FAnimation();
     void m_FFind();

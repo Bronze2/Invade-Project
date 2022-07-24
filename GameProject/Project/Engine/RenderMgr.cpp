@@ -56,9 +56,6 @@ void CRenderMgr::Render()
 
 	m_vecCam[0]->Render_Forward(); // skybox, grid, ui
 
-	// ±Û¾¾¾²±â
-	CFontMgr::GetInst()->RenderText();
-
 	for (auto i = 1; i < m_vecCam.size(); i++) {
 		m_vecCam[i]->SortGameObject();
 		m_vecCam[i]->Render_Forward();
@@ -66,6 +63,9 @@ void CRenderMgr::Render()
 
 	// Ãâ·Â
 	//CIMGUIMgr::GetInst()->Progress();
+
+	// ±Û¾¾¾²±â
+	CFontMgr::GetInst()->RenderText();
 
 	CDevice::GetInst()->Render_Present();
 	m_vecCam[0]->ClearInterSectObject();
