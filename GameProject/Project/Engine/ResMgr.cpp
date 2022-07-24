@@ -935,7 +935,9 @@ void CResMgr::CreateDefaultShader()
 	pShader->AddShaderParam(tShaderParam{ L"Start Color", SHADER_PARAM::VEC4_0 });
 	pShader->AddShaderParam(tShaderParam{ L"End Color", SHADER_PARAM::VEC4_1 });
 	pShader->AddShaderParam(tShaderParam{ L"Particle Texture", SHADER_PARAM::TEX_0 });
-
+	pShader->AddShaderParam(tShaderParam{ L"Is Scale Detail" , SHADER_PARAM::INT_0 });
+	pShader->AddShaderParam(tShaderParam{ L"Start ScaleV", SHADER_PARAM::VEC4_2 });
+	pShader->AddShaderParam(tShaderParam{ L"End ScaleV", SHADER_PARAM::VEC4_3 });
 	AddRes(L"ParticleShader", pShader);
 
 
@@ -960,6 +962,10 @@ void CResMgr::CreateDefaultShader()
 	pShader = new CShader;
 	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate5", "cs_5_0");
 	AddRes(L"ParticleUpdateShader5", pShader);
+
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate6", "cs_5_0");
+	AddRes(L"ParticleUpdateShader6", pShader);
 
 	pShader = new CShader;
 	pShader->CreateComputeShader(L"Shader\\animation.fx", "CS_Animation3D", "cs_5_0");
@@ -1167,6 +1173,13 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
 	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
 	AddRes(L"ParticleUpdate5Mtrl", pMtrl);
+
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(FindRes<CShader>(L"ParticleUpdateShader6"));
+	pMtrl->SetData(SHADER_PARAM::TEX_0, pNoiseTex.GetPointer());
+	pMtrl->SetData(SHADER_PARAM::VEC2_0, &value);
+	AddRes(L"ParticleUpdate6Mtrl", pMtrl);
 	pMtrl = new CMaterial;
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(FindRes<CShader>(L"Animation3DUpdateShader"));

@@ -328,7 +328,7 @@ void CPlayerScript::Awake()
 	m_pHealParticle = new CGameObject;
 	m_pHealParticle->AddComponent(new CTransform);
 	m_pHealParticle->AddComponent(new CParticleSystem);
-	m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
+	m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate6Mtrl");
 	m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 	m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.8f, 1.f, 1.0f));
 	m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
