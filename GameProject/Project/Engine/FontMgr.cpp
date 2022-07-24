@@ -29,8 +29,8 @@ void CFontMgr::RenderText()
 void CFontMgr::AddText(wstring key, wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vColor)
 {
 	tTextInfo Info{};
-	Info.pFont = CResMgr::GetInst()->Load<CFont>(L"Font", L"Font03.fnt");
-	Ptr<CTexture> pFontTex = CResMgr::GetInst()->Load<CTexture>(L"FontTex", L"Font03.png");
+	Info.pFont = CResMgr::GetInst()->Load<CFont>(L"Font", L"font04.fnt");
+	Ptr<CTexture> pFontTex = CResMgr::GetInst()->Load<CTexture>(L"FontTex", L"font04.png");
 	Ptr<CMaterial> pFontMtrl = new CMaterial;
 	pFontMtrl->DisableFileSave();
 	pFontMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"FontShader"));

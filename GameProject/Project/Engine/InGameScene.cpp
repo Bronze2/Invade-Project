@@ -142,7 +142,7 @@ void CInGameScene::Init()
 	//-----------------------------------------------------------------------------------------------
 
 	//Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\player_red.fbx");
-	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_blue.mdat", L"MeshData\\player_blue.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 
 	pObject = new CGameObject;
@@ -236,36 +236,10 @@ void CInGameScene::Init()
 //-----------------------------------------------------------------------------------------------
 // 맵 (baseMap + 타워 + 넥서스)
 //-----------------------------------------------------------------------------------------------
-	//기본 성 fbx
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\test_map001.fbx");
-	////pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
+
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\ingame.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\ingame.mdat", L"MeshData\\ingame.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
-
-	//pObject = pMeshData->Instantiate();
-
-	//pObject->FrustumCheck(false);
-	//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));		//0.f, 370.f, 0.f
-	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-	//pObject->MeshRender()->SetDynamicShadow(true);
-
-	//FindLayer(L"Default")->AddGameObject(pObject);
-
-	////pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Roof.fbx");
-	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Roof.mdat", L"MeshData\\Roof.mdat");
-	////pMeshData->Save(pMeshData->GetPath());
-
-	//pObject = pMeshData->Instantiate();
-
-	//pObject->FrustumCheck(false);
-	//pObject->Transform()->SetLocalPos(Vec3(0.f, 1500.f, 0.f));		//0.f, 370.f, 0.f
-	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
-	//pObject->Transform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
-	//pObject->MeshRender()->SetDynamicShadow(false);
-
-	//FindLayer(L"Default")->AddGameObject(pObject);
-
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\fqfqfqf.mdat", L"MeshData\\fqfqfqf.mdat");
 
 	pObject = pMeshData->Instantiate();
 
@@ -278,7 +252,10 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 	// 레드 1차타워
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\LowPoly_Tower.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\LowPoly_Tower.mdat", L"MeshData\\LowPoly_Tower.mdat");
+	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedFirstTower;
 	pRedFirstTower = pMeshData->Instantiate();
 	pRedFirstTower->SetName(L"FirstTower");
@@ -288,7 +265,8 @@ void CInGameScene::Init()
 	pRedFirstTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::FIRST);
 	pRedFirstTower->Sensor()->SetRadius(300.f);
 	pRedFirstTower->Transform()->SetLocalPos(Vec3(0.f, 0.f, 11500.f));
-	pRedFirstTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+	pRedFirstTower->Transform()->SetLocalRot(Vec3(-PI/2, 0.f, 0.f));
+	pRedFirstTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pRedFirstTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pRedFirstTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
 	pRedFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
@@ -300,7 +278,10 @@ void CInGameScene::Init()
 	FindLayer(L"Red")->AddGameObject(pRedFirstTower);
 
 	// 레드 2차타워
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\LowPoly_Tower.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\LowPoly_Tower.mdat", L"MeshData\\LowPoly_Tower.mdat");
+	pMeshData->Save(pMeshData->GetPath());
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedSecondTower;
 	pRedSecondTower = pMeshData->Instantiate();
 	pRedSecondTower->SetName(L"SecondTower");
@@ -309,9 +290,10 @@ void CInGameScene::Init()
 	pRedSecondTower->AddComponent(new CTowerScript);
 	pRedSecondTower->Sensor()->SetRadius(300.f);
 	pRedSecondTower->Transform()->SetLocalPos(Vec3(2500.f, 0.f, 14500.f));
+	pRedSecondTower->Transform()->SetLocalRot(Vec3(-PI / 2, 0.f, 0.f));
 	pRedSecondTower->GetScript<CTowerScript>()->SetType(TOWER_TYPE::SECOND);
 	pRedSecondTower->GetScript<CTowerScript>()->SetFirstTower(pRedFirstTower);
-	pRedSecondTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+	pRedSecondTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pRedSecondTower->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pRedSecondTower->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 150.f));
 	pRedSecondTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
@@ -323,9 +305,9 @@ void CInGameScene::Init()
 	FindLayer(L"Red")->AddGameObject(pRedSecondTower);
 
 	// 블루 1차타워
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\FirstTower01.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower01.mdat", L"MeshData\\SecondTower01.mdat");
-	//	pMeshData->Save(pMeshData->GetPath());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\LowPoly_Tower_Blue.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\LowPoly_Tower.mdat", L"MeshData\\LowPoly_Tower.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 	CGameObject* pBlueFirstTower;
 	pBlueFirstTower = pMeshData->Instantiate();
 	pBlueFirstTower->AddComponent(new CCollider3D);
@@ -338,15 +320,17 @@ void CInGameScene::Init()
 	pBlueFirstTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pBlueFirstTower->FrustumCheck(false);
 	pBlueFirstTower->Transform()->SetLocalPos(Vec3(1500.f, 0.f, 9000.f));
-	pBlueFirstTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-	pBlueFirstTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+	pBlueFirstTower->Transform()->SetLocalRot(Vec3(-PI/2, 3.14f, 0.f));
+	pBlueFirstTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueFirstTower->MeshRender()->SetDynamicShadow(true);
 	pBlueFirstTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
 	pBlueFirstTower->GetScript<CTowerScript>()->Init();
 	FindLayer(L"Blue")->AddGameObject(pBlueFirstTower);
 
-	// 블루 2차타워
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower01.mdat", L"MeshData\\SecondTower01.mdat");
+	// 블루 2차타워	
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\LowPoly_Tower_Blue.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\LowPoly_Tower.mdat", L"MeshData\\LowPoly_Tower.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 	CGameObject* pBlueSecondTower;
 	pBlueSecondTower = pMeshData->Instantiate();
 	pBlueSecondTower->AddComponent(new CCollider3D);
@@ -360,8 +344,8 @@ void CInGameScene::Init()
 	pBlueSecondTower->Collider3D()->SetOffsetPos(Vec3(0.f, 110.f, 25.f));
 	pBlueSecondTower->FrustumCheck(false);
 	pBlueSecondTower->Transform()->SetLocalPos(Vec3(-500.f, 0.f, 5500.f));
-	pBlueSecondTower->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-	pBlueSecondTower->Transform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+	pBlueSecondTower->Transform()->SetLocalRot(Vec3(-PI / 2, 3.14f, 0.f));
+	pBlueSecondTower->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueSecondTower->MeshRender()->SetDynamicShadow(true);
 	pBlueSecondTower->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
 	pBlueSecondTower->GetScript<CTowerScript>()->Init();
@@ -370,20 +354,20 @@ void CInGameScene::Init()
 
 	// 블루 넥서스
 	CGameObject* pBlueNexus;
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\LowPoly_Nexus.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 	pBlueNexus = pMeshData->Instantiate();
 	pBlueNexus->AddComponent(new CCollider3D);
 	pBlueNexus->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pBlueNexus->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
-	pBlueNexus->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
+	pBlueNexus->Collider3D()->SetOffsetScale(Vec3(500.f, 500.f, 500.f));
+	pBlueNexus->Collider3D()->SetOffsetPos(Vec3(0.f, -0.f, 250.f));
 
 	pBlueNexus->FrustumCheck(false);
-	pBlueNexus->Transform()->SetLocalPos(Vec3(1000.f, 35.f, 2000.f));
-	pBlueNexus->Transform()->SetLocalRot(Vec3(-3.14f / 6, 0.F, 0.f));
+	pBlueNexus->Transform()->SetLocalPos(Vec3(1000.f, -10.f, 2000.f));
+	pBlueNexus->Transform()->SetLocalRot(Vec3(-PI/2, PI, 0.f));
 
-	pBlueNexus->Transform()->SetLocalScale(Vec3(130.f, 130.f, 130.f));
+	pBlueNexus->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueNexus->MeshRender()->SetDynamicShadow(true);
 
 	FindLayer(L"Blue")->AddGameObject(pBlueNexus);
@@ -401,19 +385,19 @@ void CInGameScene::Init()
 
 	// 레드 넥서스
 	CGameObject* pRedNexus;
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
-	//pMeshData->Save(pMeshData->GetPath());
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\LowPoly_Nexus.fbx");
+	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
+	pMeshData->Save(pMeshData->GetPath());
 	pRedNexus = pMeshData->Instantiate();
 	pRedNexus->AddComponent(new CCollider3D);
 	pRedNexus->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pRedNexus->Collider3D()->SetOffsetScale(Vec3(2.f, 2.f, 2.f));
-	pRedNexus->Collider3D()->SetOffsetPos(Vec3(30.f, 10.f, 50.f));
+	pRedNexus->Collider3D()->SetOffsetScale(Vec3(500.f, 500.f, 500.f));
+	pRedNexus->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 250.f));
 	pRedNexus->FrustumCheck(false);
-	pRedNexus->Transform()->SetLocalPos(Vec3(1000.f, 35.f, 17600.f));
-	pRedNexus->Transform()->SetLocalRot(Vec3(-3.14f / 6, 3.14f, 0.f));
+	pRedNexus->Transform()->SetLocalPos(Vec3(1000.f, -10.f, 17600.f));
+	pRedNexus->Transform()->SetLocalRot(Vec3(-PI/2, 0.f, 0.f));
 
-	pRedNexus->Transform()->SetLocalScale(Vec3(130.f, 130.f, 130.f));
+	pRedNexus->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pRedNexus->MeshRender()->SetDynamicShadow(true);
 	FindLayer(L"Red")->AddGameObject(pRedNexus);
 
@@ -440,65 +424,79 @@ void CInGameScene::Init()
 // 장애물
 //-----------------------------------------------------------------------------------------------
 
-	CGameObject* pObstacle;
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\obstacle_vertexbreak.fbx");
+	CGameObject* pObstacle = new CGameObject;
+
 	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\obstacle.mdat", L"MeshData\\obstacle.mdat");
 	Quaternion qRot;
 
 	for (int i = 0; i < 8; ++i) {
-		pObstacle = pMeshData->Instantiate();
-		pObstacle->AddComponent(new CCollider3D);
-		pObstacle->SetName(L"obstacle");
-		pObstacle->FrustumCheck(false);
-		pObstacle->MeshRender()->SetDynamicShadow(true);
-		pObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 500.f));
-		pObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 250.f));
-		pObstacle->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-		pObstacle->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
-
-		switch (i) {
+				switch (i) {
 		case 0:
 			// R2 앞
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Obstacle01.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(2725, 80.f, 13400.f));		// R2기준 (125, -1100)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-39.f));
 			break;
 		case 1:	
 			// R1 앞
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Obstacle01.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(-350.f, 80.f, 10600.f));		// R1 기준 (-300, -900)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-43.f)); 
 			break;
 		case 2:
 			// B1 앞
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Obstacle01.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(2000.f, 80.f, 9700.f));			// B1 기준 (500, 700)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-35.f)); 
 			break;
 		case 3:	
 			// B2 앞
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Obstacle01.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(-1100.f, 80.f, 6800.f));		// B2 기준 (-600, 1300)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(31.f));
 			break;
 		case 4:
 			// R2 뒤
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\obstacle_02.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(3000.f, 80.f, 15600.f));		// R2 기준 (525, 1100)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(75.f));
 			break;
 		case 5:
 			// R1 뒤
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\obstacle_02.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(-500.f, 80.f, 12700.f));		// R1 기준 (-500, 1200)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(72.f));
 			break;
 		case 6:
 			// B1 뒤
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\obstacle_02.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(2200.f, 80.f, 7700.f));		// B1 기준 (700, -1300)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(60.f));
 			break;
 		case 7:
 			// B2 뒤
+			pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\obstacle_02.fbx");
+			pObstacle = pMeshData->Instantiate();
 			pObstacle->Transform()->SetLocalPos(Vec3(-1200.f, 80.f, 4700.f));		// B2 기준 (-675, -800)
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-27.f));
 			break;
 		}
+		pObstacle->AddComponent(new CCollider3D);
+		pObstacle->SetName(L"obstacle");
+		pObstacle->FrustumCheck(false);
+		pObstacle->MeshRender()->SetDynamicShadow(true);
+		pObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		pObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 230.f));
+		pObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+		pObstacle->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		pObstacle->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
 		pObstacle->Transform()->SetQuaternion(qRot);
 		FindLayer(L"Obstacle")->AddGameObject(pObstacle);
 	}
@@ -1292,50 +1290,78 @@ void CInGameScene::Init()
 		pPlayerInfoTex->MeshRender()->SetMaterial(pPlayerTexMtrl);
 		int iType = pPlayer->GetScript<CPlayerScript>()->GetType();
 		Ptr<CTexture> pPlayerTexTex;
-		if (pPlayer->GetLayerIdx() == 3) {
-			switch (iType) {
-			case 0:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
-				break;
-			case 1:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
-				break;
-			case 2:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
-				break;
-			case 3:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
-				break;													
-			case 4:														
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
-				break;													
-																		
-			}															
-		}																
-		else if (pPlayer->GetLayerIdx() == 4) {							
-			switch (iType) {											
-			case 0:														
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
-				break;													
-			case 1:														
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
-				break;												
-			case 2:													
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
-				break;													
-			case 3:														
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
-				break;												
-			case 4:													
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
-				break;
-			}
+
+		// 주작용
+		switch (i) {
+		case 0:
+			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
+			break;
+		case 1:
+			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+			break;
+		case 2:
+			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
+			break;
 		}
+
+		//if (pPlayer->GetLayerIdx() == 3) {
+		//	switch (iType) {
+		//	case 0:
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
+		//		break;
+		//	case 1:
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+		//		break;
+		//	case 2:
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
+		//		break;
+		//	case 3:
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
+		//		break;													
+		//	case 4:														
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
+		//		break;													
+		//																
+		//	}															
+		//}																
+		//else if (pPlayer->GetLayerIdx() == 4) {							
+		//	switch (iType) {											
+		//	case 0:														
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
+		//		break;													
+		//	case 1:														
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+		//		break;												
+		//	case 2:													
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
+		//		break;													
+		//	case 3:														
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
+		//		break;												
+		//	case 4:													
+		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
+		//		break;
+		//	}
+		//}
 		pPlayerInfoTex->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
 		FindLayer(L"UI")->AddGameObject(pPlayerInfoTex);
 
 		// 플레이어 id
-		CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+		//CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+
+		// 주작용
+		switch (i) {
+		case 0:
+			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"sangjun", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+			break;
+		case 1:
+			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"dongsu", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+			break;
+		case 2:
+			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"sumin", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+			break;
+		}
+
 
 		// 에이치피바
 		pHpBar = new CGameObject;

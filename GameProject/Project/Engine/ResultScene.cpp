@@ -86,46 +86,17 @@ void CResultScene::Init()
 // ∏ 
 //-----------------------------------------------------------------------------------------------
 
-	// ≈∏¿œ
-	CGameObject* pTileObj = new CGameObject;
-	pTileObj->SetName(L"Tile");
-	pTileObj->AddComponent(new CTransform);
-	pTileObj->AddComponent(new CMeshRender);
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\lobby3.mdat", L"MeshData\\lobby3.mdat");
 
-	pTileObj->Transform()->SetLocalPos(Vec3(0.f, -1.f, 2000.f));
-	pTileObj->Transform()->SetLocalScale(Vec3(5000.f, 5000.f, 1.f));
-	pTileObj->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	pTileObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	CGameObject* pLobbyObj = pMeshData->Instantiate();
 
-	Ptr<CMaterial> pMtrl = new CMaterial;
-	pMtrl->DisableFileSave();
-	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std3DShader"));
-	CResMgr::GetInst()->AddRes(L"TileMtrl", pMtrl);
-	pTileObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TileMtrl"));
-	Ptr<CTexture> pColor = CResMgr::GetInst()->FindRes<CTexture>(L"Tile");
-	Ptr<CTexture> pNormal = CResMgr::GetInst()->FindRes<CTexture>(L"Tile_n");
-	pTileObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	pTileObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	pTileObj->MeshRender()->SetDynamicShadow(false);
+	pLobbyObj->FrustumCheck(false);
+	pLobbyObj->Transform()->SetLocalPos(Vec3(-72.f, -100.f, 700.f));		//0.f, 370.f, 0.f
+	pLobbyObj->Transform()->SetLocalRot(Vec3(-PI / 2, -PI / 2, 0.f));
+	pLobbyObj->Transform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
+	pLobbyObj->MeshRender()->SetDynamicShadow(false);
 
-	FindLayer(L"Tile")->AddGameObject(pTileObj);
-
-	// ∫Æ
-	CGameObject* pWallObj = new CGameObject;
-	pWallObj->SetName(L"Tile");
-	pWallObj->AddComponent(new CTransform);
-	pWallObj->AddComponent(new CMeshRender);
-
-	pWallObj->Transform()->SetLocalPos(Vec3(0.f, -1.f, 2000.f));
-	pWallObj->Transform()->SetLocalScale(Vec3(5000.f, 500.f, 1.f));
-	pWallObj->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	pWallObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pWallObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TileMtrl"));
-	pWallObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	pWallObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	pWallObj->MeshRender()->SetDynamicShadow(false);
-
-	FindLayer(L"Tile")->AddGameObject(pWallObj);
+	FindLayer(L"Default")->AddGameObject(pLobbyObj);
 
 //-----------------------------------------------------------------------------------------------
 // «√∑π¿ÃæÓ fbx
@@ -143,12 +114,13 @@ void CResultScene::Init()
 		if (i < 4) {
 			pPlayerObj = pPlayerBlueMeshData->Instantiate();
 			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
-			pPlayerObj->Transform()->SetLocalPos(Vec3(-400.f + i * 300.f, 0.f, 900.f));
+			pPlayerObj->Transform()->SetLocalPos(Vec3(-400.f + i * 100.f, -70.f, 650.f));	// -525.f + i * 150.f, 0.f, 1000.f
+
 		}
 		else {
 			pPlayerObj = pPlayerRedMeshData->Instantiate();
 			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
-			pPlayerObj->Transform()->SetLocalPos(Vec3(-200.f + (i - 4) * 150.f, 0.f, 500.f));
+			pPlayerObj->Transform()->SetLocalPos(Vec3(100.f + (i - 4) * 100.f, -70.f, 650.f));	// -525.f + i * 150.f, 0.f, 1000.f
 		}
 
 		pPlayerObj->SetName(L"Monster");
@@ -187,11 +159,12 @@ void CResultScene::Init()
 
 		if (i < 4) {
 			FindLayer(L"Blue")->AddGameObject(pPlayerObj);
-			pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(true);
+			pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(true);		// Ω¬∏Æ∆¿
 		}
 		else {
 			FindLayer(L"Red")->AddGameObject(pPlayerObj);
-			pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(false);
+			pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(false);		// ∆–πË∆¿
+			pPlayerObj->Transform()->SetLocalPos(Vec3(100.f + (i - 4) * 100.f, -70.f, 580.f));	// ∆–πË∆¿ æ÷¥œ∏ﬁ¿Ãº«∂ßπÆø° æ’¿∏∑Œ ¡ª ¥ı ∂Ø±Ë
 		}
 
 		CGameObject* pReadyBarObj = new CGameObject;

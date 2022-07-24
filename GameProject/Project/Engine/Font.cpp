@@ -420,12 +420,12 @@ void CFont::Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vCo
             break;
 
         // new line
-        if (c == L'n')
-        {
-            x = topLeftScreenX;
-            y -= (m_fLineHeight + verticalPadding) * vScale.y;
-            continue;
-        }
+        //if (c == L'n')
+        //{
+        //    x = topLeftScreenX;
+        //    y -= (m_fLineHeight + verticalPadding) * vScale.y;
+        //    continue;
+        //}
 
         // don't overflow the buffer. In your app if this is true, you can implement a resize of your text vertex buffer
         if (numCharacters >= m_iMaxNumTextCharacters)

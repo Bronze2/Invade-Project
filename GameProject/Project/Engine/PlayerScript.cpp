@@ -510,19 +510,19 @@ void CPlayerScript::Awake()
 	if (GetObj()->GetLayerIdx() == 3) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx");
 			break;
 		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx");
 			break;
 		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx");
 			break;
 
 		}
@@ -530,19 +530,19 @@ void CPlayerScript::Awake()
 	else if (GetObj()->GetLayerIdx() == 4) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx");
 			break;
 		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx");
 			break;
 		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx");
 			break;
 		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx");
 			break;
 		}
 	}

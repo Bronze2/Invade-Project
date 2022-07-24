@@ -88,6 +88,10 @@ void CMinionScript::Init()
 	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
 	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 	GetObj()->AddChild(m_pHPBar);
+
+	m_fCollisionCoolTime = 0.f;
+	m_fMaxCollisionCoolTime = 10.f;
+	m_fCollisionCoolTime = true;
 }
 
 
@@ -137,6 +141,7 @@ void CMinionScript::Update()
 		if (m_bRotate) {
 
 			vRot.y += PI / 2;
+			m_bCollisionCoolCheck = true;
 
 			m_bRotate = false;
 		}
@@ -195,6 +200,7 @@ void CMinionScript::Update()
 				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 				float rotate = angle * 0.0174532925f;
 				vRot.y = rotate;
+				m_bCollisionCoolCheck = false;
 			}
 		}
 	}
@@ -210,6 +216,14 @@ void CMinionScript::Update()
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_uiMaxHp);
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCamp);
+
+	if (!m_bCollisionCoolCheck) {
+		m_fCollisionCoolTime += DT;
+		if (m_fCollisionCoolTime >= m_fMaxCollisionCoolTime) {
+			m_bCollisionCoolCheck = true;
+			m_fCollisionCoolTime = 0.f;
+		}
+	}
 }
 
 #include "PlayerScript.h"
@@ -446,7 +460,7 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 		}
 	}
 
-	if (m_arrEnemy.size() == 0) {
+	if (m_arrEnemy.size() == 0 && m_bCollisionCoolCheck) {
 
 		if (!m_bDetection)
 		{

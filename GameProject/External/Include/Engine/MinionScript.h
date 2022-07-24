@@ -77,6 +77,11 @@ class CMinionScript :
     CGameObject* m_pFirstTower;
     CGameObject* m_pSecondTower;
 
+    // 220724
+    float m_fCollisionCoolTime;
+    float m_fMaxCollisionCoolTime;
+    bool m_bCollisionCoolCheck;
+
 public:
     void CheckHp();
     CLONE(CMinionScript)
