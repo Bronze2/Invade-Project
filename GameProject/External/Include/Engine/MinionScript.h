@@ -81,6 +81,7 @@ class CMinionScript :
     float m_fCollisionCoolTime;
     float m_fMaxCollisionCoolTime;
     bool m_bCollisionCoolCheck;
+    int rotateCnt;
 
 public:
     void CheckHp();

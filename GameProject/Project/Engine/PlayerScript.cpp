@@ -549,7 +549,7 @@ void CPlayerScript::Awake()
 	}
 	pHelmetMesh->Save(pHelmetMesh->GetPath());
 	m_pHelmetObject = pHelmetMesh->Instantiate();
-	m_pHelmetObject->MeshRender()->SetDynamicShadow(false);
+	m_pHelmetObject->MeshRender()->SetDynamicShadow(true);
 	m_pHelmetObject->FrustumCheck(false);
 	m_pHelmetObject->SetName(L"Helmet");
 	m_pHelmetObject->Transform()->SetLocalScale(Vec3(0.1f, 0.09f, 0.1f));

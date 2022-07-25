@@ -74,10 +74,11 @@ void CBowScript::Update()
 		Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-		//Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos();
 		Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		// -30.f는 pMainCam의 GetLocalPos.z
-		Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
-	
+		// 화살fbx
+		Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.x) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
+		// 깃대 안보임 XMConvertToRadians(XMConvertToDegrees(vPlayerRot.x) + 90.f) / 깃대보임 XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f) 
+
 		m_pArrow[m_iCurArrow]->ClearParent();
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
@@ -198,36 +199,34 @@ void CBowScript::Init()
 }
 
 void CBowScript::Awake()
-{
-	pBlackTex = CResMgr::GetInst()->FindRes<CTexture>(L"Black");
+{		
+	// 화살fbx
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	Ptr<CMaterial> pMtrl = new CMaterial;
-	pMtrl->DisableFileSave();
-	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std3DShader"));
-	CResMgr::GetInst()->AddRes(L"ArrowMtrl", pMtrl);
+	Ptr<CMeshData> pMeshData;
 	for (int i = 0; i < 20; ++i) {
-		m_pArrow[i] = new CGameObject;
+		if (GetObj()->GetParent()->GetLayerIdx() == 3) {
+			pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\BlueArrow.mdat", L"MeshData\\BlueArrow.mdat");
+		}
+		else {
+			pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\RedArrow.mdat", L"MeshData\\RedArrow.mdat");
+		}
+
+		m_pArrow[i] = pMeshData->Instantiate();
 		m_pArrow[i]->SetName(L"Arrow");
 
-		m_pArrow[i]->AddComponent(new CTransform());
 		m_pArrow[i]->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-		m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), 0.f));
-		m_pArrow[i]->Transform()->SetLocalScale(Vec3(80.f, 1.f, 1.f));
-
-		m_pArrow[i]->AddComponent(new CMeshRender);
-		m_pArrow[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		
-		m_pArrow[i]->MeshRender()->SetMaterial(pMtrl);
-		m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
+		m_pArrow[i]->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
+		m_pArrow[i]->Transform()->SetLocalScale(Vec3(1.f, 0.2f, 0.2f));
 
 		m_pArrow[i]->AddComponent(new CCollider3D);
 		m_pArrow[i]->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f)); 
 		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 
+		m_pArrow[i]->FrustumCheck(false);
+
 		m_pArrow[i]->AddComponent(new CArrowScript(m_iType));
 		pCurScene->FindLayer(L"Arrow")->AddGameObject(m_pArrow[i]);
-		//m_pArrow[i]->SetActive(false);
 		m_pArrow[i]->GetScript<CArrowScript>()->SetBow(GetObj());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetLayerIdx(GetObj()->GetLayerIdx());
 		m_pArrow[i]->GetScript<CArrowScript>()->SetPlayer(m_pPlayer);

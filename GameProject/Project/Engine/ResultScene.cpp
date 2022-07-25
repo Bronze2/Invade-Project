@@ -128,7 +128,7 @@ void CResultScene::Init()
 		pPlayerObj->FrustumCheck(false);
 		pPlayerObj->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 		pPlayerObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), XMConvertToRadians(0.f), 0.f));
-		pPlayerObj->MeshRender()->SetDynamicShadow(false);
+		pPlayerObj->MeshRender()->SetDynamicShadow(true);
 
 		CAnimation* pPlayerAnimation = new CAnimation;
 		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);

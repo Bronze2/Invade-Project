@@ -232,7 +232,7 @@ void CArrowScript::Init()
 	m_fPerRotate = 1;
 	Transform()->SetQuaternion(Vec4(0.f,0.f,0.f,1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
+	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
 
 }
 void CArrowScript::SkillCheck()
