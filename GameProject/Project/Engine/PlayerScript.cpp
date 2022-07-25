@@ -545,7 +545,9 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx");
 			break;
 		}
+	
 	}
+	pHelmetMesh->Save(pHelmetMesh->GetPath());
 	m_pHelmetObject = pHelmetMesh->Instantiate();
 	m_pHelmetObject->MeshRender()->SetDynamicShadow(false);
 	m_pHelmetObject->FrustumCheck(false);

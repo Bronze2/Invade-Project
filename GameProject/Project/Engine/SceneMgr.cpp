@@ -341,7 +341,7 @@ void CSceneMgr::Init()
 	//m_pCurScene = new CResultScene;
 	//m_pCurScene->SetType(SCENE_TYPE::RESULT);
 	
-	m_pCurScene->Init();
+	m_pCurScene->Init(); 
 	m_pCurScene->Awake();
 	m_pCurScene->Start();
 	

@@ -92,13 +92,14 @@ void CTowerScript::Init()
 	m_pHPBar->FrustumCheck(false);
 	m_pHPBar->MeshRender()->SetDynamicShadow(false);
 
-	Vec3 vHPBarScale = Vec3(60.f, 10.f, 1.f);
-	m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
-	m_pHPBar->Transform()->SetLocalPos(Vec3(0.f, 300.f, 0.f));
-	if (m_eCampState == CAMP_STATE::BLUE)
-		m_pHPBar->Transform()->SetLocalRot(Vec3(XMConvertToRadians(180.f), 0.f, 0.f));
-	else
-		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	if (m_eType == TOWER_TYPE::NEXUS) {
+		m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, 600.f, 0.f));
+		m_pHPBar->Transform()->SetLocalScale(Vec3(300.f, 40.f, 1.f));
+	}
+	else {
+		m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, 900.f, 0.f));
+		m_pHPBar->Transform()->SetLocalScale(Vec3(200.f, 20.f, 1.f));
+	}
 	m_pHPBar->Transform()->SetBillBoard(true);
 	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
 
@@ -107,7 +108,7 @@ void CTowerScript::Init()
 	pUIHPBarMtrl->DisableFileSave();
 	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
 	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
-	GetObj()->AddChild(m_pHPBar);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"HpBar")->AddGameObject(m_pHPBar);
 }
 
 void CTowerScript::SetSecondTower(CGameObject* _pGameObject)
