@@ -169,10 +169,11 @@ void CInGameScene::Init()
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 	pObject->FrustumCheck(false);
 
-
+	Vec3 Pos = Vec3(Network::GetInst()->getMainClient().pos.x, Network::GetInst()->getMainClient().pos.y, Network::GetInst()->getMainClient().pos.z);
 	if (Network::GetInst()->getMainClient().camp == CAMP_STATE::BLUE) {
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125));
-		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125));
+
+		pObject->Transform()->SetLocalPos(Pos);
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Pos);
 
 		//pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
 		cout << "메인클라 블루  [" << Network::GetInst()->getMainClient().id<<"]" << endl;
@@ -182,8 +183,8 @@ void CInGameScene::Init()
 	}
 
 	else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
-		pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800));
-		pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800));
+		pObject->Transform()->SetLocalPos(Pos);
+		pObject->GetScript<CPlayerScript>()->SetLerpPos(Pos);
 		//pEmptyPlayer->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0));
 		cout << "메인클라 레드  [" << Network::GetInst()->getMainClient().id << "]" << endl;
 		pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
@@ -269,13 +270,6 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
 
-
-
-
-
-
-
-
 	for (auto &cl : Network::GetInst()->getOtherClients())
 	{
 
@@ -292,7 +286,7 @@ void CInGameScene::Init()
 		}
 
 
-		pObject->SetName(L"Monster");
+		pObject->SetName(L"OtherClients");
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CCollider3D);
 		pObject->AddComponent(new CSensor);
@@ -302,18 +296,19 @@ void CInGameScene::Init()
 		pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
 		pObject->FrustumCheck(false);
 
+		Vec3 Pos = Vec3(cl.second.pos.x, cl.second.pos.y, cl.second.pos.z);
 
 		if (cl.second.camp == CAMP_STATE::BLUE) {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 1125.f));
+			pObject->Transform()->SetLocalPos(Pos);
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Pos);
 
 			cout << "[ID" << cl.second.id << "] 블루"<< endl;
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
 		}
 		else if (cl.second.camp == CAMP_STATE::RED) {
-			pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-			pObject->GetScript<CPlayerScript>()->SetLerpPos(Vec3(0.f, 0.f, 5800.f));
+			pObject->Transform()->SetLocalPos(Pos);
+			pObject->GetScript<CPlayerScript>()->SetLerpPos(Pos);
 			cout << "[ID" << cl.second.id << "] 레드" << endl;
 			pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 		}
@@ -532,7 +527,7 @@ void CInGameScene::Init()
 
 
 
-	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\SecondTower.fbx");
+	//	pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\moon.fbx");
 	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\SecondTower.mdat", L"MeshData\\SecondTower.mdat");
 	CGameObject* pRedSecondTower;
 	pRedSecondTower = pMeshData->Instantiate();
@@ -604,14 +599,16 @@ void CInGameScene::Init()
 	FindLayer(L"Blue")->AddGameObject(pBlueSecondTower);
 
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\baseMap.fbx");
-	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\baseMap.mdat", L"MeshData\\baseMap.mdat");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\fqfqfqf.fbx");
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"baseMap\\.mdat", L"MeshData\\baseMap.mdat");
 	//pMeshData->Save(pMeshData->GetPath());
 	pObject = pMeshData->Instantiate();
 	pObject->AddComponent(new CTransform);
 	pObject->FrustumCheck(false);
-	pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	pObject->Transform()->SetLocalPos(Vec3(0.f, -150.f, 0.f));
+	//pObject->Transform()->SetLocalRot(Vec3(-PI / 2, PI / 2, 0.f));
+	pObject->Transform()->SetLocalRot(Vec3(-PI / 2,0, 0.f));
+
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pObject->MeshRender()->SetDynamicShadow(false);
 	FindLayer(L"Default")->AddGameObject(pObject);

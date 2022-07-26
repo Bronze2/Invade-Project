@@ -148,9 +148,10 @@ void CArrowScript::Update()
 	{
 
 		if (m_isMain) {
-
 			if (Transform()->GetWorldPos().y < 0.f)
 			{
+				cout << "DOWN -" << m_id << endl;
+
 				m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 
 				if (nullptr != m_pSkill)
@@ -159,102 +160,115 @@ void CArrowScript::Update()
 					m_pSkill = nullptr;
 				}
 				m_eState = ARROW_STATE::IDLE;
-				Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
+				GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+				m_fTime = 0;
 
+				Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
 				//vPos.y = 5.f;
 				//Transform()->SetLocalPos(vPos);
 				//Transform()->SetLocalRot(vRot);
 			}
-
-			m_vRestorePos = vPos;
-
-			Vec4 vDir = Vec4(m_vDir, 1.f);
-			m_pParticle->ParticleSystem()->SetDir(vDir);
-
-			// 트레일
-			m_pTrail->TrailRenderer()->SetEmit(true);
-
-			// 화살 기존 코드
-			CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
-			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-			Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
-			float fDegree = XMConvertToDegrees(vCamRot.x);
-
-			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
-			m_vXZDir.Normalize();
-			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
-			//cout <<"전" <<m_fAngle << endl;
-
-			m_fAngle -= PI / 8;
-
-			m_fAngle = 0.05f;
-
-			//cout << "후" << m_fAngle << endl;
-
-			//m_fAngle = 0;
-
-
-			//m_fSpeed = 1000;
-
-			m_fTime += DT;
-
-			//m_fMaxTime = m_fSpeed * sin(fAngle) / GRAVITY * 30 * DT;
-			//m_fMaxTime 
-			//cout << fAngle * 180 / PI <<"최고점 시간" << m_fMaxTime <<endl;
-			//vRot.z = fAngle * 180 / PI;
-
-			//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
-			vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-			vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-
-			//vPos = m_vDir 
-			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
-			//처음 화살 Update
-			if (m_fVelocityY == 5000) {
-				//  현재 포물선 운동을 하고 있는 Y값
-				// 
-				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
-
-				//최고점 높이 == velocity가 0이되는 지점. 
-				m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
-				m_fPerRotate = m_fHighest / m_fAngle;
-
-			}
 			else {
-				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
-				float fHigh = m_fHighest - m_fVelocityY;
-				m_fRotateAngle = fHigh / m_fPerRotate;
-				if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
-					m_fDir = -1;
+
+				m_vRestorePos = vPos;
+
+				Vec4 vDir = Vec4(m_vDir, 1.f);
+				m_pParticle->ParticleSystem()->SetDir(vDir);
+
+				// 트레일
+				m_pTrail->TrailRenderer()->SetEmit(true);
+
+				// 화살 기존 코드
+				CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
+				CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+				Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
+				float fDegree = XMConvertToDegrees(vCamRot.x);
+
+				m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
+				m_vXZDir.Normalize();
+				m_fAngle = acos(Dot(m_vDir, m_vXZDir));
+				//cout <<"전" <<m_fAngle << endl;
+
+				m_fAngle -= PI / 8;
+
+				m_fAngle = 0.05f;
+
+				//cout << "후" << m_fAngle << endl;
+
+				//m_fAngle = 0;
+
+
+				//m_fSpeed = 1000;
+
+				m_fTime += DT;
+
+				//m_fMaxTime = m_fSpeed * sin(fAngle) / GRAVITY * 30 * DT;
+				//m_fMaxTime 
+				//cout << fAngle * 180 / PI <<"최고점 시간" << m_fMaxTime <<endl;
+				//vRot.z = fAngle * 180 / PI;
+
+				//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
+				vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+				vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+
+				//vPos = m_vDir 
+				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				//처음 화살 Update
+				if (m_fVelocityY == 5000) {
+					//  현재 포물선 운동을 하고 있는 Y값
+					// 
+					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+
+					//최고점 높이 == velocity가 0이되는 지점. 
+					m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
+					m_fPerRotate = m_fHighest / m_fAngle;
+					Transform()->SetLocalPos(vPos);
+
 				}
-				m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
-				Transform()->SetQuaternion(m_qRot);
+				else {
+					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+					float fHigh = m_fHighest - m_fVelocityY;
+					m_fRotateAngle = fHigh / m_fPerRotate;
+					if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
+						m_fDir = -1;
+					}
+					m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
+					Transform()->SetQuaternion(m_qRot);
+					Transform()->SetLocalPos(vPos);
 
-			}
+				}
 
-			if (nullptr != m_pSkill) {
-				if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
-					if (vPos.y <= 1.f) {
+				if (nullptr != m_pSkill) {
+					if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+						if (vPos.y <= 1.f) {
 
-						Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
-						vPos3.y = 1.f;
-						CreateThunderObject(vPos3, m_iLayerIdx);
-						Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+							Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
+							vPos3.y = 1.f;
+							if (m_eCamp == CAMP_STATE::BLUE) {
+								cout << "BLUE ARROW" << endl;
+								cout << " ARROW ---" << (int)m_eCamp << endl;
+							}
+							else {
+								cout << " ARROW ---" << (int)m_eCamp << endl;
+							}
+							CreateThunderObject(vPos3, (int)m_eCamp);
+							Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
+							Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+						}
+					}
+					else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+						if (vPos.y <= 1.f) {
+							Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+							vPos3.y = 1.f;
+							CreateBoomParticleObject(vPos3, L"smokeparticle");
+							//Collision();
+							Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+						}
 					}
 				}
-				else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
-					if (vPos.y <= 1.f) {
-						Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-						vPos3.y = 1.f;
-						CreateBoomParticleObject(vPos3, L"smokeparticle");
-						//Collision();
-						Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-					}
-				}
-			}
-			Transform()->SetLocalPos(vPos);
-			Network::GetInst()->send_update_arrow_move(m_id, vPos, m_qRot);
+				Network::GetInst()->send_update_arrow_move(m_id, vPos, m_qRot);
 
+			}
 		}
 		else {
 
@@ -273,10 +287,14 @@ void CArrowScript::Update()
 			//Transform()->SetLocalPos(vPos);
 			//Transform()->SetLocalRot(vRot);
 		}
-
 	}
 	break;
 	}
+}
+
+void CArrowScript::StopTrail()
+{
+	m_pTrail->TrailRenderer()->SetEmit(false);
 }
 
 void CArrowScript::LerpUpdate()
@@ -304,7 +322,8 @@ void CArrowScript::EnterSkill(Vec3 vPos)
 		if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
 			Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
 			vPos.y = 1.f;
-			CreateThunderObject(vPos, m_iLayerIdx);
+
+			CreateThunderObject(vPos, (int)m_eCamp);
 			//Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 		}
 		else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
@@ -328,6 +347,7 @@ void CArrowScript::Init()
 
 	//m_pTrail->TrailRenderer()->SetEmit(false);
 
+	m_pTrail->TrailRenderer()->SetEmit(false);
 	m_bSetDotValue = false;
 	m_fVelocityY = 5000;
 	m_fFallSpeed = 0.f;

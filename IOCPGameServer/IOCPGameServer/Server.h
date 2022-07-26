@@ -64,6 +64,9 @@ public:
 
 	void send_collision_arrow(int client_id, int arrow_id, int coll_id, PACKET_COLLTYPE coll_type);
 
+	void send_arrow_create_skill(int client_id, p_Vec3 LocalPos, PACKET_SKILL skill);
+
+	void send_setDamage(int client_id, int coll_id, int damage, PACKET_COLLTYPE coll_type);
 private:
 
 };

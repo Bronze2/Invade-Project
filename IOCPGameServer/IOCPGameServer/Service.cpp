@@ -43,9 +43,12 @@ bool CService::is_near(int a, int b)
 	return true;
 }
 
-void CService::do_move(int user_id, int direction)
+void CService::do_move(int user_id, int state)
 {
-	SHARED_DATA::g_clients[user_id].Pos += SHARED_DATA::g_clients[user_id].dir * 30.f;
+	//state = 0 무브
+	//state = 1 아이들
+	//state = 2 달리기
+	SHARED_DATA::g_clients[user_id].Pos += SHARED_DATA::g_clients[user_id].dir * (30.f + (state* 60.f ));
 	SHARED_DATA::g_clients[user_id].Pos.y = 0;
 	//CServer::GetInst()->send_move_packet(user_id, user_id);
 
@@ -88,8 +91,8 @@ void CService::enter_game(int user_id)
 
 	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.m_id != user_id) {
-			//CServer::GetInst()->send_enter_packet(cl.second.m_id, user_id);
-			CServer::GetInst()->send_enter_packet(user_id, cl.second.m_id);
+				//CServer::GetInst()->send_enter_packet(cl.second.m_id, user_id);
+				CServer::GetInst()->send_enter_packet(user_id, cl.second.m_id);
 		}
 	}
 }

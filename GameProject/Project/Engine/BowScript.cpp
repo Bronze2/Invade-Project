@@ -97,6 +97,9 @@ void CBowScript::Update()
 			Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
 			vArrowDir.y = vCrossHairDir.y;
 			vArrowDir.Normalize();
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
+
+
 			m_pArrow[m_iCurArrow]->ClearParent();
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
@@ -122,9 +125,12 @@ void CBowScript::Update()
 			/*Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(), vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp,
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());*/
 
+			
 			Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
 
+
+			cout << "CurArrow" << m_iCurArrow << endl;
 			m_iCurArrow++;
 			m_iPower = 1;
 			if (m_iCurArrow > 19) {
@@ -184,6 +190,8 @@ void CBowScript::CreateArrow(PACKET_SKILL skill)
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetisMain(false);
+	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetCamp(pPlayer->GetScript<CPlayerScript>()->GetCamp());
+
 	//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
 
 	Vec3 vPlayerPos = pPlayer->Transform()->GetWorldPos();
@@ -340,6 +348,9 @@ void CBowScript::Init()
 void CBowScript::DeleteArrow(int ArrowId)
 {
 	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->StopTrail();
+	m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetLerp(Vec3(-1000, -1000, -1000),Vec4(0,0,0,0));
+
 	m_pArrow[ArrowId]->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
 
 	//m_pArrow[ArrowId]->GetScript<CArrowScript>()->SetState(ARROW_STATE::IDLE);

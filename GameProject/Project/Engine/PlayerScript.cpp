@@ -657,7 +657,6 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
-	cout << "PlayerAwake - [" << m_id << "]" << endl;
 	m_fMoveSpeed = 500.f;
 
 	m_pHealParticle = new CGameObject;
@@ -927,7 +926,13 @@ void CPlayerScript::Update()
 						Vec3 vTurnUpFront = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 						restorePos = Transform()->GetLocalPos();
 						Network::GetInst()->send_rotation_packet(vRot);
-						Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+						if (KEY_HOLD(KEY_TYPE::KEY_LSHIFT))
+						{
+							Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 1);
+						}
+						else {
+							Network::GetInst()->send_key_down_packet(0, vTurnUpFront.x, vTurnUpFront.y, vTurnUpFront.z, 0);
+						}
 					}
 
 					//m_bColCheck = false;
@@ -1462,7 +1467,11 @@ void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
 }
 void CPlayerScript::GetDamage(const UINT& _uiDamage)
 {
+
 	m_iCurHp -= _uiDamage;
+	
+	cout << "[" << m_id << "] Player HP -" << m_iCurHp << endl;
+	
 	if (m_iCurHp <= 0) {
 		SetState((int)PLAYER_STATE::DIE);
 	}

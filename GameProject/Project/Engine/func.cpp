@@ -368,7 +368,7 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
 #include "ThunderSkill1Script.h"
 
 #include "MeshRender.h"
-void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
+void CreateThunderObject(const Vec3& _Pos, int e_camp)
 {
 	CGameObject* pThunderObject = new CGameObject;
 	pThunderObject->AddComponent(new CTransform);
@@ -384,7 +384,7 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 	pThunderObject->FrustumCheck(false);
 	pThunderObject->SetActive(true);
 	Ptr<CTexture> pMagicTexture = nullptr;
-	if (3 == _iLayerIdx) {
+	if ((CAMP_STATE)e_camp == CAMP_STATE::BLUE) {
 		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle");
 	}
 	else {
@@ -400,17 +400,82 @@ void CreateThunderObject(const Vec3& _Pos, const UINT& _iLayerIdx)
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
-	if (3 == _iLayerIdx) {
+	CAMP_STATE temp;
+	if ((CAMP_STATE)e_camp == CAMP_STATE::BLUE) {
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+		temp = CAMP_STATE::BLUE;
+		cout << "Blue Camp Thunder" << endl;
 	}
 	else {
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture01"));
+		temp = CAMP_STATE::RED;
+		cout << "Red Camp Thunder" << endl;
+
 	}
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
 	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pMagicTexture.GetPointer());
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
 	pThunderObject->GetScript<CThunderSkill1Script>()->SetTarget(pObject);
-	pThunderObject->GetScript<CThunderSkill1Script>()->SetLayer(_iLayerIdx);
+	//pThunderObject->GetScript<CThunderSkill1Script>()->SetLayer(_iLayerIdx);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetCampState(temp);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetIsMain(true);
+
+	pThunderObject->Transform()->SetLocalPos(_Pos);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
+
+}
+
+
+
+void Net_CreateThunderObject(const Vec3& _Pos, int e_camp)
+{
+	CGameObject* pThunderObject = new CGameObject;
+	pThunderObject->AddComponent(new CTransform);
+	pThunderObject->AddComponent(new CParticleSystem);
+	pThunderObject->AddComponent(new CThunderSkill1Script);
+	pThunderObject->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate5Mtrl");
+	pThunderObject->ParticleSystem()->SetStartColor(Vec4(0.8f, 0.8f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pThunderObject->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
+	pThunderObject->ParticleSystem()->SetStartScale(10.f);
+	pThunderObject->ParticleSystem()->SetEndScale(10.f);
+	pThunderObject->ParticleSystem()->SetMinLifeTime(1.f);
+	pThunderObject->ParticleSystem()->SetMaxLifeTime(3.f);
+	pThunderObject->FrustumCheck(false);
+	pThunderObject->SetActive(true);
+	Ptr<CTexture> pMagicTexture = nullptr;
+	if ((CAMP_STATE)e_camp == CAMP_STATE::BLUE) {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle");
+	}
+	else {
+		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle2");
+	}
+
+	CGameObject* pObject = new CGameObject;
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetLocalPos(Vec3(_Pos.x, 2.f, _Pos.z));
+	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
+	CAMP_STATE temp;
+	if ((CAMP_STATE)e_camp == CAMP_STATE::BLUE) {
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+		temp = CAMP_STATE::BLUE;
+		cout << "Blue Camp Thunder" << endl;
+	}
+	else {
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture01"));
+		temp = CAMP_STATE::RED;
+		cout << "Red Camp Thunder" << endl;
+
+	}
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
+	pObject->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pMagicTexture.GetPointer());
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetTarget(pObject);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetCampState(temp);
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetIsMain(false);
+
 	pThunderObject->Transform()->SetLocalPos(_Pos);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pThunderObject);
 

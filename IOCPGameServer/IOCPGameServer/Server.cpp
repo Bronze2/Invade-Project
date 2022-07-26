@@ -157,7 +157,7 @@ void CServer::send_mouse_packet(int user_id, int mover)
 void CServer::send_enter_packet(int user_id, int o_id)
 {
 	sc_packet_enter p;
-	p.id = o_id;
+	p.id = SHARED_DATA::g_clients[o_id].m_id;
 	p.size = sizeof(p);
 	p.type = S2C_ENTER;
 	p.pos.x = SHARED_DATA::g_clients[o_id].Pos.x;
@@ -385,6 +385,41 @@ void CServer::send_collision_arrow(int client_id, int arrow_id, int coll_id, PAC
 	packet.coll_type = coll_type;
 
 
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == client_id) continue;
+		else if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+}
+
+
+void CServer::send_setDamage(int client_id, int coll_id, int damage, PACKET_COLLTYPE coll_type)
+{
+	sc_packet_damage packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_SET_DAMAGE;
+	packet.id = coll_id;
+	packet.damage = damage;
+	packet.colltype = coll_type;
+
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == client_id) continue;
+		else if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+}
+
+void CServer::send_arrow_create_skill(int client_id ,p_Vec3 LocalPos, PACKET_SKILL skill )
+{
+	sc_packet_arrow_create_skill packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ARROW_CREATE_SKILL;
+	packet.LocalPos = LocalPos;
+	packet.skill = skill;
+	packet.camp = SHARED_DATA::g_clients[client_id].m_camp;
 	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.m_id == client_id) continue;
 		else if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {

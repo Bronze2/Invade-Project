@@ -16,9 +16,12 @@ private:
 	bool m_bTickCheck;
 	UINT m_iLayerIdx;
 	bool m_bStart = false;
+	CAMP_STATE m_eCampState;
 
-
+	bool isMain = true;
 public:
+
+	void SetIsMain(bool m_isMain) { isMain = m_isMain; }
 	void SetTarget(CGameObject* _pTarget) { m_pTarget = _pTarget; }
 	void Collision();
 	CThunderSkill1Script();
@@ -29,7 +32,7 @@ public:
 	virtual void Update();
 	virtual void OnCollision3DEnter(CCollider3D* _pColldier);
 
-
+	void SetCampState(const CAMP_STATE& _eState) { m_eCampState = _eState; }
 	CLONE(CThunderSkill1Script)
 
 

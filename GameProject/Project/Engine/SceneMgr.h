@@ -81,6 +81,7 @@ public:
 	void net_deletProjectile(int id);
 	void net_playerHelmetUpdate(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 	void net_updateArrow(int id, int arrow_id, Vec3 LocalPos, Vec4 Quaternion);
+	void net_CreateSkill(Vec3 LocalPos, int skill , int camp);
 
 	
 	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }

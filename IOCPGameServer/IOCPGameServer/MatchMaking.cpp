@@ -20,9 +20,12 @@ void CMatchMaking::enterRoom(int room_id , int client_id)
 	}
 	if (LobbyBlue[room_id].size() <= LobbyRed[room_id].size()) {
 		LobbyBlue[room_id].push_back(client_id);
+		SHARED_DATA::g_clients[client_id].m_camp = CAMP_STATE::BLUE;
 	}
 	else {
 		LobbyRed[room_id].push_back(client_id);
+		SHARED_DATA::g_clients[client_id].m_camp = CAMP_STATE::RED;
+
 	}
 
 	for (auto blue : LobbyBlue) {

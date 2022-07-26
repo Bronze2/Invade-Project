@@ -117,6 +117,9 @@ public:
     void LerpUpdate();
     void SetLerp(Vec3 LocalPos, Vec4 Quaternion) { m_LerpPos = LocalPos; m_LerpQut = Quaternion; }
     
+    void StopTrail();
+    void StartTrail();
+
     
     //½ºÅ³
     void WaterSkill0(CCollider3D* _pColldier);
