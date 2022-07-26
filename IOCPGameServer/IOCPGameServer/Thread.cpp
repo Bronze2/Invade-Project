@@ -310,9 +310,10 @@ void CThread::process_packet(int user_id, char* buf)
 	break;
 	case C2S_ENTER_ROOM:
 	{	cs_packet_enter_room* packet = reinterpret_cast<cs_packet_enter_room*>(buf);
+
+		//ÆÀ Á¤º¸ °¹ÀÎ
 		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
 		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
-		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::RED;
 		//ÆÀ Á¤º¸ °»½Å
 		CServer::GetInst()->send_lobby_team_packet(packet->room_id, user_id);
 
@@ -344,7 +345,7 @@ void CThread::process_packet(int user_id, char* buf)
 		SHARED_DATA::g_clients[user_id].dir.y = packet->dir.y;
 		SHARED_DATA::g_clients[user_id].dir.z = packet->dir.z;
 		SHARED_DATA::g_clients[user_id].animState = packet->state;
-		CService::GetInst()->do_move(user_id, packet->direction);
+		CService::GetInst()->do_move(user_id, packet->state);
 	}
 	break;
 	case C2S_KEY_UP:
@@ -428,6 +429,28 @@ void CThread::process_packet(int user_id, char* buf)
 	}
 	break;
 
+<<<<<<< HEAD
+	case C2S_SET_DAMAGE:
+	{
+		cs_packet_damage* packet = reinterpret_cast<cs_packet_damage*>(buf);
+		CSceneMgr::GetInst()->setDamage(SHARED_DATA::g_clients[user_id].room_id, packet->id, packet->colltype, packet->camp , packet->damage);
+		CServer::GetInst()->send_setDamage(user_id, packet->id, packet->damage, packet->colltype); 
+
+
+		//CServer::GetInst()->send_collision_arrow(user_id, packet->arrow_id, packet->coll_id, packet->coll_type);
+
+	}
+	break;
+
+	case C2S_ARROW_CREATE_SKILL:
+	{
+		cs_packet_arrow_create_skill* packet = reinterpret_cast<cs_packet_arrow_create_skill*>(buf);
+		CServer::GetInst()->send_arrow_create_skill(user_id,packet->LocalPos,packet->skill);
+	}
+	break;
+
+=======
+>>>>>>> parent of 87c81aa (,)
 	case C2S_MOVE_BLOCK:
 	{
 		cs_packet_move_block* packet = reinterpret_cast<cs_packet_move_block*>(buf);

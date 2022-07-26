@@ -173,7 +173,13 @@ void Network::ProcessPacket(char* ptr)
 		else {
 			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 			//CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, my_packet->state);
-			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, (int)PLAYER_STATE::WALK);
+			if (my_packet->state == 0) {
+				CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, (int)PLAYER_STATE::WALK);
+			}
+			else if (my_packet->state == 1) {
+				CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, (int)PLAYER_STATE::RUN);
+			}
+
 		}
 	}
 	break;
@@ -189,6 +195,7 @@ void Network::ProcessPacket(char* ptr)
 		}
 		else {
 			CSceneMgr::GetInst()->net_setLerpMoveByID(my_packet->id, my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
+
 			CSceneMgr::GetInst()->net_setAnimationByID(my_packet->id, (int)PLAYER_STATE::IDLE);
 		}
 	}
@@ -305,6 +312,27 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_DamagedByArrow((int)my_packet->coll_type, my_packet->coll_id ,500);
 	}
 	break;
+<<<<<<< HEAD
+
+	case S2C_SET_DAMAGE:
+	{
+		sc_packet_damage* my_packet = reinterpret_cast<sc_packet_damage*>(ptr);
+		CSceneMgr::GetInst()->net_DamagedByArrow((int)my_packet->colltype, my_packet->id, my_packet->damage);
+	}
+	break;
+
+
+	case S2C_ARROW_CREATE_SKILL:
+	{
+		sc_packet_arrow_create_skill* my_packet = reinterpret_cast<sc_packet_arrow_create_skill*>(ptr);
+
+		Vec3 LocalPos = Vec3(my_packet->LocalPos.x, my_packet->LocalPos.y, my_packet->LocalPos.z);
+		CSceneMgr::GetInst()->net_CreateSkill(LocalPos, (int)my_packet->skill, (int)my_packet->camp);
+	}
+	break;
+
+=======
+>>>>>>> parent of 87c81aa (,)
 	case S2C_DELETE_PROJECTILE:
 	{
 		sc_packet_projectile* my_packet = reinterpret_cast<sc_packet_projectile*>(ptr);
@@ -640,6 +668,18 @@ void Network::send_collision_arrow(int arrow_id, int coll_id, PACKET_COLLTYPE co
 	m_packet.camp = camp;
 	send_packet(&m_packet);
 
+}
+
+void Network::send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAMP_STATE camp)
+{
+	cs_packet_damage m_packet;
+	m_packet.type = C2S_SET_DAMAGE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	m_packet.damage = damage;
+	m_packet.colltype = coll_type;
+	m_packet.camp = camp;
+	send_packet(&m_packet);
 }
 
 

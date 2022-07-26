@@ -86,6 +86,11 @@ public:
 	void send_lobby_ready(bool isReady);
 	void send_lobby_change_skill(ELEMENT_TYPE skill);
 
+<<<<<<< HEAD
+	void send_arrow_create_skill(Vec3 LocalPos, PACKET_SKILL skill);
+	void send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAMP_STATE camp);
+=======
+>>>>>>> parent of 87c81aa (,)
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 
 	int getOtherClientCount() {	return m_OtherClientCount; };

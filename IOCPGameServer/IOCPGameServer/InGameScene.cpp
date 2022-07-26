@@ -65,8 +65,9 @@ void CInGameScene::Init(int index)
 				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 				FindLayer(L"Blue")->AddGameObject(pObject, false);
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
-				cl.second.Pos = Vec3(0.f, 0.f, 1125.f);
+				
+				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f + cl.second.m_id * 50));
+				cl.second.Pos = Vec3(0.f, 0.f, 1125.f + cl.second.m_id * 200);
 
 				cout << "BLUE - " << cl.second.m_id << endl;
 
@@ -75,8 +76,8 @@ void CInGameScene::Init(int index)
 				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::RED);
 				FindLayer(L"Red")->AddGameObject(pObject, false);
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
-				cl.second.Pos = Vec3(0.f, 0.f, 5800.f);
+				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f + cl.second.m_id * 50));
+				cl.second.Pos = Vec3(0.f, 0.f, 5800.f + cl.second.m_id * 200);
 				cout << "RED - " << cl.second.m_id << endl;
 
 

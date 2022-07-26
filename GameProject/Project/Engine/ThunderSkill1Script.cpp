@@ -7,6 +7,11 @@
 #include "Layer.h"
 #include "MinionScript.h"
 #include "SkillMgr.h"
+<<<<<<< HEAD
+#include "InGameScene.h"
+#include "Network.h"
+=======
+>>>>>>> parent of 87c81aa (,)
 void CThunderSkill1Script::Collision()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
@@ -23,6 +28,27 @@ void CThunderSkill1Script::Collision()
 
 	const vector<CGameObject*>& vecObj = pLayer->GetObjects();
 
+<<<<<<< HEAD
+			Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+			float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+			if (Radius < 400.f)
+			{
+				if (TickCheck(m_pSkill->StartTime, m_pSkill->Count) != m_pSkill->Count) {
+					if (nullptr != vecObj[j]->GetScript<CPlayerScript>())
+					{
+						if (m_eCampState != vecObj[j]->GetScript<CPlayerScript>()->GetCamp()) {
+							vecObj[j]->GetScript<CPlayerScript>()->GetDamage(m_pSkill->DotDamage);
+							Network::GetInst()->send_set_damage(vecObj[j]->GetScript<CPlayerScript>()->m_GetId(),m_pSkill->DotDamage ,PACKET_COLLTYPE::PLAYER,m_eCampState);
+						}
+
+					}
+					else if (nullptr != vecObj[j]->GetScript<CMinionScript>()) {
+						if (m_eCampState != vecObj[j]->GetScript<CMinionScript>()->GetCamp()) {
+							vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+						}
+						vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+					}
+=======
 	for (int i = 0; i < vecObj.size(); ++i) {
 		CGameObject* pObject1 = vecObj[i];
 		CGameObject* pObject2 = GetObj();
@@ -39,6 +65,7 @@ void CThunderSkill1Script::Collision()
 				}
 				else if (nullptr != vecObj[i]->GetScript<CMinionScript>()) {
 					vecObj[i]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+>>>>>>> parent of 87c81aa (,)
 				}
 			}
 		}

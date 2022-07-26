@@ -122,9 +122,15 @@ void CBowScript::Update()
 			/*Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(), vArrowPos, vArrowRot, vTargetDir, m_fArrowSpeed, m_camp,
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());*/
 
+			
 			Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
 				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
 
+<<<<<<< HEAD
+
+			cout << "CurArrow" << m_iCurArrow << endl;
+=======
+>>>>>>> parent of 87c81aa (,)
 			m_iCurArrow++;
 			m_iPower = 1;
 			if (m_iCurArrow > 19) {

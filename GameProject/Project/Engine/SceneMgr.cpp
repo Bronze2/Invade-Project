@@ -640,7 +640,8 @@ void CSceneMgr::net_initArrow(int parentid, int id, Vec3 pos, Vec3 rot, int skil
 
 	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 		if (cl->GetScript<CPlayerScript>()->m_GetId() == parentid) {
-			cout << ">>" << endl;
+
+			cout << " Player [" << parentid << "] - Arrow Create" << endl;
 			cl->GetScript<CPlayerScript>()->SetState((int)PLAYER_STATE::ATTACK);
 			//cl->GetChild()[0]->GetScript<CBowScript>()->InitArrow(id, pos, rot, (PACKET_SKILL)skill);
 			cl->GetChild()[0]->GetScript<CBowScript>()->CreateArrow((PACKET_SKILL)skill);
@@ -730,3 +731,13 @@ void CSceneMgr::net_updateArrow(int id, int arrow_id , Vec3 LocalPos, Vec4 Quate
 		}
 	}
 }
+<<<<<<< HEAD
+
+
+void CSceneMgr::net_CreateSkill(Vec3 LocalPos, int skill , int camp)
+{
+	Net_CreateThunderObject(LocalPos, camp);
+}
+
+=======
+>>>>>>> parent of 87c81aa (,)

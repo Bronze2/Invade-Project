@@ -27,6 +27,11 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_PLAYER_HELMET 13
 #define C2S_UPDATE_ARROW_MOVE 14
 #define C2S_COLLISION_ARROW 15
+<<<<<<< HEAD
+#define C2S_ARROW_CREATE_SKILL 16
+#define C2S_SET_DAMAGE 17
+=======
+>>>>>>> parent of 87c81aa (,)
 
 
 #define S2C_LOGIN_OK		1
@@ -59,6 +64,11 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_PLAYER_HELMET 26
 #define S2C_UPDATE_ARROW 27
 #define S2C_COLLISION_ARROW 28
+<<<<<<< HEAD
+#define S2C_ARROW_CREATE_SKILL 29
+#define S2C_SET_DAMAGE 30
+=======
+>>>>>>> parent of 87c81aa (,)
 
 
 
@@ -329,6 +339,7 @@ struct cs_packet_arrow {
 	unsigned move_time;
 };
 
+
 constexpr unsigned char BLUE = 0;
 constexpr unsigned char RED = 1;
 
@@ -404,6 +415,23 @@ struct sc_packet_arrow {
 };
 
 
+struct cs_packet_damage {
+	char size;
+	char type;
+	int id;
+	int damage;
+	PACKET_COLLTYPE colltype;
+	CAMP_STATE camp;
+};
+
+struct sc_packet_damage {
+	char size;
+	char type;
+	int id;
+	int damage;
+	PACKET_COLLTYPE colltype;
+	CAMP_STATE camp;
+};
 
 ////////////////// Lobby ///////////////////////////////////
 
