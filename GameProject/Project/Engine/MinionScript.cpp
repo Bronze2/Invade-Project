@@ -100,14 +100,6 @@ void CMinionScript::Init()
 void CMinionScript::Update()
 {
 	CheckObstacle();
-
-	if (KEY_HOLD(KEY_TYPE::KEY_1)) {
-		m_eState = MINION_STATE::IDLE;
-	}
-	if (KEY_AWAY(KEY_TYPE::KEY_1)) {
-		m_eState = MINION_STATE::WALK;
-	}
-
 	CheckHp();
 	m_FAnimation();
 	if (m_pNexus == nullptr)
@@ -206,10 +198,10 @@ void CMinionScript::Update()
 				m_arrEnemy.clear();
 			}
 			else {
-				Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-				float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-				float rotate = angle * 0.0174532925f;
-				vRot.y = rotate;
+				//Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				//float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+				//float rotate = angle * 0.0174532925f;
+				//vRot.y = rotate;
 			}
 		}
 	}
@@ -389,7 +381,7 @@ void CMinionScript::AddObject(CGameObject* _pObject)
 
 void CMinionScript::CheckHp()
 {
-	if (m_iCurHp <= 0.f&&!GetObj()->IsFallDown()) {
+	if (m_iCurHp <= 0.f && !GetObj()->IsFallDown()) {
 		m_eState = MINION_STATE::DIE;
 		GetObj()->SetFallDown();
 	}
@@ -731,7 +723,7 @@ static bool iSeparate=true;
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
-		if (nullptr != _pOther->GetObj()->GetScript<CTowerScript>()) {
+		if (nullptr != _pOther->GetObj()->GetScript<CTowerScript>()) {	
 			if ((UINT)_pOther->GetObj()->GetScript<CTowerScript>()->GetCamp() != (UINT)m_eCamp) {
 				m_eState = MINION_STATE::ATTACK;
 				m_pTarget = _pOther->GetObj();

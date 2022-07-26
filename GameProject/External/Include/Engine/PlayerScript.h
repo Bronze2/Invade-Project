@@ -116,6 +116,9 @@ public:
     void m_FColCheck(Vec3 _vBeforePos,Vec3 _vAfterPos);
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
 
+    CGameObject* GetESkill() { return m_pESkillObject; }
+    CGameObject* GetZSkill() { return m_pZSkillObject; }
+
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
     virtual void OnCollision3D(CCollider3D* _pOther);
     virtual void OnCollision3DExit(CCollider3D* _pOther);

@@ -9,3 +9,7 @@ OutputFile/
 
 .vs/
 bin_debug/
+GameProject/File/bin/content/Mesh/fqfqfqf.mesh
+GameProject/File/bin/content/Mesh/lobby.mesh
+GameProject/File/bin/content/Mesh/lobby2.mesh
+GameProject/File/bin/content/Mesh/ingame.mesh

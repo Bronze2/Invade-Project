@@ -313,8 +313,10 @@ void CSceneMgr::Init()
 	Skill->DotDamage = 5.f;
 	Skill->Sum = -25.f;
 	Skill->bUse = false;
-	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); Skill = new SKILL;
-
+	CSkillMgr::GetInst()->AddSkill(Skill->Code, Skill); 
+	
+	
+	Skill = new SKILL;
 	Skill->Name = L"Fire1";
 	Skill->Code = 9;
 	Skill->eSkillType = SKILL_TYPE::ACT;

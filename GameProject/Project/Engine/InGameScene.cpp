@@ -725,56 +725,62 @@ void CInGameScene::Init()
 
 	FindLayer(L"UI")->AddGameObject(pUICrossHair);
 
+	//스킬UI
 
-	CGameObject* pDarkUI = new CGameObject;
-	pDarkUI->SetName(L"UIDark");
-	pDarkUI->FrustumCheck(false);
-	pDarkUI->AddComponent(new CTransform);
-	pDarkUI->AddComponent(new CMeshRender);
+	//CGameObject* pUISkill = new CGameObject;
+	//pUISkill->SetName(L"UISkill1");
+	//pUISkill->FrustumCheck(false);
+	//pUISkill->AddComponent(new CTransform);
+	//pUISkill->AddComponent(new CMeshRender);
 
-	pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
-	pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
-	pDarkUI->SetActive(false);
+	//tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+	//Vec3 vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
 
-	pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
-	pDarkUIMtrl->DisableFileSave();
-	pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-	pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
-	Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
-	pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
+	//pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.F, res1.fHeight / 4, 1.f));
+	//pUISkill->Transform()->SetLocalScale(vScale1);
 
-	FindLayer(L"UI")->AddGameObject(pDarkUI);
+	//pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//Ptr<CMaterial> pSkillMtrl = new CMaterial;
+	//pSkillMtrl->DisableFileSave();
+	//pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
+	//CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
+	//pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+	//pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+	//	pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
+	//pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
+	//FindLayer(L"UI")->AddGameObject(pUISkill);
 
+	////add 추가
+	//pMtrl = new CMaterial;
+	//pMtrl->DisableFileSave();
+	//pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	//CResMgr::GetInst()->AddRes(L"Texture00", pMtrl);
+	//pMtrl = new CMaterial;
+	//pMtrl->DisableFileSave();
+	//pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	//CResMgr::GetInst()->AddRes(L"Texture01", pMtrl);
+	//pUISkill = new CGameObject;
+	//pUISkill->SetName(L"UISkill2");
+	//pUISkill->FrustumCheck(false);
+	//pUISkill->AddComponent(new CTransform);
+	//pUISkill->AddComponent(new CMeshRender);
 
-//-----------------------------------------------------------------------------------------------
-// Arrow Test
-//-----------------------------------------------------------------------------------------------
+	//res1 = CRenderMgr::GetInst()->GetResolution();
+	//vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
 
+	//pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.f, res1.fHeight / 4 - vScale.y, 1.f));
+	//pUISkill->Transform()->SetLocalScale(vScale1);
 
-	CGameObject* m_pArrow = new CGameObject;
-	m_pArrow->SetName(L"Arrow");
-
-
-	m_pArrow->AddComponent(new CTransform);
-	m_pArrow->Transform()->SetLocalPos(Vec3(-50.f, 50.f, -50.f));
-	m_pArrow->Transform()->SetLocalScale(Vec3(100.f, 1.f, 1.f));
-	m_pArrow->Transform()->SetLocalRot(Vec3(0.f, 3.14f, 0.f));
-	m_pArrow->AddComponent(new CMeshRender);
-	m_pArrow->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	m_pArrow->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
-	//	m_pArrow[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlackTex.GetPointer());
-
-	m_pArrow->AddComponent(new CCollider3D);
-	m_pArrow->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-
-	m_pArrow->AddComponent(new CArrowScript(ELEMENT_TYPE::WATER));
-	m_pArrow->GetScript<CArrowScript>()->SetMove(false);
-	m_pArrow->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill((UINT)SKILL_CODE::WATER_0));
-	m_pArrow->GetScript<CArrowScript>()->SetLayerIdx(3);
-	//m_pArrow->GetScript<CArrowScript>()->SetPlayer(pPlayer);
-	//pPlayer
-	FindLayer(L"Arrow")->AddGameObject(m_pArrow);
+	//pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pSkillMtrl = new CMaterial;
+	//pSkillMtrl->DisableFileSave();
+	//pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
+	//CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
+	//pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+	//pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+	//	pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex.GetPointer());
+	//pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
+	//FindLayer(L"UI")->AddGameObject(pUISkill);
 
 
 //-----------------------------------------------------------------------------------------------
