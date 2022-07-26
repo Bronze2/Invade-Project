@@ -313,6 +313,9 @@ struct tRay {
 	Vec3 vOrigin;
 	Vec3 vDir;
 };
+
+class CTexture;
+
 struct SKILL {
 	wstring Name;
 	UINT Code;
@@ -330,4 +333,6 @@ struct SKILL {
 	bool bFinal;
 	UINT Count;
 	float Sum;
+
+	CTexture* pTex;
 };

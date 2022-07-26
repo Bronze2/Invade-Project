@@ -625,7 +625,7 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"ColorTexShader", pShader);
 
 	// ==============
-	// HPBar Shader (에이치비바)
+	// HPBar Shader (에이치피바)
 	// ==============
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_HPTex", "vs_5_0");

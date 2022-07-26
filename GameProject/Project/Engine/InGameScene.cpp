@@ -727,60 +727,60 @@ void CInGameScene::Init()
 
 	//스킬UI
 
-	//CGameObject* pUISkill = new CGameObject;
-	//pUISkill->SetName(L"UISkill1");
-	//pUISkill->FrustumCheck(false);
-	//pUISkill->AddComponent(new CTransform);
-	//pUISkill->AddComponent(new CMeshRender);
+	CGameObject* pUISkill = new CGameObject;
+	pUISkill->SetName(L"UISkill1");
+	pUISkill->FrustumCheck(false);
+	pUISkill->AddComponent(new CTransform);
+	pUISkill->AddComponent(new CMeshRender);
 
-	//tResolution res1 = CRenderMgr::GetInst()->GetResolution();
-	//Vec3 vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
+	tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+	Vec3 vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
 
-	//pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.F, res1.fHeight / 4, 1.f));
-	//pUISkill->Transform()->SetLocalScale(vScale1);
+	pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.F, res1.fHeight / 4, 1.f));
+	pUISkill->Transform()->SetLocalScale(vScale1);
 
-	//pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//Ptr<CMaterial> pSkillMtrl = new CMaterial;
-	//pSkillMtrl->DisableFileSave();
-	//pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
-	//CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
-	//pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
-	//pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
-	//	pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex.GetPointer());
-	//pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
-	//FindLayer(L"UI")->AddGameObject(pUISkill);
+	pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pSkillMtrl = new CMaterial;
+	pSkillMtrl->DisableFileSave();
+	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
+	CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
+	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+	pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+		pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex);
+	pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
+	FindLayer(L"UI")->AddGameObject(pUISkill);
 
-	////add 추가
-	//pMtrl = new CMaterial;
-	//pMtrl->DisableFileSave();
-	//pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-	//CResMgr::GetInst()->AddRes(L"Texture00", pMtrl);
-	//pMtrl = new CMaterial;
-	//pMtrl->DisableFileSave();
-	//pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-	//CResMgr::GetInst()->AddRes(L"Texture01", pMtrl);
-	//pUISkill = new CGameObject;
-	//pUISkill->SetName(L"UISkill2");
-	//pUISkill->FrustumCheck(false);
-	//pUISkill->AddComponent(new CTransform);
-	//pUISkill->AddComponent(new CMeshRender);
+	//add 추가
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes(L"Texture00", pMtrl);
+	pMtrl = new CMaterial;
+	pMtrl->DisableFileSave();
+	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	CResMgr::GetInst()->AddRes(L"Texture01", pMtrl);
+	pUISkill = new CGameObject;
+	pUISkill->SetName(L"UISkill2");
+	pUISkill->FrustumCheck(false);
+	pUISkill->AddComponent(new CTransform);
+	pUISkill->AddComponent(new CMeshRender);
 
-	//res1 = CRenderMgr::GetInst()->GetResolution();
-	//vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
+	res1 = CRenderMgr::GetInst()->GetResolution();
+	vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
 
-	//pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.f, res1.fHeight / 4 - vScale.y, 1.f));
-	//pUISkill->Transform()->SetLocalScale(vScale1);
+	pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.f, res1.fHeight / 4 - vScale.y, 1.f));
+	pUISkill->Transform()->SetLocalScale(vScale1);
 
-	//pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//pSkillMtrl = new CMaterial;
-	//pSkillMtrl->DisableFileSave();
-	//pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
-	//CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
-	//pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
-	//pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
-	//	pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex.GetPointer());
-	//pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
-	//FindLayer(L"UI")->AddGameObject(pUISkill);
+	pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pSkillMtrl = new CMaterial;
+	pSkillMtrl->DisableFileSave();
+	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
+	CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
+	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+	pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+		pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex);
+	pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
+	FindLayer(L"UI")->AddGameObject(pUISkill);
 
 
 //-----------------------------------------------------------------------------------------------
@@ -812,7 +812,7 @@ void CInGameScene::Init()
 		Ptr<CTexture> pPlayerTexTex;
 
 		// 주작용
-		switch (i) {
+		/*switch (i) {
 		case 0:
 			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
 			break;
@@ -822,55 +822,55 @@ void CInGameScene::Init()
 		case 2:
 			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
 			break;
-		}
+		}*/
 
-		//if (pPlayer->GetLayerIdx() == 3) {
-		//	switch (iType) {
-		//	case 0:
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
-		//		break;
-		//	case 1:
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
-		//		break;
-		//	case 2:
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
-		//		break;
-		//	case 3:
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
-		//		break;													
-		//	case 4:														
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
-		//		break;													
-		//																
-		//	}															
-		//}																
-		//else if (pPlayer->GetLayerIdx() == 4) {							
-		//	switch (iType) {											
-		//	case 0:														
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
-		//		break;													
-		//	case 1:														
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
-		//		break;												
-		//	case 2:													
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
-		//		break;													
-		//	case 3:														
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
-		//		break;												
-		//	case 4:													
-		//		pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
-		//		break;
-		//	}
-		//}
+		if (pPlayer->GetLayerIdx() == 3) {
+			switch (iType) {
+			case 0:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
+				break;
+			case 1:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+				break;
+			case 2:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
+				break;
+			case 3:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
+				break;													
+			case 4:														
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
+				break;													
+																		
+			}															
+		}																
+		else if (pPlayer->GetLayerIdx() == 4) {							
+			switch (iType) {											
+			case 0:														
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
+				break;													
+			case 1:														
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+				break;												
+			case 2:													
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
+				break;													
+			case 3:														
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
+				break;												
+			case 4:													
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
+				break;
+			}
+		}
 		pPlayerInfoTex->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
 		FindLayer(L"UI")->AddGameObject(pPlayerInfoTex);
 
 		// 플레이어 id
-		//CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+		CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 
 		// 주작용
-		switch (i) {
+		/*switch (i) {
 		case 0:
 			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"sangjun", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 			break;
@@ -880,7 +880,7 @@ void CInGameScene::Init()
 		case 2:
 			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"sumin", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 			break;
-		}
+		}*/
 
 
 		// 에이치피바
