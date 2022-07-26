@@ -275,6 +275,7 @@ struct tBillBoard {
 #include "Texture.h"
 
 
+
 struct tRay {
 	Vec3 vOrigin;
 	Vec3 vDir;
@@ -298,5 +299,6 @@ struct SKILL {
 	float Sum;
 
 	Ptr<CTexture> pTex;
+
 };
 

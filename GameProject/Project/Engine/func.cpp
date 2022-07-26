@@ -455,7 +455,7 @@ void CreateThunderObject(const Vec3& _Pos, const CAMP_STATE& _iLayerIdx)
 	pThunderObject->FrustumCheck(false);
 	pThunderObject->SetActive(true);
 	Ptr<CTexture> pMagicTexture = nullptr;
-	if (3 == (UINT)_iLayerIdx) {
+	if (1 == (UINT)_iLayerIdx) {
 		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle");
 	}
 	else {
@@ -478,7 +478,7 @@ void CreateThunderObject(const Vec3& _Pos, const CAMP_STATE& _iLayerIdx)
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(800.f, 1.f, 800.f));
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rect2Mesh"));
-	if (3 == (UINT)_iLayerIdx) {
+	if (1 == (UINT)_iLayerIdx) {
 		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Texture00"));
 	}
 	else {
@@ -520,6 +520,44 @@ void SetListener(const Vec3& _vFrontDir, const Vec3& _vUpDir, const Vec3& _Playe
 	listener.up = VecToFMOD(vYAxis);
 	listener.velocity = { (_PlayerPos.x - _PlayerlastPos.x) * DT,(_PlayerPos.y - _PlayerlastPos.y) * DT,(_PlayerPos.z - _PlayerlastPos.z) * DT };
 	CSound::g_pFMOD->set3DListenerAttributes(0, &listener.position, &listener.velocity, &listener.forward, &listener.up);
+}
+#include "BoxScript.h"
+#include "Collider3D.h"
+void CreateBoxObject(const Vec3& _vPos, const UINT& _idx)
+{
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_Up.mdat", L"MeshData\\bow_Up.mdat");
+	CGameObject* pBoxUp = pMeshData->Instantiate();
+	
+	pBoxUp->FrustumCheck(false);
+	pBoxUp->SetActive(true);
+
+	pBoxUp->Transform()->SetLocalPos(Vec3(_vPos.x, 70.f, _vPos.z+45));
+	pBoxUp->Transform()->SetLocalRot(Vec3(-PI / 2, 0.f, 0.f));
+
+//'	Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"SparkSound");
+//'	m_pSound->PlaySound3D(_Pos, 1000.f);
+//'
+//'	pThunderObject->GetScript<CThunderSkill1Script>()->SetSound(m_pSound);
+
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\box_Bottom.mdat", L"MeshData\\box_Bottom.mdat");
+	CGameObject* pBoxBottom = pMeshData->Instantiate();
+	pBoxBottom->SetName(L"Box");
+	pBoxBottom->AddComponent(new CBoxScript);
+	pBoxBottom->AddComponent(new CCollider3D);
+	pBoxBottom->GetScript<CBoxScript>()->SetUp(pBoxUp);
+
+	pBoxBottom->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pBoxBottom->GetScript<CBoxScript>()->SetIdx(_idx);
+	pBoxBottom->Transform()->SetLocalPos(Vec3(_vPos.x, 50.f, _vPos.z));
+	pBoxBottom->Transform()->SetLocalRot(Vec3(-PI / 2 , 0.f, 0.f));
+	pBoxBottom->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pBoxBottom->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pBoxBottom->Collider3D()->SetOffsetScale(Vec3(120.f, 100.f, 100.f));
+	pBoxBottom->GetScript<CBoxScript>()->Init();
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pBoxBottom);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pBoxUp);
+
 }
 
 

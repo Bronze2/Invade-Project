@@ -43,6 +43,7 @@
 #include "EmptyPlayerScript.h"
 #include "BowScript.h"
 #include "SafeZone.h"
+#include"SpawnMgr.h"
 
 #include "SkillMgr.h" 
 #include "CrossHairScript.h"
@@ -61,6 +62,7 @@ void CInGameScene::Init()
     GetLayer(7)->SetName(L"Terrain");
     GetLayer(8)->SetName(L"Tile");
     GetLayer(9)->SetName(L"Obstacle");
+    GetLayer(10)->SetName(L"Box");
     GetLayer(30)->SetName(L"UI");
     GetLayer(31)->SetName(L"Tool");
 
@@ -144,7 +146,7 @@ void CInGameScene::Init()
     Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_without_bow01.mdat", L"MeshData\\player_without_bow01.mdat");
     //pMeshData->Save(pMeshData->GetPath());
 
-    pObject = new CGameObject;
+
     pObject = pMeshData->Instantiate();
     pObject->SetName(L"Monster");
     pObject->AddComponent(new CCollider3D);
@@ -154,7 +156,7 @@ void CInGameScene::Init()
     pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));      // 80.f, 200.f, 80.f ?????
     pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
     pObject->FrustumCheck(false);
-    pObject->Transform()->SetLocalPos(Vec3(-0.f, 0.f, 15000.f));
+    pObject->Transform()->SetLocalPos(Vec3(100.f, 0.f, 100.f));
     pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
     pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
     pObject->MeshRender()->SetDynamicShadow(true);
@@ -377,7 +379,9 @@ void CInGameScene::Init()
     pBlueNexus->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
     pBlueNexus->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
     pBlueNexus->MeshRender()->SetDynamicShadow(true);
-
+    pBlueNexus->GetScript<CTowerScript>()->Init();
+    pBlueNexus->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
+    pBlueNexus->GetScript<CTowerScript>()->SetType(TOWER_TYPE::NEXUS);
     FindLayer(L"Blue")->AddGameObject(pBlueNexus);
 
     CGameObject* pBlueSpawnPlace = new CGameObject;
@@ -405,10 +409,11 @@ void CInGameScene::Init()
     pRedNexus->FrustumCheck(false);
     pRedNexus->Transform()->SetLocalPos(Vec3(1000.f, -10.f, 17600.f));
     pRedNexus->Transform()->SetLocalRot(Vec3(-PI / 2, 0.f, 0.f));
-
+    pRedNexus->GetScript<CTowerScript>()->Init();
     pRedNexus->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
     pRedNexus->MeshRender()->SetDynamicShadow(true);
-
+    pRedNexus->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::RED);
+    pRedNexus->GetScript<CTowerScript>()->SetType(TOWER_TYPE::NEXUS);
     pRedNexus->GetScript<CTowerScript>()->SetSecondTower(pRedSecondTower);
     FindLayer(L"Red")->AddGameObject(pRedNexus);
 
@@ -1559,8 +1564,8 @@ void CInGameScene::Init()
    pRangeObject->AddComponent(new CSafeZone);
    pRangeObject->SetName(L"Range");
    pRangeObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-   pRangeObject->Transform()->SetLocalPos(Vec3(0.f, 5.f, 0.f));
-   pRangeObject->Transform()->SetLocalScale(Vec3(100.f, 1.f, 100.f));
+   pRangeObject->Transform()->SetLocalPos(Vec3(400.f, 5.f, 500.f));
+   pRangeObject->Transform()->SetLocalScale(Vec3(2000.f, 1.f, 1000.f));
    pRangeObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
    pRangeObject->Collider3D()->SetOffsetScale(Vec3(1.f, 100.f, 1.f));
    pRangeObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"ColRect2Mesh"));
@@ -1570,8 +1575,12 @@ void CInGameScene::Init()
 
 
     //해야 할일 화살 파티클 지정 사운드 지정
-
-
+  // pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_Up.fbx");
+   //pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\LowPoly_Tower.mdat", L"MeshData\\LowPoly_Tower.mdat");
+ //  pMeshData->Save(pMeshData->GetPath());
+ //  pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\box_Bottom.fbx");
+   //pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\LowPoly_Tower.mdat", L"MeshData\\LowPoly_Tower.mdat");
+ //  pMeshData->Save(pMeshData->GetPath());
 
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Red");
@@ -1581,11 +1590,13 @@ void CInGameScene::Init()
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Arrow");
 
     CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
-
+    CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Box");
+    CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Box");
 
     CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
     CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Blue");
     CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Red");
+    CSpawnMgr::GetInst()->Init();
 }
 
 

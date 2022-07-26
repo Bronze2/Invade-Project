@@ -30,8 +30,8 @@ void CThunderSkill1Script::Collision()
 						if (m_eCampState!=vecObj[j]->GetScript<CPlayerScript>()->GetCampState()) {
 							vecObj[j]->GetScript<CPlayerScript>()->SetDamage(m_pSkill->DotDamage);
 						}
-						
-
+						m_pSkill->Count += 1;
+		
 					}
 					else if (nullptr != vecObj[j]->GetScript<CMinionScript>()) {
 						if (m_eCampState != vecObj[j]->GetScript<CMinionScript>()->GetCamp()) {

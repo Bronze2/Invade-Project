@@ -61,7 +61,8 @@ public:
     UINT GetLayerIdx() { return m_iLayerIdx; }
     virtual void Awake();
     virtual void Update();
-
+    const UINT& GetDmg() { return m_iDamage; }
+    void SetDmg(const UINT& _iDmg) { m_iDamage = _iDmg; }
     bool M_FLengthCheck();
     void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
    

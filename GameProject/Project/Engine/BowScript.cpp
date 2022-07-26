@@ -62,7 +62,8 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(false);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
-
+		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDmg(m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->GetDmg()+m_pPlayer->GetScript<CPlayerScript>()->GetStrength());
+		int a=m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->GetDmg();
 		Vec3 vBowRot = GetObj()->GetParent()->Transform()->GetLocalRot();
 		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetWorldPos() + Vec3(0.f, 0.f, 0.f);
 		Vec3 vArrowRot = Vec3(vBowRot.x, XMConvertToRadians(XMConvertToDegrees(vBowRot.y) + 80.f), vBowRot.z);

@@ -52,6 +52,7 @@
 #include "EmptyPlayerScript.h"
 #include "LoginScene.h"
 #include "TitleScene.h"
+#include "SpawnMgr.h"
 
 CScene* CSceneMgr::GetCurScene()
 {
@@ -135,8 +136,11 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"smokeparticle", L"Texture\\Particle\\smokeparticle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"HardCircle", L"Texture\\Particle\\HardCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"particle_00", L"Texture\\Particle\\particle_00.png");
+	CResMgr::GetInst()->Load<CTexture>(L"CartoonSmoke", L"Texture\\Particle\\CartoonSmoke.png");
 	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle", L"Texture\\MagicCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle2", L"Texture\\MagicCircle2.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Skeleton", L"Texture\\Particle\\Skeleton.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Sword", L"Texture\\Particle\\Sword.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pWhite = CResMgr::GetInst()->Load<CTexture>(L"white", L"Texture\\Tile\\1234.png");
@@ -318,14 +322,16 @@ void CSceneMgr::Init()
 void CSceneMgr::Update()
 {
 	m_pCurScene->Update();
+
 	m_pCurScene->LateUpdate();
+	
 
 	// rendermgr ī�޶� �ʱ�ȭ
 	CRenderMgr::GetInst()->ClearCamera();
 	//CRenderMgr::GetInst()->RegisterCamera(CRenderMgr::GetInst()->GetCamera());
 
 	m_pCurScene->FinalUpdate();
-
+	CSpawnMgr::GetInst()->Update();
 
 	CSensorMgr::GetInst()->Update();
 	// �浹 ó��

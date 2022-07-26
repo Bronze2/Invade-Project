@@ -35,7 +35,7 @@ private:
     CGameObject* m_pHealParticle;
     CGameObject* m_pFlameParticle;
     CGameObject* m_pThunderParticle;
-
+    CGameObject* m_pBuffParticle;
 
     bool m_bHealCheck;
     bool m_bFlameCheck;
@@ -49,6 +49,8 @@ private:
     bool m_bColCheck;
     bool m_bMoveCheck;
    
+
+
 
     bool m_bTurn;
     int m_iKeyHoldCnt;
@@ -65,7 +67,7 @@ private:
 
     vector<SKILL*> m_arrSkill;
    
-    
+    std::chrono::system_clock::time_point m_tBuffTime;
 
 
 
@@ -80,7 +82,14 @@ private:
     CAMP_STATE m_eCampState;
     CGameObject* pDeadEffect;
     bool m_bCanAttack;
+    bool m_bColBox;
+
+    UINT m_uiStrength;
+
 public:
+    void SetStrength(const UINT& _Dmg) { m_uiStrength = _Dmg; }
+    const UINT& GetStrength() { return m_uiStrength; }
+    void GetBuff();
     void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
     CAMP_STATE GetCampState() { return m_eCampState; }
     SKILL* GetESkill() { return m_tESkill; }

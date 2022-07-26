@@ -264,6 +264,12 @@
     <ClCompile Include="SafeZone.cpp">
       <Filter>Script\SAFEZONE</Filter>
     </ClCompile>
+    <ClCompile Include="BoxScript.cpp">
+      <Filter>Script\BOX</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnMgr.cpp">
+      <Filter>Mgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -515,6 +521,12 @@
     <ClInclude Include="SafeZone.h">
       <Filter>Script\SAFEZONE</Filter>
     </ClInclude>
+    <ClInclude Include="BoxScript.h">
+      <Filter>Script\BOX</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnMgr.h">
+      <Filter>Mgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -630,6 +642,9 @@
     </Filter>
     <Filter Include="Script\SAFEZONE">
       <UniqueIdentifier>{9625e533-d3da-45e4-b41e-d87227f4ab6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\BOX">
+      <UniqueIdentifier>{15d1507f-c0eb-468b-9208-e6d9f723f72e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

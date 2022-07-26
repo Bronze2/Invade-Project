@@ -178,6 +178,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="BowScript.h" />
+    <ClInclude Include="BoxScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
     <ClInclude Include="CrossHairScript.h" />
@@ -244,6 +245,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SpawnMgr.h" />
     <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="StaticUI.h" />
     <ClInclude Include="stb_image.h" />
@@ -263,6 +265,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="BowScript.cpp" />
+    <ClCompile Include="BoxScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
     <ClCompile Include="CrossHairScript.cpp" />
@@ -328,6 +331,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpawnMgr.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="StaticUI.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />

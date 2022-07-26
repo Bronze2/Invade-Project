@@ -39,7 +39,9 @@ enum class SCRIPT_TYPE {
     CROSSHAIRSCRIPT,
     PARTICLE,
 
+    //Ãß°¡
     SAFEZONE,
+    BOX,
     END,
 };
 

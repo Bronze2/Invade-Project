@@ -17,7 +17,14 @@
 #include "Collider3D.h"
 #include "RenderMgr.h"
 #include "CollisionMgr.h"
+#include "BoxScript.h"
+#include "SpawnMgr.h"
+void CPlayerScript::GetBuff()
+{
 
+	m_pBuffParticle->SetActive(true);
+	m_tBuffTime = std::chrono::system_clock::now();
+}
 void CPlayerScript::m_FAnimation()
 {
 	if (m_ePrevState != m_eState) {
@@ -261,6 +268,7 @@ void CPlayerScript::m_FAnimation()
 
 bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 {
+	m_bColBox = false;
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	Vec3 vFinalPos = Collider3D()->GetOffsetPos();
 	vFinalPos = vFinalPos / Transform()->GetWorldScale();
@@ -275,7 +283,7 @@ bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 	Matrix matWorld = matScale * matRot * matTranslation;
 	MatColWorld *= matWorld;
 	bool bTrue = false;
-	for (int i = (UINT)INGAME_LAYER::DEFAULT + 1; i < (UINT)INGAME_LAYER::OBSTACLE + 1; ++i) {
+	for (int i = (UINT)INGAME_LAYER::DEFAULT + 1; i < (UINT)INGAME_LAYER::BOX + 1; ++i) {
 		const vector<CGameObject*>& vecObj = pCurScene->GetLayer(i)->GetObjects();
 		if (i == 6)
 			continue;
@@ -290,9 +298,20 @@ bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 				continue;
 			if (L"Minion" == vecObj[j]->GetName())
 				continue;
+		
 			bTrue = CCollisionMgr::GetInst()->CollisionCubeMatrix(MatColWorld, vecObj[j]->Collider3D()->GetColliderWorldMatNotify());
-			if (bTrue)
-				return bTrue; 
+			if (bTrue) {
+				if (L"Box" == vecObj[j]->GetName())
+				{
+					if (
+						BOX_STATE::CLOSE == vecObj[j]->GetScript<CBoxScript>()->GetOpen()) {
+						vecObj[j]->GetScript<CBoxScript>()->SetOpen((UINT)BOX_STATE::OPEN);
+						vecObj[j]->GetScript<CBoxScript>()->SetPlayer(GetObj());
+					}
+				}
+				
+				return bTrue;
+			}
 		}
 
 	}
@@ -370,8 +389,20 @@ void CPlayerScript::Awake()
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
 	GetObj()->AddChild(m_pThunderParticle);
-	
+	m_pBuffParticle = new CGameObject;
+	m_pBuffParticle->AddComponent(new CTransform);
+	m_pBuffParticle->AddComponent(new CParticleSystem);
+	m_pBuffParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Sword"), L"ParticleUpdate4Mtrl");
+	m_pBuffParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	m_pBuffParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+	m_pBuffParticle->ParticleSystem()->SetStartScale(10.f);
+	m_pBuffParticle->ParticleSystem()->SetEndScale(15.f);
+	//m_pHealParticle->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+	m_pBuffParticle->FrustumCheck(false);
+	m_pBuffParticle->SetActive(false);
 
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pBuffParticle);
+	GetObj()->AddChild(m_pBuffParticle);
 	m_fMoveSpeed = 500.f;
 	if ((UINT)INGAME_LAYER::BLUE == GetObj()->GetLayerIdx()) {
 		m_eCampState = CAMP_STATE::BLUE;
@@ -601,7 +632,9 @@ void CPlayerScript::Update()
 
 	Transform()->GetWorldMat();
 
-
+	if (KEY_AWAY(KEY_TYPE::KEY_F)) {
+		if(m_bColBox){}
+	}
 
 	SetListener(-1*vDirFront,vDirUp,vCurPos,vPrevPos);
 
@@ -720,6 +753,7 @@ void CPlayerScript::StatusCheck()
 	m_bHealCheck = false;
 	m_bFlameCheck = false;
 	m_bThunderCheck = false;
+	
 
 	if (m_pHealParticle->IsActive()) {
 		for (int i = 0; i < m_arrSkill.size(); ++i) {
@@ -759,6 +793,17 @@ void CPlayerScript::StatusCheck()
 		}
 
 
+	}
+	if (m_pBuffParticle->IsActive()) {
+		m_uiStrength = 10;
+		if (CoolTimeCheck(m_tBuffTime,5.f))
+		{
+			m_pBuffParticle->SetActive(false);
+		}
+
+	}
+	else {
+		m_uiStrength = 0;
 	}
 }
 void CPlayerScript::UseSkill()
@@ -915,6 +960,7 @@ void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 void CPlayerScript::OnCollision3D(CCollider3D* _pOther)
 {
+
 }
 
 void CPlayerScript::OnCollision3DExit(CCollider3D* _pOther)
@@ -967,7 +1013,7 @@ CPlayerScript::~CPlayerScript()
 
 void CPlayerScript::SetDamage(const int& _Damage)
 {
-	if (!m_bCanAttack)
+	if (m_bCanAttack)
 		return;
 	m_iCurHp -= _Damage;
 	if (m_iCurHp < 0) {

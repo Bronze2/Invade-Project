@@ -416,3 +416,9 @@ enum class eSOUND {
 	MAX,
 
 };
+
+enum class BUFF_TYPE {
+	HEAL,
+	STRENGTH,
+	DAMAGE,
+};

@@ -76,7 +76,7 @@ void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& 
 
 void SetListener(const Vec3& _vFrontDir,const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);
 
-
+void CreateBoxObject(const Vec3& _vPos,const UINT&_idx);
 
 
 

@@ -557,9 +557,9 @@ void CS_ParticleUpdate5(int3 _iThreadIdx : SV_DispatchThreadID)
         
         float fRatio = tRWData[_iThreadIdx.x].m_fCurTime / tRWData[_iThreadIdx.x].m_fLifeTime;
         float fSpeed = (g_float_3 - g_float_2) * fRatio + g_float_2;
-        tRWData[_iThreadIdx.x].vWorldPos.x+= tRWData[_iThreadIdx.x].vWorldDir.x * fSpeed * g_fDT;
+        tRWData[_iThreadIdx.x].vWorldPos.x += tRWData[_iThreadIdx.x].vWorldDir.x * fSpeed * g_fDT;
         tRWData[_iThreadIdx.x].vWorldPos.z += tRWData[_iThreadIdx.x].vWorldDir.z * fSpeed * g_fDT;
-        // 생존 파티클 개수 확인
+        
         tRWSharedData[0].iCurCount = 0;
         InterlockedAdd(tRWSharedData[0].iCurCount, 1);
     }
