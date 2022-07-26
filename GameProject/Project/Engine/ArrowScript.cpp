@@ -84,11 +84,8 @@ void CArrowScript::Awake()
 	m_pTrail->SetActive(true);
 	m_pTrail->FrustumCheck(false);
 	m_pTrail->MeshRender()->SetDynamicShadow(false);
-	//Vec3 vTrailPos = Vec3(0.f, 0.f, 0.f) - GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT) * 40.f;
+	//Vec3 vTrailPos = Vec3(0.f, 0.f, 0.f) - GetObj()->Transform()->GetWorldDir(DIR_TYPE::UP) * 100.f;
 	//m_pTrail->Transform()->SetLocalPos(vTrailPos);
-	//m_pTrail->Transform()->SetBillBoard(true);
-	//m_pTrail->Transform()->SetCamera(dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0]);
-	//GetObj()->AddChild(m_pTrail);
 	m_pTrail->TrailRenderer()->SetTargetObj(GetObj());
 	pCurScene->FindLayer(L"Default")->AddGameObject(m_pTrail);
 
@@ -153,22 +150,19 @@ void CArrowScript::Update()
 			m_vRestorePos = vPos;
 
 			Vec4 vDir = Vec4(m_vDir, 1.f);
+			float a = vDir.x;
+			vDir.x = vDir.z;
+			vDir.z = a;
 			m_pParticle->ParticleSystem()->SetDir(vDir);
 
 			// 트레일
 			m_pTrail->TrailRenderer()->SetEmit(true);
 
 			// 화살 기존 코드
-			CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
-			CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-			Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
-			float fDegree = XMConvertToDegrees(vCamRot.x);
-
 			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			m_vXZDir.Normalize();
 			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
 			m_fAngle -= PI / 9;
-			//m_fSpeed = 1000;
 
 			m_fTime += DT;
 

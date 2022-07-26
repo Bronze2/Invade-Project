@@ -31,13 +31,13 @@ void CMinionScript::Init()
 	switch (m_eAttackType)
 	{
 	case MINION_ATTACK_TYPE::MELEE: {
-		SetAttackRange(180);
+		SetAttackRange(200);
 		m_uiMaxHp = 450; m_uiAttackDamage = 30;
 	}
 	break;
 
 	case MINION_ATTACK_TYPE::RANGE: {
-		SetAttackRange(200);
+		SetAttackRange(250);
 		m_uiMaxHp = 300; m_uiAttackDamage = 20;
 		//	if (CAMP_STATE::BLUE == m_eCamp) {
 		//		m_pProjectile = new CGameObject;
@@ -51,7 +51,7 @@ void CMinionScript::Init()
 	break;
 
 	case MINION_ATTACK_TYPE::CANON: {
-		SetAttackRange(300);
+		SetAttackRange(350);
 		m_uiMaxHp = 550; m_uiAttackDamage = 60;
 	}
 	break;
@@ -267,7 +267,7 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 
 	if (nullptr == m_pTarget)
 		return;
-	if (nullptr == m_pTarget->GetScript<CPlayerScript>())
+	if (nullptr == m_pTarget->GetScript<CPlayerScript>())		// 미니언 많이 나오면 여기서터짐 220727 am0230
 		return;
 
 
@@ -734,6 +734,7 @@ void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp && m_eState == MINION_STATE::WALK) {
 			m_bAllienceCol = true;
 			m_bRotate = true;
+			cout << "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC " << endl;
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
 				float Value = _pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
 				Vec3 Value3 = _pOther->Transform()->GetLocalPos() - Transform()->GetLocalPos();
@@ -773,6 +774,7 @@ void CMinionScript::OnCollision3DExit(CCollider3D* _pOther)
 			
 		
 		}
+		cout << "---------------------" << endl;
 		m_iAllienceCol -= 1;
 		if (m_iAllienceCol <= 0) {
 			m_iAllienceCol = 0;

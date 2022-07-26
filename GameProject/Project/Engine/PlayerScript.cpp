@@ -16,11 +16,12 @@
 #include "WindSkill1Script.h"
 #include "ThunderSkill0Script.h"
 #include "ThunderSkill1Script.h"
-#include"DarkSkill0Script.h"
+#include "DarkSkill0Script.h"
 #include "FireSkill0Script.h"
 #include "FireSkill1Script.h"
 #include "Collider3D.h"
 #include "RenderMgr.h"
+#include "FontMgr.h"
 
 void CPlayerScript::m_FAnimation()
 {
@@ -408,16 +409,17 @@ void CPlayerScript::Init()
 		m_eState = PLAYER_STATE::IDLE;
 		m_ePrevState = PLAYER_STATE::IDLE;
 	}
+
+	// 사망처리
+	m_iMaxHp = 200.f;
+	m_iCurHp = m_iMaxHp;
+
+	m_fMoveSpeed = 300.f;
 }
 
 void CPlayerScript::Awake()
 {
 	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
-		m_iMaxHp = 200.f;
-		m_iCurHp = 50.f;
-
-		m_fMoveSpeed = 300.f;
-
 		m_pHealParticle = new CGameObject;
 		m_pHealParticle->AddComponent(new CTransform);
 		m_pHealParticle->AddComponent(new CParticleSystem);
@@ -499,6 +501,31 @@ void CPlayerScript::Awake()
 		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
 
+		// 사망
+		m_pDeadEffect = new CGameObject;
+		m_pDeadEffect->SetName(L"DeadEffect");
+		m_pDeadEffect->FrustumCheck(false);
+		m_pDeadEffect->AddComponent(new CTransform);
+		m_pDeadEffect->AddComponent(new CMeshRender);
+		m_pDeadEffect->SetActive(false);
+		tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+		Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
+
+		m_pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+		m_pDeadEffect->Transform()->SetLocalScale(vScale1);
+
+		m_pDeadEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pSkillMtrl = new CMaterial;
+		pSkillMtrl->DisableFileSave();
+		pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexEffectShader"));
+		CResMgr::GetInst()->AddRes(L"TexEffectMtrl", pSkillMtrl);
+		Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"DeadEffect", L"Texture\\DeadEffect.png");
+		m_pDeadEffect->MeshRender()->SetMaterial(pSkillMtrl);
+		m_pDeadEffect->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+			pTex.GetPointer());
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDeadEffect);
+
 		// Run
 		m_fMoveSpeed = 500.f;
 		m_bRun = false;
@@ -560,6 +587,30 @@ void CPlayerScript::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	if (pCurScene->GetCurScene() == SCENE_TYPE::INGAME) {
+
+		// 사망처리 
+		if (m_iCurHp <= 0 && !m_bDead) {
+			//m_bDead = true;
+			//m_pDeadEffect->SetActive(true);
+			//m_uiDeadStart = clock();
+		}
+		if (m_bDead) {
+			m_uiDeadEnd = clock();
+			m_uiDeadInterval = (m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC;
+
+			if (m_uiDeadInterval == DEADTIME) {
+				Transform()->SetLocalPos(Vec3(0.f, 0.f, 1000.f));
+				m_pDeadEffect->SetActive(false);
+				m_bDead = false;
+				m_iCurHp = m_iMaxHp;
+				m_uiDeadStart = m_uiDeadEnd;
+				Init();
+			}
+		}
+		else {
+			//m_iCurHp -= 3 * DT;	// 임시임요 
+		}
+
 		SkillCoolTimeCheck();
 		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -781,9 +832,12 @@ void CPlayerScript::Update()
 		// 파티창 에이치피바
 		for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
 			//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+			// 여기서 상대 플레이어 죽었으면 hp바 대신 주석된 폰트 띄우면 될듯?
 			int iCurHp = 100 + 30 * i;
 			m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
 			m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+
 		}
 	}
 
@@ -1259,10 +1313,11 @@ CPlayerScript::~CPlayerScript()
 {
 }
 
+// 사망
 void CPlayerScript::SetDamage(const int& _Damage)
 {
 	m_iCurHp -= _Damage;
-	if (m_iCurHp < 0) {
+	if (m_iCurHp <= 0) {
 		m_iCurHp = 0;
 	}
 	if (m_iCurHp > m_iMaxHp)

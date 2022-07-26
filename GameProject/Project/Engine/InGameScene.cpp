@@ -59,8 +59,7 @@ void CInGameScene::Init()
 	GetLayer(4)->SetName(L"Red");
 	GetLayer(5)->SetName(L"Cover");
 	GetLayer(6)->SetName(L"Arrow");
-	GetLayer(7)->SetName(L"Terrain");
-	GetLayer(8)->SetName(L"HpBar");
+	GetLayer(7)->SetName(L"HpBar");
 	GetLayer(9)->SetName(L"Obstacle");
 	GetLayer(30)->SetName(L"UI");
 	GetLayer(31)->SetName(L"Tool");
@@ -126,7 +125,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -191,7 +190,7 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -30.f));		// -300, 130, -50
+	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -20.f));		// -300, 130, -50
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));		// -15.f
 	pMainCam->GetScript<CCameraScript>()->Init();
 
@@ -200,7 +199,7 @@ void CInGameScene::Init()
 	FindLayer(L"Default")->AddGameObject(pEmptyPlayer);
 
 //-----------------------------------------------------------------------------------------------
-// 맵 (baseMap + 타워 + 넥서스)
+// 맵 (맵 + 타워 + 넥서스)
 //-----------------------------------------------------------------------------------------------
 
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\ingame.fbx");
@@ -733,11 +732,11 @@ void CInGameScene::Init()
 	pUISkill->AddComponent(new CTransform);
 	pUISkill->AddComponent(new CMeshRender);
 
-	tResolution res1 = CRenderMgr::GetInst()->GetResolution();
-	Vec3 vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
+	Vec3 vESkillScale = Vec3(res.fWidth / 18, res.fWidth / 18, 1.f);
+	Vec3 vZSkillScale = Vec3(res.fWidth / 13, res.fWidth / 13, 1.f);
 
-	pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.F, res1.fHeight / 4, 1.f));
-	pUISkill->Transform()->SetLocalScale(vScale1);
+	pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vESkillScale.x * 0.5f - vZSkillScale.x - res.fWidth/30, -res.fHeight / 2 + vESkillScale.y/2, 1.f));
+	pUISkill->Transform()->SetLocalScale(vESkillScale);
 
 	pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pSkillMtrl = new CMaterial;
@@ -765,11 +764,8 @@ void CInGameScene::Init()
 	pUISkill->AddComponent(new CTransform);
 	pUISkill->AddComponent(new CMeshRender);
 
-	res1 = CRenderMgr::GetInst()->GetResolution();
-	vScale1 = Vec3(res1.fWidth / 13, res1.fWidth / 13, 1.f);
-
-	pUISkill->Transform()->SetLocalPos(Vec3(0.f + 100.f, res1.fHeight / 4 - vScale.y, 1.f));
-	pUISkill->Transform()->SetLocalScale(vScale1);
+	pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vZSkillScale.x * 0.5, -res.fHeight / 2 + vZSkillScale.y / 2, 1.f));
+	pUISkill->Transform()->SetLocalScale(vZSkillScale);
 
 	pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pSkillMtrl = new CMaterial;
@@ -810,19 +806,6 @@ void CInGameScene::Init()
 		pPlayerInfoTex->MeshRender()->SetMaterial(pPlayerTexMtrl);
 		int iType = pPlayer->GetScript<CPlayerScript>()->GetType();
 		Ptr<CTexture> pPlayerTexTex;
-
-		// 주작용
-		/*switch (i) {
-		case 0:
-			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
-			break;
-		case 1:
-			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
-			break;
-		case 2:
-			pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
-			break;
-		}*/
 
 		if (pPlayer->GetLayerIdx() == 3) {
 			switch (iType) {
@@ -868,19 +851,6 @@ void CInGameScene::Init()
 
 		// 플레이어 id
 		CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
-
-		// 주작용
-		/*switch (i) {
-		case 0:
-			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"sangjun", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
-			break;
-		case 1:
-			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"dongsu", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
-			break;
-		case 2:
-			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), L"sumin", Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
-			break;
-		}*/
 
 
 		// 에이치피바

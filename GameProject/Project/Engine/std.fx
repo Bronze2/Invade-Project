@@ -286,6 +286,38 @@ float4 PS_TexUI(TEX_OUTPUT _input) : SV_Target
 }
 
 // =================
+// 사망처리
+// =================
+
+TEX_OUTPUT VS_TexEffect(TEX_INPUT _input)
+{
+    TEX_OUTPUT output = (TEX_OUTPUT)0;
+
+    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
+    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
+    float4 vViewPos = mul(vWorldPos, g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    output.vOutPos = vProjPos;
+    output.vUV = _input.vUV;
+
+    return output;
+}
+
+float4 PS_TexEffect(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+
+    if (tex_0)
+        vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+
+    vColor.a = 0.6f;
+
+    return vColor;
+}
+
+// =================
 // Collider2D Shader
 // =================
 TEX_OUTPUT VS_Collider2D(TEX_INPUT _input)

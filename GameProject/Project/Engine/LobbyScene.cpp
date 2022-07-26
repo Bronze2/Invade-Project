@@ -266,8 +266,8 @@ void CLobbyScene::Init()
 	Ptr<CTexture> pWindTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyWind");
 	Ptr<CTexture> pThunderTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyThunder");
 	Ptr<CTexture> pFireTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyFire");
-	Ptr<CTexture> pLockTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOCK");
 	CGameObject* pUIButtonProperty;
+	Ptr<CTexture> pLockTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOCK");
 	CGameObject* pUIButtonLock;
 	Vec4 vLockColor = Vec4(1.f, 1.f, 1.f, 0.9f);
 	Ptr<CMaterial> pUIButtonLockMtrl = new CMaterial;

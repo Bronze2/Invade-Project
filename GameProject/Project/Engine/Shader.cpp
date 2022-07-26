@@ -164,12 +164,8 @@ void CShader::CreateFontShader(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopolo
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1 }
 	};
 
-	//UINT uiNumElement = sizeof(inputElementDescs) / sizeof(inputElementDescs[0]);
-
-	// fill out an input layout description structure
 	D3D12_INPUT_LAYOUT_DESC textInputLayoutDesc = {};
 
-	// we can get the number of elements in an array by "sizeof(array) / sizeof(arrayElementType)"
 	textInputLayoutDesc.NumElements = sizeof(inputElementDescs) / sizeof(D3D12_INPUT_ELEMENT_DESC);
 	textInputLayoutDesc.pInputElementDescs = inputElementDescs;
 

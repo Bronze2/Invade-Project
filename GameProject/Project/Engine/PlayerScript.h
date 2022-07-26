@@ -4,7 +4,7 @@
 
 class CTexture;
 
-
+#define DEADTIME 15
 
 class CPlayerScript :
     public CScript
@@ -77,6 +77,13 @@ private:
     // 에이치피바
     CGameObject* m_pHPBar;
     vector<CGameObject*> m_vecUIHpBar;
+
+    // 사망
+    CGameObject* m_pDeadEffect;
+    bool m_bDead;
+    clock_t m_uiDeadStart;
+    clock_t m_uiDeadEnd;
+    clock_t m_uiDeadInterval;
 
     // 로비씬
     bool m_bReady;

@@ -16,7 +16,7 @@ CGameObject* CSpawnScript::SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, 
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CMinionScript);
 	pObject->AddComponent(new CSensor);
-	pObject->Sensor()->SetRadius(500.f);
+	pObject->Sensor()->SetRadius(500.f);		
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Collider3D()->SetOffsetScale(_vOffsetScale);
 	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);
@@ -119,6 +119,7 @@ void CSpawnScript::Update()
 							m_uiCount = 0;
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
+							m_bClockStart = false;
 
 							m_eSpawnPattern = SPAWN_PATTERN::PATTERN2;
 							break;
@@ -185,6 +186,7 @@ void CSpawnScript::Update()
 							m_uiCount = 0;
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
+							m_bClockStart = false;
 
 							m_eSpawnPattern = SPAWN_PATTERN::PATTERN3;
 							break;
@@ -271,8 +273,9 @@ void CSpawnScript::Update()
 							m_uiCount = 0;
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
+							m_bClockStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::END;
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
 							break;
 
 						default:
@@ -344,6 +347,7 @@ void CSpawnScript::Update()
 							m_uiCount = 0;
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
+							m_bClockStart = false;
 
 							m_eSpawnPattern = SPAWN_PATTERN::PATTERN2;
 							break;
@@ -408,6 +412,7 @@ void CSpawnScript::Update()
 							m_uiCount = 0;
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
+							m_bClockStart = false;
 
 							m_eSpawnPattern = SPAWN_PATTERN::PATTERN3;
 							break;
@@ -485,8 +490,9 @@ void CSpawnScript::Update()
 							m_uiCount = 0;
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
+							m_bClockStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::END;
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
 							break;
 
 						default:

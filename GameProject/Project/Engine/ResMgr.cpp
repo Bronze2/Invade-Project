@@ -682,6 +682,28 @@ void CResMgr::CreateDefaultShader()
 	AddRes(L"TexUIShader", pShader);
 
 	// =================
+	// 사망처리
+	// =================
+
+	pShader = new CShader;
+	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_TexEffect", "vs_5_0");
+	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexEffect", "ps_5_0");
+
+	// BlendState 설정
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+	// DSState
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+
+	// Shader Parameter 알림
+	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+
+	pShader->Create(SHADER_POV::FORWARD);
+
+	AddRes(L"TexEffectShader", pShader);
+
+
+	// =================
 	// Collider2D Shader
 	// =================
 	pShader = new CShader;
@@ -914,6 +936,14 @@ void CResMgr::CreateDefaultShader()
 	pShader = new CShader;
 	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate4", "cs_5_0");
 	AddRes(L"ParticleUpdateShader4", pShader);
+
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate5", "cs_5_0");
+	AddRes(L"ParticleUpdateShader5", pShader);
+
+	pShader = new CShader;
+	pShader->CreateComputeShader(L"Shader\\particle.fx", "CS_ParticleUpdate6", "cs_5_0");
+	AddRes(L"ParticleUpdateShader6", pShader);
 
 
 	pShader = new CShader;

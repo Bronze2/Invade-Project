@@ -79,48 +79,48 @@ void CButtonScript::Execute()
 		break;
 	case BUTTON_TYPE::SELECT_WATER:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx")->GetMesh());
 		}
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx")->GetMesh());
 		}
 		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
 		break;
-	case BUTTON_TYPE::SELECT_DARK:
+	case BUTTON_TYPE::SELECT_FIRE:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx")->GetMesh());
 		}
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx")->GetMesh());
+		}
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+		break;
+	case BUTTON_TYPE::SELECT_DARK:
+		if (m_pPlayerObj->GetLayerIdx() == 3) {
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx")->GetMesh());
+		}
+		else if (m_pPlayerObj->GetLayerIdx() == 4) {
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx")->GetMesh());
 		}
 		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::DARK);
 		break;
-	case BUTTON_TYPE::SELECT_WIND:
-		if (m_pPlayerObj->GetLayerIdx() == 3) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj->GetLayerIdx() == 4) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx")->GetMesh());
-		}
-		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WIND);
-		break;
 	case BUTTON_TYPE::SELECT_THUNDER:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx")->GetMesh());
 		}
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx")->GetMesh());
 		}
 		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
 		break;
-	case BUTTON_TYPE::SELECT_FIRE:
+	case BUTTON_TYPE::SELECT_WIND:
 		if (m_pPlayerObj->GetLayerIdx() == 3) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx")->GetMesh());
 		}
 		else if (m_pPlayerObj->GetLayerIdx() == 4) {
-			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx")->GetMesh());
+			m_pPlayerHelmet->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx")->GetMesh());
 		}
-		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
+		m_pPlayerObj->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WIND);
 		break;
 	}
 }

@@ -44,7 +44,6 @@ void CBowScript::Update()
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
-		CFontMgr::GetInst()->AddText(L"BowTest", L"BBBow~", Vec2(0.9f, 0.f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
@@ -60,7 +59,6 @@ void CBowScript::Update()
 
 	// 크로스헤어
 	if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-		CFontMgr::GetInst()->DeleteText(L"BowTest");
 		CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
 		CGameObject* pPlayer = GetObj()->GetParent();
 		Vec3 vCrossHairDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
@@ -74,9 +72,9 @@ void CBowScript::Update()
 		Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-		Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -30.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		// -30.f는 pMainCam의 GetLocalPos.z
+		Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		// -30.f는 pMainCam의 GetLocalPos.z
 		// 화살fbx
-		Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.x) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
+		Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 		// 깃대 안보임 XMConvertToRadians(XMConvertToDegrees(vPlayerRot.x) + 90.f) / 깃대보임 XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f) 
 
 		m_pArrow[m_iCurArrow]->ClearParent();

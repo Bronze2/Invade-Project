@@ -67,12 +67,12 @@ void CTowerScript::Init()
 	case TOWER_TYPE::FIRST:
 		m_iMaxHp = 1500;
 		m_uiCurHp = m_iMaxHp;
-		m_uiAttackDamage = 150;
+		m_uiAttackDamage = 1000;
 		break;
 	case TOWER_TYPE::SECOND:
 		m_iMaxHp = 2000;
 		m_uiCurHp = m_iMaxHp;
-		m_uiAttackDamage = 150;
+		m_uiAttackDamage = 1500;
 		break;
 	case TOWER_TYPE::NEXUS:
 
@@ -162,7 +162,7 @@ void CTowerScript::m_FRotate()
 {
 	Vec3 vPos = Transform()->GetWorldPos();
 	Vec3 vRot=Transform()->GetLocalRot();
-	if (nullptr != m_pTarget) {
+	if (nullptr != m_pTarget && m_eType != TOWER_TYPE::NEXUS) {
 		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 		float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 		float rotate = angle * 0.0174532925f;
@@ -178,6 +178,7 @@ void CTowerScript::Update()
 {
 	if (m_uiCurHp <= 0) {
 		DeleteObject(GetObj());
+		DeleteObject(m_pHPBar);
 		return;
 	}
 	FindNearObject(m_arrEnemy);
