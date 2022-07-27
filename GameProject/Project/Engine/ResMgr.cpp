@@ -651,6 +651,12 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_HPTex", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_UIHPTex", "ps_5_0");
 
+	// BlendState 설정
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+	// DSState
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
+
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"MaxHp", SHADER_PARAM::INT_1 });
@@ -659,16 +665,16 @@ void CResMgr::CreateDefaultShader()
 
 	AddRes(L"UIHPBarShader", pShader);
 
+	// 사망처리
 	pShader = new CShader;
 	pShader->CreateVertexShader(L"Shader\\std.fx", "VS_TexUI", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexUI", "ps_5_0");
 
 	// BlendState 설정
-	// pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	// DSState
-	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
-
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
 
 	pShader->AddShaderParam(tShaderParam{ L"Ratio",SHADER_PARAM::FLOAT_0 });
 	pShader->AddShaderParam(tShaderParam{ L"StartColor", SHADER_PARAM::VEC4_0 });
@@ -680,7 +686,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->Create(SHADER_POV::FORWARD);
 
 	AddRes(L"TexUIShader", pShader);
-
+		
 	// =================
 	// 사망처리
 	// =================
@@ -693,7 +699,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	// DSState
-	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
 
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
@@ -909,7 +915,8 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreateVertexShader(L"Shader\\font.fx", "VS_FONT", "vs_5_0");
 	pShader->CreatePixelShader(L"Shader\\font.fx", "PS_FONT", "ps_5_0");
 
-	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+	pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
 
 	pShader->CreateFontShader(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 

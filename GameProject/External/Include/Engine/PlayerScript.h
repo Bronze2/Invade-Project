@@ -105,10 +105,8 @@ public:
     void DamageBySkill(SKILL* _pSkill);
     void GetDamage();
 
-    // Çï¸ä
     void AttachHelmet();
 
-    // ·Îºñ¾À
     void SetReady(bool _bTrue) { m_bReady = _bTrue; }
     bool GetReady() { return m_bReady; }
     void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
@@ -122,6 +120,9 @@ public:
     void SetCurHp(int _hp) { m_iCurHp = _hp; }
     void m_FColCheck(Vec3 _vBeforePos,Vec3 _vAfterPos);
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
+   
+    // »ç¸ÁÃ³¸®
+    void CheckHpAndDead();
 
     // ½ºÅ³À¯¾ÆÀÌ
     SKILL* GetESkill() { return m_tESkill; }

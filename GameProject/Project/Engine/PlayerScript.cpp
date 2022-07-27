@@ -583,34 +583,11 @@ void CPlayerScript::Awake()
 	GetObj()->AddChild(m_pHelmetObject);
 }
 
+
 void CPlayerScript::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 	if (pCurScene->GetCurScene() == SCENE_TYPE::INGAME) {
-
-		// 사망처리 
-		if (m_iCurHp <= 0 && !m_bDead) {
-			//m_bDead = true;
-			//m_pDeadEffect->SetActive(true);
-			//m_uiDeadStart = clock();
-		}
-		if (m_bDead) {
-			m_uiDeadEnd = clock();
-			m_uiDeadInterval = (m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC;
-
-			if (m_uiDeadInterval == DEADTIME) {
-				Transform()->SetLocalPos(Vec3(0.f, 0.f, 1000.f));
-				m_pDeadEffect->SetActive(false);
-				m_bDead = false;
-				m_iCurHp = m_iMaxHp;
-				m_uiDeadStart = m_uiDeadEnd;
-				Init();
-			}
-		}
-		else {
-			//m_iCurHp -= 3 * DT;	// 임시임요 
-		}
-
 		SkillCoolTimeCheck();
 		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -818,27 +795,13 @@ void CPlayerScript::Update()
 		{
 			cout << "Player Position : " << vPos.x << ", " << vPos.y << ", " << vPos.z << endl;
 		}
-
+		// 사망처리
+		CheckHpAndDead();
 		UseSkill();
 		StatusCheck();
 		GetDamage();
 		Transform()->SetLocalRot(vRot);
 		Transform()->SetLocalPos(vPos);
-
-		// 본인 에이치피바
-		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
-		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-
-		// 파티창 에이치피바
-		for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
-			//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
-			// 여기서 상대 플레이어 죽었으면 hp바 대신 주석된 폰트 띄우면 될듯?
-			int iCurHp = 100 + 30 * i;
-			m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
-			m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-			CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
-
-		}
 	}
 
 	AttachHelmet();
@@ -913,6 +876,7 @@ void CPlayerScript::AttachHelmet()
 }
 
 // 스킬유아이 
+// 스킬쿨타임글씨 (0727)
 void CPlayerScript::SkillCoolTimeCheck()
 {
 	//추가 7.22
@@ -940,13 +904,23 @@ void CPlayerScript::SkillCoolTimeCheck()
 	Vec4 vStartColor = Vec4(1.f, 1.f, 1.f, 1.f);
 
 	float Value = m_tESkill->fCoolTime / m_tESkill->fCoolTime;
+	
+	int iSkiilCoolTextTime;
+	wstring wSkillCoolTextTime;
+
 	if (m_tESkill->bUse) {
 		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tESkill->StartTime;
 		Value = sec.count();
+		iSkiilCoolTextTime = m_tESkill->fCoolTime - Value + 1;
 		Value = Value / m_tESkill->fCoolTime;
+		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
+
+		CFontMgr::GetInst()->AddText(L"ECoolTime", wSkillCoolTextTime, Vec2(0.853f, 0.929f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+
 		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
 
 			m_tESkill->bUse = false;
+			CFontMgr::GetInst()->DeleteText(L"ECoolTime");
 		}
 
 
@@ -960,11 +934,15 @@ void CPlayerScript::SkillCoolTimeCheck()
 	if (m_tZSkill->bUse) {
 		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tZSkill->StartTime;
 		Value = sec.count();
+		iSkiilCoolTextTime = m_tZSkill->fCoolTime - Value + 1;
 		Value = Value / m_tZSkill->fCoolTime;
+		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
 
-
+		CFontMgr::GetInst()->AddText(L"ZCoolTime", wSkillCoolTextTime, Vec2(0.945f, 0.915f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+		
 		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;
+			CFontMgr::GetInst()->DeleteText(L"ZCoolTime");
 		}
 
 	}
@@ -1220,6 +1198,54 @@ void CPlayerScript::GetDamage()
 	m_arrSkill.erase(std::remove_if(m_arrSkill.begin(), m_arrSkill.end(), SkillFinalCheck), m_arrSkill.end());
 }
 
+void CPlayerScript::CheckHpAndDead()
+{
+	int iToRestartTime;
+	wstring wCoolTime;
+	// 사망처리 
+	if (m_iCurHp <= 0 && !m_bDead) {
+		m_bDead = true;
+		m_pDeadEffect->SetActive(true);
+		m_uiDeadStart = clock();
+		m_iCurHp = 0.f;
+	}
+	if (m_bDead) {
+		CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
+		m_uiDeadEnd = clock();
+		m_uiDeadInterval = (m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC;
+
+		// 아군 플레이어 죽었을 때 파티창 HpBar에 부활까지 남은 시간 써주기 (Add, DeleteText 첫번째 인자에 키값은 죽은 플레이어의 인덱스)
+		iToRestartTime = DEADTIME - m_uiDeadInterval;
+		wCoolTime = to_wstring(iToRestartTime);
+		CFontMgr::GetInst()->AddText(wstring(L"DeadPlayerID") + to_wstring(0), wCoolTime, Vec2(0.071f, 0.47f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
+
+		if (m_uiDeadInterval == DEADTIME) {
+			Transform()->SetLocalPos(Vec3(0.f, 0.f, 1000.f));
+			m_pDeadEffect->SetActive(false);
+			m_bDead = false;
+			m_iCurHp = m_iMaxHp;
+			m_uiDeadStart = m_uiDeadEnd;
+			Init();
+			CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
+		}
+	}
+	else {
+		m_iCurHp -= 3 * DT;	// 임시임요 
+	}
+
+	// 본인 에이치피바
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+
+	// 파티창 에이치피바
+	for (int i = 1; i < m_vecUIHpBar.size(); ++i) {		// 0부터
+		//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+		int iCurHp = 100 + 30 * i;	
+		m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+		m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+	}
+}
+
 void CPlayerScript::m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos)
 {
 	if (m_bColCheck) {
@@ -1313,7 +1339,7 @@ CPlayerScript::~CPlayerScript()
 {
 }
 
-// 사망
+// 사망처리
 void CPlayerScript::SetDamage(const int& _Damage)
 {
 	m_iCurHp -= _Damage;

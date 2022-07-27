@@ -176,7 +176,10 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
+	// 타워무너짐
 	if (m_uiCurHp <= 0) {
+		Vec3 vPos = GetObj()->Transform()->GetWorldPos() + Vec3(0.f, GetObj()->Collider3D()->GetOffsetPos().y, 0.f);
+		CreateDestroyParticleObject(vPos, L"smokeparticle");
 		DeleteObject(GetObj());
 		DeleteObject(m_pHPBar);
 		return;

@@ -15,6 +15,7 @@
 // 여기에 미리 컴파일하려는 헤더 추가
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include "global.h"
 

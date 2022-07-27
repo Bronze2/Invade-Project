@@ -734,7 +734,6 @@ void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 		if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp && m_eState == MINION_STATE::WALK) {
 			m_bAllienceCol = true;
 			m_bRotate = true;
-			cout << "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC " << endl;
 			if (_pOther->GetObj()->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
 				float Value = _pOther->Transform()->GetLocalPos().x - Transform()->GetLocalPos().x;
 				Vec3 Value3 = _pOther->Transform()->GetLocalPos() - Transform()->GetLocalPos();
@@ -774,7 +773,6 @@ void CMinionScript::OnCollision3DExit(CCollider3D* _pOther)
 			
 		
 		}
-		cout << "---------------------" << endl;
 		m_iAllienceCol -= 1;
 		if (m_iAllienceCol <= 0) {
 			m_iAllienceCol = 0;

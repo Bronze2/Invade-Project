@@ -64,3 +64,5 @@ bool CoolTimeCheck(std::chrono::system_clock::time_point start, int _Time);
 bool SkillFinalCheck(SKILL* _pSkill);
 
 void CreateHitParticleObject(const Vec3& _Pos,const wstring& _strKey);
+// 타워무너짐
+void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey);

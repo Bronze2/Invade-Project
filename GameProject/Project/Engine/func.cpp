@@ -344,3 +344,34 @@ void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey)
 
 }
 
+// Å¸¿ö¹«³ÊÁü
+
+void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey)
+{
+	CGameObject* pHitParticle = new CGameObject;
+	pHitParticle->AddComponent(new CTransform);
+	pHitParticle->AddComponent(new CParticleSystem);
+	pHitParticle->AddComponent(new CParticleScript);
+	pHitParticle->Transform()->SetLocalPos(_Pos);
+	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
+	pHitParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 1.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.3f, 0.3f, 0.4f, 0.5f));
+	pHitParticle->ParticleSystem()->SetStartScale(500.f);
+	pHitParticle->ParticleSystem()->SetEndScale(100.f);
+	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.5f);
+	pHitParticle->GetScript<CParticleScript>()->SetTime();
+	pHitParticle->ParticleSystem()->SetMinLifeTime(3.f);
+	pHitParticle->ParticleSystem()->SetMaxLifeTime(3.f);
+
+
+	//Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"explosion");
+	//m_pSound->PlaySound3D(_Pos, 1000.f);
+
+	//pHitParticle->GetScript<CParticleScript>()->SetSound(m_pSound);
+
+
+	pHitParticle->FrustumCheck(false);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
+
+}
