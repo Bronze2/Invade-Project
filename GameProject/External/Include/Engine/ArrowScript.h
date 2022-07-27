@@ -51,6 +51,9 @@ private:
     Vec3 m_vDeltaPos;
 
     Vec3 m_vQtrnRotAxis;
+    // 트레일수정
+    Vec3 m_vQtrnRotAxisToFront;
+    float m_fQtrnRotAngleToFront;
 
     CGameObject* m_pBow;
 

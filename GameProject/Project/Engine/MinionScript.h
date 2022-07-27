@@ -63,8 +63,9 @@ class CMinionScript :
     SimpleMath::Ray* GetRay() { return m_pRay; }
 
 
-    // 에이치비바
+    // 에이치비바 수정
     CGameObject* m_pHPBar;
+    float m_fHPBarHeight;
 
     //Ray
     float m_fStartXValue;
@@ -136,7 +137,8 @@ public:
     void m_FAnimation();
     void m_FFind();
 
-
+    // 220727
+    void DeadCheck();
    
     CMinionScript();
     CMinionScript(float _fSpeed,float _fRange,MINION_STATE _eState, CAMP_STATE _eCamp);

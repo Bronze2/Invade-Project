@@ -66,18 +66,18 @@ void CTowerScript::Init()
 	{
 	case TOWER_TYPE::FIRST:
 		m_iMaxHp = 1500;
-		m_uiCurHp = m_iMaxHp;
+		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 1000;
 		break;
 	case TOWER_TYPE::SECOND:
 		m_iMaxHp = 2000;
-		m_uiCurHp = m_iMaxHp;
+		m_iCurHp = m_iMaxHp;
 		m_uiAttackDamage = 1500;
 		break;
 	case TOWER_TYPE::NEXUS:
 
 		m_iMaxHp = 5000;
-		m_uiCurHp = m_iMaxHp;
+		m_iCurHp = m_iMaxHp;
 		break;
 	default:
 		break;
@@ -94,11 +94,14 @@ void CTowerScript::Init()
 
 	if (m_eType == TOWER_TYPE::NEXUS) {
 		m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, 600.f, 0.f));
-		m_pHPBar->Transform()->SetLocalScale(Vec3(300.f, 40.f, 1.f));
+		m_pHPBar->Transform()->SetLocalScale(Vec3(350.f, 30.f, 1.f));		// 에이치피바수정
 	}
 	else {
 		m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, 900.f, 0.f));
 		m_pHPBar->Transform()->SetLocalScale(Vec3(200.f, 20.f, 1.f));
+	}
+	if (m_eCampState == CAMP_STATE::BLUE) {
+		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, PI, 0.f));
 	}
 	m_pHPBar->Transform()->SetBillBoard(true);
 	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
@@ -109,6 +112,8 @@ void CTowerScript::Init()
 	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
 	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"HpBar")->AddGameObject(m_pHPBar);
+
+	m_bDeadTimeCheck = false;
 }
 
 void CTowerScript::SetSecondTower(CGameObject* _pGameObject)
@@ -176,21 +181,31 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
-	// 타워무너짐
-	if (m_uiCurHp <= 0) {
-		Vec3 vPos = GetObj()->Transform()->GetWorldPos() + Vec3(0.f, GetObj()->Collider3D()->GetOffsetPos().y, 0.f);
+	if (m_iCurHp <= 0 && !m_bDeadTimeCheck) {
+		Vec3 vPos = GetObj()->Transform()->GetWorldPos() + Vec3(0.f, 350.f, 0.f);
 		CreateDestroyParticleObject(vPos, L"smokeparticle");
-		DeleteObject(GetObj());
-		DeleteObject(m_pHPBar);
+
+		m_uiDeadStart = clock();
+		m_bDeadTimeCheck = true;
+	}
+	if (m_bDeadTimeCheck) {
+		m_uiDeadEnd = clock();
+		if ((m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC >= 0.5) {
+			DeleteObject(GetObj());
+			DeleteObject(m_pHPBar);
+		}
 		return;
 	}
-	FindNearObject(m_arrEnemy);
-	m_FRotate();
-	m_FAttack();
+	else {
 
-	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_uiCurHp);
-	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCampState);
+		FindNearObject(m_arrEnemy);
+		m_FRotate();
+		m_FAttack();
+
+		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+		m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCampState);
+	}
 }
 
 void CTowerScript::FinalUpdate()
@@ -237,6 +252,12 @@ CTowerScript::~CTowerScript()
 {
 }
 
+void CTowerScript::GetDamage(const UINT& _Dmg) 
+{ 
+	m_iCurHp -= _Dmg;
+	if (m_iCurHp < 0.f)
+		m_iCurHp = 0.f;
+}
 
 void CTowerScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {

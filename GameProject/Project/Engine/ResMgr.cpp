@@ -632,7 +632,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->CreatePixelShader(L"Shader\\std.fx", "PS_HPTex", "ps_5_0");
 
 	// BlendState 설정
-	pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
+	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
@@ -699,7 +699,7 @@ void CResMgr::CreateDefaultShader()
 	pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
 	// DSState
-	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
+	//pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
 
 	// Shader Parameter 알림
 	pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });

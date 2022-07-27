@@ -219,7 +219,7 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 							
-								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat", vPos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(150.f, 100.f, 150.f), MINION_ATTACK_TYPE::MELEE, pNewAnimation, m_eCampState);
+								CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat", vPos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100, 100.f, 100.f), MINION_ATTACK_TYPE::MELEE, pNewAnimation, m_eCampState);
 								
 								CreateObject(pObject, L"Red");
 								m_uiCount += 1;
@@ -235,7 +235,7 @@ void CSpawnScript::Update()
 								pNewAnimation->InsertAnimClip(L"DIE", 125, 174);
 								Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 						
-								CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", vPos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 130.f, 0.f), Vec3(230.f, 220.f, 230.f), MINION_ATTACK_TYPE::CANON, pNewAnimation, m_eCampState);
+								CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", vPos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 130.f, 0.f), Vec3(180.f, 220.f, 180.f), MINION_ATTACK_TYPE::CANON, pNewAnimation, m_eCampState);
 							
 								CreateObject(pObject, L"Red");
 								m_uiCount += 1;

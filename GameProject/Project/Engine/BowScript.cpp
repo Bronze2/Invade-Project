@@ -73,9 +73,7 @@ void CBowScript::Update()
 		Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 		float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
 		Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);		// -30.f는 pMainCam의 GetLocalPos.z
-		// 화살fbx
 		Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
-		// 깃대 안보임 XMConvertToRadians(XMConvertToDegrees(vPlayerRot.x) + 90.f) / 깃대보임 XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f) 
 
 		m_pArrow[m_iCurArrow]->ClearParent();
 		m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);

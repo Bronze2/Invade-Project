@@ -121,6 +121,11 @@ public:
     void m_FColCheck(Vec3 _vBeforePos,Vec3 _vAfterPos);
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
    
+    // 스킬정보보기
+    CGameObject* m_pSkillInfoUI;
+    Ptr<CTexture> m_pSkillInfoTex;
+    bool m_bSkillInfoActive;
+
     // 사망처리
     void CheckHpAndDead();
 

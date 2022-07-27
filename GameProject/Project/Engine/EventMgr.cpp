@@ -52,8 +52,8 @@ void CEventMgr::Execute(tEvent& _event)
 		if (((CGameObject*)_event.wParam)->m_bDead)
 			break;
 
-		((CGameObject*)_event.wParam)->SetDead();
 		m_vecDead.push_back((CGameObject*)_event.wParam);
+		((CGameObject*)_event.wParam)->SetDead();
 
 		break;
 	case EVENT_TYPE::ADD_CHILD:

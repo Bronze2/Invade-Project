@@ -11,8 +11,9 @@ class CTowerScript :
     public CScript
 {
 private:
-    UINT m_iMaxHp;
-    UINT m_uiCurHp;
+    // 미니언수정 + 타워무너짐
+    int m_iMaxHp;
+    int m_iCurHp;
     float m_fAttackRange;
 
     UINT m_uiDef;
@@ -41,6 +42,11 @@ private:
     //에이치피바
     CGameObject* m_pHPBar;
 
+    // 타워무너짐
+    clock_t m_uiDeadStart;
+    clock_t m_uiDeadEnd;
+    bool m_bDeadTimeCheck;
+
 public:
     void SetCampState(CAMP_STATE _eCampState) { 
         m_eCampState = _eCampState;
@@ -68,7 +74,7 @@ public:
     virtual void Update();
     virtual void FinalUpdate();
 
-    void GetDamage(const UINT& _Dmg) { m_uiCurHp -= _Dmg; }
+    void GetDamage(const UINT& _Dmg);
    
 
     virtual void OnDetectionEnter(CGameObject* _pOther);

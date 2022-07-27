@@ -70,15 +70,26 @@ void CMinionScript::Init()
 	m_pHPBar->FrustumCheck(false);
 	m_pHPBar->MeshRender()->SetDynamicShadow(false);
 
-	Vec3 vHPBarScale = Vec3(60.f, 10.f, 1.f);
+	switch (m_eAttackType)
+	{
+	case MINION_ATTACK_TYPE::MELEE:
+		m_fHPBarHeight = 200.f;
+		break;
+	case MINION_ATTACK_TYPE::RANGE:
+		m_fHPBarHeight = 230.f;
+		break;
+	case MINION_ATTACK_TYPE::CANON:
+		m_fHPBarHeight = 300.f;
+		break;
+	}
+
+	//if (m_eCamp == CAMP_STATE::BLUE) {
+	//	m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, PI , 0.f));
+	//}
+
+	Vec3 vHPBarScale = Vec3(90.f, 10.f, 1.f);
 	m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
-	m_pHPBar->Transform()->SetLocalPos(Vec3(0.f, GetObj()->Collider3D()->GetOffsetPos().y + GetObj()->Collider3D()->GetOffsetScale().y + 30.f, 0.f));
-	if (m_eCamp == CAMP_STATE::BLUE) {
-		m_pHPBar->Transform()->SetLocalRot(Vec3(XMConvertToRadians(180.f), 0.f, 0.f));
-	}
-	else{
-		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	}
+	m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, m_fHPBarHeight, 0.f));
 	m_pHPBar->Transform()->SetBillBoard(true);
 	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
 
@@ -87,28 +98,24 @@ void CMinionScript::Init()
 	pUIHPBarMtrl->DisableFileSave();
 	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
 	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
-	GetObj()->AddChild(m_pHPBar);
-
-	m_fCollisionCoolTime = 0.f;
-	m_fMaxCollisionCoolTime = 5.f;
-	m_fCollisionCoolTime = false;
-
-	rotateCnt = 0;
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"HpBar")->AddGameObject(m_pHPBar);
 }
 
 
 void CMinionScript::Update()
 {
-	CheckObstacle();
-	CheckHp();
-	m_FAnimation();
+	CheckObstacle();				// 장애물 체크
+	CheckHp();						// 본인 hp 체크
+	m_FAnimation();					// 애니메이션
 	if (m_pNexus == nullptr)
 		return;
 
 	if (m_eState == MINION_STATE::DIE) {
 		return;
 	}
+
 	FindNearObject(m_arrEnemy);
+	DeadCheck();
 	CheckRange();
 	Vec3 vPos = Transform()->GetWorldPos(); 
 	Vec3 vTargetPos;
@@ -130,25 +137,17 @@ void CMinionScript::Update()
 				vRot.y = rotate;
 			}
 		}
+		else {
+			FindNearObject(m_arrEnemy);
+		}
 	}
 	if (m_bAllienceCol && !m_bSeparate) {
 		if (m_bRotate) {
 
 			vRot.y += PI / 2;
 			m_bRotate = false;
-
-			//m_bCollisionCoolCheck = true;
 		}
 	}
-
-	/*if (m_bCollisionCoolCheck) {
-		m_fCollisionCoolTime += DT;
-		if (m_fCollisionCoolTime >= m_fMaxCollisionCoolTime) {
-			m_bCollisionCoolCheck = false;
-			m_fCollisionCoolTime = 0.f;
-		}
-	}*/
-
 
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
@@ -198,10 +197,18 @@ void CMinionScript::Update()
 				m_arrEnemy.clear();
 			}
 			else {
-				//Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-				//float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-				//float rotate = angle * 0.0174532925f;
-				//vRot.y = rotate;
+				if (m_pTarget != nullptr && !m_pTarget->IsDead()) {
+					Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+					float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
+					float rotate = angle * 0.0174532925f;
+					vRot.y = rotate;
+
+
+				}
+				else {
+					m_eState = MINION_STATE::WALK;
+					FindNearObject(m_arrEnemy);
+				}
 			}
 		}
 	}
@@ -214,6 +221,8 @@ void CMinionScript::Update()
 	Transform()->SetLocalPos(vLocalPos);
 	Transform()->SetLocalRot(vRot);
 
+	// 에이치피바수정
+	m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, m_fHPBarHeight, 0.f));
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_uiMaxHp);
 	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCamp);
@@ -265,9 +274,11 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 	Vec3 vDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 
 
-	if (nullptr == m_pTarget)
+	if (m_pTarget == nullptr)
 		return;
-	if (nullptr == m_pTarget->GetScript<CPlayerScript>())		// 미니언 많이 나오면 여기서터짐 220727 am0230
+	if (m_pTarget->IsDead())
+		return;
+	if (nullptr == m_pTarget->GetScript<CPlayerScript>())		// 미니언 많이 나오면 여기서터짐 220727 am0230 당연함 m_pTarget == null은아닌데아무것도없음 응?
 		return;
 
 
@@ -302,11 +313,49 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 	}
 }
 
-void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
+void CMinionScript::DeadCheck()
 {
-	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {
+	if (m_pTarget != nullptr) {
+		if (m_pTarget->IsDead()) {
+			vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
+			for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
+				if (m_arrEnemy[i] == m_pTarget) {
+					m_arrEnemy.erase(iter);
+					if (Sensor()->GetDetectionCount() == 0 || m_arrEnemy.size() == 0) {
+						m_bFindNear = false;
+						if (!m_pFirstTower->IsDead())
+						{
+
+							m_pTarget = m_pFirstTower;
+
+						}
+						else if (!m_pSecondTower->IsDead()) {
+
+							m_pTarget = m_pSecondTower;
+
+						}
+						else
+							m_pTarget = m_pNexus;
+					}
+					else {
+
+						FindNearObject(m_arrEnemy);
+					}
+					return;
+				}
+
+			}
+		}
+	}
+}
+
+void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
+{	
+	// 센서 감지됐을때
+	if (_pOther->GetLayerIdx() != GetObj()->GetLayerIdx()) {		// 적군인 경우 (적군 미니언, 적군 타워, 적군 넥서스, 적군 플레이어
 		m_arrEnemy.push_back(_pOther);
 		m_bFindNear = true;
+		m_bDetection = true;
 	}
 }
 
@@ -326,11 +375,10 @@ void CMinionScript::CheckObstacle()
 void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 {
 	vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
-
 	for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
-		if (m_arrEnemy[i] == _pOther) {
-			m_arrEnemy.erase(iter);
-			if (Sensor()->GetDetectionCount() == 0) {
+		if (m_arrEnemy[i] == _pOther) {								// 감지됐었던 애가 적군애 있으면,,?
+			m_arrEnemy.erase(iter);									// 감지됐던 적군중에 얘 지우고 (죽었거나 했으니까)
+			if (Sensor()->GetDetectionCount() == 0 || m_arrEnemy.size() == 0) {		// 주변에 적군 아무도 없는 경우 타워나 넥서스를 향해 감
 				m_bFindNear = false;
 				if (!m_pFirstTower->IsDead())
 				{
@@ -347,7 +395,7 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
 					m_pTarget = m_pNexus;
 			}
 			else {
-				FindNearObject(m_arrEnemy);
+				FindNearObject(m_arrEnemy);							// 주변에 적군 있으면 찾아가기
 			}
 			return;
 		}
@@ -367,16 +415,13 @@ void CMinionScript::RayCollision(const CLayer* _pLayer)
 			continue;
 		InterSectsObject(pCollider);
 	}
-
-
-
 }
+
 
 void CMinionScript::AddObject(CGameObject* _pObject)
 {
 
 	m_arrEnemy.push_back(_pObject);
-
 }
 
 void CMinionScript::CheckHp()
@@ -417,42 +462,18 @@ void CMinionScript::CheckRange()
 			}
 		}
 	}
+
 }
 
 void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {
-	if (FIND_STATE::RAY_FIRST == m_eFindState) {
-
-
+	if (FIND_STATE::RAY_FIRST == m_eFindState) {			// 장애물이랑 만났을때 다시 돌아갈 때는 안찾음
 		return;
 	}
 
-	if (0 == _pObject.size() || !m_bFindNear) return;
+	//if (0 == _pObject.size()) return;				// findNear false인 경우 타워나 넥서스를 타겟으로 잡아버림
 
-	for (int i = 0; i < _pObject.size(); ++i) {
-		if (i == 0) {
-			m_pTarget = _pObject[i];
-		}
-		else {
-			if (L"Obstacle" == _pObject[i]->GetName())
-				continue;
-			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
-			Vec3 vPos = Transform()->GetWorldPos();
-			float length1 = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
-
-			Vec3 vTargetPos2 = _pObject[i]->Transform()->GetWorldPos();
-			float length2 = sqrt(pow(vTargetPos2.x - vPos.x, 2) + pow(vTargetPos2.z - vPos.z, 2));
-			if (length1 > length2) {
-				m_pTarget = _pObject[i];
-
-				if (nullptr != m_pTarget->GetScript<CPlayerScript>())
-					m_eFindState = FIND_STATE::SENSOR_FIRST;
-
-			}
-		}
-	}
-
-	if (m_arrEnemy.size() == 0) {
+	if (_pObject.size() == 0) {
 
 		if (!m_bDetection)
 		{
@@ -474,6 +495,30 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 				m_pTarget = m_pNexus;
 		}
 
+	}
+	else {
+		for (int i = 0; i < _pObject.size(); ++i) {
+			if (i == 0) {
+				m_pTarget = _pObject[i];
+			}
+			else {
+				if (L"Obstacle" == _pObject[i]->GetName())
+					continue;
+				Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+				Vec3 vPos = Transform()->GetWorldPos();
+				float length1 = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
+
+				Vec3 vTargetPos2 = _pObject[i]->Transform()->GetWorldPos();
+				float length2 = sqrt(pow(vTargetPos2.x - vPos.x, 2) + pow(vTargetPos2.z - vPos.z, 2));
+				if (length1 > length2) {
+					m_pTarget = _pObject[i];
+
+					if (nullptr != m_pTarget->GetScript<CPlayerScript>())
+						m_eFindState = FIND_STATE::SENSOR_FIRST;
+
+				}
+			}
+		}
 	}
 }
 
@@ -596,15 +641,18 @@ void CMinionScript::m_FAnimation()
 						m_bFindNear = true;
 						m_bFinishAnimation = true;
 						m_bProjectile = false;
-						if (m_pTarget == nullptr) {
+						if (m_pTarget == nullptr || m_pTarget->IsDead()) {
+							m_eState = MINION_STATE::WALK;
+							return;
 						}
-						else
+						else {
 							if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
 								m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
 							}
 							else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
 								m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
 							}
+						}
 					}
 					if (m_eAttackType != MINION_ATTACK_TYPE::MELEE) {
 						switch (m_eCamp)
@@ -673,7 +721,7 @@ void CMinionScript::m_FAnimation()
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) || m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
 						DeleteObject(GetObj());
-						GetObj()->MeshRender()->SetRender(false);
+						//GetObj()->MeshRender()->SetRender(false);
 						DeleteObject(m_pHPBar);
 					}
 				}

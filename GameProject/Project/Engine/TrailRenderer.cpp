@@ -96,12 +96,10 @@ void CTrailRenderer::FinalUpdate()
 			v.vPos = m_vecVtxLeft[i];
 			v.vUV = Vec2(0.f, i * fRatio);
 			vecVTX.push_back(v);
-			//cout << v.vPos.x << ", " << v.vPos.y << ", " << v.vPos.z << endl;
 
 			v.vPos = m_vecVtxRight[i];
 			v.vUV = Vec2(1.f, i * fRatio);
 			vecVTX.push_back(v);
-			//cout << v.vPos.x << ", " << v.vPos.y << ", " << v.vPos.z << endl;
 		}
 
 		for (int i = 0; i < (vecVTX.size() - 2); i += 2) {
@@ -131,53 +129,21 @@ void CTrailRenderer::EmitPoint(Vec3 _vPos)
 	float ratio = 1.f / m_pTrails.size();
 	float fScale = m_fMaxWidth - (m_fMaxWidth - m_fMinWidth) * ratio;
 
+	// 트레일수정
+	CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
+	Vec3 vDir = pCamera->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+
 	Vec3 vLeftPoint = _vPos;
-	vLeftPoint.x -= m_fMinWidth / 2;
-	//vLeftPoint.x -= fScale / 2;
+	vLeftPoint -= m_fMinWidth / 2 * vDir;
 	m_vecPosLeft.emplace_back(vLeftPoint);
 
 	Vec3 vRightPoint = _vPos;
-	vRightPoint.x += m_fMinWidth / 2;
-	//vRightPoint.x += fScale / 2;
+	vRightPoint += m_fMinWidth / 2 * vDir;
 	m_vecPosRight.emplace_back(vRightPoint);
-
-	//cout << "Left : " << vLeftPoint.x << ", " << vLeftPoint.y << ", " << vLeftPoint.z << endl;
-	//cout << "Right : " << vRightPoint.x << ", " << vRightPoint.y << ", " << vRightPoint.z << endl;
 }
 
 void CTrailRenderer::ErasePoint()
 {
-	// 생존시간 초과한 정점들 소멸
-	//for (int i = 0; i < m_pTrails.size(); ++i) {
-	//	if (m_pTrails[i].fCurTime > m_pTrails[i].fLifeTime) {
-	//		if (i % 2 == 1) {	// 두 정점 중 하나만 삭제 막기
-	//			m_pTrails.erase(m_pTrails.begin(), m_pTrails.begin() + i);
-	//		}
-	//		else {
-	//			m_pTrails.erase(m_pTrails.begin(), m_pTrails.begin() + i - 1);
-	//		}
-	//		return;
-	//	}
-	//}
-
-	//if (m_bEmit && m_pTrails.size() >= m_iMaxTrail)
-	//{
-	//	m_pTrails.erase(m_pTrails.begin(), m_pTrails.begin() + 1);
-	//}
-	//else if (!m_bEmit) {
-	//	for (int i = 0; i < m_pTrails.size(); ++i) {
-	//		if (i % 2 == 1) {	// 두 정점 중 하나만 삭제 막기
-	//			m_pTrails.erase(m_pTrails.begin(), m_pTrails.begin() + i);
-	//		}
-	//		else {
-	//			m_pTrails.erase(m_pTrails.begin(), m_pTrails.begin() + i - 1);
-	//		}
-	//	}
-	//	if (m_pTrails.size() == 1) {
-	//		m_pTrails.clear();
-	//	}
-	//}
-
 	if (m_bEmit && m_vecPosLeft.size() >= m_iMaxTrail)
 	{
 		m_vecPosLeft.erase(m_vecPosLeft.begin());

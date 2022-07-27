@@ -491,7 +491,7 @@ void CPlayerScript::Awake()
 		m_pHPBar->AddComponent(new CMeshRender);
 		m_pHPBar->FrustumCheck(false);
 		m_pHPBar->MeshRender()->SetDynamicShadow(false);
-		Vec3 vHPBarScale = Vec3(res.fWidth / 8.f, res.fHeight / 20.f, 1.f);
+		Vec3 vHPBarScale = Vec3(res.fWidth / 7.f, res.fHeight / 22.f, 1.f);
 		m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
 		m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x/2 + 10.f, res.fHeight / 2 - vHPBarScale.y / 2 - 10.f, 1.f));
 		m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -530,7 +530,6 @@ void CPlayerScript::Awake()
 		m_fMoveSpeed = 500.f;
 		m_bRun = false;
 	}
-
 	// 헬멧 플레이어 고개 까딱
 	Ptr<CMeshData> pHelmetMesh;
 
@@ -538,18 +537,23 @@ void CPlayerScript::Awake()
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
 			break;
 		case ELEMENT_TYPE::FIRE:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
 			break;
 		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
 			break;
 		case ELEMENT_TYPE::THUNDER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
 			break;
 		case ELEMENT_TYPE::WIND:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
 			break;
 
 		}
@@ -558,18 +562,23 @@ void CPlayerScript::Awake()
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
 			break;
 		case ELEMENT_TYPE::FIRE:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
 			break;
 		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
 			break;
 		case ELEMENT_TYPE::THUNDER:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
 			break;
 		case ELEMENT_TYPE::WIND:
 			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx");
+			m_pSkillInfoTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
 			break;
 		}
 	
@@ -581,6 +590,30 @@ void CPlayerScript::Awake()
 	m_pHelmetObject->SetName(L"Helmet");
 	m_pHelmetObject->Transform()->SetLocalScale(Vec3(0.1f, 0.09f, 0.1f));
 	GetObj()->AddChild(m_pHelmetObject);
+
+	// SkillInfo (스킬정보보기)
+	m_pSkillInfoUI = new CGameObject;
+	m_pSkillInfoUI->SetName(L"SkillInfo");
+	m_pSkillInfoUI->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
+	m_pSkillInfoUI->AddComponent(new CTransform);
+	m_pSkillInfoUI->AddComponent(new CMeshRender);
+	m_pSkillInfoUI->SetActive(false);
+
+	tResolution res = CRenderMgr::GetInst()->GetResolution();
+	Vec3 vUIInfoScale = Vec3(res.fWidth / 2.f, res.fHeight / 2.f, 1.f);
+	m_pSkillInfoUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+	m_pSkillInfoUI->Transform()->SetLocalScale(vUIInfoScale);
+
+	m_pSkillInfoUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pUIInfoMtrl = new CMaterial;
+	pUIInfoMtrl->DisableFileSave();
+	pUIInfoMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+	m_pSkillInfoUI->MeshRender()->SetMaterial(pUIInfoMtrl);
+	m_pSkillInfoUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, m_pSkillInfoTex.GetPointer());
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pSkillInfoUI);
+	m_bSkillInfoActive = false;
+
 }
 
 
@@ -791,10 +824,23 @@ void CPlayerScript::Update()
 			m_eState = PLAYER_STATE::DIE;
 		}
 
-		if (KEY_TAB(KEY_TYPE::KEY_Q))
+		// 스킬정보보기
+		if (KEY_TAB(KEY_TYPE::KEY_LCTRL))
 		{
-			cout << "Player Position : " << vPos.x << ", " << vPos.y << ", " << vPos.z << endl;
+			tEvent evn = {};
+			evn.wParam = (DWORD_PTR)m_pSkillInfoUI;
+			evn.eType = EVENT_TYPE::ACTIVATE_GAMEOBJECT;
+			CEventMgr::GetInst()->AddEvent(evn);
 		}
+		if (KEY_AWAY(KEY_TYPE::KEY_LCTRL))
+		{
+			tEvent evn = {};
+			evn.wParam = (DWORD_PTR)m_pSkillInfoUI;
+			evn.eType = EVENT_TYPE::DEACTIVATE_GAMEOBJECT;
+			CEventMgr::GetInst()->AddEvent(evn);
+			m_bSkillInfoActive = false;
+		}
+
 		// 사망처리
 		CheckHpAndDead();
 		UseSkill();
@@ -1121,6 +1167,7 @@ void CPlayerScript::UseSkill()
 				}
 
 				DamageBySkill(m_tZSkill);
+
 				break;
 			default:
 			{
@@ -1209,14 +1256,17 @@ void CPlayerScript::CheckHpAndDead()
 		m_uiDeadStart = clock();
 		m_iCurHp = 0.f;
 	}
-	if (m_bDead) {
+	if (m_bDead) {	
 		CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
 		m_uiDeadEnd = clock();
 		m_uiDeadInterval = (m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC;
 
-		// 아군 플레이어 죽었을 때 파티창 HpBar에 부활까지 남은 시간 써주기 (Add, DeleteText 첫번째 인자에 키값은 죽은 플레이어의 인덱스)
 		iToRestartTime = DEADTIME - m_uiDeadInterval;
 		wCoolTime = to_wstring(iToRestartTime);
+
+		CFontMgr::GetInst()->AddText(L"DeadCoolTime", wCoolTime, Vec2(0.06f, 0.01f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(0.f, 0.f, 1.f, 1.f));
+
+		// 아군 플레이어 죽었을 때 파티창 HpBar에 부활까지 남은 시간(그 플레이어의 wCoolTime) 써주기 (Add, DeleteText 첫번째 인자에 키값은 죽은 플레이어의 인덱스)
 		CFontMgr::GetInst()->AddText(wstring(L"DeadPlayerID") + to_wstring(0), wCoolTime, Vec2(0.071f, 0.47f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
 
 		if (m_uiDeadInterval == DEADTIME) {
@@ -1226,6 +1276,7 @@ void CPlayerScript::CheckHpAndDead()
 			m_iCurHp = m_iMaxHp;
 			m_uiDeadStart = m_uiDeadEnd;
 			Init();
+			CFontMgr::GetInst()->DeleteText(L"DeadCoolTime");
 			CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
 		}
 	}

@@ -356,12 +356,12 @@ void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(_strKey), L"ParticleUpdate2Mtrl");
 	pHitParticle->ParticleSystem()->SetStartColor(Vec4(1.f, 1.f, 1.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
 	pHitParticle->ParticleSystem()->SetEndColor(Vec4(0.3f, 0.3f, 0.4f, 0.5f));
-	pHitParticle->ParticleSystem()->SetStartScale(500.f);
+	pHitParticle->ParticleSystem()->SetStartScale(900.f);
 	pHitParticle->ParticleSystem()->SetEndScale(100.f);
 	pHitParticle->GetScript<CParticleScript>()->SetCoolTime(1.5f);
 	pHitParticle->GetScript<CParticleScript>()->SetTime();
-	pHitParticle->ParticleSystem()->SetMinLifeTime(3.f);
-	pHitParticle->ParticleSystem()->SetMaxLifeTime(3.f);
+	pHitParticle->ParticleSystem()->SetMinLifeTime(5.f);
+	pHitParticle->ParticleSystem()->SetMaxLifeTime(5.f);
 
 
 	//Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"explosion");
@@ -374,4 +374,16 @@ void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey)
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
 
+}
+
+Vec3 VectorRotate(const Vec3& _Value, const Vec3& _Axis, const float _angle)
+{
+	XMVECTOR v = XMLoadFloat3(&_Value);
+	XMVECTOR axis = XMLoadFloat3(&_Axis);
+	XMVECTOR qtrn = XMQuaternionRotationAxis(axis, _angle);
+
+	XMVECTOR R = XMVector3Rotate(v, qtrn);
+	Vec3 result;
+	XMStoreFloat3(&result, R);
+	return result;
 }

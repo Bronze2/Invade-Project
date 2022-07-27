@@ -90,6 +90,7 @@ void CInGameScene::Init()
 	//-----------------------------------------------------------------------------------------------
 
 	pObject = new CGameObject;
+	pObject->SetName(L"Light0");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CLight3D);
 	pObject->Light3D()->SetLightPos(Vec3(0.f, 500.f, 0.f));
@@ -125,7 +126,7 @@ void CInGameScene::Init()
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
 	pObject->MeshRender()->SetDynamicShadow(true);
 	pObject->Sensor()->SetRadius(500.f);
-	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::WATER);
+	pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::FIRE);
 
 	CGameObject* pPlayer = pObject;
 	pObject->GetScript<CPlayerScript>()->SetCurHp(50);
@@ -190,7 +191,7 @@ void CInGameScene::Init()
 	pEmptyPlayer->AddComponent(new CEmptyPlayerScript);
 	pEmptyPlayer->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 
-	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -20.f));		// -300, 130, -50
+	pMainCam->Transform()->SetLocalPos(Vec3(-200.f, 100.f, -30.f));		// -300, 130, -50
 	pMainCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));		// -15.f
 	pMainCam->GetScript<CCameraScript>()->Init();
 
@@ -778,6 +779,10 @@ void CInGameScene::Init()
 	pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
 	FindLayer(L"UI")->AddGameObject(pUISkill);
 
+	// 스킬쿨타임글씨
+	CFontMgr::GetInst()->AddText(L"Eskill", L"E", Vec2(0.8f, 0.95f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
+	CFontMgr::GetInst()->AddText(L"Zskill", L"Z", Vec2(0.9f, 0.95f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
+
 
 //-----------------------------------------------------------------------------------------------
 // 파티창 
@@ -852,7 +857,6 @@ void CInGameScene::Init()
 		// 플레이어 id
 		CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(i), wstring(L"PlayerID") + to_wstring(i), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
 
-
 		// 에이치피바
 		pHpBar = new CGameObject;
 		pHpBar->SetName(wstring(L"UI HPBar ") + to_wstring(i));
@@ -878,6 +882,7 @@ void CInGameScene::Init()
 
 	for (int i = 0; i < 2; i++) {
 		pObject = new CGameObject;
+		pObject->SetName(wstring(L"Light") + to_wstring(i+1));
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CLight3D);
 		pObject->Light3D()->SetLightPos(Vec3(1000.f + 2000.f * i, 1000.f, -1500.f));
@@ -888,7 +893,7 @@ void CInGameScene::Init()
 		pObject->Light3D()->SetLightDir(Vec3(1.f, -1.f, 1.f));
 		pObject->Light3D()->SetLightRange(1000.f);
 		FindLayer(L"Default")->AddGameObject(pObject);
-	}	
+	}
 
 //-----------------------------------------------------------------------------------------------
 // 충돌 처리
@@ -903,15 +908,18 @@ void CInGameScene::Init()
 
 	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Arrow");
 
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Obstacle");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Red", L"Obstacle");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Obstacle", L"Arrow");
+	CCollisionMgr::GetInst()->CheckCollisionLayer(L"Obstacle", L"Arrow");
 	
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Red");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Blue", L"Blue");
 	CSensorMgr::GetInst()->CheckSensorLayer(L"Red", L"Red");
+
 }
 
 void CInGameScene::Exit()
 {
-	for (int i = 0; i < 3; ++i) {
-		CFontMgr::GetInst()->DeleteText(wstring(L"PlayerID") + to_wstring(i));
-	}
+	CFontMgr::GetInst()->Clear();
 }

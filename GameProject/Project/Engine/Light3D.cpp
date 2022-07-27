@@ -85,7 +85,13 @@ void CLight3D::Render()
 
 		m_pLightMtrl->SetData(SHADER_PARAM::MATRIX_0, &matVP);
 	}
+	else {
+		Ptr<CTexture> pShadowMapTex = CResMgr::GetInst()->FindRes<CTexture>(L"ShadowMapTargetTex");
+		m_pLightMtrl->SetData(SHADER_PARAM::TEX_3, pShadowMapTex.GetPointer());
+		Matrix matVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
 
+		m_pLightMtrl->SetData(SHADER_PARAM::MATRIX_0, &matVP);
+	}
 
 
 	Transform()->UpdateData();

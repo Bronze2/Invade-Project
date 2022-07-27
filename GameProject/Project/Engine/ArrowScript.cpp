@@ -196,8 +196,9 @@ void CArrowScript::Update()
 				if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
 					m_fDir = -1;
 				}
-				Quaternion qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
-				Transform()->SetQuaternion(qRot);
+
+			Quaternion qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
+			Transform()->SetQuaternion(qRot);
 			}
 
 			Transform()->SetLocalPos(vPos);
