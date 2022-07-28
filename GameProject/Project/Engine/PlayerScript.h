@@ -69,13 +69,16 @@ private:
     float m_fCurDegree;
     int m_iKeyHoldCnt;
     UINT m_iMaxHp;
-    int m_iCurHp = 1500;
+    UINT m_iCurHp = 1500;
     CAMP_STATE m_eCamp;
     Vec3 restorePos;
     CGameObject* m_pBowObject;
     bool m_bReady;
-public:
 
+    CGameObject* m_pHPBar;
+    vector<CGameObject*> m_vecUIHpBar;
+public:
+    void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
     void AttachHelmet();
     void m_FAnimation();
     void Init();
@@ -113,8 +116,6 @@ public:
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);
     virtual void OnDetectionExit(CGameObject* _pOther);
-
-
     void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
 
     void SkillCoolTimeCheck();
@@ -127,6 +128,11 @@ public:
     SKILL* GetSkill_E() { return m_tESkill; }
     SKILL* GetSkill_Z() { return m_tZSkill; }
     SKILL* GetCurrentSkill() { return m_currentSkill; }
+    SKILL* GetESkill() { return m_tESkill; }
+    SKILL* GetZSkill() { return m_tZSkill; }
+    void SetESkillObj(CGameObject* _pObj) { m_pESkillObject = _pObj; }
+    void SetZSkillObj(CGameObject* _pObj) { m_pZSkillObject = _pObj; }
+
 
 
     void UpdateHelmet(Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
@@ -137,6 +143,10 @@ public:
     void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
     PLAYER_STATE GetAnimaionState() { return m_eState; }
     
+
+    //hp
+    UINT GetCurHp() { return m_iCurHp; }
+    void SetCurHp(int _hp) { m_iCurHp = _hp; }
 
     CLONE(CPlayerScript);
 };

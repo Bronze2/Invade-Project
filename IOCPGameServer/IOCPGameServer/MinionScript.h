@@ -55,17 +55,26 @@ class CMinionScript :
 
     CGameObject* m_pFirstTower;
     CGameObject* m_pSecondTower;
-public:
 
+    // 
+    int movePrioty;
+
+    int coll_id;
+    int coll_index_x;
+    int coll_index_y;
+public:
+    void SetPrioty(int p) { movePrioty = p; }
     void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
     void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
 
+    int mapIndex_x = 99999;
+    int mapIndex_y = 99999;
 
     void CheckHp();
     void Init();
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
     
-    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
+    void GetDamage(const UINT& _uiDamage);
    
     void SetNexus(CGameObject* _pNexus) { m_pNexus = _pNexus; }
     virtual void Update();

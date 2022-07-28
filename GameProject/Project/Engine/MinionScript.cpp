@@ -4,7 +4,8 @@
 #include "SceneMgr.h"
 #include "Sensor.h"
 #include "TimeMgr.h"
-
+#include "MeshRender.h"
+#include "Collider3D.h"
 
 void CMinionScript::Init()
 {
@@ -23,25 +24,53 @@ void CMinionScript::Init()
 	{
 	case MINION_ATTACK_TYPE::MELEE:{
 		SetAttackRange(50);
-		m_uiMaxHp = 450; m_uiAttackDamage = 30;
+		m_uiMaxHp = 950; m_uiAttackDamage = 30;
 		}
 		break;
 
 	case MINION_ATTACK_TYPE::RANGE: {
 		SetAttackRange(150);
-		m_uiMaxHp = 300; m_uiAttackDamage = 20;
+		m_uiMaxHp = 900; m_uiAttackDamage = 20;
 	}
 	 break;
 
 	case MINION_ATTACK_TYPE::CANON: {
 		SetAttackRange(50);
-		m_uiMaxHp = 550; m_uiAttackDamage = 60;
+		m_uiMaxHp = 1550; m_uiAttackDamage = 60;
 	}
 	 break;
 
 	}
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
+	
+
+	m_pHPBar = new CGameObject;
+	m_pHPBar->SetName(L"Minion HPBar");
+	m_pHPBar->AddComponent(new CTransform);
+	m_pHPBar->AddComponent(new CMeshRender);
+	m_pHPBar->FrustumCheck(false);
+	m_pHPBar->MeshRender()->SetDynamicShadow(false);
+
+	Vec3 vHPBarScale = Vec3(60.f, 10.f, 1.f);
+	m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
+	m_pHPBar->Transform()->SetLocalPos(Vec3(0.f, GetObj()->Collider3D()->GetOffsetPos().y + GetObj()->Collider3D()->GetOffsetScale().y + 30.f, 0.f));
+	if (m_eCamp == CAMP_STATE::BLUE) {
+		m_pHPBar->Transform()->SetLocalRot(Vec3(XMConvertToRadians(180.f), 0.f, 0.f));
+	}
+	else {
+		m_pHPBar->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
+	}
+	m_pHPBar->Transform()->SetBillBoard(true);
+	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
+
+	m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+	pUIHPBarMtrl->DisableFileSave();
+	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
+	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+	GetObj()->AddChild(m_pHPBar);
+	int dieCount = 0;
 
 }
 
@@ -54,16 +83,14 @@ void CMinionScript::Update()
 
 	m_FAnimation();
 	if (m_eState == MINION_STATE::DIE) {
+		dieCount++;
+		if (dieCount >= 100) {
+			DeleteObject(GetObj());
+		}
 		return;
 	}
 	Vec3 vPos;
 	Vec3 vRot;
-
-
-	//cout << "GPos	";
-	//cout << CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos.x << ",";
-	//cout << CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos.y << ",";
-	//cout << CSceneMgr::GetInst()->get_minioninfo(GetObj()->GetId()).pos.z << endl;
 
 	if (Transform()->GetLocalPos().x == 0 &&
 		Transform()->GetLocalPos().y == 0 &&
@@ -74,10 +101,18 @@ void CMinionScript::Update()
 	switch (m_eState)
 	{
 	case MINION_STATE::WALK: {
+		
+		
+		Vec3 vRestorePos = vPos;
 		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(m_id).pos, DT * 10.f);
-		vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
+		float fAngle = atan2(vRestorePos.x - vPos.x, vRestorePos.z - vPos.z);
+		vRot.y = fAngle;
+		
+		//vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
 
 		Transform()->SetLocalPos(vPos);
+		Transform()->SetLocalRot(vRot);
+
 		Transform()->SetLocalRot(CSceneMgr::GetInst()->get_minioninfo(m_id).rot);
 
 	}
@@ -104,6 +139,10 @@ void CMinionScript::Update()
 	}
 	Transform()->SetLocalPos(vPos);
 	Transform()->SetLocalRot(vRot);
+
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_uiMaxHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCamp);
 
 }
 
@@ -336,8 +375,8 @@ void CMinionScript::m_FAnimation()
 			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
 				if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - 1) ||
 					m_pCurAnimClip->iStartFrame > GetObj()->Animator3D()->GetFrameIdx()) {
-					GetObj()->SetFallDown();
-					DeleteObject(GetObj());
+					//GetObj()->SetFallDown();
+					//DeleteObject(GetObj());
 				}
 			}
 		}

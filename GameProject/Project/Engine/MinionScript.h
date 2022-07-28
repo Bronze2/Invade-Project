@@ -42,9 +42,15 @@ class CMinionScript :
 
     MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
-
     int m_id;
+    
+    //Ã¼·Â¹Ù
+    CGameObject* m_pHPBar;
+
+    int dieCount = 0;
+
 public:
+    void SetHp(int hp) { m_iCurHp = hp; }
     void CheckHp();
     CLONE(CMinionScript)
     void Init();

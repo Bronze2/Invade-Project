@@ -11,7 +11,7 @@ class CTowerScript :
 {
 private:
     UINT m_iMaxHp;
-    int m_uiCurHp;
+    int m_iCurHp;
     float m_fAttackRange;
     CAMP_STATE  m_eCampState;
 
@@ -52,7 +52,7 @@ public:
 
     void m_SetId(int id) { m_id = id; }
     int  m_GetId() { return m_id; }
-    void GetDamage(const UINT& _uiDamage) { m_uiCurHp -= _uiDamage; }
+    void GetDamage(const UINT& _uiDamage);
 
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);

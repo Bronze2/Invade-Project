@@ -12,13 +12,33 @@ void CTowerScript::Init()
 	switch (m_eType)
 	{
 	case TOWER_TYPE::FIRST:
+		m_iMaxHp = 1500;
 		break;
 	case TOWER_TYPE::SECOND:
+		m_iMaxHp = 2000;
+
 		break;
 	case TOWER_TYPE::NEXUS:
+		m_iMaxHp = 5000;
+
 		break;
 	default:
 		break;
+	}
+	m_iCurHp = m_iMaxHp;
+}
+
+void CTowerScript::GetDamage(const UINT& _uiDamage)
+{
+	m_iCurHp -= _uiDamage;
+
+	if (m_iCurHp <= 0.f && !GetObj()->IsFallDown()) {
+		//CServer::GetInst()->send_delete_tower(m_GetId());
+		DeleteObject(GetObj());
+		//GetObj()->SetFallDown();
+	}
+	else {
+		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
 	}
 }
 

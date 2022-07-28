@@ -9,6 +9,7 @@
 #include "SkillMgr.h"
 #include "InGameScene.h"
 #include "Network.h"
+
 void CThunderSkill1Script::Collision()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
@@ -31,14 +32,20 @@ void CThunderSkill1Script::Collision()
 							vecObj[j]->GetScript<CPlayerScript>()->GetDamage(m_pSkill->DotDamage);
 							Network::GetInst()->send_set_damage(vecObj[j]->GetScript<CPlayerScript>()->m_GetId(),m_pSkill->DotDamage ,PACKET_COLLTYPE::PLAYER,m_eCampState);
 						}
+							m_pSkill->Count += 1;
+
 
 					}
 					else if (nullptr != vecObj[j]->GetScript<CMinionScript>()) {
 						if (m_eCampState != vecObj[j]->GetScript<CMinionScript>()->GetCamp()) {
-							vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+							Network::GetInst()->send_set_damage(vecObj[j]->GetScript<CMinionScript>()->m_GetId(), m_pSkill->DotDamage, PACKET_COLLTYPE::MONSTER, m_eCampState);
+
+
+							//vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
 						}
-						vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
+						//vecObj[j]->GetScript<CMinionScript>()->SetDamage(m_pSkill->DotDamage);
 					}
+
 				}
 			}
 		}

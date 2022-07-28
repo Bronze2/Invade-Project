@@ -24,17 +24,21 @@ private:
 
     SPAWN_PATTERN m_eSpawnPattern;
     CGameObject* m_pNexus;
-
-
-
-
     
     CAMP_STATE m_eCampState;
+    CGameObject* m_pFirstTower;
+    CGameObject* m_pSecondTower;
+
 private:
     CGameObject* SpawnObject(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange ,CAnimation* _pAnimation,CAMP_STATE _eState);
     CGameObject* SpawnObject_Proejectile(const wstring& _strKey, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale);
 
 public:
+    //Ãß°¡
+    void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
+    void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }
+
+
     void SpawnObject_Red(int id, Vec3 Pos, MINION_ATTACK_TYPE type);
     void SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type);
 

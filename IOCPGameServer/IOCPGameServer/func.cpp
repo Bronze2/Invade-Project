@@ -218,6 +218,18 @@ Vec3 Cross(const Vec3& _Value1, const Vec3& _Value2)
 	return result;
 }
 
+Vec3 VectorRotate(const Vec3& _Value, const Vec3& _Axis, const float _angle)
+{
+	XMVECTOR v = XMLoadFloat3(&_Value);
+	XMVECTOR axis = XMLoadFloat3(&_Axis);
+	XMVECTOR qtrn = XMQuaternionRotationAxis(axis, _angle);
+
+	XMVECTOR R = XMVector3Rotate(v, qtrn);
+	Vec3 result;
+	XMStoreFloat3(&result, R);
+	return result;
+}
+
 #include "GameObject.h"
 //#include "Transform.h"
 //bool lengthCompare(Vec3 _vbeforeObject,  Vec3 _vAfterPos, CGameObject* _pAfterObject, Vec3 _vTargetObject)

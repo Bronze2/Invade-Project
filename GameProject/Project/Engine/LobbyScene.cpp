@@ -118,16 +118,19 @@ void CLobbyScene::Init()
 		if (i < 4) {
 			pPlayerObj = pPlayerBlueMeshData->Instantiate();
 			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
+			pPlayerObj->Transform()->SetLocalPos(Vec3(-400.f + i * 100.f, -70.f, 650.f));   // -525.f + i * 150.f, 0.f, 1000.f
+
 		}
 		else {
 			pPlayerObj = pPlayerRedMeshData->Instantiate();
 			pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
+			pPlayerObj->Transform()->SetLocalPos(Vec3(100.f + (i - 4) * 100.f, -70.f, 650.f));   // -525.f + i * 150.f, 0.f, 1000.f
 		}
 
 		pPlayerObj->SetName(L"Monster");
 		pPlayerObj->AddComponent(new CPlayerScript);
 		pPlayerObj->FrustumCheck(false);
-		pPlayerObj->Transform()->SetLocalPos(Vec3(-525.f + i * 150.f, 0.f - 1000.f, 1000.f));
+
 		pPlayerObj->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 		pPlayerObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), XMConvertToRadians(0.f), 0.f));
 		pPlayerObj->MeshRender()->SetDynamicShadow(false);
@@ -202,73 +205,21 @@ void CLobbyScene::Init()
 	// 맵
 	//-----------------------------------------------------------------------------------------------
 
-		// 타일
-	CGameObject* pTileObj = new CGameObject;
-	pTileObj->SetName(L"Tile");
-	pTileObj->AddComponent(new CTransform);
-	pTileObj->AddComponent(new CMeshRender);
-
-	pTileObj->Transform()->SetLocalPos(Vec3(0.f, -1.f, 2000.f));
-	pTileObj->Transform()->SetLocalScale(Vec3(5000.f, 5000.f, 1.f));
-	pTileObj->Transform()->SetLocalRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	pTileObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-
-	Ptr<CMaterial> pMtrl = new CMaterial;
-	pMtrl->DisableFileSave();
-	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"Std3DShader"));
-	CResMgr::GetInst()->AddRes(L"TileMtrl", pMtrl);
-	pTileObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TileMtrl"));
-	Ptr<CTexture> pColor = CResMgr::GetInst()->FindRes<CTexture>(L"Tile");
-	Ptr<CTexture> pNormal = CResMgr::GetInst()->FindRes<CTexture>(L"Tile_n");
-	pTileObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	pTileObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	pTileObj->MeshRender()->SetDynamicShadow(false);
-
-	FindLayer(L"Tile")->AddGameObject(pTileObj);
-
-	// 벽
-	CGameObject* pWallObj = new CGameObject;
-	pWallObj->SetName(L"Tile");
-	pWallObj->AddComponent(new CTransform);
-	pWallObj->AddComponent(new CMeshRender);
-
-	pWallObj->Transform()->SetLocalPos(Vec3(0.f, -1.f, 2000.f));
-	pWallObj->Transform()->SetLocalScale(Vec3(5000.f, 500.f, 1.f));
-	pWallObj->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	pWallObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pWallObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TileMtrl"));
-	pWallObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pColor.GetPointer());
-	pWallObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_1, pNormal.GetPointer());
-	pWallObj->MeshRender()->SetDynamicShadow(false);
-
-	FindLayer(L"Tile")->AddGameObject(pWallObj);
 
 
+	   //Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\lobby3.fbx");
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\lobby3.mdat", L"MeshData\\lobby3.mdat");
+	//pMeshData->Save(pMeshData->GetPath());
 
-	// Blue Nexus
-	CGameObject* pNexus;
-	Ptr<CMeshData> pNexusMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus01.mdat", L"MeshData\\Nexus01.mdat");
-	pNexus = pNexusMeshData->Instantiate();
-	pNexus->FrustumCheck(false);
-	pNexus->Transform()->SetLocalPos(Vec3(-400.f, 35.f, 1500.f));
-	pNexus->Transform()->SetLocalRot(Vec3(-3.14f / 6, XMConvertToRadians(180.f), 0.f));
-	pNexus->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-	pNexus->MeshRender()->SetDynamicShadow(true);
+	CGameObject* pLobbyObj = pMeshData->Instantiate();
 
-	FindLayer(L"Blue")->AddGameObject(pNexus);
+	pLobbyObj->FrustumCheck(false);
+	pLobbyObj->Transform()->SetLocalPos(Vec3(-72.f, -100.f, 700.f));      //0.f, 370.f, 0.f
+	pLobbyObj->Transform()->SetLocalRot(Vec3(-PI / 2, -PI / 2, 0.f));
+	pLobbyObj->Transform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
+	pLobbyObj->MeshRender()->SetDynamicShadow(false);
 
-	// Red Nexus
-	pNexusMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Nexus.mdat", L"MeshData\\Nexus.mdat");
-	pNexus = pNexusMeshData->Instantiate();
-	pNexus->FrustumCheck(false);
-	pNexus->Transform()->SetLocalPos(Vec3(400.f, 35.f, 1500.f));
-	pNexus->Transform()->SetLocalRot(Vec3(-3.14f / 6, XMConvertToRadians(180.f), 0.f));
-	pNexus->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-	pNexus->MeshRender()->SetDynamicShadow(true);
-
-	FindLayer(L"Red")->AddGameObject(pNexus);
-
-
+	FindLayer(L"Default")->AddGameObject(pLobbyObj);
 
 	//-----------------------------------------------------------------------------------------------
 	// UI - BUTTON
@@ -352,8 +303,35 @@ void CLobbyScene::Init()
 	Ptr<CTexture> pThunderTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyThunder");
 	Ptr<CTexture> pFireTex = CResMgr::GetInst()->FindRes<CTexture>(L"PropertyFire");
 	CGameObject* pUIButtonProperty;
+	Ptr<CTexture> pLockTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOCK");
+	CGameObject* pUIButtonLock;
+	Vec4 vLockColor = Vec4(1.f, 1.f, 1.f, 0.9f);
+	Ptr<CMaterial> pUIButtonLockMtrl = new CMaterial;
+	pUIButtonLockMtrl->DisableFileSave();
+	pUIButtonLockMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"ColorTexShader"));
+
 
 	for (int i = 0; i < 5; i++) {
+
+
+		pUIButtonLock = new CGameObject;
+		pUIButtonLock->SetName(L"LockTex");
+		pUIButtonLock->FrustumCheck(false);   // 절두체 컬링 사용하지 않음
+		pUIButtonLock->AddComponent(new CTransform);
+		pUIButtonLock->AddComponent(new CMeshRender);
+		pUIButtonLock->AddComponent(new CButtonScript);
+		pUIButtonLock->MeshRender()->SetRender(false);
+
+		pUIButtonLock->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIProPertyButtonScale.x / 2 - vUIProPertyButtonScale.x * i, res.fHeight / 2 - vUIProPertyButtonScale.y / 2, 1.f));
+		pUIButtonLock->Transform()->SetLocalScale(vUIProPertyButtonScale);
+
+		pUIButtonLock->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pUIButtonLock->MeshRender()->SetMaterial(pUIButtonLockMtrl);
+		pUIButtonLock->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pLockTex.GetPointer());
+		pUIButtonLock->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::VEC4_0, &vLockColor);
+		FindLayer(L"UI")->AddGameObject(pUIButtonLock);
+
+
 		pUIButtonProperty = new CGameObject;
 		pUIButtonProperty->FrustumCheck(false);	// 절두체 컬링 사용하지 않음
 		pUIButtonProperty->AddComponent(new CTransform);
@@ -361,8 +339,8 @@ void CLobbyScene::Init()
 		//pUIButtonProperty->AddComponent(new CStaticUI);
 		pUIButtonProperty->AddComponent(new CButtonScript);
 
-		pUIButtonProperty->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vUIProPertyButtonScale.x / 2 - vUIProPertyButtonScale.x * i, res.fHeight / 2 - vUIProPertyButtonScale.y / 2, 1.f));
-		pUIButtonProperty->Transform()->SetLocalScale(vUIProPertyButtonScale);
+		pUIButtonProperty->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+		pUIButtonProperty->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 		pUIButtonProperty->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pUIButtonStartMtrl = new CMaterial;
@@ -372,33 +350,33 @@ void CLobbyScene::Init()
 
 		switch (i) {
 		case 0:
-			pUIButtonProperty->SetName(L"FirePropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFireTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_FIRE);
-			break;
-		case 1:
-			pUIButtonProperty->SetName(L"ThunderPropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pThunderTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_THUNDER);
-			break;
-		case 2:
-			pUIButtonProperty->SetName(L"WindPropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pWindTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WIND);
-			break;
-		case 3:
-			pUIButtonProperty->SetName(L"DarkPropertyButton");
-			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_DARK);
-			break;
-		case 4:
 			pUIButtonProperty->SetName(L"WaterPropertyButton");
 			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pWaterTex.GetPointer());
-			pUIButtonProperty->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WATER);
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WATER);
+			break;
+		case 1:
+			pUIButtonProperty->SetName(L"FirePropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pFireTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_FIRE);
+			break;
+		case 2:
+			pUIButtonProperty->SetName(L"DarkPropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_DARK);
+			break;
+		case 3:
+			pUIButtonProperty->SetName(L"ThunderPropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pThunderTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_THUNDER);
+			break;
+		case 4:
+			pUIButtonProperty->SetName(L"WindPropertyButton");
+			pUIButtonProperty->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pWindTex.GetPointer());
+			pUIButtonLock->GetScript<CButtonScript>()->SetButtonType(BUTTON_TYPE::SELECT_WIND);
 			break;
 		}
 
-		FindLayer(L"UI")->AddGameObject(pUIButtonProperty);
+		pUIButtonLock->AddChild(pUIButtonProperty);
 	}
 
 

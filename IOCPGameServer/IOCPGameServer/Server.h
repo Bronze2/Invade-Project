@@ -67,6 +67,14 @@ public:
 	void send_arrow_create_skill(int client_id, p_Vec3 LocalPos, PACKET_SKILL skill);
 
 	void send_setDamage(int client_id, int coll_id, int damage, PACKET_COLLTYPE coll_type);
+
+	void send_damage_minion(int minion_id, int hp, CAMP_STATE camp);
+
+	void send_delete_tower(int tower_id);
+
+	void send_damage_tower(int tower_id,int  hp, CAMP_STATE camp);
+
+	void send_chat_msg(int clinet_id, char msg[255]);
 private:
 
 };

@@ -29,7 +29,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_COLLISION_ARROW 15
 #define C2S_ARROW_CREATE_SKILL 16
 #define C2S_SET_DAMAGE 17
-
+#define C2S_CHAT_MSG 18
 
 #define S2C_LOGIN_OK		1
 #define S2C_KEY_DOWN		2
@@ -63,6 +63,11 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_COLLISION_ARROW 28
 #define S2C_ARROW_CREATE_SKILL 29
 #define S2C_SET_DAMAGE 30
+#define S2C_DAMAGE_MINION 31
+#define S2C_DAMAGE_TOWER 32
+#define S2C_DELETE_TOWER 33
+#define S2C_CHAT_MSG 34
+
 
 
 
@@ -239,9 +244,45 @@ struct sc_packet_arrow_create_skill
 	CAMP_STATE camp;
 };
 
+struct sc_packet_damage_minion
+{
+	char size;
+	char type;
+	int minion_id;
+	int current_hp;
+	CAMP_STATE camp;
+};
+
+struct sc_packet_damage_tower
+{
+	char size;
+	char type;
+	int tower_id;
+	int current_hp;
+	CAMP_STATE camp;
+};
+
 //OBJECT TYPE
 constexpr unsigned char O_PLAYER = 0;
 constexpr unsigned char O_NPC = 1;
+
+
+struct cs_chat_msg {
+	char size;
+	char type;
+	char msg[100];
+};
+
+struct sc_chat_msg {
+	char size;
+	char type;
+	char msg[100];
+};
+
+
+
+
+
 
 struct sc_packet_enter {
 	char size;
@@ -387,6 +428,13 @@ struct sc_packet_delete_minion {
 	char type;
 	int id;
 };
+
+struct sc_packet_delete_tower {
+	char size;
+	char type;
+	int id;
+};
+
 
 struct sc_packet_delete_arrow {
 	char size;

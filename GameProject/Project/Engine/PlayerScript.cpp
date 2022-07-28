@@ -13,275 +13,8 @@
 #include "SkillMgr.h"
 
 #include "BowScript.h"
-//
-//void CPlayerScript::m_FAnimation()
-//{
-//	// 로비씬 RUN과 JUMP 순서 바꿈
-//	if (m_ePrevState != m_eState) {
-//		// Blend  ʿ 
-//		switch (m_eState)
-//		{
-//		case PLAYER_STATE::IDLE:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"IDLE")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"IDLE");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::IDLE);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::IDLE, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::IDLE;
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::WALK:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::WALK);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::WALK, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::WALK;
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::JUMP:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::JUMP);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::JUMP, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::JUMP;
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::RUN:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::RUN);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::RUN, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::RUN;
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::ATTACK_READY:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::ATTACK_READY;
-//				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::ATTACK:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::ATTACK;
-//				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK);
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::ATTACK_READY_HIGH:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::ATTACK_READY_HIGH);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::ATTACK_READY_HIGH, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::ATTACK_READY_HIGH;
-//				GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::ATTACK_READY);
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::DEMAGED:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DEMAGED);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DEMAGED, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::DEMAGED;
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::DIE:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
-//				m_pNextAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
-//				GetObj()->Animator3D()->SetBlendState(true);
-//				GetObj()->Animator3D()->SetNextClipIndex((UINT)PLAYER_STATE::DIE);
-//				GetObj()->Animator3D()->SetNextFrameIdx(m_pNextAnimClip->iStartFrame);
-//				GetObj()->Animator3D()->SetCurTime((UINT)PLAYER_STATE::DIE, 0.f);
-//				GetObj()->Animator3D()->SetStartNextFrameTime(m_pNextAnimClip->dStartTime);
-//				m_ePrevState = PLAYER_STATE::DIE;
-//			}
-//		}
-//		break;
-//
-//		default:
-//			break;
-//		}
-//	}
-//	else {
-//		switch (m_eState)
-//		{
-//		case PLAYER_STATE::IDLE:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"IDLE")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"IDLE");
-//
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::IDLE);
-//						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
-//						GetObj()->Animator3D()->SetCurTime(0.f);
-//						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-//					}
-//				}
-//
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::WALK:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"WALK");
-//
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::WALK);
-//						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
-//						GetObj()->Animator3D()->SetCurTime(0.f);
-//						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-//					}
-//				}
-//
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::JUMP:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
-//
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//						m_eState = PLAYER_STATE::IDLE;
-//					}
-//				}
-//
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::RUN:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"RUN");
-//
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//						GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::RUN);
-//						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
-//						GetObj()->Animator3D()->SetCurTime(0.f);
-//						GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
-//					}
-//				}
-//
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::ATTACK_READY:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY");
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-//						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
-//					}
-//				}
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::ATTACK:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK");
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-//						m_eState = PLAYER_STATE::IDLE;
-//						GetObj()->GetChild()[0]->GetScript<CBowScript>()->SetState(BOW_STATE::IDLE);
-//					}
-//				}
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::ATTACK_READY_HIGH:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"ATTACK_READY_HIGH");
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame)) {
-//						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
-//					}
-//				}
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::DEMAGED:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DEMAGED");
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//						m_eState = PLAYER_STATE::IDLE;
-//					}
-//				}
-//
-//			}
-//		}
-//		break;
-//		case PLAYER_STATE::DIE:
-//		{
-//			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
-//				if (!GetObj()->Animator3D()->GetBlendState()) {
-//					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
-//					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-//						m_eState = PLAYER_STATE::IDLE;
-//					}
-//				}
-//			}
-//		}
-//		break;
-//
-//		default:
-//			break;
-//		}
-//	}
-//}
+#include "RenderMgr.h"
+#include "MeshRender.h"
 
 void CPlayerScript::m_FAnimation()
 {
@@ -657,99 +390,119 @@ void CPlayerScript::Init()
 
 void CPlayerScript::Awake()
 {
-	m_fMoveSpeed = 500.f;
+	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {
 
-	m_pHealParticle = new CGameObject;
-	m_pHealParticle->AddComponent(new CTransform);
-	m_pHealParticle->AddComponent(new CParticleSystem);
-	m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
-	m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.8f, 1.f, 1.0f));
-	m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pHealParticle->ParticleSystem()->SetEndScale(15.f);
-	m_pHealParticle->FrustumCheck(false);
-	m_pHealParticle->SetActive(false);
+		m_fMoveSpeed = 500.f;
 
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
-	GetObj()->AddChild(m_pHealParticle);
+		m_pHealParticle = new CGameObject;
+		m_pHealParticle->AddComponent(new CTransform);
+		m_pHealParticle->AddComponent(new CParticleSystem);
+		m_pHealParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"HardRain2"), L"ParticleUpdate4Mtrl");
+		m_pHealParticle->ParticleSystem()->SetStartColor(Vec4(0.f, 0.5f, 0.5f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pHealParticle->ParticleSystem()->SetEndColor(Vec4(0.f, 0.8f, 1.f, 1.0f));
+		m_pHealParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pHealParticle->ParticleSystem()->SetEndScale(15.f);
+		m_pHealParticle->FrustumCheck(false);
+		m_pHealParticle->SetActive(false);
 
-
-	m_pFlameParticle = new CGameObject;
-	m_pFlameParticle->AddComponent(new CTransform);
-	m_pFlameParticle->AddComponent(new CParticleSystem);
-	m_pFlameParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Flame"), L"ParticleUpdate4Mtrl");
-	m_pFlameParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pFlameParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
-	m_pFlameParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pFlameParticle->ParticleSystem()->SetEndScale(0.1f);
-	m_pFlameParticle->FrustumCheck(false);
-	m_pFlameParticle->SetActive(false);
-
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pFlameParticle);
-	GetObj()->AddChild(m_pFlameParticle);
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pHealParticle);
+		GetObj()->AddChild(m_pHealParticle);
 
 
-	m_pThunderParticle = new CGameObject;
-	m_pThunderParticle->AddComponent(new CTransform);
-	m_pThunderParticle->AddComponent(new CParticleSystem);
-	m_pThunderParticle->Transform()->SetLocalPos(Vec3(0.f, 0.f, 150.f));
-	m_pThunderParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate3Mtrl");
-	m_pThunderParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
-	m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 0.f, 1.0f));
-	m_pThunderParticle->ParticleSystem()->SetStartScale(10.f);
-	m_pThunderParticle->ParticleSystem()->SetEndScale(10.f);
-	m_pThunderParticle->FrustumCheck(false);
-	m_pThunderParticle->SetActive(false);
+		m_pFlameParticle = new CGameObject;
+		m_pFlameParticle->AddComponent(new CTransform);
+		m_pFlameParticle->AddComponent(new CParticleSystem);
+		m_pFlameParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Flame"), L"ParticleUpdate4Mtrl");
+		m_pFlameParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pFlameParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+		m_pFlameParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pFlameParticle->ParticleSystem()->SetEndScale(0.1f);
+		m_pFlameParticle->FrustumCheck(false);
+		m_pFlameParticle->SetActive(false);
 
-	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
-	GetObj()->AddChild(m_pThunderParticle);
-
-
-	m_fMoveSpeed = 300.f;
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pFlameParticle);
+		GetObj()->AddChild(m_pFlameParticle);
 
 
+		m_pThunderParticle = new CGameObject;
+		m_pThunderParticle->AddComponent(new CTransform);
+		m_pThunderParticle->AddComponent(new CParticleSystem);
+		m_pThunderParticle->Transform()->SetLocalPos(Vec3(0.f, 0.f, 150.f));
+		m_pThunderParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Thunder"), L"ParticleUpdate3Mtrl");
+		m_pThunderParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pThunderParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 0.f, 1.0f));
+		m_pThunderParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pThunderParticle->ParticleSystem()->SetEndScale(10.f);
+		m_pThunderParticle->FrustumCheck(false);
+		m_pThunderParticle->SetActive(false);
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
+		GetObj()->AddChild(m_pThunderParticle);
+		m_fMoveSpeed = 300.f;
+
+		tResolution res = CRenderMgr::GetInst()->GetResolution();
+
+		//hp
+		m_pHPBar = new CGameObject;
+		m_pHPBar->SetName(L"MainClient HPBar");
+		m_pHPBar->AddComponent(new CTransform);
+		m_pHPBar->AddComponent(new CMeshRender);
+		m_pHPBar->FrustumCheck(false);
+		m_pHPBar->MeshRender()->SetDynamicShadow(false);
+		Vec3 vHPBarScale = Vec3(res.fWidth / 8.f, res.fHeight / 20.f, 1.f);
+		m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
+		m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x / 2 + 10.f, res.fHeight / 2 - vHPBarScale.y / 2 - 10.f, 1.f));
+		m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+		pUIHPBarMtrl->DisableFileSave();
+		pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
+		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
+
+	}
 	Ptr<CMeshData> pHelmetMesh;
 
 	if (m_eCamp == CAMP_STATE::BLUE) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Blue.fbx");
-			break;
-		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Blue.fbx");
-			break;
-		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Blue.fbx");
-			break;
-		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Blue.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx");
 			break;
+		case ELEMENT_TYPE::DARK:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx");
+			break;
+		case ELEMENT_TYPE::THUNDER:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx");
+			break;
+		case ELEMENT_TYPE::WIND:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx");
+			break;
+
 		}
 	}
 	else if (m_eCamp == CAMP_STATE::RED) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_01_Red.fbx");
-			break;
-		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_02_Red.fbx");
-			break;
-		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_03_Red.fbx");
-			break;
-		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_04_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\helmet_05_Red.fbx");
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx");
+			break;
+		case ELEMENT_TYPE::DARK:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx");
+			break;
+		case ELEMENT_TYPE::THUNDER:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx");
+			break;
+		case ELEMENT_TYPE::WIND:
+			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx");
 			break;
 		}
 	}
 	m_pHelmetObject = pHelmetMesh->Instantiate();
-	m_pHelmetObject->MeshRender()->SetDynamicShadow(false);
+	m_pHelmetObject->MeshRender()->SetDynamicShadow(true);
 	m_pHelmetObject->FrustumCheck(false);
 	m_pHelmetObject->SetName(L"Helmet");
 	m_pHelmetObject->Transform()->SetLocalScale(Vec3(0.1f, 0.09f, 0.1f));
@@ -1025,6 +778,16 @@ void CPlayerScript::Update()
 			Transform()->SetLocalRot(vRot);
 			UseSkill();
 			GetDamage();
+			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+
+			for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
+				//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+				int iCurHp = 100 + 30 * i;
+				m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+				m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+			}
+
 		}
 		StatusCheck();
 
@@ -1148,21 +911,66 @@ void CPlayerScript::SetType(ELEMENT_TYPE _iType)
 
 
 }
+
+
+
 void CPlayerScript::SkillCoolTimeCheck()
 {
+	//추가 7.22
+	Vec4 vEndColor;
+	switch (m_iType)
+	{
+	case ELEMENT_TYPE::WATER:
+		vEndColor = Vec4(0.f, 0.f, 0.9f, 1.f);
+		break;
+	case ELEMENT_TYPE::FIRE:
+		vEndColor = Vec4(0.9f, 0.f, 0.f, 1.f);
+		break;
+	case ELEMENT_TYPE::DARK:
+		vEndColor = Vec4(0.3f, 0.3f, 0.3f, 1.f);
+		break;
+	case ELEMENT_TYPE::THUNDER:
+		vEndColor = Vec4(0.9f, 0.9f, 0.f, 1.f);
+		break;
+	case ELEMENT_TYPE::WIND:
+		vEndColor = Vec4(0.f, 0.9f, 0.f, 1.f);
+		break;
+	default:
+		break;
+	}
+	Vec4 vStartColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+	float Value = m_tESkill->fCoolTime / m_tESkill->fCoolTime;
 	if (m_tESkill->bUse) {
+		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tESkill->StartTime;
+		Value = sec.count();
+		Value = Value / m_tESkill->fCoolTime;
 		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
+
 			m_tESkill->bUse = false;
 		}
 	}
+	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Value);
+	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &vStartColor);
+	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_1, &vEndColor);
+	Value = m_tZSkill->fCoolTime / m_tZSkill->fCoolTime;
+	float v = 1.f / 25.f;
 	if (m_tZSkill->bUse) {
+		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tZSkill->StartTime;
+		Value = sec.count();
+		Value = Value / m_tZSkill->fCoolTime;
 		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;
 		}
 	}
-
+	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Value);
+	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &vStartColor);
+	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_1, &vEndColor);
 
 }
+
+
+
 void CPlayerScript::StatusCheck()
 {
 	m_bHealCheck = false;

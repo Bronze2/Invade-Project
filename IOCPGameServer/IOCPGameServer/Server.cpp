@@ -289,6 +289,47 @@ void CServer::send_delete_minion(int minion_id)
 
 }
 
+
+void CServer::send_delete_tower(int tower_id)
+{
+	sc_packet_delete_tower packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_DELETE_TOWER;
+	packet.id = tower_id;
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
+void CServer::send_damage_minion(int minion_id , int hp ,CAMP_STATE camp)
+{
+	sc_packet_damage_minion packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_DAMAGE_MINION;
+	packet.minion_id = minion_id;
+	packet.current_hp = hp;
+	packet.camp = camp;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
+void CServer::send_damage_tower(int tower_id, int  hp, CAMP_STATE camp)
+{
+	sc_packet_damage_tower packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_DAMAGE_TOWER;
+	packet.tower_id = tower_id;
+	packet.current_hp = hp;
+	packet.camp = camp;
+
+	for (int i = 0; i < SHARED_DATA::current_user; ++i)
+		send_packet(i, &packet);
+
+}
+
+
 void CServer::send_rot_tower_packet(int tower_id)
 {
 	sc_packet_rot_tower packet;
@@ -392,6 +433,22 @@ void CServer::send_collision_arrow(int client_id, int arrow_id, int coll_id, PAC
 		}
 	}
 }
+
+void CServer::send_chat_msg(int client_id, char msg[100])
+{
+	sc_chat_msg packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_CHAT_MSG;
+	strcpy_s(packet.msg, msg);
+	cout << packet.msg << endl;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+}
+
 
 
 void CServer::send_setDamage(int client_id, int coll_id, int damage, PACKET_COLLTYPE coll_type)

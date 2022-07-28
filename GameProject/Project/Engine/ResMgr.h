@@ -7,6 +7,7 @@
 #include "Ptr.h"
 #include "PathMgr.h"
 #include "MeshData.h"
+#include "Font.h"
 class CResMgr
 {
 	SINGLE(CResMgr);
@@ -67,6 +68,8 @@ RES_TYPE GetType()
 		return RES_TYPE::TEXTURE;
 	if (typeid(T).hash_code() == typeid(CSound).hash_code())
 		return RES_TYPE::SOUND;
+	if (typeid(T).hash_code() == typeid(CFont).hash_code())
+		return RES_TYPE::FONT;
 	return RES_TYPE::END;
 }
 

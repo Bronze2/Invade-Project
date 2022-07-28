@@ -18,7 +18,9 @@ private:
 	ImVector<char*>       History;
 	tResolution m_tResloution;
 	char buffer[255];
-	char chatItems[255];
+	char sendChatItem[255];
+	char veiwChatItmes[13][255];
+	int chatCount = 0;
 	ImVector<const char*> Commands;
 	D3D12_GPU_DESCRIPTOR_HANDLE GPU_Handle;
 	UINT Image_Width;

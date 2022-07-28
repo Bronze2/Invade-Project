@@ -82,8 +82,10 @@ public:
 	void net_playerHelmetUpdate(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 	void net_updateArrow(int id, int arrow_id, Vec3 LocalPos, Vec4 Quaternion);
 	void net_CreateSkill(Vec3 LocalPos, int skill , int camp);
+	void net_damageMinion(int id, int camp, int damage);
+	void net_damageTower(int id, int camp, int damage);
+	void net_deleteTower(int id);
 
-	
 	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
 	Vec3 get_arrowRot(int p_id, int m_id) { return m_arrow[p_id][m_id].Rot; }

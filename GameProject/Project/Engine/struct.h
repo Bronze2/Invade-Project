@@ -271,6 +271,8 @@ struct tBillBoard {
 	Vec2 vPadding;
 };
 
+class CTexture;
+
 struct SKILL {
 	wstring Name;
 	UINT Code;
@@ -288,4 +290,37 @@ struct SKILL {
 	bool bFinal;
 	UINT Count;
 	float Sum;
+
+	CTexture* pTex;
+};
+
+
+// 글씨쓰기
+struct tFontChar
+{
+	int iId;                  // 유니코드 id (char -> int로 변환해서 얘 id와 일치하는 id 찾아야함)
+	float fU;
+	float fV;
+	float ftWidth;            // 텍스쳐 상의 width
+	float ftHeight;
+	float fWidth;            // 스크린좌표에서의 width
+	float fHeight;
+	float fxOffset;            // 현재 커서 위치에서 문자 왼쪽으로 간격띄우기 (렌더링 시 현재 x위치에서 픽셀 단위의 문자 offset)
+	float fyOffset;            // 줄 맨 위에서 문자 맨 위로 간격띄우기 (렌더링 시 줄 맨 위에서 문자 offset)
+	float fxAdvance;            // 다음 문자를 위해 오른쪽으로 얼마나 이동해야 하는지
+};
+
+struct tFontKerning
+{
+	int iFirstID;            // 첫번째 문자의 id
+	int iSecondID;            // 두번째 문자의 id
+	float fxAmount;            // 두번째 문자에 추가하거나 뺄 xrkqt
+};
+
+struct TextVTX
+{
+	Vec4 vPos;
+	Vec4 vUV;
+	Vec4 vColor;
+	TextVTX(float r, float g, float b, float a, float u, float v, float tw, float th, float x, float y, float w, float h) : vColor(Vec4(r, g, b, a)), vUV(Vec4(u, v, tw, th)), vPos(Vec4(x, y, w, h)) {}
 };

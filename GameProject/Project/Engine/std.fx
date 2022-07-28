@@ -155,8 +155,9 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
 {
     float4 vColor = (float4) 0.f;
 
-    if (tex_0)
+    if (tex_0) {
         vColor = g_tex_0.Sample(g_sam_0, _input.vUV);
+    }
     else
         vColor = float4(1.f, 0.f, 1.f, 1.f);
 
@@ -165,6 +166,124 @@ float4 PS_Tex(TEX_OUTPUT _input) : SV_Target
     return vColor;
 }
 
+// 잠금버튼
+float4 PS_ColorTex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    if (tex_0) {
+        vColor = g_tex_0.Sample(g_sam_0, _input.vUV) * g_vec4_0;
+    }
+    else
+        vColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    clip(vColor.a - 0.9f);
+
+    return vColor;
+}
+
+// =================
+// HPBar Shader (에이치피바)
+
+// g_int_0 : CurHP
+// g_int_1 : MaxHP
+// g_int_2 : camp (0 red  / 1 blue)
+// =================
+
+TEX_OUTPUT VS_HPTex(TEX_INPUT _input)
+{
+    TEX_OUTPUT output = (TEX_OUTPUT)0;
+
+    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
+    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
+    float4 vViewPos = mul(vWorldPos, g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    output.vOutPos = vProjPos;
+    output.vUV = _input.vUV;
+
+    return output;
+}
+
+float4 PS_HPTex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+
+    float fRatio = (float)g_int_0 / (float)g_int_1;
+
+    if (g_int_2 == 0) {
+        if (_input.vUV.x >= fRatio) {
+            vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+        }
+        else {
+            vColor = float4(1.f, 0.f, 0.f, 1.f);
+        }
+    }
+    else {
+        if ((1.f - _input.vUV.x) >= fRatio) {
+            vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+        }
+        else {
+            vColor = float4(1.f, 0.f, 0.f, 1.f);
+        }
+    }
+
+    return vColor;
+}
+
+float4 PS_UIHPTex(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+    float fRatio = (float)g_int_0 / (float)g_int_1;
+
+    if (_input.vUV.x >= fRatio) {
+        vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+    }
+    else {
+        vColor = float4(1.f, 0.f, 0.f, 1.f);
+    }
+
+    return vColor;
+}
+
+TEX_OUTPUT VS_TexUI(TEX_INPUT _input)
+{
+    TEX_OUTPUT output = (TEX_OUTPUT)0;
+
+    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
+    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
+    float4 vViewPos = mul(vWorldPos, g_matView);
+    float4 vProjPos = mul(vViewPos, g_matProj);
+
+    output.vOutPos = vProjPos;
+    output.vUV = _input.vUV;
+
+    return output;
+}
+
+float4 PS_TexUI(TEX_OUTPUT _input) : SV_Target
+{
+    float4 vColor = (float4) 0.f;
+
+
+    if (tex_0) {
+        float fRatio = g_float_0;
+        float4 vCurColor = (g_vec4_1 - g_vec4_0) * fRatio + g_vec4_0;
+
+
+        vColor = vCurColor * g_tex_0.Sample(g_sam_0, _input.vUV);
+    }
+    else
+        vColor = float4(1.f, 0.f, 1.f, 1.f);
+
+    clip(vColor.a - 0.9f);
+
+    //float 
+
+    return vColor;
+}
 
 // =================
 // Collider2D Shader
@@ -191,33 +310,6 @@ float4 PS_Collider2D(TEX_OUTPUT _input) : SV_Target
     else
         return float4(0.f, 1.f, 0.f, 1.f);
 }
-
-TEX_OUTPUT VS_Range2D(TEX_INPUT _input)
-{
-    TEX_OUTPUT output = (TEX_OUTPUT)0;
-
-    // 투영좌표계를 반환할 때에는 float4 4번째 w 요소에 1.f 을 넣어준다.
-    float4 vWorldPos = mul(float4(_input.vPos, 1.f), g_matWorld);
-    float4 vViewPos = mul(vWorldPos, g_matView);
-    float4 vProjPos = mul(vViewPos, g_matProj);
-
-    output.vOutPos = vProjPos;
-    output.vUV = _input.vUV;
-
-    return output;
-}
-
-float4 PS_Range2D(TEX_OUTPUT _input) : SV_Target
-{
-    int value = g_int_0;
-    if (value == 2)
-        return float4(0.9f, 0.2f, 0.f, 1.f);
-    else
-        return float4(0.f, 0.2f, 0.9f, 1.f);
-}
-
-
-
 
 TEX_OUTPUT VS_LINE2D(TEX_INPUT _input)
 {

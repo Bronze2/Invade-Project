@@ -92,7 +92,7 @@ void CArrowScript::Awake()
 	m_pTrail->TrailRenderer()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Sparks"));
 	m_pTrail->TrailRenderer()->SetColor(Vec4(0.8f, 0.f, 0.f, 0.1f));	// 레드 0.8f, 0.f, 0.f, 0.1f // 블루 0.f, 0.f, 0.8f, 0.1f
 	m_pTrail->TrailRenderer()->SetMaxWidth(3.f);
-	m_pTrail->TrailRenderer()->SetMinWidth(1.f);
+	m_pTrail->TrailRenderer()->SetMinWidth(3.f);
 	m_pTrail->TrailRenderer()->SetEmit(false);
 	m_pTrail->SetActive(true);
 	m_pTrail->FrustumCheck(false);
@@ -171,8 +171,10 @@ void CArrowScript::Update()
 			else {
 
 				m_vRestorePos = vPos;
-
 				Vec4 vDir = Vec4(m_vDir, 1.f);
+				float a = vDir.x;
+				vDir.x = vDir.z;
+				vDir.z = a;
 				m_pParticle->ParticleSystem()->SetDir(vDir);
 
 				// 트레일
@@ -187,31 +189,13 @@ void CArrowScript::Update()
 				m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 				m_vXZDir.Normalize();
 				m_fAngle = acos(Dot(m_vDir, m_vXZDir));
-				//cout <<"전" <<m_fAngle << endl;
 
-				m_fAngle -= PI / 8;
-
-				m_fAngle = 0.05f;
-
-				//cout << "후" << m_fAngle << endl;
-
-				//m_fAngle = 0;
-
-
-				//m_fSpeed = 1000;
+				m_fAngle -= PI / 9;
 
 				m_fTime += DT;
 
-				//m_fMaxTime = m_fSpeed * sin(fAngle) / GRAVITY * 30 * DT;
-				//m_fMaxTime 
-				//cout << fAngle * 180 / PI <<"최고점 시간" << m_fMaxTime <<endl;
-				//vRot.z = fAngle * 180 / PI;
-
-				//vPos.x = vPos.x +(  m_fSpeed * m_fTime * cos(fAngle));
 				vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
 				vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-
-				//vPos = m_vDir 
 				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
 				//처음 화살 Update
 				if (m_fVelocityY == 5000) {
@@ -261,7 +245,8 @@ void CArrowScript::Update()
 							Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
 							vPos3.y = 1.f;
 							CreateBoomParticleObject(vPos3, L"smokeparticle");
-							//Collision();
+							
+							Collision();
 							Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 						}
 					}
@@ -501,4 +486,39 @@ void CArrowScript::WindSkill1(CCollider3D* _pCollider)
 
 	//}
 
+}
+
+
+
+void CArrowScript::Collision()
+{
+	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+	CLayer* pLayer = nullptr;
+	if (L"Red" == pCurScene->GetLayer(m_iLayerIdx)->GetName())
+	{
+		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue");
+	}
+	else if (L"Blue" == pCurScene->GetLayer(m_iLayerIdx)->GetName()) {
+		pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Red");
+	}
+	if (nullptr == pLayer)
+		return;
+
+	const vector<CGameObject*>& vecObj = pLayer->GetObjects();
+	for (int i = 0; i < vecObj.size(); ++i) {
+		CGameObject* pObject1 = vecObj[i];
+		CGameObject* pObject2 = GetObj();
+		Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+		Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+		float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+		if (Radius < 400.f)
+		{
+			if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
+			{
+				vecObj[i]->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+
+			}
+		}
+
+	}
 }

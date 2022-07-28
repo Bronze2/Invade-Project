@@ -432,11 +432,17 @@ void CThread::process_packet(int user_id, char* buf)
 	{
 		cs_packet_damage* packet = reinterpret_cast<cs_packet_damage*>(buf);
 		CSceneMgr::GetInst()->setDamage(SHARED_DATA::g_clients[user_id].room_id, packet->id, packet->colltype, packet->camp , packet->damage);
-		CServer::GetInst()->send_setDamage(user_id, packet->id, packet->damage, packet->colltype); 
-
+		CServer::GetInst()->send_setDamage(user_id, packet->id, packet->damage, packet->colltype);
 
 		//CServer::GetInst()->send_collision_arrow(user_id, packet->arrow_id, packet->coll_id, packet->coll_type);
 
+	}
+
+	case C2S_CHAT_MSG:
+	{
+		cs_chat_msg* packet = reinterpret_cast<cs_chat_msg*>(buf);
+		CServer::GetInst()->send_chat_msg(user_id, packet->msg);
+		cout << "RECV CHAT - " << packet->msg << endl;
 	}
 	break;
 

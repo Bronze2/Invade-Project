@@ -25,5 +25,8 @@ class CInGameScene :
 public:
     virtual void Init();
 
+private:
+    vector<CGameObject*> TeamPlayer;
+    CGameObject* pPlayer;
 };
 

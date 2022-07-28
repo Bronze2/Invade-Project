@@ -82,6 +82,9 @@
     <Filter Include="Skill">
       <UniqueIdentifier>{f3993354-e03d-4ff7-bfda-6431ad8646c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Font">
+      <UniqueIdentifier>{fb08231e-8d94-4d9a-be9d-bd558bc6d4bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -331,6 +334,12 @@
     <ClInclude Include="TrailRenderer.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="FontMgr.h">
+      <Filter>Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -565,6 +574,12 @@
     <ClCompile Include="TrailRenderer.cpp">
       <Filter>Script</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="FontMgr.cpp">
+      <Filter>Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -606,6 +621,9 @@
       <Filter>ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="trail.fx">
+      <Filter>ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="font.fx">
       <Filter>ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

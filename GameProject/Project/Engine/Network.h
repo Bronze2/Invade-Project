@@ -85,6 +85,7 @@ public:
 	void send_enter_room_packet(int room_id);
 	void send_lobby_ready(bool isReady);
 	void send_lobby_change_skill(ELEMENT_TYPE skill);
+	void send_chat_msg(char msg[255]);
 
 	void send_arrow_create_skill(Vec3 LocalPos, PACKET_SKILL skill);
 	void send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAMP_STATE camp);
@@ -103,6 +104,12 @@ public:
 	int Red[4];
 	bool isNewState = false;
 
+
+	char veiwChatItmes[13][100];
+	int chatCount = 0;
+	bool ChatisMax = false;
+
+
 private:
 	CLIENT m_Client;
 	unordered_map<int, OTHER_CLINET> m_otherClients;
@@ -114,6 +121,9 @@ private:
 	int my_room_id;
 	int enter_count = 1;
 	int current_enter_count = 0;
+
+
+
 
 
 };

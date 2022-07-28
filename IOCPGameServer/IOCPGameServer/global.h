@@ -84,6 +84,13 @@ struct MINION {
 };
 
 
+struct MINION_MAP {
+	int x;
+	int y;
+	int MinionID = 999;
+};
+
+
 
 namespace SHARED_DATA {
 	extern HANDLE g_iocp;					//iocp วฺต้
@@ -97,7 +104,11 @@ namespace SHARED_DATA {
 	extern map <int, Vec3> g_tower;
 	extern unordered_map<int, Vec3> g_bullet;
 	extern int g_bulletindex;
+	extern 	MINION_MAP map_info[40][400];
 };
+
+
+
 //struct tResolution
 //{
 //	float fWidth;

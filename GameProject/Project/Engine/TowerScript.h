@@ -12,7 +12,7 @@ class CTowerScript :
 {
 private:
     UINT m_iMaxHp;
-    int m_uiCurHp;
+    int m_iCurHp;
     float m_fAttackRange;
 
     UINT m_uiDef;
@@ -30,8 +30,21 @@ private:
     CGameObject* m_pTarget;
     bool m_bFindNear;
     int m_id;
-public:
 
+    CGameObject* m_pHPBar;
+    CAMP_STATE m_eCampState;
+    wstring m_CampName;
+public:
+    void SetHp(int hp) { m_iCurHp = hp; }
+
+    void SetCampState(CAMP_STATE _eCampState) {
+        m_eCampState = _eCampState;
+        if (m_eCampState == CAMP_STATE::RED)
+            m_CampName = L"Red";
+
+        if (m_eCampState == CAMP_STATE::BLUE)
+            m_CampName = L"Blue";
+    }
     void Init();
 
     void SetSecondTower(CGameObject* _pGameObject);

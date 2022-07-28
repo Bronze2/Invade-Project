@@ -19,6 +19,7 @@ namespace SHARED_DATA {
 	map <int, Vec3> g_tower;
 	unordered_map<int, Vec3> g_bullet;
 	int g_bulletindex;
+	MINION_MAP map_info[40][400];
 };
 
 

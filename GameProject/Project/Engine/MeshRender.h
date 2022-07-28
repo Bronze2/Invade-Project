@@ -9,19 +9,23 @@ class CMeshRender :
 {
 private:
     Ptr<CMesh> m_pMesh;
-    
+
     vector<Ptr<CMaterial>>  m_vecMtrl;
 
     bool m_bDynamicShadow;
+
+
+    bool m_bRender = true;
 public:
+    void SetRender(bool _bRender) { m_bRender = _bRender; }
     void SetMesh(Ptr<CMesh> _pMesh) { m_pMesh = _pMesh; }
-    void SetMaterial(Ptr<CMaterial> _pMtrl,UINT _iSubset=0);
+    void SetMaterial(Ptr<CMaterial> _pMtrl, UINT _iSubset = 0);
 
     void SetDynamicShadow(bool _bTrue) { m_bDynamicShadow = _bTrue; }
     bool IsDynamicShadow() { return m_bDynamicShadow; }
 
     Ptr<CMesh> GetMesh() { return m_pMesh; }
-    Ptr<CMaterial> GetCloneMaterial(UINT _iSubset=0);
+    Ptr<CMaterial> GetCloneMaterial(UINT _iSubset = 0);
     Ptr<CMaterial> GetSharedMaterial(UINT _iSubset = 0) { return m_vecMtrl[_iSubset]; };
 
     UINT GetMtrlCount() { return(UINT)m_vecMtrl.size(); }
@@ -33,10 +37,9 @@ public:
     virtual void SaveToScene(FILE* _pFile);
     virtual void LoadFromScene(FILE* _pFile);
 
-   
+
 public:
     CMeshRender();
     virtual ~CMeshRender();
     CLONE(CMeshRender)
 };
-

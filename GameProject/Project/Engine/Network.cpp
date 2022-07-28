@@ -295,7 +295,21 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_deleteMinion(my_packet->id);
 	}
 	break;
+	case S2C_DAMAGE_MINION:
+	{
+		sc_packet_damage_minion* my_packet = reinterpret_cast<sc_packet_damage_minion*>(ptr);
+		CSceneMgr::GetInst()->net_damageMinion(my_packet->minion_id, (int)my_packet->camp , my_packet->current_hp);
 
+	}
+		break;
+
+	case S2C_DAMAGE_TOWER:
+	{
+		sc_packet_damage_tower* my_packet = reinterpret_cast<sc_packet_damage_tower*>(ptr);
+		CSceneMgr::GetInst()->net_damageTower(my_packet->tower_id, (int)my_packet->camp, my_packet->current_hp);
+
+	}
+	break;
 	case S2C_DELETE_ARROW:
 	{
 		//sc_packet_delete_arrow* my_packet = reinterpret_cast<sc_packet_delete_arrow*>(ptr);
@@ -405,6 +419,39 @@ void Network::ProcessPacket(char* ptr)
 
 		CSceneMgr::GetInst()->net_updateArrow(my_packet->id, my_packet->arrow_id, LocalPos, Quaternion);
 	}
+	break;
+
+	case S2C_CHAT_MSG:
+	{
+		sc_chat_msg* my_packet = reinterpret_cast<sc_chat_msg*>(ptr);
+		
+		// 인덱스가 0 ~ 12;
+		// 12번째에서 항상   11
+		if (ChatisMax == true) {
+			chatCount = 12;
+			for (int i = 0; i < 12; ++i) {
+				strcpy_s(veiwChatItmes[i], veiwChatItmes[i + 1]);
+			}
+			strcpy_s(veiwChatItmes[chatCount], my_packet->msg);
+		}
+		else {
+			strcpy_s(veiwChatItmes[chatCount], my_packet->msg);
+			chatCount++;
+			if (chatCount > 12) {
+				chatCount = 12;
+				ChatisMax = true;
+			}
+		}
+
+
+
+		//veiwChatItmes[13][255];
+		//chatCount = 0;
+		//ChatisMax = false;
+
+
+	}
+	break;
 	break;
 
 	//case S2C_LEAVE:
@@ -689,6 +736,17 @@ void Network::send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAM
 	m_packet.damage = damage;
 	m_packet.colltype = coll_type;
 	m_packet.camp = camp;
+	send_packet(&m_packet);
+}
+
+
+void Network::send_chat_msg(char msg[100])
+{
+	cs_chat_msg m_packet;
+	m_packet.type = C2S_CHAT_MSG;
+	m_packet.size = sizeof(m_packet);
+	strcpy_s(m_packet.msg, msg);
+	cout <<"SEND CHAT - " <<m_packet.msg << endl;
 	send_packet(&m_packet);
 }
 

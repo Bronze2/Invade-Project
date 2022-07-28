@@ -120,6 +120,7 @@ public:
     void StopTrail();
     void StartTrail();
 
+    void Collision();
     
     //½ºÅ³
     void WaterSkill0(CCollider3D* _pColldier);

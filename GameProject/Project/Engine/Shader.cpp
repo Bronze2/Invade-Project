@@ -150,6 +150,55 @@ void CShader::Create(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopology)
 
 }
 
+void CShader::CreateFontShader(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopology)
+{
+	m_eTopology = _eTopology;
+	m_ePov = _ePov;
+
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+	{
+	   { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1 },
+	   { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1 },
+	   { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA, 1 }
+	};
+
+	D3D12_INPUT_LAYOUT_DESC textInputLayoutDesc = {};
+
+	textInputLayoutDesc.NumElements = sizeof(inputElementDescs) / sizeof(D3D12_INPUT_ELEMENT_DESC);
+	textInputLayoutDesc.pInputElementDescs = inputElementDescs;
+
+	m_tPipeLine.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+	m_tPipeLine.pRootSignature = CDevice::GetInst()->GetRootSignature(ROOT_SIG_TYPE::RENDER).Get();
+
+	m_tPipeLine.RasterizerState = g_arrRSDesc[(UINT)m_eRSType];
+	m_tPipeLine.BlendState = g_arrBlendDesc[(UINT)m_eBlendType];
+	m_tPipeLine.DepthStencilState = g_arrDepthStencilDesc[(UINT)m_eDSType];
+
+	m_tPipeLine.SampleMask = UINT_MAX;
+	m_tPipeLine.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	m_tPipeLine.SampleDesc.Count = 1;
+
+	m_tPipeLine.NumRenderTargets = 1;
+	m_tPipeLine.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	m_tPipeLine.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	HRESULT hr = DEVICE->CreateGraphicsPipelineState(&m_tPipeLine, IID_PPV_ARGS(&m_pPipeLineState));
+	if (FAILED(hr))
+		assert(nullptr);
+	if (nullptr != m_pVSInstBlob) {
+		m_tPipeLine.VS = { m_pVSInstBlob->GetBufferPointer(), m_pVSInstBlob->GetBufferSize() };
+
+		HRESULT hr = DEVICE->CreateGraphicsPipelineState(&m_tPipeLine, IID_PPV_ARGS(&m_pPipeLineStateInst));
+		if (FAILED(hr))
+			assert(nullptr);
+	}
+}
+
+
+
+
+
 void CShader::CreateVertexShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion)
 {
 	int iFlag = 0;

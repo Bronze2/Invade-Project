@@ -6,22 +6,61 @@
 #include "MinionScript.h"
 #include "PlayerScript.h"
 #include "SceneMgr.h"
+#include "MeshRender.h"
 
 void CTowerScript::Init()
 {
 	switch (m_eType)
 	{
 	case TOWER_TYPE::FIRST:
+		m_iMaxHp = 1500;
+		m_iCurHp = 1500;
+
 		break;
 	case TOWER_TYPE::SECOND:
+		m_iMaxHp = 2000;
+		m_iCurHp = 2000;
 		break;
 	case TOWER_TYPE::NEXUS:
+		m_iMaxHp = 5000;
+		m_iCurHp = 5000;
 		break;
 	default:
 		break;
 	}
 
-	CSceneMgr::GetInst()->set_towerRot(m_GetId(), GetObj()->Transform()->GetLocalRot());
+
+
+	m_pHPBar = new CGameObject;
+	m_pHPBar->SetName(L"Tower HPBar");
+	m_pHPBar->AddComponent(new CTransform);
+	m_pHPBar->AddComponent(new CMeshRender);
+	m_pHPBar->FrustumCheck(false);
+	m_pHPBar->MeshRender()->SetDynamicShadow(false);
+
+	if (m_eType == TOWER_TYPE::NEXUS) {
+		m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, 600.f, 0.f));
+		m_pHPBar->Transform()->SetLocalScale(Vec3(300.f, 40.f, 1.f));
+	}
+	else {
+		m_pHPBar->Transform()->SetLocalPos(GetObj()->Transform()->GetLocalPos() + Vec3(0.f, 900.f, 0.f));
+		m_pHPBar->Transform()->SetLocalScale(Vec3(200.f, 20.f, 1.f));
+	}
+	m_pHPBar->Transform()->SetBillBoard(true);
+	m_pHPBar->Transform()->SetCamera(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
+
+	m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+	pUIHPBarMtrl->DisableFileSave();
+	pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"HPBarShader"));
+	m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"HpBar")->AddGameObject(m_pHPBar);
+
+
+
+	if(m_eType != TOWER_TYPE::NEXUS)
+		CSceneMgr::GetInst()->set_towerRot(m_GetId(), GetObj()->Transform()->GetLocalRot());
+
 }
 
 void CTowerScript::SetSecondTower(CGameObject* _pGameObject)
@@ -85,13 +124,24 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
+	if (m_iCurHp <= 0) {
+		DeleteObject(GetObj());
+		DeleteObject(m_pHPBar);
+		return;
+	}
+	if (m_eType != TOWER_TYPE::NEXUS) {
+		Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(),
+			Vec3(Transform()->GetLocalRot().x,
+				CSceneMgr::GetInst()->get_towerRot(m_GetId()).y,
+				Transform()->GetLocalRot().z), DT * 10.f);
 
-	Vec3 vRot = Vec3::Lerp(Transform()->GetLocalRot(),
-		Vec3(Transform()->GetLocalRot().x,
-		CSceneMgr::GetInst()->get_towerRot(m_GetId()).y,
-		Transform()->GetLocalRot().z), DT * 10.f);
+		Transform()->SetLocalRot(vRot);
+	}
 
-	Transform()->SetLocalRot(vRot);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_2, &m_eCampState);
+
 
 	//if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
 	//	ChangeScene(SCENE_TYPE::INGAME);

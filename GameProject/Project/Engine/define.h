@@ -91,6 +91,7 @@ enum class RES_TYPE
 	TEXTURE,
 	SOUND,
 	SHADER,
+	FONT,
 	END,
 };
 
@@ -212,6 +213,7 @@ enum class BLEND_TYPE
 	DEFAULT,
 	ALPHABLEND,
 	ONEBLEND,
+	ALPHATOCOVERAGE,
 	END,
 };
 

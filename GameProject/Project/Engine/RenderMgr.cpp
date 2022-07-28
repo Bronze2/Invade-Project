@@ -12,6 +12,7 @@
 #include "ResMgr.h"
 #include "MRT.h"
 #include "CollisionMgr.h"
+#include "FontMgr.h"
 CRenderMgr::CRenderMgr() 
 	:m_arrMRT{},m_iRTVHeapSize(0)
 {}
@@ -61,6 +62,7 @@ void CRenderMgr::Render()
 	}
 
 	// Ãâ·Â
+	CFontMgr::GetInst()->RenderText();
 	CIMGUIMgr::GetInst()->Progress();
 	CDevice::GetInst()->Render_Present();
 	m_vecCam[0]->ClearInterSectObject();

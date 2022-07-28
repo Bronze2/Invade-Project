@@ -154,7 +154,7 @@ void CIMGUIMgr::Init()
         style.Colors[ImGuiCol_WindowBg].w = 255.0f;
     }
 
-    ImFont* mdFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\HancomEQN.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
+    ImFont* mdFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\HMKMRHD.ttf", 18.f, NULL, io.Fonts->GetGlyphRangesKorean());
 
     // create descriptor heap
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
@@ -241,6 +241,8 @@ void CIMGUIMgr::Progress()
         {
             load_styles();
             doOnce = true;
+            chatCount = 0;
+            ZeroMemory(&buffer, sizeof(buffer));
         }
 
         ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight));
@@ -498,20 +500,55 @@ void CIMGUIMgr::Progress()
         ImGui::SetNextWindowPos(ImVec2(50, m_tResloution.fHeight / 2 + 100));
         bool bOpen = true;
         if (ImGui::Begin("Chat", &bOpen, iw.window_flags)) {
-            ImGui::BeginChild("Chat", ImVec2(300, 300));
-            // 채팅치면 위에 그려주는듯?          ImGui::Text(chatItems);
-                    //  Ptr<CTexture> Images = CResMgr::GetInst()->FindRes<CTexture>(L"TestTex");
-                     // ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
+            ImGui::BeginChild("채팅", ImVec2(300, 300));
+
+            //for (int i = 0; i < 10; ++i)
+            //{
+            //    for (int j = 0; j < i; ++j) {
+            //        strcat_s(chatItems[i], "1");
+            //    }
+            //    chatCount++;
+            //}
+
+            if (Network::GetInst()->chatCount > 0 || Network::GetInst()->ChatisMax)
+            {
+                for (int i = 0; i < Network::GetInst()->chatCount+1; ++i) {
+                    ImGui::Text(Network::GetInst()->veiwChatItmes[i]);
+                }
+            }
+
+            //if (chatCount > 0) {
+            //    for (int i = 0; i < chatCount; ++i) {
+
+            //       // ImGui::Text(chatItems[i]);
+            //    
+            //    }
+            //}
+            //Ptr<CTexture> Images = CResMgr::GetInst()->FindRes<CTexture>(L"TestTex");
+            //ImGui::Image((ImTextureID)GPU_Handle.ptr, ImVec2(m_pTexture->Width(), m_pTexture->Height()));
+
 
 
             ImGui::EndChild();
             bool reclaim_focus = false;
             //ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
             if (KEY_TAB(KEY_TYPE::KEY_ENTER)) {
+                if (buffer[0] != NULL) {
+                    strcat_s(buffer, "\n");
+                    strcat_s(sendChatItem, UserInformations.m_cUserName);
+                    strcat_s(sendChatItem, " : ");
+                    strcat_s(sendChatItem, buffer);
+                    ZeroMemory(&buffer, sizeof(buffer));
+
+                    cout << " Send" << endl;
+                    Network::GetInst()->send_chat_msg(sendChatItem);
+                    ZeroMemory(&sendChatItem, sizeof(sendChatItem));
+                }
 
                 if (!bChat) {
                     if (!ImGui::IsAnyItemActive())
                         ImGui::SetKeyboardFocusHere(0);
+
                     bChat = true;
 
                 }
@@ -525,11 +562,14 @@ void CIMGUIMgr::Progress()
             }
 
             if (bChat) {
+                //ImGui::SetKeyboardFocusHere(-1);
+                //ImGui::InputText("##Username", UserInformations.m_cUserName, IM_ARRAYSIZE(UserInformations.m_cUserName));
                 if (ImGui::InputText("", buffer, IM_ARRAYSIZE(buffer)))
                 {
-
+              
                 }
-                //     ImGui::SetKeyboardFocusHere(-1);
+
+
             }
 
 
