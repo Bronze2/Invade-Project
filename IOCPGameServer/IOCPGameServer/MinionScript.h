@@ -55,7 +55,6 @@ class CMinionScript :
 
     CGameObject* m_pFirstTower;
     CGameObject* m_pSecondTower;
-
     // 
     int movePrioty;
 
@@ -104,6 +103,8 @@ public:
     void FindNearObject(const vector<CGameObject*>& _pObject);
     void CheckObstacle();
     
+    // 수민입니다
+    void DeadCheck();
     
     void m_FFind();
     

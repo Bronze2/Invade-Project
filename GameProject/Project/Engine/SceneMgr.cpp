@@ -119,9 +119,6 @@ void CSceneMgr::Init()
 	// 필요한 리소스 로딩
 	// Texture 로드
 
-
-
-
 	Ptr<CTexture> pFloorRed = CResMgr::GetInst()->Load<CTexture>(L"FloorRed", L"Texture\\FloorTextures\\ColorPaletteBLUE.png");
 	Ptr<CTexture> pFloorBlue = CResMgr::GetInst()->Load<CTexture>(L"FloorBlue", L"Texture\\FloorTextures\\ColorPaletteRED.png");
 	Ptr<CTexture> pFloorWater = CResMgr::GetInst()->Load<CTexture>(L"FloorWater", L"Texture\\FloorTextures\\Water.png");

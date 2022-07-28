@@ -184,42 +184,42 @@ void CButtonScript::ExecuteChangeSkill(int id)
 	switch (m_eType) {
 	case BUTTON_TYPE::SELECT_WATER:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_DARK:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_WIND:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_THUNDER:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_FIRE:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		break;
 	}

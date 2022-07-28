@@ -254,7 +254,7 @@ void CThread::worker_Thread()
 }
 
 
-#include "Database.h";
+//#include "Database.h";
 void CThread::process_packet(int user_id, char* buf)
 {
 	switch (buf[1]) //[0]Àº size
@@ -263,12 +263,19 @@ void CThread::process_packet(int user_id, char* buf)
 	{
 		sc_packet_check_login* packet = reinterpret_cast<sc_packet_check_login*>(buf);
 		cout << "Recv Login Packet Client " << endl;
-		wstring t_userid;
-		wstring t_userpw;
-		t_userid.assign(packet->loginid.begin(), packet->loginid.end());
-		t_userpw.assign(packet->loginpw.begin(), packet->loginpw.end());
+		//wstring t_userid;
+		//wstring t_userpw;
+		//t_userid.assign(packet->loginid.begin(), packet->loginid.end());
+		//t_userpw.assign(packet->loginpw.begin(), packet->loginpw.end());
 
-		if (CDataBase::GetInst()->CheckAdminLogin(t_userid, t_userpw))
+		CServer::GetInst()->send_lobby_login_ok_packet(user_id);
+		if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
+			for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
+				CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4);
+			}
+		}
+
+		/*if (CDataBase::GetInst()->CheckAdminLogin(t_userid, t_userpw))
 		{
 			CServer::GetInst()->send_lobby_login_ok_packet(user_id);
 			if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
@@ -279,7 +286,7 @@ void CThread::process_packet(int user_id, char* buf)
 		}
 		else {
 			CServer::GetInst()->send_login_fail_packet();
-		}
+		}*/
 		
 	}
 	break;

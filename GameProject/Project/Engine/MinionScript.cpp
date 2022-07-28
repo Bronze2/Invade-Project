@@ -102,12 +102,11 @@ void CMinionScript::Update()
 	{
 	case MINION_STATE::WALK: {
 		
-		
-		Vec3 vRestorePos = vPos;
+		Vec3 vRestorePos = Transform()->GetLocalPos();
 		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(m_id).pos, DT * 10.f);
 		float fAngle = atan2(vRestorePos.x - vPos.x, vRestorePos.z - vPos.z);
 		vRot.y = fAngle;
-		
+
 		//vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
 
 		Transform()->SetLocalPos(vPos);
@@ -120,10 +119,10 @@ void CMinionScript::Update()
 	case MINION_STATE::ATTACK:
 	{
 		vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_minioninfo(m_id).pos, DT * 10.f);
-		vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
+		//vRot = Vec3::Lerp(Transform()->GetLocalRot(), CSceneMgr::GetInst()->get_minioninfo(m_id).rot, DT * 10.f);
 
 		Transform()->SetLocalPos(vPos);
-		Transform()->SetLocalRot(vRot);
+		//Transform()->SetLocalRot(vRot);
 
 		if (m_bFinishAnimation) {
 			CSceneMgr::GetInst()->set_minioninfoState(m_id, MINION_STATE::WALK);

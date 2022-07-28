@@ -974,9 +974,9 @@ void CInGameScene::Init()
 	pSkillMtrl->DisableFileSave();
 	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
 	CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
-	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
-	pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+	pSkillMtrl->SetData(SHADER_PARAM::TEX_0,
 		pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex);
+	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
 	pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
 	FindLayer(L"UI")->AddGameObject(pUISkill);
 
@@ -1003,9 +1003,9 @@ void CInGameScene::Init()
 	pSkillMtrl->DisableFileSave();
 	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
 	CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
-	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
-	pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+	pSkillMtrl->SetData(SHADER_PARAM::TEX_0,
 		pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex);
+	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
 	pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
 	FindLayer(L"UI")->AddGameObject(pUISkill);
 

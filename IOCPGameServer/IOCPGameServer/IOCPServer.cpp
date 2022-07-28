@@ -26,7 +26,7 @@ namespace SHARED_DATA {
 void main()
 {
 	std::cout << "Run DB" << std::endl;
-	CDataBase::GetInst()->Init();
+	//CDataBase::GetInst()->Init();
 	std::cout << "Run Server" << std::endl;
 	//CDataBase::GetInst()->CreateAdmin(L"extest", L"ext11");
 	//CDataBase::GetInst()->DoubleCheckAdmin(L"extes1t");
