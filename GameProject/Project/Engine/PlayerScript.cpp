@@ -19,6 +19,8 @@
 #include "CollisionMgr.h"
 #include "BoxScript.h"
 #include "SpawnMgr.h"
+#include "PlayerColScript.h"
+#include "BoxColScript.h"
 void CPlayerScript::GetBuff()
 {
 
@@ -268,18 +270,19 @@ void CPlayerScript::m_FAnimation()
 
 bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 {
+	//추가 충돌
 	m_bColBox = false;
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	Vec3 vFinalPos = Collider3D()->GetOffsetPos();
-	vFinalPos = vFinalPos / Transform()->GetWorldScale();
+	Vec3 vFinalPos = m_pColPlayer->Collider3D()->GetOffsetPos();
+	vFinalPos = vFinalPos / m_pColPlayer->Transform()->GetWorldScale();
 	Matrix matColTranslation = XMMatrixTranslation(vFinalPos.x, vFinalPos.y, vFinalPos.z);
-	Matrix matColScale = XMMatrixScaling(Collider3D()->GetOffsetScale().x, Collider3D()->GetOffsetScale().y, Collider3D()->GetOffsetScale().z);
+	Matrix matColScale = XMMatrixScaling(m_pColPlayer->Collider3D()->GetOffsetScale().x, m_pColPlayer->Collider3D()->GetOffsetScale().y, m_pColPlayer->Collider3D()->GetOffsetScale().z);
 	Matrix MatColWorld = matColScale * matColTranslation;
 	Matrix matTranslation = XMMatrixTranslation(_vPos.x, _vPos.y, _vPos.z);
-	Matrix matScale = XMMatrixScaling(Transform()->GetLocalScale().x, Transform()->GetLocalScale().y, Transform()->GetLocalScale().z);
-	Matrix matRot = XMMatrixRotationX(Transform()->GetLocalRot().x);
-	matRot *= XMMatrixRotationY(Transform()->GetLocalRot().y);
-	matRot *= XMMatrixRotationZ(Transform()->GetLocalRot().z);
+	Matrix matScale = XMMatrixScaling(m_pColPlayer->Transform()->GetLocalScale().x, m_pColPlayer->Transform()->GetLocalScale().y, m_pColPlayer->Transform()->GetLocalScale().z);
+	Matrix matRot = XMMatrixRotationX(m_pColPlayer->Transform()->GetLocalRot().x);
+	matRot *= XMMatrixRotationY(m_pColPlayer->Transform()->GetLocalRot().y);
+	matRot *= XMMatrixRotationZ(m_pColPlayer->Transform()->GetLocalRot().z);
 	Matrix matWorld = matScale * matRot * matTranslation;
 	MatColWorld *= matWorld;
 	bool bTrue = false;
@@ -298,15 +301,19 @@ bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 				continue;
 			if (L"Minion" == vecObj[j]->GetName())
 				continue;
-		
+
+			if (m_pColPlayer->GetScript<CPlayerColScript>()->GetPlayer() == vecObj[j])
+				continue;
+			if (m_pColPlayer == vecObj[j])
+				continue;
 			bTrue = CCollisionMgr::GetInst()->CollisionCubeMatrix(MatColWorld, vecObj[j]->Collider3D()->GetColliderWorldMatNotify());
 			if (bTrue) {
-				if (L"Box" == vecObj[j]->GetName())
+				if (L"BoxCol" == vecObj[j]->GetName())
 				{
 					if (
-						BOX_STATE::CLOSE == vecObj[j]->GetScript<CBoxScript>()->GetOpen()) {
-						vecObj[j]->GetScript<CBoxScript>()->SetOpen((UINT)BOX_STATE::OPEN);
-						vecObj[j]->GetScript<CBoxScript>()->SetPlayer(GetObj());
+						BOX_STATE::CLOSE == vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->GetOpen()) {
+						vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->SetOpen((UINT)BOX_STATE::OPEN);
+						vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->SetPlayer(GetObj());
 					}
 				}
 				
@@ -397,6 +404,10 @@ void CPlayerScript::Awake()
 	m_pBuffParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
 	m_pBuffParticle->ParticleSystem()->SetStartScale(10.f);
 	m_pBuffParticle->ParticleSystem()->SetEndScale(15.f);
+	m_pBuffParticle->ParticleSystem()->SetMinSpeed(10.f);
+	m_pBuffParticle->ParticleSystem()->SetMaxSpeed(50.f);
+	m_pBuffParticle->ParticleSystem()->SetMinLifeTime(2.f);
+	m_pBuffParticle->ParticleSystem()->SetMaxLifeTime(3.f);
 	//m_pHealParticle->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 	m_pBuffParticle->FrustumCheck(false);
 	m_pBuffParticle->SetActive(false);
@@ -579,11 +590,14 @@ void CPlayerScript::Update()
 			
 			vPos.x += vFront.x * m_fMoveSpeed * DT;
 			vPos.z += vFront.z * m_fMoveSpeed * DT;
-
 			if (MoveCheck(vPos)) {
 				vPos.x -= vFront.x * m_fMoveSpeed * DT;
 				vPos.z -= vFront.z * m_fMoveSpeed * DT;
+	
 			}
+
+			m_pColPlayer->GetScript<CPlayerColScript>()->SetRot(Vec3(0.f,vRot.y,0.f));
+
 		}
 
 	}

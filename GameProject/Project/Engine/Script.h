@@ -42,6 +42,10 @@ enum class SCRIPT_TYPE {
     //추가
     SAFEZONE,
     BOX,
+    //추가 충돌
+    COLPLAYER,
+    COLBOX,
+    COLTOWER,
     END,
 };
 

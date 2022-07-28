@@ -142,6 +142,7 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"Skeleton", L"Texture\\Particle\\Skeleton.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Sword", L"Texture\\Particle\\Sword.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Stop", L"Texture\\Stop.png");
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
 	Ptr<CTexture> pWhite = CResMgr::GetInst()->Load<CTexture>(L"white", L"Texture\\Tile\\1234.png");
 

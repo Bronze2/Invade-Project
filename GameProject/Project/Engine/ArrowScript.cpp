@@ -4,7 +4,9 @@
 #include "PlayerScript.h"
 #include "ParticleSystem.h"
 #include "SkillMgr.h"
+#include "CTowerColScript.h"
 #include <math.h>
+#include "PlayerColScript.h"
 void CArrowScript::SetSkill(SKILL* _pSkill)
 {
 	m_pSkill = new SKILL;
@@ -235,14 +237,18 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 	if (nullptr == m_pSkill) {
 		if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
 			m_pSound->PlaySoundOnce(100.f);
-			if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>()) {
-				_pColldier->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
+			if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>()) {
+				_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
 			}
-			else if (nullptr != _pColldier->GetObj()->GetScript<CTowerScript>()) {
-				_pColldier->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+			else if (nullptr != _pColldier->GetObj()->GetScript<CTowerColScript>()) {
+				_pColldier->GetObj()->GetScript<CTowerColScript>()->GetTower()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
 			}
 			else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>()) {
 				_pColldier->GetObj()->GetScript<CMinionScript>()->SetDamage(m_iDamage);
+			}
+			else if (L"obstacle" == _pColldier->GetObj()->GetName()) {
+				GetObj()->SetActive(false);
+				m_pParticle->SetActive(false);
 			}
 		}
 	}
@@ -374,8 +380,9 @@ CArrowScript::~CArrowScript()
 }
  
 void CArrowScript::WaterSkill0(CCollider3D* _pCollider) {
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
-		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 
@@ -383,16 +390,16 @@ void CArrowScript::WaterSkill0(CCollider3D* _pCollider) {
 
 void CArrowScript::DarkSkill0(CCollider3D* _pCollider)
 {
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
-		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 }
 
 void CArrowScript::ThunderSkill0(CCollider3D* _pCollider)
 {
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
-		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 }
@@ -402,31 +409,31 @@ void CArrowScript::ThunderSkill1(CCollider3D* _pCollider)
 	Vec3 vPos = GetObj()->Transform()->GetLocalPos();
 	vPos.y = 1.f;
 	CreateThunderObject(vPos, m_eCampState);
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
-		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->SetDamage(m_iDamage);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 	else if(nullptr!=_pCollider->GetObj()->GetScript<CMinionScript>()) {
 		_pCollider->GetObj()->GetScript<CMinionScript>()->SetDamage(m_iDamage);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
-	else if (nullptr != _pCollider->GetObj()->GetScript<CTowerScript>()) {
-		_pCollider->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+	else if (nullptr != _pCollider->GetObj()->GetScript<CTowerColScript>()) {
+		_pCollider->GetObj()->GetScript<CTowerColScript>()->GetTower()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 }
 
 void CArrowScript::FireSkill0(CCollider3D* _pCollider)
 {
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
-		_pCollider->GetObj()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 }
 
 void CArrowScript::FireSkill1(CCollider3D* _pCollider)
 {
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
 		Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
 		CreateBoomParticleObject(vPos3, L"smokeparticle");
 		Collision();
@@ -437,8 +444,9 @@ void CArrowScript::FireSkill1(CCollider3D* _pCollider)
 
 void CArrowScript::WindSkill0(CCollider3D* _pCollider)
 {
-	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>())
-		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+	}
 	else {
 		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
@@ -450,12 +458,12 @@ void CArrowScript::WindSkill1(CCollider3D* _pCollider)
 		if (nullptr != _pCollider->GetObj()->GetScript<CMinionScript>()) {
 			_pCollider->GetObj()->GetScript<CMinionScript>()->SetDamage(m_pSkill->fDamage);
 		}
-		else if (nullptr != _pCollider->GetObj()->GetScript<CTowerScript>()) {
-			_pCollider->GetObj()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
+		else if (nullptr != _pCollider->GetObj()->GetScript<CTowerColScript>()) {
+			_pCollider->GetObj()->GetScript<CTowerColScript>()->GetTower()->GetScript<CTowerScript>()->GetDamage(m_iDamage);
 	
 		}
-		else if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>()) {
-			_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
+		else 	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerColScript>()) {
+		_pCollider->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
 
 		}
 	

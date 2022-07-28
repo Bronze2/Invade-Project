@@ -12,6 +12,40 @@
 // Animation State (IDLE / WALK / ATTACK / DIE)
 // enum class MINION_STATE (WALK / ATTACK / DIE / END)
 
+void CMinionScript::DeadCheck()
+{
+	if (m_pTarget->IsDead()) {
+		vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
+		for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
+			if (m_arrEnemy[i] == m_pTarget) {
+				m_arrEnemy.erase(iter);
+				if (Sensor()->GetDetectionCount() == 0) {
+					m_bFindNear = false;
+					if (!m_pFirstTower->IsDead())
+					{
+
+						m_pTarget = m_pFirstTower;
+
+					}
+					else if (!m_pSecondTower->IsDead()) {
+
+						m_pTarget = m_pSecondTower;
+
+					}
+					else
+						m_pTarget = m_pNexus;
+				}
+				else {
+
+					FindNearObject(m_arrEnemy);
+				}
+				return;
+			}
+
+		}
+	}
+}
+
 void CMinionScript::Init()
 {
 	m_bDetection = false;
@@ -82,7 +116,7 @@ void CMinionScript::Update()
 	m_FAnimation();
 	if (m_pNexus == nullptr)
 		return;
-
+	
 	if (m_eState == MINION_STATE::DIE) {
 		return;
 	}
@@ -205,7 +239,7 @@ void CMinionScript::CreateProjectile(const wstring& _Key, const UINT& _Bone, con
 
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::MINION);
 	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
-		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->GetScript<CPlayerScript>()->GetColObj()->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
 	}
 	else {
 		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
@@ -235,7 +269,7 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 
 
 	Vec3 target = m_pTarget->Transform()->GetWorldPos();
-	target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+	target.y += m_pTarget->GetScript<CPlayerScript>()->GetColObj()->Collider3D()->GetOffsetPos().z;
 	m_pRay->position = vWorldPos;
 	m_pRay->direction = vDir;
 	float min = INFINITE;
@@ -246,7 +280,7 @@ void CMinionScript::InterSectsObject(CCollider3D* _pCollider)
 	if (m_pRay->Intersects(_pCollider->GetBox(), min)) {
 		Vec3 target = m_pTarget->Transform()->GetWorldPos();
 
-		target.y += m_pTarget->Collider3D()->GetOffsetPos().z;
+		target.y += m_pTarget->GetScript<CPlayerScript>()->GetColObj()->Collider3D()->GetOffsetPos().y;
 		float distance = Vec3::Distance(target, vWorldPos);
 		Vec3 vPos2 = Vec3();
 		
@@ -448,6 +482,10 @@ void  CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 		else {
 			if (L"Obstacle"==_pObject[i]->GetName())
 				continue;
+			if (m_pTarget->IsDead()) {
+				m_pTarget->Transform()->SetLocalPos(Vec3(-10000, -100000, 100000));
+				
+			}
 			Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 			Vec3 vPos = Transform()->GetWorldPos();
 			float length1= sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
@@ -769,10 +807,11 @@ void CMinionScript::OnCollision3DExit(CCollider3D* _pOther)
 		m_iAllienceCol -= 1;
 		if (m_iAllienceCol <= 0) {
 			m_iAllienceCol = 0;
-		}
-		if (m_iAllienceCol == 0) {
 			m_bAllienceCol = false;
+			m_bSeparate = false;
+			m_bRotate = false;
 		}
+	
 	}
 
 }

@@ -22,8 +22,10 @@ private:
     CGameObject* m_pBuffParticle;
     Ptr<CSound> m_pSound;
     bool m_bParticle;
+    CGameObject* m_pBoxCol;
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
+    void SetBoxCol(CGameObject* _pObj) { m_pBoxCol = _pObj; }
     void Init();
     UINT GetIdx() { return m_iIdx; }
     void SetIdx(const UINT& _iIdx) { m_iIdx = _iIdx; }

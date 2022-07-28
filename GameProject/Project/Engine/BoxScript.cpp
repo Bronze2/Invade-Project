@@ -103,6 +103,7 @@ void CBoxScript::Update()
 			DeleteObject(GetObj());
 			DeleteObject(m_pUpObj);
 			DeleteObject(m_pBuffParticle);
+			DeleteObject(m_pBoxCol);
 			GiveBuff();
 		}
 	}

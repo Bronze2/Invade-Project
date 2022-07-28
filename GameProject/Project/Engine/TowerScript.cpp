@@ -43,7 +43,7 @@ void CTowerScript::CreateProjectile(const wstring& _Key, const wstring& _Layer)
 	pObject->GetScript<CProjectileScript>()->SetStartPos(Matrix.Translation());
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
 	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
-		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
+		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->GetScript<CPlayerScript>()->GetColObj()->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
 	}
 	else {
 		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));

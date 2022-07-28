@@ -42,6 +42,11 @@ private:
 
 
 
+    
+
+    CGameObject* m_pTowerColObject;
+
+
 public:
     void SetDeadCheck(const bool& _bValue) { m_bDeadCheck = _bValue; }
     void SetCampState(CAMP_STATE _eCampState) { 
@@ -81,6 +86,9 @@ public:
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
 
+
+    void SetColTower(CGameObject* _pObj) { m_pTowerColObject = _pObj; }
+    CGameObject* GetColTower() { return m_pTowerColObject; }
     CLONE(CTowerScript);
 };
 

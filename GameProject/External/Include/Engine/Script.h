@@ -42,6 +42,9 @@ enum class SCRIPT_TYPE {
     //Ãß°¡
     SAFEZONE,
     BOX,
+    COLPLAYER,
+    COLBOX,
+    COLTOWER,
     END,
 };
 

@@ -85,7 +85,7 @@ private:
     bool m_bColBox;
 
     UINT m_uiStrength;
-
+    CGameObject* m_pColPlayer;
 public:
     void SetStrength(const UINT& _Dmg) { m_uiStrength = _Dmg; }
     const UINT& GetStrength() { return m_uiStrength; }
@@ -131,6 +131,9 @@ public:
     void SetDamage(const int& _Damage);
 
 
+
+    void SetColPlayer(CGameObject* _pObj) { m_pColPlayer = _pObj; }
+    CGameObject* GetColObj() { return m_pColPlayer; }
     CLONE(CPlayerScript);
 };
 

@@ -270,6 +270,9 @@
     <ClCompile Include="SpawnMgr.cpp">
       <Filter>Mgr</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerColScript.cpp" />
+    <ClCompile Include="BoxColScript.cpp" />
+    <ClCompile Include="CTowerColScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator3D.h">
@@ -527,6 +530,9 @@
     <ClInclude Include="SpawnMgr.h">
       <Filter>Mgr</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerColScript.h" />
+    <ClInclude Include="BoxColScript.h" />
+    <ClInclude Include="CTowerColScript.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">

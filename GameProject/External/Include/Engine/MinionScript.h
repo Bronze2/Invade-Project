@@ -13,7 +13,7 @@ enum class FIND_STATE {
     NONE,
     SENSOR_FIRST,
     RAY_FIRST,
-    END,
+    END, 
 };
 class CMinionScript :
     public CScript
@@ -27,7 +27,7 @@ class CMinionScript :
     tMTAnimClip* m_pCurAnimClip;
     tMTAnimClip* m_pNextAnimClip;
     CGameObject* m_pTarget;
-
+    void DeadCheck();
  
     CGameObject* m_pNexus;
     float m_fFindRange;

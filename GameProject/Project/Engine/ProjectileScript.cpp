@@ -6,7 +6,9 @@
 #include "Mesh.h"
 #include "Collider3D.h"
 #include "MinionScript.h"
-
+#include "CTowerColScript.h"
+#include "PlayerScript.h"
+#include "PlayerColScript.h"
 bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
 {
 	float value = sqrt(pow(m_vStartPos.x - _Pos.x, 2)+ pow(m_vStartPos.y - _Pos.y, 2) + pow(m_vStartPos.z - _Pos.z, 2));
@@ -165,9 +167,13 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 		}
 		
 	}
-	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr) {
-		_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
+	if (nullptr != _pOther->GetObj()->GetScript<CTowerColScript>()) {
+		_pOther->GetObj()->GetScript<CTowerColScript>()->GetTower()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
 		DeleteObject(GetObj());
+	}
+	if (nullptr != _pOther->GetObj()->GetScript<CPlayerColScript>()) {
+		_pOther->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->SetDamage(m_uiDamage);
+		Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 	}
 }
 

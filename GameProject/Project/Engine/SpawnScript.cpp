@@ -59,7 +59,7 @@ void CSpawnScript::Update()
 			{
 			case CAMP_STATE::RED:
 			{
-				return;
+			
 				switch (m_eSpawnPattern)
 				{
 				case SPAWN_PATTERN::PATTERN1:
@@ -271,7 +271,7 @@ void CSpawnScript::Update()
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::END;
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
 							break;
 
 						default:
@@ -485,7 +485,7 @@ void CSpawnScript::Update()
 							m_bPatternOn = false;
 							m_bSpawnStart = false;
 
-							m_eSpawnPattern = SPAWN_PATTERN::END;
+							m_eSpawnPattern = SPAWN_PATTERN::PATTERN1;
 							break;
 
 						default:
@@ -515,7 +515,7 @@ void CSpawnScript::Update()
 
 }
 
-CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN3)
+CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN1)
 ,m_bSpawnStart(false),m_uiCount(0),m_bPatternOn(false)
 {
 }
