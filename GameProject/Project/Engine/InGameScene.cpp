@@ -100,7 +100,7 @@ void CInGameScene::Init()
 	pObject->Light3D()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 	pObject->Light3D()->SetLightDir(Vec3(1.f, -1.f, 1.f));
 	pObject->Light3D()->SetLightRange(1000.f);
-	pObject->Transform()->SetLocalPos(Vec3(-1000.f, 1000.f, -1500.f));
+	pObject->Transform()->SetLocalPos(Vec3(-1200.f, 1000.f, -1500.f));		// 조명그림자카메라
 	FindLayer(L"Default")->AddGameObject(pObject);
 
 	//-----------------------------------------------------------------------------------------------

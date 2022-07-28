@@ -240,7 +240,7 @@ void CRenderMgr::CreateMRT()
 
 		// 별도의 깊이버퍼를 가짐
 		Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"ShadowMapDepthTex"
-			, 4096*2, 4096*2//그림자
+			, 4096*2, 4096*2//그림자		// 2->4 조명그림자카메라
 			, DXGI_FORMAT_D32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 			, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
