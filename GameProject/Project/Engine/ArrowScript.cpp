@@ -134,6 +134,7 @@ void CArrowScript::Update()
 			//GetObj()->SetActive(false);
 			// 트레일
 			m_pTrail->TrailRenderer()->SetEmit(false);
+			GetObj()->MeshRender()->SetRender(false);
 			
 			if (nullptr != m_pSkill)
 			{
@@ -162,7 +163,7 @@ void CArrowScript::Update()
 			m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 			m_vXZDir.Normalize();
 			m_fAngle = acos(Dot(m_vDir, m_vXZDir));
-			m_fAngle -= PI / 9;
+			m_fAngle -= PI / 7;
 
 			m_fTime += DT;
 
@@ -176,21 +177,21 @@ void CArrowScript::Update()
 			vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
 
 			//vPos = m_vDir 
-			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+			vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 250) * m_fTime * m_fTime));
 
 			//처음 화살 Update
 			if (m_fVelocityY == 5000) {
 				//  현재 포물선 운동을 하고 있는 Y값
 				// 
-				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 250) * m_fTime * m_fTime));
 
 				//최고점 높이 == velocity가 0이되는 지점. 
-				m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
+				m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 250) * 2);
 				m_fPerRotate = m_fHighest / m_fAngle;
 
 			}
 			else {
-				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 250) * m_fTime * m_fTime));
 				float fHigh = m_fHighest - m_fVelocityY;
 				m_fRotateAngle = fHigh / m_fPerRotate;
 				if (m_fRotateAngle <= 0.005f && m_fDir == 1) {

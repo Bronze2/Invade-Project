@@ -53,3 +53,5 @@ void CFontMgr::DeleteText(wstring key)
 		m_mapText.erase(key);
 	}
 }
+
+//----------------------------------------------------------

@@ -149,7 +149,6 @@ void CMinionScript::Update()
 		}
 	}
 
-
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	
 	if (FIND_STATE::RAY_FIRST == m_eFindState)
@@ -202,7 +201,6 @@ void CMinionScript::Update()
 					float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
 					float rotate = angle * 0.0174532925f;
 					vRot.y = rotate;
-
 
 				}
 				else {

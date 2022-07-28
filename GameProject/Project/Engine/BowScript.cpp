@@ -40,19 +40,19 @@ void CBowScript::Update()
 	Vec3 vArrowDir;
 
 	if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed = 500.f;
+		m_fArrowSpeed = 5000.f;
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 		m_pArrow[m_iCurArrow]->SetActive(true);
 		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
 	}
 
 	if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		m_fArrowSpeed += 3000.f * DT;
-		if (m_fArrowSpeed < 1500.f) {
-			m_fArrowSpeed = 1500.f;
+		m_fArrowSpeed += 8000.f * DT;
+		if (m_fArrowSpeed <= 5000.f) {
+			m_fArrowSpeed = 5000.f;
 		}
-		else if (m_fArrowSpeed > 3000.f) {
-			m_fArrowSpeed = 3000.f;
+		else if (m_fArrowSpeed > 8000.f) {
+			m_fArrowSpeed = 8000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 		}
 	}

@@ -1281,7 +1281,7 @@ void CPlayerScript::CheckHpAndDead()
 		}
 	}
 	else {
-		m_iCurHp -= 3 * DT;	// 임시임요 
+		//m_iCurHp -= 3 * DT;	// 임시임요 
 	}
 
 	// 본인 에이치피바

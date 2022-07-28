@@ -450,7 +450,7 @@ void CInGameScene::Init()
 			pObstacle = pMeshData->Instantiate();
 			pObstacle->AddComponent(new CCollider3D);
 			pObstacle->Transform()->SetLocalPos(Vec3(-1100.f, 80.f, 6800.f));		// B2 기준 (-600, 1300)
-			pObstacle->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
+			pObstacle->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), 0.f));
 			pObstacle->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			pObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 230.f));
 			pObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 80.f));
@@ -878,7 +878,7 @@ void CInGameScene::Init()
 
 //-----------------------------------------------------------------------------------------------
 // 조명 추가
-//----------------------------------------------------------------------0-------------------------
+//------------------------------------------------------------------------------------------------
 
 	for (int i = 0; i < 2; i++) {
 		pObject = new CGameObject;
