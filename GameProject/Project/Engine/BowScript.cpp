@@ -44,14 +44,14 @@ void CBowScript::Update()
 		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetLocalPos();
 
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed = 500.f;
+			m_fArrowSpeed = 7000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 			m_pArrow[m_iCurArrow]->SetActive(true);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
 		}
 
 		//if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-		//	m_fArrowSpeed += 2000.f * DT;
+		//	m_fArrowSpeed += 2000.f		* DT;
 		//	if (m_fArrowSpeed > 1500.f) {
 		//		m_fArrowSpeed = 1500.f;
 		//		m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
@@ -59,12 +59,12 @@ void CBowScript::Update()
 		//}
 
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed += 3000.f * DT;
-			if (m_fArrowSpeed < 1500.f) {
-				m_fArrowSpeed = 1500.f;
+			m_fArrowSpeed += 10000.f * DT;
+			if (m_fArrowSpeed < 7000.f) {
+				m_fArrowSpeed = 7000.f;
 			}
-			else if (m_fArrowSpeed > 3000.f) {
-				m_fArrowSpeed = 3000.f;
+			else if (m_fArrowSpeed > 10000.f) {
+				m_fArrowSpeed = 10000.f;
 				m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 			}
 		}

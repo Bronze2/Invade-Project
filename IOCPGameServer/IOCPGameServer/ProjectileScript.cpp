@@ -142,7 +142,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 	}
 	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr&& m_eProjectileType == PROJECTILE_TYPE::MINION) {
-		_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
+		//_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
 		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		DeleteObject(GetObj());
 	}

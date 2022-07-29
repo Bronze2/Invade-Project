@@ -77,6 +77,10 @@ private:
 
     CGameObject* m_pHPBar;
     vector<CGameObject*> m_vecUIHpBar;
+
+    // UI¼öÁ¤
+    CGameObject* m_pMainHelmetUI;
+
 public:
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
     void AttachHelmet();

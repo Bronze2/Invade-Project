@@ -59,6 +59,7 @@ private:
 	vector<Vec3>				m_vecVtxRight;
 
 	CGameObject*				m_pObj;
+	CGameObject*				m_pCam;
 
 public:
 	void Init(Ptr<CTexture> _pTex);
@@ -71,6 +72,7 @@ public:
 	void SetLifeTime(float _fLifeTime) { m_fLifeTime = _fLifeTime; }
 
 	void SetTargetObj(CGameObject* _pObj) { m_pObj = _pObj; }
+	void SetCamera(CGameObject* _pObj) { m_pCam = _pObj; }
 
 	bool GetEmit() { return m_bEmit; }
 	void SetEmit(bool _bTrue) { m_bEmit = _bTrue; }

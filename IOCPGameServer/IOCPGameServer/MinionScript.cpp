@@ -37,7 +37,7 @@ void CMinionScript::Init()
     m_pTarget = m_pNexus;
     m_bDetection = false;
 
-
+    std::chrono::high_resolution_clock::time_point AttackTime = std::chrono::high_resolution_clock::now();
 }
 
 
@@ -136,7 +136,7 @@ void CMinionScript::Update()
 {
     CheckHp();
     //CheckObstacle();
-    if (m_eState == MINION_STATE::DIE) {
+    if (m_eState == MINION_STATE::DIE || GetObj()->IsDead()) {
         return;
     }
 
@@ -148,31 +148,23 @@ void CMinionScript::Update()
 
     //m_pTarget = m_pNexus;
     FindNearObject(m_arrEnemy);
-    //DeadCheck();
+    DeadCheck();
     CheckRange();
-
-    if (nullptr != m_pTarget) {
-        Vec3 vTargetPos;
-        if (!m_pTarget->IsDead()) {
-            vTargetPos = m_pTarget->Transform()->GetWorldPos();
-            float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
-            float rotate = angle * 0.0174532925f;
-            vRot.y = rotate;
-        }
-        else {
-            FindNearObject(m_arrEnemy);
-        }
-    }
 
     switch (m_eState)
     {
     case MINION_STATE::IDLE:
     {
+        Transform()->SetLocalPos(vLocalPos);
+        Transform()->SetLocalRot(vRot);
     }
     break;
     case MINION_STATE::WALK: {
-
-
+        if (m_pTarget == nullptr || m_pTarget->IsDead()) {
+            FindNearObject(m_arrEnemy);
+            return;
+        }
+            
         bool Down = false;
         bool Right = false;
         bool Left = false;
@@ -198,7 +190,7 @@ void CMinionScript::Update()
             {
                 if (min->GetScript<CMinionScript>() != nullptr &&
                     Vec3::Distance(vLocalPos, min->Transform()->GetLocalPos()) < 300 &&
-                    min->GetScript<CMinionScript>()->m_GetId() != m_GetId()) {
+                    min->GetScript<CMinionScript>()->m_GetId() != m_GetId() && !min->IsDead()) {
                     temp.push_back(min);
 
                 }
@@ -209,7 +201,7 @@ void CMinionScript::Update()
             {
                 if (min->GetScript<CMinionScript>() != nullptr &&
                     Vec3::Distance(vLocalPos, min->Transform()->GetLocalPos()) < 300 &&
-                    min->GetScript<CMinionScript>()->m_GetId() != m_GetId()) {
+                    min->GetScript<CMinionScript>()->m_GetId() != m_GetId() && !min->IsDead()) {
                     temp.push_back(min);
                 }
             }
@@ -225,12 +217,12 @@ void CMinionScript::Update()
             Vec3 DisPos = other->Transform()->GetLocalPos();
 
             if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
-                other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE) {
+                other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
                 if (Vec3::Distance(vLocalPos, DisPos) < 150) {
                     vLocalPos.z -= 10 * vTargetDir.z;
                     vLocalPos.x -= 10 * vTargetDir.x;
 
-                    vTargetDir = VectorRotate(vTargetDir, Transform()->GetWorldDir(DIR_TYPE::UP), PI / 2 * Prioty);
+                    vTargetDir = VectorRotate(vTargetDir, Vec3(0.f, 1.f, 0.f), PI / 2 * Prioty);
                     vLocalPos.z += 10 * vTargetDir.z;
                     vLocalPos.x += 10 * vTargetDir.x;
                     Down = true;
@@ -245,7 +237,7 @@ void CMinionScript::Update()
                 Vec3 DisPos = other->Transform()->GetLocalPos();
 
                 if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
-                    other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE) {
+                    other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
                     if (Vec3::Distance(vLocalPos, DisPos) < 120) {
                         vLocalPos.z += 10 * vTargetDir.z;
                         vLocalPos.x += 10 * vTargetDir.x;
@@ -279,21 +271,8 @@ void CMinionScript::Update()
 
         Transform()->SetLocalPos(vLocalPos);
         Transform()->SetLocalRot(vRot);
-
-        //if (m_bAllienceCol && !m_bSeparate && MINION_STATE::ATTACK != m_eState) {
-        //
-
-
-        //}
-        //else {
-        //   Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-        //   vLocalPos.x -= vWorldDir.x * 5;
-        //   vLocalPos.z -= vWorldDir.z * 5;
-        //   Transform()->SetLocalPos(vLocalPos);
-        //   Transform()->SetLocalRot(vRot);
-        //}
     }
-                           break;
+    break;
     case MINION_STATE::ATTACK:
     {
         if (m_pTarget != nullptr && !m_pTarget->IsDead()) {
@@ -301,7 +280,8 @@ void CMinionScript::Update()
             float angle = atan2(vPos.x - vTargetPos.x, vPos.z - vTargetPos.z) * (180 / PI);
             float rotate = angle * 0.0174532925f;
             vRot.y = rotate;
-
+            Transform()->SetLocalPos(vLocalPos);
+            Transform()->SetLocalRot(vRot);
         }
         else {
             m_eState = MINION_STATE::WALK;
@@ -316,7 +296,7 @@ void CMinionScript::Update()
     }
 
     //Transform()->SetLocalPos(vLocalPos);
-    Transform()->SetLocalRot(vRot);
+    //Transform()->SetLocalRot(vRot);
 
     /*if (m_id == 0 || m_id == 1)
        cout << "Minion ID:" << m_id << "Pos:" << Transform()->GetLocalPos().x << "," << Transform()->GetLocalPos().y << "," << Transform()->GetLocalPos().z << endl << endl;*/
@@ -330,7 +310,7 @@ void CMinionScript::Update()
     SHARED_DATA::g_minion[m_GetId()].Rot.x = vRot.x;
     SHARED_DATA::g_minion[m_GetId()].Rot.y = vRot.y;
     SHARED_DATA::g_minion[m_GetId()].Rot.z = vRot.z;
-    SHARED_DATA::g_minion[m_GetId()].State = m_eState;
+    //SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 
     //SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
     //std::cout << GetObj()->GetId() << endl;
@@ -411,6 +391,16 @@ void CMinionScript::RayCollision(const CLayer* _pLayer)
 
 void CMinionScript::OnDetectionEnter(CGameObject* _pOther)
 {
+    if (_pOther == m_pSecondTower) {
+        if (!m_pFirstTower->IsDead()) {
+            return;
+        }
+    }
+    else if (_pOther == m_pNexus) {
+        if (!m_pFirstTower->IsDead() || !m_pSecondTower->IsDead()) {
+            return;
+        }
+    }
     m_arrEnemy.push_back(_pOther);
     m_bFindNear = true;
     m_bDetection = true;
@@ -429,7 +419,20 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
             m_arrEnemy.erase(iter);
             if (Sensor()->GetDetectionCount() == 0) {
                 m_bFindNear = false;
-                m_pTarget = m_pNexus;
+                if (!m_pFirstTower->IsDead())
+                {
+
+                    m_pTarget = m_pFirstTower;
+
+                }
+                else if (!m_pSecondTower->IsDead()) {
+
+                    m_pTarget = m_pSecondTower;
+
+                }
+                else if (m_pFirstTower->IsDead() && m_pSecondTower->IsDead()) {
+                    m_pTarget = m_pNexus;
+                }
             }
             else {
                 FindNearObject(m_arrEnemy);
@@ -438,7 +441,6 @@ void CMinionScript::OnDetectionExit(CGameObject* _pOther)
         }
 
     }
-
 }
 
 void CMinionScript::AddObject(CGameObject* _pObject)
@@ -451,8 +453,34 @@ void CMinionScript::GetDamage(const UINT& _uiDamage)
 {
     m_iCurHp -= _uiDamage;
 
-    if (m_iCurHp <= 0.f && !GetObj()->IsFallDown()) {
+    if (m_iCurHp <= 0.f) {
         m_eState = MINION_STATE::DIE;
+        if (m_eCamp == CAMP_STATE::BLUE) {
+            for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Red")->GetParentObj()) {       // P : 釭 避檣 喫
+                if (nullptr != p->GetScript<CMinionScript>()) {
+                    if (nullptr != p->GetScript<CMinionScript>()->GetTarget()) {
+                        if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()) {
+                            if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()->m_GetId()) {
+                                p->GetScript<CMinionScript>()->RemoveTarget();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (m_eCamp == CAMP_STATE::RED) {
+            for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Blue")->GetParentObj()) {
+                if (nullptr != p->GetScript<CMinionScript>()) {
+                    if (nullptr != p->GetScript<CMinionScript>()->GetTarget()) {
+                        if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()) {
+                            if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()->m_GetId()) {
+                                p->GetScript<CMinionScript>()->RemoveTarget();
+                            }
+                        }
+                    }
+                }
+            }
+        }
         CServer::GetInst()->send_delete_minion(m_GetId());
         DeleteObject(GetObj());
     }
@@ -471,16 +499,13 @@ void CMinionScript::CheckHp()
 #include "TowerScript.h"
 void CMinionScript::CheckRange()
 {
-    if (SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
-        SHARED_DATA::g_minion[m_GetId()].m_attack_current_time += 1;
-    }
-
-    if (m_pTarget == nullptr)return;
+    if (m_pTarget == nullptr || m_pTarget->IsDead()) return;
     Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
     Vec3 vPos = Transform()->GetWorldPos();
     float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
     if (m_fAttackRange >= length) {
-        if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
+        if (AttackTime < std::chrono::high_resolution_clock::now()) {
+            AttackTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(2000);   //2蟾除問
             //cout << "[" << m_GetId() << "] 奢問ж塭~" << endl;
             m_eState = MINION_STATE::ATTACK;
             SHARED_DATA::g_minion[m_GetId()].State = m_eState;
@@ -526,74 +551,60 @@ void CMinionScript::CheckRange()
                                           break;
 
             }
-
+            SHARED_DATA::g_minion[m_GetId()].State = m_eState;
             CServer::GetInst()->send_anim_minion_packet(m_GetId(), index);
-
-            SHARED_DATA::g_minion[m_GetId()].m_during_attack = true;
-            SHARED_DATA::g_minion[m_GetId()].m_attack_current_time++;
-
-
         }
-        else if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
-            SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
-            SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
-            m_eState = MINION_STATE::WALK;
-
+        else {
+            m_eState = MINION_STATE::IDLE;
+            //SHARED_DATA::g_minion[m_GetId()].State = m_eState;
         }
 
     }
     else {
-        if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
-
-            SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
-            SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
-            m_eState = MINION_STATE::WALK;
-
-        }
-
+        m_eState = MINION_STATE::WALK;
+        FindNearObject(m_arrEnemy);
+        SHARED_DATA::g_minion[m_GetId()].State = m_eState;
+        CServer::GetInst()->send_move_minion_packet(m_GetId(), index);
     }
 }
-//
-//void CMinionScript::DeadCheck()
-//{
-//    if (m_pTarget != nullptr) {
-//        if (m_pTarget->IsDead()) {
-//            vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
-//            for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
-//                if (m_arrEnemy[i] == m_pTarget) {
-//                    m_arrEnemy.erase(iter);
-//                    if (Sensor()->GetDetectionCount() == 0 || m_arrEnemy.size() == 0) {
-//                        m_bFindNear = false;
-//                        if (!m_pFirstTower->IsDead())
-//                        {
-//
-//                            m_pTarget = m_pFirstTower;
-//
-//                        }
-//                        else if (!m_pSecondTower->IsDead()) {
-//
-//                            m_pTarget = m_pSecondTower;
-//
-//                        }
-//                        else
-//                            m_pTarget = m_pNexus;
-//                    }
-//                    else {
-//
-//                        FindNearObject(m_arrEnemy);
-//                    }
-//                    return;
-//                }
-//
-//            }
-//        }
-//    }
-//}
+
+void CMinionScript::DeadCheck()
+{
+    /*if (m_pTarget == nullptr || m_pTarget->IsDead()) {
+        vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
+        for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
+            if (m_arrEnemy[i] == m_pTarget) {
+                m_arrEnemy.erase(iter);
+                if (Sensor()->GetDetectionCount() == 0 || m_arrEnemy.size() == 0) {
+                    m_bFindNear = false;
+                    if (!m_pFirstTower->IsDead())
+                    {
+                        m_pTarget = m_pFirstTower;
+                    }
+                    else if (!m_pSecondTower->IsDead()) {
+
+                        m_pTarget = m_pSecondTower;
+
+                    }
+                    else if (m_pFirstTower->IsDead() && m_pSecondTower->IsDead()) {
+                        m_pTarget = m_pNexus;
+                    }
+                }
+                else {
+
+                    FindNearObject(m_arrEnemy);
+                }
+                return;
+            }
+
+        }
+    }*/
+}
 
 
 void CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
 {
-    if (m_arrEnemy.size() == 0) {
+    if (0 == _pObject.size()) {
         if (!m_bDetection)
         {
             m_pTarget = m_pNexus;
@@ -609,27 +620,30 @@ void CMinionScript::FindNearObject(const vector<CGameObject*>& _pObject)
                 m_pTarget = m_pSecondTower;
 
             }
-            else {
+            else if (m_pFirstTower->IsDead() && m_pSecondTower->IsDead()) {
                 m_pTarget = m_pNexus;
             }
         }
     }
     else {
-        if (0 == _pObject.size() || !m_bFindNear)return;
         for (int i = 0; i < _pObject.size(); ++i) {
-            if (i == 0) {
-                m_pTarget = _pObject[i];
-            }
-            else {
-                Vec3 vTargetPos = m_pTarget->Transform()->GetLocalPos();
-                Vec3 vPos = Transform()->GetLocalPos();
-                float length1 = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
-
-                Vec3 vTargetPos2 = _pObject[i]->Transform()->GetLocalPos();
-                float length2 = sqrt(pow(vTargetPos2.x - vPos.x, 2) + pow(vTargetPos2.z - vPos.z, 2));
-                if (length1 > length2) {
+            if (!_pObject[i]->IsDead()) {
+                if (i == 0) {
                     m_pTarget = _pObject[i];
                 }
+                else {
+                    if (!m_pTarget->IsDead() ) {
+                        Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
+                        Vec3 vPos = Transform()->GetWorldPos();
+                        float length1 = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
+
+                        Vec3 vTargetPos2 = _pObject[i]->Transform()->GetWorldPos();
+                        float length2 = sqrt(pow(vTargetPos2.x - vPos.x, 2) + pow(vTargetPos2.z - vPos.z, 2));
+                        if (length1 > length2) {
+                            m_pTarget = _pObject[i];
+                        }
+                    }
+                }   
             }
         }
     }
@@ -757,4 +771,33 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
 
     CreateObject(index, pObject, _Layer);
 
+}
+
+void CMinionScript::RemoveTarget()
+{
+    vector<CGameObject*>::iterator iter = m_arrEnemy.begin();
+    for (int i = 0; iter != m_arrEnemy.end(); ++iter, ++i) {
+        if (m_arrEnemy[i] == m_pTarget) {
+            m_arrEnemy.erase(iter);
+            m_pTarget = nullptr;
+            break;
+        }
+    }
+    if (!m_pFirstTower->IsDead() || nullptr != m_pFirstTower)
+    {
+        m_pTarget = m_pFirstTower;
+
+    }
+    else if ((!m_pSecondTower->IsDead() || nullptr != m_pSecondTower)) {
+
+        m_pTarget = m_pSecondTower;
+
+    }
+    else if (m_pFirstTower->IsDead() && m_pSecondTower->IsDead()) {
+        m_pTarget = m_pNexus;
+    }
+    else {
+        wcout << "六六...................." << endl;
+    }
+    //FindNearObject(m_arrEnemy);
 }

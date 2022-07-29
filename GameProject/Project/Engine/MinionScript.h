@@ -46,6 +46,7 @@ class CMinionScript :
     
     //Ã¼·Â¹Ù
     CGameObject* m_pHPBar;
+    float m_fHPBarHeight;
 
     int dieCount = 0;
 

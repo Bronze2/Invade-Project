@@ -98,6 +98,7 @@ void CArrowScript::Awake()
 	m_pTrail->FrustumCheck(false);
 	m_pTrail->MeshRender()->SetDynamicShadow(false);
 	m_pTrail->TrailRenderer()->SetTargetObj(GetObj());
+	m_pTrail->TrailRenderer()->SetCamera(pCurScene->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0]);
 	pCurScene->FindLayer(L"Default")->AddGameObject(m_pTrail);
 
 }
@@ -161,6 +162,7 @@ void CArrowScript::Update()
 				}
 				m_eState = ARROW_STATE::IDLE;
 				GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+				//GetObj()->MeshRender()->SetRender(false);
 				m_fTime = 0;
 
 				Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
@@ -181,36 +183,45 @@ void CArrowScript::Update()
 				m_pTrail->TrailRenderer()->SetEmit(true);
 
 				// 화살 기존 코드
-				CGameObject* pPlayer = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue")->GetParentObj()[0]);
-				CGameObject* pMainCam = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-				Vec3 vCamRot = pMainCam->Transform()->GetLocalRot();
-				float fDegree = XMConvertToDegrees(vCamRot.x);
 
 				m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 				m_vXZDir.Normalize();
 				m_fAngle = acos(Dot(m_vDir, m_vXZDir));
+				float fGravity;
 
-				m_fAngle -= PI / 9;
-
+				float fDegree = XMConvertToDegrees(m_fAngle);
+				if (fDegree <= 25.f) {
+					m_fAngle -= PI / 8.f;
+					fGravity = GRAVITY * 250;
+				}
+				else if (fDegree > 25.f && fDegree <= 31.f) {
+					m_fAngle -= PI / 8.f;
+					fGravity = GRAVITY * 300;
+				}
+				else {
+					m_fAngle -= PI / 7.f;
+					fGravity = GRAVITY * 350;
+				}
+				
 				m_fTime += DT;
 
 				vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
 				vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
 				//처음 화살 Update
 				if (m_fVelocityY == 5000) {
 					//  현재 포물선 운동을 하고 있는 Y값
 					// 
-					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
 
 					//최고점 높이 == velocity가 0이되는 지점. 
-					m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
+					m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / (fGravity * 2);
 					m_fPerRotate = m_fHighest / m_fAngle;
 					Transform()->SetLocalPos(vPos);
 
 				}
 				else {
-					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
 					float fHigh = m_fHighest - m_fVelocityY;
 					m_fRotateAngle = fHigh / m_fPerRotate;
 					if (m_fRotateAngle <= 0.005f && m_fDir == 1) {

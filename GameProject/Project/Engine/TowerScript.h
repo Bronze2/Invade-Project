@@ -11,9 +11,13 @@ class CTowerScript :
     public CScript
 {
 private:
-    UINT m_iMaxHp;
+    int m_iMaxHp;
     int m_iCurHp;
     float m_fAttackRange;
+
+    clock_t m_uiDeadStart;
+    clock_t m_uiDeadEnd;
+    bool m_bDeadTimeCheck;
 
     UINT m_uiDef;
 

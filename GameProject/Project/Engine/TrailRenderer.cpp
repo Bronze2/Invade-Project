@@ -72,7 +72,7 @@ void CTrailRenderer::Update()
 	}
 
 	ErasePoint();
-}
+} 
 
 void CTrailRenderer::FinalUpdate()
 {
@@ -131,18 +131,16 @@ void CTrailRenderer::EmitPoint(Vec3 _vPos)
 	float ratio = 1.f / m_pTrails.size();
 	float fScale = m_fMaxWidth - (m_fMaxWidth - m_fMinWidth) * ratio;
 
+	// 트레일수정
+	Vec3 vDir = m_pCam->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
+
 	Vec3 vLeftPoint = _vPos;
-	vLeftPoint.x -= m_fMinWidth / 2;
-	//vLeftPoint.x -= fScale / 2;
+	vLeftPoint -= vDir * m_fMinWidth / 2;
 	m_vecPosLeft.emplace_back(vLeftPoint);
 
 	Vec3 vRightPoint = _vPos;
-	vRightPoint.x += m_fMinWidth / 2;
-	//vRightPoint.x += fScale / 2;
+	vRightPoint += vDir * m_fMinWidth / 2;
 	m_vecPosRight.emplace_back(vRightPoint);
-
-	//cout << "Left : " << vLeftPoint.x << ", " << vLeftPoint.y << ", " << vLeftPoint.z << endl;
-	//cout << "Right : " << vRightPoint.x << ", " << vRightPoint.y << ", " << vRightPoint.z << endl;
 }
 
 void CTrailRenderer::ErasePoint()
@@ -153,7 +151,7 @@ void CTrailRenderer::ErasePoint()
 		m_vecPosRight.erase(m_vecPosRight.begin());
 		m_pTrails.erase(m_pTrails.begin());
 	}
-	else if (!m_bEmit && m_vecPosLeft.size() >= 1) {
+	if (!m_bEmit && m_vecPosLeft.size() >= 1 && m_pTrails.size() >= 1) {
 		m_fClearCurTime += DT * 3;
 		if (m_fClearCurTime >= m_fLifeTime) {
 			m_vecPosLeft.erase(m_vecPosLeft.begin());

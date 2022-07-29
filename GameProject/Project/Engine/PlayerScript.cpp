@@ -441,23 +441,81 @@ void CPlayerScript::Awake()
 		m_fMoveSpeed = 300.f;
 
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
-
-		//hp
+		Vec3 vHPBarScale = Vec3(res.fWidth / 6.f, res.fHeight / 25.f, 1.f);
+		Vec3 vPlayerTexScale = Vec3(res.fWidth / 20.f, res.fHeight / 11.f, 1.f);		// 80,. 77
+		
+																						//hp
 		m_pHPBar = new CGameObject;
 		m_pHPBar->SetName(L"MainClient HPBar");
 		m_pHPBar->AddComponent(new CTransform);
 		m_pHPBar->AddComponent(new CMeshRender);
 		m_pHPBar->FrustumCheck(false);
 		m_pHPBar->MeshRender()->SetDynamicShadow(false);
-		Vec3 vHPBarScale = Vec3(res.fWidth / 8.f, res.fHeight / 20.f, 1.f);
 		m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
-		m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x / 2 + 10.f, res.fHeight / 2 - vHPBarScale.y / 2 - 10.f, 1.f));
+		m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x / 2 + vPlayerTexScale.x - 5.f, res.fHeight / 2.f - vPlayerTexScale.y / 2 - 10.f, 1.f));
 		m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
 		pUIHPBarMtrl->DisableFileSave();
 		pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
 		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
+
+		// UI수정
+		m_pMainHelmetUI = new CGameObject;
+		m_pMainHelmetUI->SetName(L"MainClient UIHelmetTex");
+		m_pMainHelmetUI->AddComponent(new CTransform);
+		m_pMainHelmetUI->AddComponent(new CMeshRender);
+		m_pMainHelmetUI->FrustumCheck(false);
+		m_pMainHelmetUI->MeshRender()->SetDynamicShadow(false);
+		m_pMainHelmetUI->Transform()->SetLocalPos(Vec3(-res.fWidth / 2.f + vPlayerTexScale.x / 2 + 10.f, res.fHeight/2.f - vPlayerTexScale.y / 2 - 10.f, 1.f));
+		m_pMainHelmetUI->Transform()->SetLocalScale(vPlayerTexScale);
+		m_pMainHelmetUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+		Ptr<CMaterial> pUIHelmetTexMtrl = new CMaterial;
+		pUIHelmetTexMtrl->DisableFileSave();
+		pUIHelmetTexMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+		m_pMainHelmetUI->MeshRender()->SetMaterial(pUIHelmetTexMtrl);
+		Ptr<CTexture> pPlayerTexTex;
+		if (m_eCamp == CAMP_STATE::BLUE) {
+			switch (m_iType) {
+			case ELEMENT_TYPE::WATER:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
+				break;
+			case ELEMENT_TYPE::FIRE:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+				break;
+			case ELEMENT_TYPE::DARK:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
+				break;
+			case ELEMENT_TYPE::THUNDER:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
+				break;
+			case ELEMENT_TYPE::WIND:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
+				break;	
+			}
+		}
+		else if (m_eCamp == CAMP_STATE::RED) {
+			switch (m_iType) {
+			case ELEMENT_TYPE::WATER:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
+				break;
+			case ELEMENT_TYPE::FIRE:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+				break;
+			case ELEMENT_TYPE::DARK:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
+				break;
+			case ELEMENT_TYPE::THUNDER:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
+				break;
+			case ELEMENT_TYPE::WIND:
+				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
+				break;
+			}
+		}
+		m_pMainHelmetUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pMainHelmetUI);
+
 
 	}
 	Ptr<CMeshData> pHelmetMesh;
@@ -468,12 +526,12 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue02.mdat", L"MeshData\\Helmet_Blue02.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat");
 			break;
 		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat");
 			break;
-		case ELEMENT_TYPE::THUNDER:
+		case ELEMENT_TYPE::THUNDER:	// hetlmet_blue_04 좀 이상..
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat");
 			break;
 		case ELEMENT_TYPE::WIND:

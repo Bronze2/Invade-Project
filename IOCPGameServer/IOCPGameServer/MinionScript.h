@@ -61,6 +61,8 @@ class CMinionScript :
     int coll_id;
     int coll_index_x;
     int coll_index_y;
+
+    std::chrono::high_resolution_clock::time_point AttackTime;
 public:
     void SetPrioty(int p) { movePrioty = p; }
     void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
@@ -105,6 +107,8 @@ public:
     
     // ¼ö¹ÎÀÔ´Ï´Ù
     void DeadCheck();
+    CGameObject* GetTarget() { return m_pTarget; }
+    void RemoveTarget();
     
     void m_FFind();
     

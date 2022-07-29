@@ -87,7 +87,7 @@ void CSensorMgr::DetectionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 			id.iSensorID2 = pSensor2->GetSensorID();
 			iter = m_mapSensor.find(id.ID);
 			bool IsDead = false;
-			if (pSensor1->GetObj()->IsFallDown() || pSensor2->GetObj()->IsFallDown())
+			if (pSensor1->GetObj()->IsDead() || pSensor2->GetObj()->IsDead())
 				IsDead = true;
 			if (IsDetection(pSensor1, pSensor2)) {
 				if (m_mapSensor.end() != iter && iter->second == true) {

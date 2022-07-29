@@ -126,7 +126,7 @@ void CInGameScene::Init()
 
 	Ptr<CMeshData> pMeshDataRed = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
 	Ptr<CMeshData> pMeshDataBlue = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_blue.mdat", L"MeshData\\player_blue.mdat");
-	Ptr<CMeshData> pMeshbowData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
+	Ptr<CMeshData> pMeshbowData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 
 	Ptr<CTexture>pPlayerRed = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Red");
 	Ptr<CTexture>pPlayerBlue = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Blue");
@@ -969,6 +969,7 @@ void CInGameScene::Init()
 	pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vESkillScale.x * 0.5f - vZSkillScale.x - res.fWidth / 30, -res.fHeight / 2 + vESkillScale.y / 2, 1.f));
 	pUISkill->Transform()->SetLocalScale(vESkillScale);
 
+
 	pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	Ptr<CMaterial> pSkillMtrl = new CMaterial;
 	pSkillMtrl->DisableFileSave();
@@ -989,6 +990,7 @@ void CInGameScene::Init()
 	pMtrl->DisableFileSave();
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"Texture01", pMtrl);
+
 	pUISkill = new CGameObject;
 	pUISkill->SetName(L"UISkill2");
 	pUISkill->FrustumCheck(false);
