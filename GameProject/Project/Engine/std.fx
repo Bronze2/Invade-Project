@@ -212,21 +212,11 @@ float4 PS_HPTex(TEX_OUTPUT _input) : SV_Target
 
     float fRatio = (float)g_int_0 / (float)g_int_1;
 
-    if (g_int_2 == 0) {
-        if (_input.vUV.x >= fRatio) {
-            vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
-        }
-        else {
-            vColor = float4(1.f, 0.f, 0.f, 1.f);
-        }
+    if (_input.vUV.x >= fRatio) {
+        vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
     }
     else {
-        if ((1.f - _input.vUV.x) >= fRatio) {
-            vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
-        }
-        else {
-            vColor = float4(1.f, 0.f, 0.f, 1.f);
-        }
+        vColor = float4(1.f, 0.f, 0.f, 1.f);
     }
 
     return vColor;

@@ -62,7 +62,7 @@ void CPlayerScript::Update()
 {
 	SHARED_DATA::g_clients[m_id].Pos.y = 0;
 	Transform()->SetLocalPos(SHARED_DATA::g_clients[m_id].Pos);
-	Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
+	//Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
 
 }
 

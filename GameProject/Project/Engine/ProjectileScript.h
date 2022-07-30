@@ -32,6 +32,9 @@ private:
     float m_fRoty;
     int m_id;
     float fAngle;
+
+    std::chrono::high_resolution_clock::time_point DeleteTime;
+
 public:
     void m_SetId(int id) { m_id = id; }
     int m_GetId() { return m_id; }

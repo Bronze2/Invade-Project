@@ -1,4 +1,4 @@
-//#include "pch.h"
+#include "pch.h"
 //#include "DataBase.h"
 //
 //CDataBase::CDataBase()
@@ -254,3 +254,4 @@
 //   //    }
 //   //    SQLFreeHandle(SQL_HANDLE_ENV, henv);
 //   //}
+//

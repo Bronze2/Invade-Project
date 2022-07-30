@@ -544,6 +544,7 @@ void CInGameScene::Init()
 	pTowerCol->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pTowerCol->Collider3D()->SetOffsetScale(Vec3(300.f, 800.f, 300.f));
 	pTowerCol->Collider3D()->SetOffsetPos(Vec3(0.f, 410.f, 0.f));
+
 	pTowerCol->Transform()->SetLocalPos(pBlueFirstTower->Transform()->GetLocalPos());
 	pTowerCol->FrustumCheck(false);
 	pTowerCol->GetScript<CTowerColScript>()->SetTower(pBlueFirstTower);
@@ -588,7 +589,7 @@ void CInGameScene::Init()
 	pTowerCol->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pTowerCol->MeshRender()->SetMaterial(pMtrl);
 	pTowerCol->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
-	pBlueFirstTower->GetScript<CTowerScript>()->SetColTower(pTowerCol);
+	pBlueSecondTower->GetScript<CTowerScript>()->SetColTower(pTowerCol);
 	FindLayer(L"Blue")->AddGameObject(pTowerCol);
 
 
@@ -633,7 +634,7 @@ void CInGameScene::Init()
 	pTowerCol->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pTowerCol->MeshRender()->SetMaterial(pMtrl);
 	pTowerCol->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
-	pBlueFirstTower->GetScript<CTowerScript>()->SetColTower(pTowerCol);
+	pBlueNexus->GetScript<CTowerScript>()->SetColTower(pTowerCol);
 	FindLayer(L"Blue")->AddGameObject(pTowerCol);
 
 	FindLayer(L"Blue")->AddGameObject(pBlueNexus);
@@ -686,7 +687,7 @@ void CInGameScene::Init()
 	pTowerCol->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pTowerCol->MeshRender()->SetMaterial(pMtrl);
 	pTowerCol->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
-	pBlueFirstTower->GetScript<CTowerScript>()->SetColTower(pTowerCol);
+	pRedNexus->GetScript<CTowerScript>()->SetColTower(pTowerCol);
 	FindLayer(L"Red")->AddGameObject(pTowerCol);
 
 	CGameObject* pRedSpawnPlace = new CGameObject;
@@ -1287,20 +1288,20 @@ void CInGameScene::Init()
 // 조명 추가
 //------------------------------------------------------------------------------------------------
 
-	for (int i = 0; i < 2; i++) {
-		pObject = new CGameObject;
-		pObject->SetName(wstring(L"Light") + to_wstring(i + 1));
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CLight3D);
-		pObject->Light3D()->SetLightPos(Vec3(1000.f + 2000.f * i, 1000.f, -1500.f));
-		pObject->Light3D()->SetLightType(LIGHT_TYPE::DIR);
-		pObject->Light3D()->SetDiffuseColor(Vec3(1.f, 1.f, 1.f));
-		pObject->Light3D()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
-		pObject->Light3D()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
-		pObject->Light3D()->SetLightDir(Vec3(1.f, -1.f, 1.f));
-		pObject->Light3D()->SetLightRange(1000.f);
-		FindLayer(L"Default")->AddGameObject(pObject);
-	}
+	//for (int i = 0; i < 2; i++) {
+	//	pObject = new CGameObject;
+	//	pObject->SetName(wstring(L"Light") + to_wstring(i + 1));
+	//	pObject->AddComponent(new CTransform);
+	//	pObject->AddComponent(new CLight3D);
+	//	pObject->Light3D()->SetLightPos(Vec3(1000.f + 2000.f * i, 1000.f, -1500.f));
+	//	pObject->Light3D()->SetLightType(LIGHT_TYPE::DIR);
+	//	pObject->Light3D()->SetDiffuseColor(Vec3(1.f, 1.f, 1.f));
+	//	pObject->Light3D()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
+	//	pObject->Light3D()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
+	//	pObject->Light3D()->SetLightDir(Vec3(1.f, -1.f, 1.f));
+	//	pObject->Light3D()->SetLightRange(1000.f);
+	//	FindLayer(L"Default")->AddGameObject(pObject);
+	//}
 
 	// 세이프존
 

@@ -390,11 +390,9 @@ void CSceneMgr::Update()
 
 	m_pCurScene->FinalUpdate();
 	CSpawnMgr::GetInst()->Update();
-
 	CSensorMgr::GetInst()->Update();
 	CCollisionMgr::GetInst()->Update();
 	// 충돌 처리
-	
 	CRenderMgr::GetInst()->Render();
 
 	//if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {

@@ -124,6 +124,9 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
+
+	if (GetObj()->IsDead()) 
+		return;
 	if (m_iCurHp <= 0 && !m_bDeadTimeCheck) {
 		Vec3 vPos = GetObj()->Transform()->GetWorldPos() + Vec3(0.f, 350.f, 0.f);
 		CreateDestroyParticleObject(vPos, L"smokeparticle");
@@ -134,9 +137,11 @@ void CTowerScript::Update()
 	if (m_bDeadTimeCheck) {
 		m_uiDeadEnd = clock();
 		if ((m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC >= 0.5) {
-			DeleteObject(GetObj());
 			DeleteObject(m_pTowerColObject);
 			DeleteObject(m_pHPBar);
+			DeleteObject(GetObj());
+			cout << "À¸¾ÇÁ×À½" << endl;
+			m_bDeadTimeCheck = false;
 		}
 		return;
 	}

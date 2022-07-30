@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TowerScript.h"
 #include "Sensor.h"
 #include "SensorMgr.h"
@@ -32,10 +32,31 @@ void CTowerScript::GetDamage(const UINT& _uiDamage)
 {
 	m_iCurHp -= _uiDamage;
 
-	if (m_iCurHp <= 0.f && !GetObj()->IsFallDown()) {
+	if (m_iCurHp <= 0.f) {
+		if (m_eCampState == CAMP_STATE::BLUE) {
+			for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Red")->GetParentObj()) {       
+				if (nullptr != p->GetScript<CMinionScript>()) {
+					if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CTowerScript>()) {
+						if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CTowerScript>()->m_GetId()) {
+							p->GetScript<CMinionScript>()->RemoveTarget();
+						}
+					}
+				}
+			}
+		}
+		else if (m_eCampState == CAMP_STATE::RED) {
+			for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Blue")->GetParentObj()) {
+				if (nullptr != p->GetScript<CMinionScript>()) {
+					if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CTowerScript>()) {
+						if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CTowerScript>()->m_GetId()) {
+							p->GetScript<CMinionScript>()->RemoveTarget();
+						}
+					}
+				}
+			}
+		}
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
 		DeleteObject(GetObj());
-		//GetObj()->SetFallDown();
 	}
 	else {
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
@@ -215,8 +236,6 @@ void CTowerScript::CreateProjectile(const wstring& _Layer)
 	}
 
 	pObject->Transform()->SetLocalPos(vProjectileStartPos);
-
-	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
 	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	Vec3 vDir;

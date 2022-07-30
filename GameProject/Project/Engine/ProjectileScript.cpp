@@ -20,8 +20,14 @@ bool CProjectileScript::M_FLengthCheck(const Vec3& _Pos)
 
 void CProjectileScript::Update()
 {
+
+	if (DeleteTime < std::chrono::high_resolution_clock::now()) {
+		DeleteObject(GetObj());
+	}
+
+
 	if (!CSceneMgr::GetInst()->get_ProjectileDelete(m_id)) {
-		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_ProjectilePos(m_id), DT * 10.f);
+		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_ProjectilePos(m_id), DT * 5.f);
 		Transform()->SetLocalPos(vPos);
 	
 		fAngle += PI / 18;
@@ -64,23 +70,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 void CProjectileScript::Init()
 {
 	fAngle = 0.f;
-	//Vec3 vLocalPos = Transform()->GetLocalPos();
-	//Vec3 vLocalRot = Transform()->GetLocalRot();
-	//Vec3 vLocalScale = Transform()->GetLocalScale();
-
-	//Matrix matTranslation = XMMatrixTranslation(vLocalPos.x, vLocalPos.y, vLocalPos.z);
-	//Matrix matScale = XMMatrixScaling(vLocalScale.x, vLocalScale.y, vLocalScale.z);
-
-
-	//Matrix matRot = XMMatrixRotationX(vLocalRot.x);
-	//matRot *= XMMatrixRotationY(vLocalRot.y);
-	//matRot *= XMMatrixRotationZ(vLocalRot.z);
-	//Matrix matWorld = matScale * matRot * matTranslation;
-	//matWorld *= m_matObjectWorldMatrix;
-	//Vec3 vPos = matWorld.Translation();
-	//Vec3 vTest = m_vTargetPos - vPos;
-	//vTest.Normalize();
-	//m_vDir = vTest;
+	DeleteTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(4000);
 
 }
 

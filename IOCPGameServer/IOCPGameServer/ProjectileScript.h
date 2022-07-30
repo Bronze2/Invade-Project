@@ -24,6 +24,9 @@ private:
     CAMP_STATE m_eCamp;
 
     PROJECTILE_TYPE m_eProjectileType;
+
+    std::chrono::high_resolution_clock::time_point DeleteTime;
+
 public:
     void SetProjectileType(PROJECTILE_TYPE _Type) { m_eProjectileType = _Type; }
     void SetMatrixObject(const Matrix& _Matrix) { m_matObjectWorldMatrix = _Matrix; }
