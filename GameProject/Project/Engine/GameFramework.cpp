@@ -65,15 +65,17 @@ int CGameFramework::Init(HWND _hWnd, const tResolution& _resolution, bool _bWind
 
 void CGameFramework::Progress()
 {
-
-	CEventMgr::GetInst()->Clear();
 	CKeyMgr::GetInst()->Update();
+
 	CTimeMgr::GetInst()->Update();
 	CSound::g_pFMOD->update();
 	//Network::GetInst()->RecvData();
+	
 	CSceneMgr::GetInst()->Update();
-	//CRenderMgr::GetInst()->Render();
+	CRenderMgr::GetInst()->Render();
 	CEventMgr::GetInst()->Update();
+	
+	CEventMgr::GetInst()->Clear();
 	CInstancingMgr::GetInst()->Clear();
 
 }
@@ -83,7 +85,7 @@ void CGameFramework::ProcessInput()
 
 	POINT ptCursorPos;
 	//SetCursor(NULL);
-	ShowCursor(TRUE);
+	//ShowCursor(TRUE);
 	GetCursorPos(&ptCursorPos);
 	POINT ptCursorPos2;
 	GetCursorPos(&ptCursorPos2);

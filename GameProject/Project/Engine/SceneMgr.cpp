@@ -212,7 +212,6 @@ void CSceneMgr::Init()
 	pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
 	CResMgr::GetInst()->AddRes(L"TransparencyMtrl", pMtrl);
 
-
 	SKILL* Skill = new SKILL;
 	Skill->Name = L"Water0";
 	Skill->Code = 0;
@@ -395,7 +394,7 @@ void CSceneMgr::Update()
 	CCollisionMgr::GetInst()->Update();
 	// 충돌 처리
 	
-	CRenderMgr::GetInst()->Render();
+	//CRenderMgr::GetInst()->Render();
 
 	//if (KEY_TAB(KEY_TYPE::KEY_Q) && m_pCurScene == m_arrScene[(UINT)SCENE_TYPE::LOBBY]) {
 	//	if (Network::GetInst()->getHost()) {

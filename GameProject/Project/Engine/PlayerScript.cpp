@@ -1138,7 +1138,7 @@ void CPlayerScript::SkillCoolTimeCheck()
 		Value = Value / m_tESkill->fCoolTime;
 		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
 
-		CFontMgr::GetInst()->AddText(L"ECoolTime", wSkillCoolTextTime, Vec2(0.8f, 0.93f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+		CFontMgr::GetInst()->AddText(L"ECoolTime", wSkillCoolTextTime, Vec2(0.8f, 0.905f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
 
 		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
 
@@ -1161,7 +1161,7 @@ void CPlayerScript::SkillCoolTimeCheck()
 		Value = Value / m_tZSkill->fCoolTime;
 		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
 
-		CFontMgr::GetInst()->AddText(L"ZCoolTime", wSkillCoolTextTime, Vec2(0.9f, 0.91f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+		CFontMgr::GetInst()->AddText(L"ZCoolTime", wSkillCoolTextTime, Vec2(0.9f, 0.905f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
 
 		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;

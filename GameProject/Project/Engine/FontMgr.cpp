@@ -19,7 +19,6 @@ void CFontMgr::Clear()
 
 void CFontMgr::RenderText()
 {
-	// Mtrl이든 셰이더든 설정해줘야함
 	for (auto& f : m_mapText)
 	{
 		f.second.pFont->Render(f.second.text, f.second.vPos, f.second.vScale, f.second.vPadding, f.second.vColor);
@@ -53,3 +52,5 @@ void CFontMgr::DeleteText(wstring key)
 		m_mapText.erase(key);
 	}
 }
+
+//----------------------------------------------------------

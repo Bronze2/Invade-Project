@@ -66,6 +66,7 @@ void CRenderMgr::Render()
 
 	// Ãâ·Â (¼ö¹Î)
 	CIMGUIMgr::GetInst()->Progress();
+
 	CDevice::GetInst()->Render_Present();
 	m_vecCam[0]->ClearInterSectObject();
 

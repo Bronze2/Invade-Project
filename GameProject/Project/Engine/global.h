@@ -32,6 +32,8 @@ using namespace Microsoft::WRL;
 #include <sstream>
 #include <condition_variable>
 
+#include <fstream>
+
 #include <fbxsdk.h>
 #ifdef _DEBUG
 #pragma comment(lib, "FBXLoader/x64/debug/libfbxsdk-md.lib")

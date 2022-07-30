@@ -182,20 +182,16 @@ void CFont::LoadFont(LPCWSTR filename)
 
 void CFont::CreateVB()
 {
-    // 정점버퍼 만들
-
     ID3D12Resource* vBufferUploadHeap;
     CD3DX12_HEAP_PROPERTIES value = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
     CD3DX12_RESOURCE_DESC value2 = CD3DX12_RESOURCE_DESC::Buffer(m_iMaxNumTextCharacters * sizeof(TextVTX));
     DEVICE->CreateCommittedResource(
-        &value, // upload heap
-        D3D12_HEAP_FLAG_NONE, // no flags
-        &value2, // resource description for a buffer
-        D3D12_RESOURCE_STATE_GENERIC_READ, // GPU will read from this buffer and copy its contents to the default heap
+        &value,
+        D3D12_HEAP_FLAG_NONE, 
+        &value2, 
+        D3D12_RESOURCE_STATE_GENERIC_READ, 
         nullptr,
         IID_PPV_ARGS(&textVertexBuffer));
-
-   // textVertexBuffer->SetName(L"Text Vertex Buffer Upload Resource Heap");
 
     D3D12_RANGE readRange{ 0, 0 };
     textVertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_TextVBGPUAddress));
@@ -204,7 +200,6 @@ void CFont::CreateVB()
     m_tTextVtxView.StrideInBytes = sizeof(TextVTX);
     m_tTextVtxView.SizeInBytes = m_iMaxNumTextCharacters * sizeof(TextVTX);
 }
-
 void CFont::CreateSrv()
 {
 
@@ -221,9 +216,6 @@ void CFont::Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vCo
 
     CMDLIST->IASetVertexBuffers(0, 1, &m_tTextVtxView);
 
-    //CMDLIST->SetGraphicsRootDescriptorTable(1, m_pTex->GetSRV()->GetGPUDescriptorHandleForHeapStart());
-
-    // Update
     int numCharacters = 0;
 
     float topLeftScreenX = (vPos.x * 2.0f) - 1.0f;
@@ -235,10 +227,9 @@ void CFont::Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vCo
     float horrizontalPadding = (m_fLeftPadding + m_fRightPadding) * vPadding.x;
     float verticalPadding = (m_fTopPadding + m_fBottomPadding) * vPadding.y;
 
-    // cast the gpu virtual address to a textvertex, so we can directly store our vertices there
     TextVTX* vert = (TextVTX*)m_TextVBGPUAddress;
 
-    wchar_t lastChar = -1; // no last character to start with
+    wchar_t lastChar = -1;
 
     for (int i = 0; i < text.size(); ++i)
     {
@@ -246,23 +237,12 @@ void CFont::Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vCo
 
         tFontChar* fc = GetChar(c);
 
-        // character not in font char set
         if (fc == nullptr)
             continue;
 
-        // end of string
         if (c == L' ')
             break;
 
-        // new line
-        //if (c == L'n')
-        //{
-        //    x = topLeftScreenX;
-        //    y -= (m_fLineHeight + verticalPadding) * vScale.y;
-        //    continue;
-        //}
-
-        // don't overflow the buffer. In your app if this is true, you can implement a resize of your text vertex buffer
         if (numCharacters >= m_iMaxNumTextCharacters)
             break;
 
@@ -276,15 +256,10 @@ void CFont::Render(wstring text, Vec2 vPos, Vec2 vScale, Vec2 vPadding, Vec4 vCo
 
         numCharacters++;
 
-        // remove horrizontal padding and advance to next char position
         x += (fc->fxAdvance - horrizontalPadding) * vScale.x;
 
         lastChar = c;
     }
-
-    //for (int i = 0; i < m_iNumCharacters; ++i) {
-    //    cout << vert[i].vPos.x << ", " << vert[i].vPos.y << ", " << vert[i].vPos.z << ", " << vert[i].vPos.w << endl;
-    //}
 
     CMDLIST->DrawInstanced(4, m_iNumCharacters, 0, 0);
 }

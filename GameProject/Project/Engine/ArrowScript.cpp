@@ -384,7 +384,7 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
 	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>() && GetObj()->Transform()->GetLocalPos().y < 150 && m_eState == ARROW_STATE::ATTACK) {
 		if (_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
-			cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
+			cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId() << endl;
 			m_eState = ARROW_STATE::IDLE;
 			m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 			GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
