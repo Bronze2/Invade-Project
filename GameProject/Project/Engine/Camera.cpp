@@ -42,6 +42,7 @@ CCamera::~CCamera()
 
 void CCamera::InterSectsObject(CCollider3D* _pCollider)
 {
+	return;
 	if (!m_pPlayer)return;
 	Vec3 vWorldPos = Vec3(m_matCamera._41, m_matCamera._42, m_matCamera._43);
 

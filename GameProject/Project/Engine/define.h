@@ -403,3 +403,9 @@ enum class BUTTON_TYPE {
 	SELECT_DARK,
 	SELECT_WATER,
 };
+
+enum class BUFF_TYPE {
+	HEAL,
+	STRENGTH,
+	DAMAGE,
+};

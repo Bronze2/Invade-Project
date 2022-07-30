@@ -796,8 +796,5 @@ void CMinionScript::RemoveTarget()
     else if (m_pFirstTower->IsDead() && m_pSecondTower->IsDead()) {
         m_pTarget = m_pNexus;
     }
-    else {
-        wcout << "¤»¤»...................." << endl;
-    }
     //FindNearObject(m_arrEnemy);
 }

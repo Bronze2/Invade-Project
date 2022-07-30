@@ -510,3 +510,60 @@ void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
 
 }
+
+
+#include "BoxScript.h"
+#include "Collider3D.h"
+#include "BoxColScript.h"
+void CreateBoxObject(const Vec3& _vPos, const UINT& _idx)
+{
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\box_Up.mdat", L"MeshData\\box_Up.mdat");
+	CGameObject* pBoxUp = pMeshData->Instantiate();
+
+	pBoxUp->FrustumCheck(false);
+	pBoxUp->SetActive(true);
+
+	pBoxUp->Transform()->SetLocalPos(Vec3(_vPos.x, 70.f, _vPos.z + 45));
+	pBoxUp->Transform()->SetLocalRot(Vec3(-PI / 2, 0.f, 0.f));
+
+	//'	Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"SparkSound");
+	//'	m_pSound->PlaySound3D(_Pos, 1000.f);
+	//'
+	//'	pThunderObject->GetScript<CThunderSkill1Script>()->SetSound(m_pSound);
+
+	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\box_Bottom.mdat", L"MeshData\\box_Bottom.mdat");
+	CGameObject* pBoxBottom = pMeshData->Instantiate();
+	pBoxBottom->AddComponent(new CBoxScript);
+	pBoxBottom->GetScript<CBoxScript>()->SetUp(pBoxUp);
+
+	pBoxBottom->GetScript<CBoxScript>()->SetIdx(_idx);
+	pBoxBottom->Transform()->SetLocalPos(Vec3(_vPos.x, 50.f, _vPos.z));
+	pBoxBottom->Transform()->SetLocalRot(Vec3(-PI / 2, 0.f, 0.f));
+	pBoxBottom->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	pBoxBottom->GetScript<CBoxScript>()->Init();
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pBoxBottom);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pBoxUp);
+
+	Ptr<CMaterial>pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"TransparencyMtrl");
+	Ptr<CTexture> pTransparency = CResMgr::GetInst()->FindRes<CTexture>(L"Transparency");
+	CGameObject* pColObj = new CGameObject;
+	pColObj->SetName(L"BoxCol");
+	pColObj->AddComponent(new CCollider3D);
+	pColObj->AddComponent(new CBoxColScript);
+	pColObj->AddComponent(new CTransform);
+	pColObj->AddComponent(new CMeshRender);
+	pColObj->Transform()->SetLocalPos(pBoxBottom->Transform()->GetLocalPos());
+	pColObj->Transform()->SetLocalScale(pBoxBottom->Transform()->GetLocalScale());
+	pColObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pColObj->MeshRender()->SetMaterial(pMtrl);
+	pColObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
+	pColObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pColObj->Collider3D()->SetOffsetScale(Vec3(120.f, 100.f, 120.f));      // 80.f, 200.f, 80.f ?????
+	pColObj->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pBoxBottom->GetScript<CBoxScript>()->SetBoxCol(pColObj);
+	pColObj->GetScript<CBoxColScript>()->SetBox(pBoxBottom);
+
+	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pColObj, false);
+
+}

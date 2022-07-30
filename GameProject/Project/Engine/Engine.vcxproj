@@ -172,10 +172,13 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Animator3D.h" />
     <ClInclude Include="ArrowScript.h" />
     <ClInclude Include="BowScript.h" />
+    <ClInclude Include="BoxColScript.h" />
+    <ClInclude Include="BoxScript.h" />
     <ClInclude Include="ButtonScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Animation3D.h" />
     <ClInclude Include="CrossHairScript.h" />
+    <ClInclude Include="CTowerColScript.h" />
     <ClInclude Include="d3dUtil.h" />
     <ClInclude Include="EmptyCameraScript.h" />
     <ClInclude Include="EmptyPlayerScript.h" />
@@ -228,12 +231,14 @@ call EngineCopy.bat</Command>
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PathMgr.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerColScript.h" />
     <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="ProjectileScript.h" />
     <ClInclude Include="Ptr.h" />
     <ClInclude Include="RenderMgr.h" />
     <ClInclude Include="ResMgr.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SafeZone.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMgr.h" />
     <ClInclude Include="Script.h" />
@@ -244,6 +249,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SkillMgr.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SpawnMgr.h" />
     <ClInclude Include="SpawnScript.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="StructuredBuffer.h" />
@@ -261,10 +267,13 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Animator3D.cpp" />
     <ClCompile Include="ArrowScript.cpp" />
     <ClCompile Include="BowScript.cpp" />
+    <ClCompile Include="BoxColScript.cpp" />
+    <ClCompile Include="BoxScript.cpp" />
     <ClCompile Include="ButtonScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Animation3D.cpp" />
     <ClCompile Include="CrossHairScript.cpp" />
+    <ClCompile Include="CTowerColScript.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="EmptyCameraScript.cpp" />
     <ClCompile Include="EmptyPlayerScript.cpp" />
@@ -316,12 +325,14 @@ call EngineCopy.bat</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PlayerColScript.cpp" />
     <ClCompile Include="PlayerScript.cpp" />
     <ClCompile Include="ProjectileScript.cpp" />
     <ClCompile Include="RenderMgr.cpp" />
     <ClCompile Include="RenderMgrInit.cpp" />
     <ClCompile Include="ResMgr.cpp" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="SafeZone.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
     <ClCompile Include="Script.cpp" />
@@ -332,6 +343,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SkillMgr.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpawnMgr.cpp" />
     <ClCompile Include="SpawnScript.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="Terrain.cpp" />

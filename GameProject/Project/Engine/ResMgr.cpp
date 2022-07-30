@@ -692,7 +692,7 @@ void CResMgr::CreateDefaultShader()
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_HPTex", "ps_5_0");
 
     // BlendState 설정
-    pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
     // Shader Parameter 알림
     pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
@@ -711,6 +711,13 @@ void CResMgr::CreateDefaultShader()
     pShader->CreateVertexShader(L"Shader\\std.fx", "VS_HPTex", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_UIHPTex", "ps_5_0");
 
+    // BlendState 설정
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+    // DSState
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
+
+
     // Shader Parameter 알림
     pShader->AddShaderParam(tShaderParam{ L"CurHP", SHADER_PARAM::INT_0 });
     pShader->AddShaderParam(tShaderParam{ L"MaxHp", SHADER_PARAM::INT_1 });
@@ -724,10 +731,10 @@ void CResMgr::CreateDefaultShader()
     pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexUI", "ps_5_0");
 
     // BlendState 설정
-    // pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
 
     // DSState
-    //pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+    pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
 
 
     pShader->AddShaderParam(tShaderParam{ L"Ratio",SHADER_PARAM::FLOAT_0 });
@@ -740,6 +747,24 @@ void CResMgr::CreateDefaultShader()
     pShader->Create(SHADER_POV::FORWARD);
 
     AddRes(L"TexUIShader", pShader);
+
+    // =================
+    // 사망처리 수민
+    // =================
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\std.fx", "VS_TexEffect", "vs_5_0");
+    pShader->CreatePixelShader(L"Shader\\std.fx", "PS_TexEffect", "ps_5_0");
+    // BlendState 설정
+    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+
+    // DSState
+    //pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE);
+    //pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::NO_DEPTHTEST_NO_WRITE);
+
+    // Shader Parameter 알림
+    pShader->AddShaderParam(tShaderParam{ L"Output Texture", SHADER_PARAM::TEX_0 });
+    pShader->Create(SHADER_POV::FORWARD);
+    AddRes(L"TexEffectShader", pShader);
 
     // =================
     // Collider2D Shader
@@ -952,7 +977,8 @@ void CResMgr::CreateDefaultShader()
     pShader->CreateVertexShader(L"Shader\\font.fx", "VS_FONT", "vs_5_0");
     pShader->CreatePixelShader(L"Shader\\font.fx", "PS_FONT", "ps_5_0");
 
-    pShader->SetBlendState(BLEND_TYPE::ALPHABLEND);
+    pShader->SetBlendState(BLEND_TYPE::ALPHATOCOVERAGE);
+    //pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::LESS_NO_WRITE); // 깊이테스트 o, 깊이 기록 x
 
     pShader->CreateFontShader(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
@@ -1012,6 +1038,15 @@ void CResMgr::CreateDefaultShader()
     pShader->Create(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
     AddRes(L"TerrainShader", pShader);
 
+    pShader = new CShader;
+    pShader->CreateVertexShader(L"Shader\\std.fx", "VS_Range2D", "vs_5_0");
+    pShader->CreatePixelShader(L"Shader\\std.fx", "PS_Range2D", "ps_5_0");
+
+    // DepthStencilState 설정
+//	pShader->SetDepthStencilType(DEPTH_STENCIL_TYPE::);
+
+    pShader->Create(SHADER_POV::FORWARD, D3D_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+    AddRes(L"RangeShader", pShader);
 
 }
 
@@ -1211,6 +1246,11 @@ void CResMgr::CreateDefaultMaterial()
     pMtrl->DisableFileSave();
     pMtrl->SetShader(FindRes<CShader>(L"FontShader"));
     AddRes(L"FontMtrl", pMtrl);
+
+    pMtrl = new CMaterial;
+    pMtrl->DisableFileSave();
+    pMtrl->SetShader(FindRes<CShader>(L"RangeShader"));
+    AddRes(L"RangeMtrl", pMtrl);
 }
 
 FMOD_RESULT CHANNEL_CALLBACK(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype

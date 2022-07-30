@@ -63,3 +63,5 @@ void CreateThunderObject(const Vec3& _Pos,  int e_camp);
 void Net_CreateThunderObject(const Vec3& _Pos, int e_camp);
 
 void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey);
+
+void CreateBoxObject(const Vec3& _vPos, const UINT& _idx);

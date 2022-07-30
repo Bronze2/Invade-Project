@@ -15,6 +15,19 @@
 #include "BowScript.h"
 #include "RenderMgr.h"
 #include "MeshRender.h"
+#include "FontMgr.h"
+#include "CollisionMgr.h"
+#include "BoxScript.h"
+#include "SpawnMgr.h"
+#include "PlayerColScript.h"
+#include "BoxColScript.h"
+
+void CPlayerScript::GetBuff()
+{
+
+	m_pBuffParticle->SetActive(true);
+	m_tBuffTime = std::chrono::system_clock::now();
+}
 
 void CPlayerScript::m_FAnimation()
 {
@@ -438,6 +451,26 @@ void CPlayerScript::Awake()
 
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
 		GetObj()->AddChild(m_pThunderParticle);
+		
+		m_pBuffParticle = new CGameObject;
+		m_pBuffParticle->AddComponent(new CTransform);
+		m_pBuffParticle->AddComponent(new CParticleSystem);
+		m_pBuffParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"Sword"), L"ParticleUpdate4Mtrl");
+		m_pBuffParticle->ParticleSystem()->SetStartColor(Vec4(0.5f, 0.5f, 0.f, 1.f));//,m_vStartColor(Vec4(0.4f,0.4f,0.8f,1.4f)),m_vEndColor(Vec4(1.f,1.f,1.f,1.0f))
+		m_pBuffParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 0.f, 0.f, 1.0f));
+		m_pBuffParticle->ParticleSystem()->SetStartScale(10.f);
+		m_pBuffParticle->ParticleSystem()->SetEndScale(15.f);
+		m_pBuffParticle->ParticleSystem()->SetMinSpeed(10.f);
+		m_pBuffParticle->ParticleSystem()->SetMaxSpeed(50.f);
+		m_pBuffParticle->ParticleSystem()->SetMinLifeTime(2.f);
+		m_pBuffParticle->ParticleSystem()->SetMaxLifeTime(3.f);
+		//m_pHealParticle->Transform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		m_pBuffParticle->FrustumCheck(false);
+		m_pBuffParticle->SetActive(false);
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pBuffParticle);
+		GetObj()->AddChild(m_pBuffParticle);
+
 		m_fMoveSpeed = 300.f;
 
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
@@ -460,7 +493,7 @@ void CPlayerScript::Awake()
 		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
 
-		// UI수정
+		// UI수정 수민
 		m_pMainHelmetUI = new CGameObject;
 		m_pMainHelmetUI->SetName(L"MainClient UIHelmetTex");
 		m_pMainHelmetUI->AddComponent(new CTransform);
@@ -516,7 +549,30 @@ void CPlayerScript::Awake()
 		m_pMainHelmetUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pMainHelmetUI);
 
+		// 사망
+		m_pDeadEffect = new CGameObject;
+		m_pDeadEffect->SetName(L"DeadEffect");
+		m_pDeadEffect->FrustumCheck(false);
+		m_pDeadEffect->AddComponent(new CTransform);
+		m_pDeadEffect->AddComponent(new CMeshRender);
+		m_pDeadEffect->SetActive(false);
+		tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+		Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
 
+		m_pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+		m_pDeadEffect->Transform()->SetLocalScale(vScale1);
+
+		m_pDeadEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		Ptr<CMaterial> pSkillMtrl = new CMaterial;
+		pSkillMtrl->DisableFileSave();
+		pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexEffectShader"));
+		CResMgr::GetInst()->AddRes(L"TexEffectMtrl", pSkillMtrl);
+		Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"DeadEffect", L"Texture\\DeadEffect.png");
+		m_pDeadEffect->MeshRender()->SetMaterial(pSkillMtrl);
+		m_pDeadEffect->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+			pTex.GetPointer());		
+
+		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDeadEffect);
 	}
 	Ptr<CMeshData> pHelmetMesh;
 
@@ -836,15 +892,19 @@ void CPlayerScript::Update()
 			Transform()->SetLocalRot(vRot);
 			UseSkill();
 			GetDamage();
+			CheckHpAndDead();	// 수민
 			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
 			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
 
-			for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
-				//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
-				int iCurHp = 100 + 30 * i;
-				m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
-				m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-			}
+
+			m_pColPlayer->GetScript<CPlayerColScript>()->SetRot(Vec3(0.f, vRot.y, 0.f));
+
+			//for (int i = 0; i < m_vecUIHpBar.size(); ++i) {
+			//	//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+			//	int iCurHp = 100 + 30 * i;
+			//	m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+			//	m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+			// }
 
 		}
 		StatusCheck();
@@ -857,23 +917,78 @@ void CPlayerScript::Update()
 #include "InGameScene.h"
 #include "CollisionMgr.h"
 
+void CPlayerScript::CheckHpAndDead()
+{
+	//if (isMain) {
+	//	int iToRestartTime;
+	//	wstring wCoolTime;
+	//	// 사망처리 
+	//	if (m_iCurHp <= 0 && !m_bDead) {
+	//		m_bDead = true;
+	//		m_pDeadEffect->SetActive(true);
+	//		m_uiDeadStart = clock();
+	//		m_iCurHp = 0.f;
+	//	}
+	//	if (m_bDead) {
+	//		CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
+	//		m_uiDeadEnd = clock();
+	//		m_uiDeadInterval = (m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC;
+
+	//		iToRestartTime = DEADTIME - m_uiDeadInterval;
+	//		wCoolTime = to_wstring(iToRestartTime);
+
+	//		CFontMgr::GetInst()->AddText(L"DeadCoolTime", wCoolTime, Vec2(0.06f, 0.01f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(0.f, 0.f, 1.f, 1.f));
+
+	//		// 아군 플레이어 죽었을 때 파티창 HpBar에 부활까지 남은 시간(그 플레이어의 wCoolTime) 써주기 (Add, DeleteText 첫번째 인자에 키값은 죽은 플레이어의 인덱스)
+	//		CFontMgr::GetInst()->AddText(wstring(L"DeadPlayerID") + to_wstring(0), wCoolTime, Vec2(0.071f, 0.47f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
+
+	//		if (m_uiDeadInterval == DEADTIME) {
+	//			Transform()->SetLocalPos(Vec3(0.f, 0.f, 1000.f));
+	//			m_pDeadEffect->SetActive(false);
+	//			m_bDead = false;
+	//			m_iCurHp = m_iMaxHp;
+	//			m_uiDeadStart = m_uiDeadEnd;
+	//			Init();
+	//			CFontMgr::GetInst()->DeleteText(L"DeadCoolTime");
+	//			CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
+	//		}
+	//	}
+	//	else {
+	//		//m_iCurHp -= 3 * DT;	// 임시임요 
+	//	}
+
+	//	// 본인 에이치피바
+	//	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
+	//	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+
+	//	// 파티창 에이치피바
+	//	//for (int i = 1; i < m_vecUIHpBar.size(); ++i) {		// 0부터
+	//	//	//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
+	//	//	int iCurHp = 100 + 30 * i;
+	//	//	m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+	//	//	m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
+	//	//}
+	//}
+}
+
 bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 {
+	m_bColBox = false;
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	Vec3 vFinalPos = Collider3D()->GetOffsetPos();
-	vFinalPos = vFinalPos / Transform()->GetWorldScale();
+	Vec3 vFinalPos = m_pColPlayer->Collider3D()->GetOffsetPos();
+	vFinalPos = vFinalPos / m_pColPlayer->Transform()->GetWorldScale();
 	Matrix matColTranslation = XMMatrixTranslation(vFinalPos.x, vFinalPos.y, vFinalPos.z);
-	Matrix matColScale = XMMatrixScaling(Collider3D()->GetOffsetScale().x, Collider3D()->GetOffsetScale().y, Collider3D()->GetOffsetScale().z);
+	Matrix matColScale = XMMatrixScaling(m_pColPlayer->Collider3D()->GetOffsetScale().x, m_pColPlayer->Collider3D()->GetOffsetScale().y, m_pColPlayer->Collider3D()->GetOffsetScale().z);
 	Matrix MatColWorld = matColScale * matColTranslation;
 	Matrix matTranslation = XMMatrixTranslation(_vPos.x, _vPos.y, _vPos.z);
-	Matrix matScale = XMMatrixScaling(Transform()->GetLocalScale().x, Transform()->GetLocalScale().y, Transform()->GetLocalScale().z);
-	Matrix matRot = XMMatrixRotationX(Transform()->GetLocalRot().x);
-	matRot *= XMMatrixRotationY(Transform()->GetLocalRot().y);
-	matRot *= XMMatrixRotationZ(Transform()->GetLocalRot().z);
+	Matrix matScale = XMMatrixScaling(m_pColPlayer->Transform()->GetLocalScale().x, m_pColPlayer->Transform()->GetLocalScale().y, m_pColPlayer->Transform()->GetLocalScale().z);
+	Matrix matRot = XMMatrixRotationX(m_pColPlayer->Transform()->GetLocalRot().x);
+	matRot *= XMMatrixRotationY(m_pColPlayer->Transform()->GetLocalRot().y);
+	matRot *= XMMatrixRotationZ(m_pColPlayer->Transform()->GetLocalRot().z);
 	Matrix matWorld = matScale * matRot * matTranslation;
 	MatColWorld *= matWorld;
 	bool bTrue = false;
-	for (int i = (UINT)INGAME_LAYER::DEFAULT + 1; i < (UINT)INGAME_LAYER::OBSTACLE + 1; ++i) {
+	for (int i = (UINT)INGAME_LAYER::DEFAULT + 1; i < (UINT)INGAME_LAYER::BOX + 1; ++i) {
 		const vector<CGameObject*>& vecObj = pCurScene->GetLayer(i)->GetObjects();
 		if (i == 6)
 			continue;
@@ -890,10 +1005,23 @@ bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 				continue;
 			if (L"Arrow" == vecObj[j]->GetName())
 				continue;
+			if(m_pColPlayer->GetScript<CPlayerColScript>()->GetPlayer() == vecObj[j])
+				continue;
+			if (m_pColPlayer == vecObj[j])
+				continue;
+
 
 			bTrue = CCollisionMgr::GetInst()->CollisionCubeMatrix(MatColWorld, vecObj[j]->Collider3D()->GetColliderWorldMatNotify());
 			if (bTrue) {
-				wcout << vecObj[j]->GetName() << endl;
+				if (L"BoxCol" == vecObj[j]->GetName()) 
+				{
+					if (
+						BOX_STATE::CLOSE == vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->GetOpen()) {
+						vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->SetOpen((UINT)BOX_STATE::OPEN);
+						vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->SetPlayer(GetObj());
+					}
+				}
+
 				return bTrue;
 			}
 		}
@@ -999,14 +1127,27 @@ void CPlayerScript::SkillCoolTimeCheck()
 	Vec4 vStartColor = Vec4(1.f, 1.f, 1.f, 1.f);
 
 	float Value = m_tESkill->fCoolTime / m_tESkill->fCoolTime;
+
+	int iSkiilCoolTextTime;
+	wstring wSkillCoolTextTime;
+
 	if (m_tESkill->bUse) {
 		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tESkill->StartTime;
 		Value = sec.count();
+		iSkiilCoolTextTime = m_tESkill->fCoolTime - Value + 1;
 		Value = Value / m_tESkill->fCoolTime;
+		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
+
+		CFontMgr::GetInst()->AddText(L"ECoolTime", wSkillCoolTextTime, Vec2(0.8f, 0.93f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+
 		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
 
 			m_tESkill->bUse = false;
+			CFontMgr::GetInst()->DeleteText(L"ECoolTime");
 		}
+
+
+
 	}
 	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Value);
 	m_pESkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &vStartColor);
@@ -1016,10 +1157,17 @@ void CPlayerScript::SkillCoolTimeCheck()
 	if (m_tZSkill->bUse) {
 		std::chrono::duration<float>sec = std::chrono::system_clock::now() - m_tZSkill->StartTime;
 		Value = sec.count();
+		iSkiilCoolTextTime = m_tZSkill->fCoolTime - Value + 1;
 		Value = Value / m_tZSkill->fCoolTime;
+		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
+
+		CFontMgr::GetInst()->AddText(L"ZCoolTime", wSkillCoolTextTime, Vec2(0.9f, 0.91f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+
 		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;
+			CFontMgr::GetInst()->DeleteText(L"ZCoolTime");
 		}
+
 	}
 	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::FLOAT_0, &Value);
 	m_pZSkillObject->MeshRender()->GetSharedMaterial(0)->SetData(SHADER_PARAM::VEC4_0, &vStartColor);
@@ -1074,7 +1222,20 @@ void CPlayerScript::StatusCheck()
 
 
 	}
+
+	if (m_pBuffParticle->IsActive()) {
+		m_uiStrength = 10;
+		if (CoolTimeCheck(m_tBuffTime, 5.f))
+		{
+			m_pBuffParticle->SetActive(false);
+		}
+
+	}
+	else {
+		m_uiStrength = 0;
+	}
 }
+
 void CPlayerScript::UseSkill()
 {
 	if (m_bThunderCheck)

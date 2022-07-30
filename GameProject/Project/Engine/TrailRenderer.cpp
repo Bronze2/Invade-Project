@@ -195,6 +195,13 @@ void CTrailRenderer::Interpolate(size_t steps)
 	}
 }
 
+void CTrailRenderer::ClearPoint()
+{
+	m_vecVtxLeft.clear();
+	m_vecVtxRight.clear();
+	m_pTrails.clear();
+}
+
 void CTrailRenderer::Init(Ptr<CTexture> _pTex)
 {
 	m_pMtrl = new CMaterial;

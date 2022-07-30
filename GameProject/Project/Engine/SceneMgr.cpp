@@ -52,7 +52,8 @@
 #include "LobbyScene.h"
 #include "TitleScene.h"
 #include "SkillMgr.h"
-#include "Network.h";
+#include "Network.h"
+#include "SpawnMgr.h"
 
 
 CScene* CSceneMgr::GetCurScene()
@@ -143,7 +144,9 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle", L"Texture\\MagicCircle.png");
 	CResMgr::GetInst()->Load<CTexture>(L"MagicCircle2", L"Texture\\MagicCircle2.png");
 	CResMgr::GetInst()->Load<CTexture>(L"Flame", L"Texture\\Particle\\Flame.png");
-
+	CResMgr::GetInst()->Load<CTexture>(L"Skeleton", L"Texture\\Particle\\Skeleton.png");
+	CResMgr::GetInst()->Load<CTexture>(L"Sword", L"Texture\\Particle\\Sword.png");
+	CResMgr::GetInst()->Load<CTexture>(L"CartoonSmoke", L"Texture\\Particle\\CartoonSmoke.png");
 
 	// ·Îºñ¾À
 	CResMgr::GetInst()->Load<CTexture>(L"bow_big", L"Texture\\bow_big.png");
@@ -179,7 +182,7 @@ void CSceneMgr::Init()
 	CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\property_thunder.png");
 	CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\property_fire.png");
 
-
+	CResMgr::GetInst()->Load<CTexture>(L"Stop", L"Texture\\Stop.png");
 
 
 	Ptr<CTexture> pColor = CResMgr::GetInst()->Load<CTexture>(L"Tile", L"Texture\\Tile\\TILE_03.tga");
@@ -386,6 +389,7 @@ void CSceneMgr::Update()
 	m_pCurScene->LateUpdate();
 
 	m_pCurScene->FinalUpdate();
+	CSpawnMgr::GetInst()->Update();
 
 	CSensorMgr::GetInst()->Update();
 	CCollisionMgr::GetInst()->Update();

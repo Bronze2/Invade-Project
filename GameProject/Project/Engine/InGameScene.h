@@ -13,7 +13,8 @@ enum class INGAME_LAYER {
     //GetLayer(6)->SetName(L"Arrow");
     //GetLayer(7)->SetName(L"Terrain");
     //GetLayer(8)->SetName(L"Tile");
-    OBSTACLE = 10 //GetLayer(9)->SetName(L"Obstacle");
+    OBSTACLE = 10, //GetLayer(9)->SetName(L"Obstacle");
+    BOX=11,
      //GetLayer(30)->SetName(L"UI");
      //GetLayer(31)->SetName(L"Tool");
 

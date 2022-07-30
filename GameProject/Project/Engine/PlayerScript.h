@@ -2,6 +2,8 @@
 #include "Script.h"
 #include "Animation3D.h"
 
+// 熱團
+#define DEADTIME 15
 
 class CTexture;
 class CPlayerScript :
@@ -49,6 +51,7 @@ private:
     CGameObject* m_pHealParticle;
     CGameObject* m_pFlameParticle;
     CGameObject* m_pThunderParticle;
+    CGameObject* m_pBuffParticle;
     bool m_bHealCheck;
     bool m_bFlameCheck;
     bool m_bThunderCheck;
@@ -68,8 +71,8 @@ private:
     
     float m_fCurDegree;
     int m_iKeyHoldCnt;
-    UINT m_iMaxHp;
-    UINT m_iCurHp = 1500;
+    int m_iMaxHp;
+    int m_iCurHp = 1500;
     CAMP_STATE m_eCamp;
     Vec3 restorePos;
     CGameObject* m_pBowObject;
@@ -78,10 +81,24 @@ private:
     CGameObject* m_pHPBar;
     vector<CGameObject*> m_vecUIHpBar;
 
-    // UI熱薑
+    // UI熱薑 熱團
     CGameObject* m_pMainHelmetUI;
+    bool m_bDead;
+    CGameObject* m_pDeadEffect;
+    clock_t m_uiDeadStart;
+    clock_t m_uiDeadEnd;
+    clock_t m_uiDeadInterval;
+
+    std::chrono::system_clock::time_point m_tBuffTime;
+    bool m_bCanAttack;
+    bool m_bColBox;
+
+    UINT m_uiStrength;
+
+    CGameObject* m_pColPlayer;
 
 public:
+    void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
     void AttachHelmet();
     void m_FAnimation();
@@ -137,7 +154,8 @@ public:
     void SetESkillObj(CGameObject* _pObj) { m_pESkillObject = _pObj; }
     void SetZSkillObj(CGameObject* _pObj) { m_pZSkillObject = _pObj; }
 
-
+    // 熱團
+    void CheckHpAndDead();
 
     void UpdateHelmet(Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 
@@ -151,6 +169,13 @@ public:
     //hp
     UINT GetCurHp() { return m_iCurHp; }
     void SetCurHp(int _hp) { m_iCurHp = _hp; }
+
+    void SetStrength(const UINT& _Dmg) { m_uiStrength = _Dmg; }
+    const UINT& GetStrength() { return m_uiStrength; }
+    void GetBuff();
+
+    void SetColPlayer(CGameObject* _pObj) { m_pColPlayer = _pObj; }
+    CGameObject* GetColObj() { return m_pColPlayer; }
 
     CLONE(CPlayerScript);
 };

@@ -72,6 +72,7 @@ void CBowScript::Update()
 		if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
 			CGameObject* pCrossHair = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"UI")->GetParentObj()[0]);
 			CGameObject* pPlayer = GetObj()->GetParent();
+			CGameObject* pColPlayer = pPlayer->GetScript<CPlayerScript>()->GetColObj();
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetParentId(GetObj()->GetParent()->GetScript<CPlayerScript>()->m_GetId());
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->m_SetId(m_iCurArrow);
 
@@ -91,7 +92,7 @@ void CBowScript::Update()
 			Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 			Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 			float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, pPlayer->Collider3D()->GetOffsetScale().y + fCamRotDegree, 0.f);
+			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, 50.f + fCamRotDegree, 0.f);
 			Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 
 			Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
@@ -101,6 +102,8 @@ void CBowScript::Update()
 			//화살 수정
 			//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDmg(m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->GetDmg() + m_pPlayer->GetScript<CPlayerScript>()->GetStrength());
+			int a = m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->GetDmg();
 
 			m_pArrow[m_iCurArrow]->ClearParent();
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalPos(vArrowPos);

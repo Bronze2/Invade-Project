@@ -56,13 +56,15 @@ void CRenderMgr::Render()
 	Merge_Light();
 
 	m_vecCam[0]->Render_Forward(); // skybox, grid, ui
+	
+	CFontMgr::GetInst()->RenderText();
+
 	for (auto i = 1; i < m_vecCam.size(); i++) {
 		m_vecCam[i]->SortGameObject();
 		m_vecCam[i]->Render_Forward();
 	}
 
-	// Ãâ·Â
-	CFontMgr::GetInst()->RenderText();
+	// Ãâ·Â (¼ö¹Î)
 	CIMGUIMgr::GetInst()->Progress();
 	CDevice::GetInst()->Render_Present();
 	m_vecCam[0]->ClearInterSectObject();
@@ -232,16 +234,16 @@ void CRenderMgr::CreateMRT()
 	}
 	{
 		tRT arrRT[8] = {};
-
+		// ¼ö¹Î
 		arrRT[0].vClearColor = Vec4(0.f, 0.f, 0.f, 0.f);
 		arrRT[0].pTarget = CResMgr::GetInst()->CreateTexture(L"ShadowMapTargetTex"
-			, 4096 *2, 4096*2
+			, 4096 *4, 4096*4
 			, DXGI_FORMAT_R32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 			, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, arrRT[0].vClearColor);
 
 		// º°µµÀÇ ±íÀÌ¹öÆÛ¸¦ °¡Áü
 		Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"ShadowMapDepthTex"
-			, 4096*2, 4096*2
+			, 4096*4, 4096*4
 			, DXGI_FORMAT_D32_FLOAT, CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE
 			, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 

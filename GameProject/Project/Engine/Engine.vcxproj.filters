@@ -85,6 +85,9 @@
     <Filter Include="Font">
       <UniqueIdentifier>{fb08231e-8d94-4d9a-be9d-bd558bc6d4bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ColScript">
+      <UniqueIdentifier>{d23da98d-c212-4c2b-9034-d65419af45ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -252,7 +255,6 @@
       <Filter>Script\Minion</Filter>
     </ClInclude>
     <ClInclude Include="Sensor.h" />
-    <ClInclude Include="SensorMgr.h" />
     <ClInclude Include="d3dUtil.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -339,6 +341,27 @@
     </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Font</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxColScript.h">
+      <Filter>ColScript</Filter>
+    </ClInclude>
+    <ClInclude Include="CTowerColScript.h">
+      <Filter>ColScript</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerColScript.h">
+      <Filter>ColScript</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="SafeZone.h">
+      <Filter>Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -495,7 +518,6 @@
       <Filter>Script\Minion</Filter>
     </ClCompile>
     <ClCompile Include="Sensor.cpp" />
-    <ClCompile Include="SensorMgr.cpp" />
     <ClCompile Include="d3dUtil.cpp">
       <Filter>Header</Filter>
     </ClCompile>
@@ -579,6 +601,27 @@
     </ClCompile>
     <ClCompile Include="FontMgr.cpp">
       <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxColScript.cpp">
+      <Filter>ColScript</Filter>
+    </ClCompile>
+    <ClCompile Include="CTowerColScript.cpp">
+      <Filter>ColScript</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerColScript.cpp">
+      <Filter>ColScript</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="SafeZone.cpp">
+      <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

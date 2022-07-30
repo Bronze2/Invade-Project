@@ -8,6 +8,10 @@
 #include "TrailRenderer.h"
 #include <math.h>
 #include "Network.h"
+#include "TowerScript.h"
+#include "CTowerColScript.h"
+#include "PlayerColScript.h"
+#include "BoxColScript.h"
 
 void CArrowScript::SetSkill(SKILL* _pSkill)
 {
@@ -138,11 +142,13 @@ void CArrowScript::Update()
 	break;
 	case ARROW_STATE::ATTACK_READY:
 	{
-		if (!m_bMaxCharged) {
-			Vec3 vRestorePos = vPos;
-			vPos.x += 30.f * DT;			// 15.f
+		if (m_isMain) {
+			if (!m_bMaxCharged) {
+				Vec3 vRestorePos = vPos;
+				vPos.x += 30.f * DT;			// 15.f
+			}
+			Transform()->SetLocalPos(vPos);
 		}
-		Transform()->SetLocalPos(vPos);
 	}
 	break;
 	case ARROW_STATE::ATTACK:
@@ -355,7 +361,7 @@ void CArrowScript::Init()
 	Transform()->SetQuaternion(Vec4(0.f, 0.f, 0.f, 1.f));
 	Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
 	Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
-
+	m_pTrail->TrailRenderer()->ClearPoint();
 
 	//---수정전
 	//m_bSetDotValue = false;
@@ -370,20 +376,20 @@ void CArrowScript::Init()
 	//GetObj()->SetActive(false);
 	//SetState(ARROW_STATE::IDLE);
 
-	m_pBow->AddChild(GetObj());
+	//m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
 #include "MinionScript.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerScript>() && GetObj()->Transform()->GetLocalPos().y < 150 && m_eState == ARROW_STATE::ATTACK) {
-		if (_pColldier->GetObj()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
+	if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>() && GetObj()->Transform()->GetLocalPos().y < 150 && m_eState == ARROW_STATE::ATTACK) {
+		if (_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
 			cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId() << endl;
 			m_eState = ARROW_STATE::IDLE;
 			m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 			GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
-			_pColldier->GetObj()->GetScript<CPlayerScript>()->GetDamage(500);
-			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
+			_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetDamage(500);
+			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
 		}
 	}
 	else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>() && m_eState == ARROW_STATE::ATTACK) {
@@ -393,6 +399,28 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 			m_pTrail->TrailRenderer()->SetEmit(false);		// 여기요 여기요 여기요
 			GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
 			Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId(), PACKET_COLLTYPE::MONSTER, m_eCamp);
+		}
+	}
+	else if (nullptr != _pColldier->GetObj()->GetScript<CTowerColScript>()) {
+		cout << "tower collision on~!" << endl;
+	}
+
+	if (nullptr == m_pSkill) {
+		if (_pColldier->GetObj()->GetLayerIdx() != m_iLayerIdx) {
+			if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>()) {
+				cout << "_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->SetDamage(m_iDamage)" << endl;
+			}
+			else if (nullptr != _pColldier->GetObj()->GetScript<CTowerColScript>()) {
+				cout << "_pColldier->GetObj()->GetScript<CTowerColScript>()->GetTower()->GetScript<CTowerScript>()->GetDamage(m_iDamage)" << endl;
+			}
+			else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>()) {
+				cout << "_pColldier->GetObj()->GetScript<CMinionScript>()->SetDamage(m_iDamage)" << endl;
+			}
+			else if (L"obstacle" == _pColldier->GetObj()->GetName()) {
+				GetObj()->SetActive(false);
+				m_pParticle->SetActive(false);
+			}
+
 		}
 	}
 }

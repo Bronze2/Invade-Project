@@ -121,6 +121,9 @@ public:
     void StartTrail();
 
     void Collision();
+
+    const UINT& GetDmg() { return m_iDamage; }
+    void SetDmg(const UINT& _iDmg) { m_iDamage = _iDmg; }
     
     //½ºÅ³
     void WaterSkill0(CCollider3D* _pColldier);

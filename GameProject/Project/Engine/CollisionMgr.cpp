@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CollisionMgr.h"
 
 #include "SceneMgr.h"
@@ -18,143 +18,11 @@ void CCollisionMgr::Init()
 {
 }
 
-bool CCollisionMgr::CollisionCubeMatrix(const Matrix& _pCollider1, const Matrix& _pCollider2)
-{
-	{
-		static Vec3 arrLocal[4] = {               // 0 -- 1
-		  Vec3(-0.5f, 0.5f, 0.f)            // |   |
-		, Vec3(0.5f, 0.5f, 0.f)               // 3 -- 2
-		, Vec3(0.5f, -0.5f, 0.f)
-		, Vec3(-0.5f, -0.5f, 0.f) };
-
-
-		const Matrix& matCol1 = _pCollider1;
-		const Matrix& matCol2 = _pCollider2;
-
-		Vec3 arrCol1[4] = {};
-		Vec3 arrCol2[4] = {};
-		Vec3 arrCenter[2] = {};
-
-		for (UINT i = 0; i < 4; ++i)
-		{
-			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
-			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
-
-			// 2D Ãæµ¹ÀÌ±â ¶§¹®¿¡ °°Àº Z ÁÂÇ¥»ó¿¡¼­ Ãæµ¹À» °è»êÇÑ´Ù.
-			arrCol1[i].z = 0.f;
-			arrCol2[i].z = 0.f;
-		}
-
-		arrCenter[0] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol1);
-		arrCenter[1] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol2);
-		arrCenter[0].z = 0.f;
-		arrCenter[1].z = 0.f;
-
-		Vec3 vCenter = arrCenter[1] - arrCenter[0];
-
-		Vec3 arrOriginVec[4] = { arrCol1[3] - arrCol1[0]
-		   , arrCol1[1] - arrCol1[0]
-		   , arrCol2[3] - arrCol2[0]
-		   , arrCol2[1] - arrCol2[0]
-		};
-
-		Vec3 arrProjVec[4] = {};
-		for (UINT i = 0; i < 4; ++i)
-		{
-			arrOriginVec[i].Normalize(arrProjVec[i]);
-		}
-
-
-		// Åõ¿µÀ» ÅëÇØ¼­ ºÐ¸®Ãà Å×½ºÆ®
-		// vCenter       µÎ »ç°¢ÇüÀÇ Áß½ÉÀ» ÀÕ´Â º¤ÅÍ
-		// arrOriginVec  °¢ »ç°¢ÇüÀÇ Ç¥¸é º¤ÅÍ
-		// arrProjVec    »ç°¢ÇüÀÇ Ç¥¸é°ú ÆòÇàÇÑ Åõ¿µÃà º¤ÅÍ(´ÜÀ§º¤ÅÍ)
-
-		for (UINT i = 0; i < 4; ++i)
-		{
-			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // Áß½É °Å¸® º¤ÅÍ¸¦ ÇØ´ç Åõ¿µÃàÀ¸·Î Åõ¿µ½ÃÅ² ±æÀÌ
-
-			float fAcc = 0.f;
-			for (UINT j = 0; j < 4; ++j)
-				fAcc += abs(arrOriginVec[j].Dot(arrProjVec[i]));
-
-			fAcc /= 2.f;
-
-			if (fCenter > fAcc)
-				return false;
-		}
-	}
-	{
-		static Vec3 arrLocal[4] = {               // 0 -- 1
-			 Vec3(-0.5f, 0.0f, 0.5f)            // |   |
-		   , Vec3(0.5f, 0.0f, 0.5f)               // 3 -- 2
-		   , Vec3(0.5f, 0.0f, -0.5f)
-		   , Vec3(-0.5f, 0.0f, -0.5f) };
-
-
-		const Matrix& matCol1 = _pCollider1;
-		const Matrix& matCol2 = _pCollider2;
-
-		Vec3 arrCol1[4] = {};
-		Vec3 arrCol2[4] = {};
-		Vec3 arrCenter[2] = {};
-
-		for (UINT i = 0; i < 4; ++i)
-		{
-			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
-			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
-
-			// 2D Ãæµ¹ÀÌ±â ¶§¹®¿¡ °°Àº Z ÁÂÇ¥»ó¿¡¼­ Ãæµ¹À» °è»êÇÑ´Ù.
-			arrCol1[i].y = 0.f;
-			arrCol2[i].y = 0.f;
-		}
-
-		arrCenter[0] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol1);
-		arrCenter[1] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol2);
-		arrCenter[0].y = 0.f;
-		arrCenter[1].y = 0.f;
-
-		Vec3 vCenter = arrCenter[1] - arrCenter[0];
-
-		Vec3 arrOriginVec[4] = { arrCol1[3] - arrCol1[0]
-		   , arrCol1[1] - arrCol1[0]
-		   , arrCol2[3] - arrCol2[0]
-		   , arrCol2[1] - arrCol2[0]
-		};
-
-		Vec3 arrProjVec[4] = {};
-		for (UINT i = 0; i < 4; ++i)
-		{
-			arrOriginVec[i].Normalize(arrProjVec[i]);
-		}
-
-
-		// Åõ¿µÀ» ÅëÇØ¼­ ºÐ¸®Ãà Å×½ºÆ®
-		// vCenter       µÎ »ç°¢ÇüÀÇ Áß½ÉÀ» ÀÕ´Â º¤ÅÍ
-		// arrOriginVec  °¢ »ç°¢ÇüÀÇ Ç¥¸é º¤ÅÍ
-		// arrProjVec    »ç°¢ÇüÀÇ Ç¥¸é°ú ÆòÇàÇÑ Åõ¿µÃà º¤ÅÍ(´ÜÀ§º¤ÅÍ)
-
-		for (UINT i = 0; i < 4; ++i)
-		{
-			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // Áß½É °Å¸® º¤ÅÍ¸¦ ÇØ´ç Åõ¿µÃàÀ¸·Î Åõ¿µ½ÃÅ² ±æÀÌ
-
-			float fAcc = 0.f;
-			for (UINT j = 0; j < 4; ++j)
-				fAcc += abs(arrOriginVec[j].Dot(arrProjVec[i]));
-
-			fAcc /= 2.f;
-
-			if (fCenter > fAcc)
-				return false;
-		}
-	}
-	return true;
-}
-
 void CCollisionMgr::Update()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-	if (nullptr != m_pCameraObject) m_pCameraObject->SetFront(Vec3(0, 0, 0));
+	if (nullptr != m_pCameraObject)
+		m_pCameraObject->SetFront(Vec3(0, 0, 0));
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
 
@@ -205,6 +73,204 @@ void CCollisionMgr::CheckCollisionLayer(int _iLayerIdx1, int _iLyaerIdx2)
 	m_LayerCheck[iMinIdx] |= (1 << iMaxIdx);
 }
 
+bool CCollisionMgr::CollisionCubeMatrix(const Matrix& _pCollider1, const Matrix& _pCollider2)
+{
+	{
+		static Vec3 arrLocal[4] = {					// 0 -- 1
+		  Vec3(-0.5f, 0.5f, 0.f)				// |	|
+		, Vec3(0.5f, 0.5f, 0.f)					// 3 -- 2
+		, Vec3(0.5f, -0.5f, 0.f)
+		, Vec3(-0.5f, -0.5f, 0.f) };
+
+
+		const Matrix& matCol1 = _pCollider1;
+		const Matrix& matCol2 = _pCollider2;
+
+		Vec3 arrCol1[4] = {};
+		Vec3 arrCol2[4] = {};
+		Vec3 arrCenter[2] = {};
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
+			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
+
+			// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+			arrCol1[i].z = 0.f;
+			arrCol2[i].z = 0.f;
+		}
+
+		arrCenter[0] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol1);
+		arrCenter[1] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol2);
+		arrCenter[0].z = 0.f;
+		arrCenter[1].z = 0.f;
+
+		Vec3 vCenter = arrCenter[1] - arrCenter[0];
+
+		Vec3 arrOriginVec[4] = { arrCol1[3] - arrCol1[0]
+			, arrCol1[1] - arrCol1[0]
+			, arrCol2[3] - arrCol2[0]
+			, arrCol2[1] - arrCol2[0]
+		};
+
+		Vec3 arrProjVec[4] = {};
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrOriginVec[i].Normalize(arrProjVec[i]);
+		}
+
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+		// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
+
+			float fAcc = 0.f;
+			for (UINT j = 0; j < 4; ++j)
+				fAcc += abs(arrOriginVec[j].Dot(arrProjVec[i]));
+
+			fAcc /= 2.f;
+
+			if (fCenter > fAcc)
+				return false;
+		}
+	}
+	{
+		static Vec3 arrLocal[4] = {					// 0 -- 1
+			  Vec3(-0.5f, 0.0f, 0.5f)				// |	|
+			, Vec3(0.5f, 0.0f, 0.5f)					// 3 -- 2
+			, Vec3(0.5f, 0.0f, -0.5f)
+			, Vec3(-0.5f, 0.0f, -0.5f) };
+
+
+		const Matrix& matCol1 = _pCollider1;
+		const Matrix& matCol2 = _pCollider2;
+
+		Vec3 arrCol1[4] = {};
+		Vec3 arrCol2[4] = {};
+		Vec3 arrCenter[2] = {};
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
+			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
+
+			// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+			arrCol1[i].y = 0.f;
+			arrCol2[i].y = 0.f;
+		}
+
+		arrCenter[0] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol1);
+		arrCenter[1] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol2);
+		arrCenter[0].y = 0.f;
+		arrCenter[1].y = 0.f;
+
+		Vec3 vCenter = arrCenter[1] - arrCenter[0];
+
+		Vec3 arrOriginVec[4] = { arrCol1[3] - arrCol1[0]
+			, arrCol1[1] - arrCol1[0]
+			, arrCol2[3] - arrCol2[0]
+			, arrCol2[1] - arrCol2[0]
+		};
+
+		Vec3 arrProjVec[4] = {};
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrOriginVec[i].Normalize(arrProjVec[i]);
+		}
+
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+		// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
+
+			float fAcc = 0.f;
+			for (UINT j = 0; j < 4; ++j)
+				fAcc += abs(arrOriginVec[j].Dot(arrProjVec[i]));
+
+			fAcc /= 2.f;
+
+			if (fCenter > fAcc)
+				return false;
+		}
+	}
+	{
+		static Vec3 arrLocal[4] = {					// 0 -- 1
+		  Vec3(0.f, -0.5f, 0.5f)				// |	|
+		, Vec3(0.f, 0.5f, 0.5f)					// 3 -- 2
+		, Vec3(0.f, 0.5f, -0.5f)
+		, Vec3(0.f, -0.5f, -0.5f) };
+
+
+		const Matrix& matCol1 = _pCollider1;
+		const Matrix& matCol2 = _pCollider2;
+
+		Vec3 arrCol1[4] = {};
+		Vec3 arrCol2[4] = {};
+		Vec3 arrCenter[2] = {};
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
+			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
+
+			// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+			arrCol1[i].x = 0.f;
+			arrCol2[i].x = 0.f;
+		}
+
+		arrCenter[0] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol1);
+		arrCenter[1] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol2);
+		arrCenter[0].x = 0.f;
+		arrCenter[1].x = 0.f;
+
+		Vec3 vCenter = arrCenter[1] - arrCenter[0];
+
+		Vec3 arrOriginVec[4] = { arrCol1[3] - arrCol1[0]
+			, arrCol1[1] - arrCol1[0]
+			, arrCol2[3] - arrCol2[0]
+			, arrCol2[1] - arrCol2[0]
+		};
+
+		Vec3 arrProjVec[4] = {};
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrOriginVec[i].Normalize(arrProjVec[i]);
+		}
+
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+		// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
+
+			float fAcc = 0.f;
+			for (UINT j = 0; j < 4; ++j)
+				fAcc += abs(arrOriginVec[j].Dot(arrProjVec[i]));
+
+			fAcc /= 2.f;
+
+			if (fCenter > fAcc)
+				return false;
+		}
+	}
+
+	return true;
+}
+
 void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 {
 	const vector<CGameObject*>& vecObj1 = _pLayer1->GetObjects();
@@ -220,7 +286,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 			continue;
 
 		size_t j = 0;
-		if (_pLayer1 == _pLayer2) // µ¿ÀÏÇÑ ·¹ÀÌ¾î °£ÀÇ Ãæµ¹À» °Ë»çÇÏ´Â °æ¿ì
+		if (_pLayer1 == _pLayer2) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
 			j = i + 1;
 
 		for (; j < vecObj2.size(); ++j)
@@ -239,10 +305,10 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 			if (pCollider1->GetObj()->IsDead() || pCollider2->GetObj()->IsDead())
 				IsDead = true;
 
-			// Ãæµ¹Çß´Ù.
+			// ï¿½æµ¹ï¿½ß´ï¿½.
 			if (IsCollision(pCollider1, pCollider2))
 			{
-				// Ãæµ¹ ÁßÀÌ´Ù
+				// ï¿½æµ¹ ï¿½ï¿½ï¿½Ì´ï¿½
 				if (m_mapCol.end() != iter && iter->second == true)
 				{
 					if (IsDead)
@@ -257,7 +323,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 						pCollider2->OnCollision(pCollider1);
 					}
 				}
-				// Ã³À½ Ãæµ¹Çß´Ù
+				// Ã³ï¿½ï¿½ ï¿½æµ¹ï¿½ß´ï¿½
 				else
 				{
 					if (IsDead)
@@ -276,7 +342,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 					}
 				}
 			}
-			else // Ãæµ¹ÇÏÁö ¾Ê´Â´Ù.
+			else // ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
 			{
 				if (m_mapCol.end() != iter && true == iter->second)
 				{
@@ -290,7 +356,7 @@ void CCollisionMgr::CollisionLayer(const CLayer* _pLayer1, const CLayer* _pLayer
 	}
 
 }
-	
+
 void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLayer2)
 {
 	const vector<CGameObject*>& vecObj1 = _pLayer1->GetObjects();
@@ -306,7 +372,7 @@ void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLay
 			continue;
 
 		size_t j = 0;
-		if (_pLayer1 == _pLayer2) // µ¿ÀÏÇÑ ·¹ÀÌ¾î °£ÀÇ Ãæµ¹À» °Ë»çÇÏ´Â °æ¿ì
+		if (_pLayer1 == _pLayer2) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
 			j = i + 1;
 
 		for (; j < vecObj2.size(); ++j)
@@ -325,10 +391,10 @@ void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLay
 			if (pCollider1->GetObj()->IsDead() || pCollider2->GetObj()->IsDead())
 				IsDead = true;
 
-			// Ãæµ¹Çß´Ù.
+			// ï¿½æµ¹ï¿½ß´ï¿½.
 			if (IsCollision3D(pCollider1, pCollider2))
 			{
-				// Ãæµ¹ ÁßÀÌ´Ù
+				// ï¿½æµ¹ ï¿½ï¿½ï¿½Ì´ï¿½
 				if (m_mapCol.end() != iter && iter->second == true)
 				{
 					if (IsDead)
@@ -343,7 +409,7 @@ void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLay
 						pCollider2->OnCollision(pCollider1);
 					}
 				}
-				// Ã³À½ Ãæµ¹Çß´Ù
+				// Ã³ï¿½ï¿½ ï¿½æµ¹ï¿½ß´ï¿½
 				else
 				{
 					if (IsDead)
@@ -362,7 +428,7 @@ void CCollisionMgr::Collision3DLayer(const CLayer* _pLayer1, const CLayer* _pLay
 					}
 				}
 			}
-			else // Ãæµ¹ÇÏÁö ¾Ê´Â´Ù.
+			else // ï¿½æµ¹ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
 			{
 				if (m_mapCol.end() != iter && true == iter->second)
 				{
@@ -434,7 +500,7 @@ bool CCollisionMgr::CollisionRect(CCollider2D* _pCollider1, CCollider2D* _pColli
 		arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
 		arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
 
-		// 2D Ãæµ¹ÀÌ±â ¶§¹®¿¡ °°Àº Z ÁÂÇ¥»ó¿¡¼­ Ãæµ¹À» °è»êÇÑ´Ù.
+		// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		arrCol1[i].z = 0.f;
 		arrCol2[i].z = 0.f;
 	}
@@ -459,14 +525,14 @@ bool CCollisionMgr::CollisionRect(CCollider2D* _pCollider1, CCollider2D* _pColli
 	}
 
 
-	// Åõ¿µÀ» ÅëÇØ¼­ ºÐ¸®Ãà Å×½ºÆ®
-	// vCenter		 µÎ »ç°¢ÇüÀÇ Áß½ÉÀ» ÀÕ´Â º¤ÅÍ
-	// arrOriginVec  °¢ »ç°¢ÇüÀÇ Ç¥¸é º¤ÅÍ
-	// arrProjVec    »ç°¢ÇüÀÇ Ç¥¸é°ú ÆòÇàÇÑ Åõ¿µÃà º¤ÅÍ(´ÜÀ§º¤ÅÍ)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+	// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
 	for (UINT i = 0; i < 4; ++i)
 	{
-		float fCenter = abs(vCenter.Dot(arrProjVec[i])); // Áß½É °Å¸® º¤ÅÍ¸¦ ÇØ´ç Åõ¿µÃàÀ¸·Î Åõ¿µ½ÃÅ² ±æÀÌ
+		float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
 
 		float fAcc = 0.f;
 		for (UINT j = 0; j < 4; ++j)
@@ -514,7 +580,7 @@ bool CCollisionMgr::CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pColli
 			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
 			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
 
-			// 2D Ãæµ¹ÀÌ±â ¶§¹®¿¡ °°Àº Z ÁÂÇ¥»ó¿¡¼­ Ãæµ¹À» °è»êÇÑ´Ù.
+			// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			arrCol1[i].z = 0.f;
 			arrCol2[i].z = 0.f;
 		}
@@ -539,14 +605,14 @@ bool CCollisionMgr::CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pColli
 		}
 
 
-		// Åõ¿µÀ» ÅëÇØ¼­ ºÐ¸®Ãà Å×½ºÆ®
-		// vCenter		 µÎ »ç°¢ÇüÀÇ Áß½ÉÀ» ÀÕ´Â º¤ÅÍ
-		// arrOriginVec  °¢ »ç°¢ÇüÀÇ Ç¥¸é º¤ÅÍ
-		// arrProjVec    »ç°¢ÇüÀÇ Ç¥¸é°ú ÆòÇàÇÑ Åõ¿µÃà º¤ÅÍ(´ÜÀ§º¤ÅÍ)
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+		// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
 		for (UINT i = 0; i < 4; ++i)
 		{
-			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // Áß½É °Å¸® º¤ÅÍ¸¦ ÇØ´ç Åõ¿µÃàÀ¸·Î Åõ¿µ½ÃÅ² ±æÀÌ
+			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
 
 			float fAcc = 0.f;
 			for (UINT j = 0; j < 4; ++j)
@@ -578,7 +644,7 @@ bool CCollisionMgr::CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pColli
 			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
 			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
 
-			// 2D Ãæµ¹ÀÌ±â ¶§¹®¿¡ °°Àº Z ÁÂÇ¥»ó¿¡¼­ Ãæµ¹À» °è»êÇÑ´Ù.
+			// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			arrCol1[i].y = 0.f;
 			arrCol2[i].y = 0.f;
 		}
@@ -603,14 +669,14 @@ bool CCollisionMgr::CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pColli
 		}
 
 
-		// Åõ¿µÀ» ÅëÇØ¼­ ºÐ¸®Ãà Å×½ºÆ®
-		// vCenter		 µÎ »ç°¢ÇüÀÇ Áß½ÉÀ» ÀÕ´Â º¤ÅÍ
-		// arrOriginVec  °¢ »ç°¢ÇüÀÇ Ç¥¸é º¤ÅÍ
-		// arrProjVec    »ç°¢ÇüÀÇ Ç¥¸é°ú ÆòÇàÇÑ Åõ¿µÃà º¤ÅÍ(´ÜÀ§º¤ÅÍ)
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+		// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
 		for (UINT i = 0; i < 4; ++i)
 		{
-			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // Áß½É °Å¸® º¤ÅÍ¸¦ ÇØ´ç Åõ¿µÃàÀ¸·Î Åõ¿µ½ÃÅ² ±æÀÌ
+			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
 
 			float fAcc = 0.f;
 			for (UINT j = 0; j < 4; ++j)
@@ -622,6 +688,72 @@ bool CCollisionMgr::CollisionCube(CCollider3D* _pCollider1, CCollider3D* _pColli
 				return false;
 		}
 	}
+
+	{
+		static Vec3 arrLocal[4] = {					// 0 -- 1
+		  Vec3(0.f, -0.5f, 0.5f)				// |	|
+		, Vec3(0.f, 0.5f, 0.5f)					// 3 -- 2
+		, Vec3(0.f, 0.5f, -0.5f)
+		, Vec3(0.f, -0.5f, -0.5f) };
+
+
+		const Matrix& matCol1 = _pCollider1->GetColliderWorldMat();
+		const Matrix& matCol2 = _pCollider2->GetColliderWorldMat();
+
+		Vec3 arrCol1[4] = {};
+		Vec3 arrCol2[4] = {};
+		Vec3 arrCenter[2] = {};
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrCol1[i] = XMVector3TransformCoord(arrLocal[i], matCol1);
+			arrCol2[i] = XMVector3TransformCoord(arrLocal[i], matCol2);
+
+			// 2D ï¿½æµ¹ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Z ï¿½ï¿½Ç¥ï¿½ó¿¡¼ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+			arrCol1[i].x = 0.f;
+			arrCol2[i].x = 0.f;
+		}
+
+		arrCenter[0] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol1);
+		arrCenter[1] = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), matCol2);
+		arrCenter[0].x = 0.f;
+		arrCenter[1].x = 0.f;
+
+		Vec3 vCenter = arrCenter[1] - arrCenter[0];
+
+		Vec3 arrOriginVec[4] = { arrCol1[3] - arrCol1[0]
+			, arrCol1[1] - arrCol1[0]
+			, arrCol2[3] - arrCol2[0]
+			, arrCol2[1] - arrCol2[0]
+		};
+
+		Vec3 arrProjVec[4] = {};
+		for (UINT i = 0; i < 4; ++i)
+		{
+			arrOriginVec[i].Normalize(arrProjVec[i]);
+		}
+
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ð¸ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+		// vCenter		 ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrOriginVec  ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// arrProjVec    ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+
+		for (UINT i = 0; i < 4; ++i)
+		{
+			float fCenter = abs(vCenter.Dot(arrProjVec[i])); // ï¿½ß½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å² ï¿½ï¿½ï¿½ï¿½
+
+			float fAcc = 0.f;
+			for (UINT j = 0; j < 4; ++j)
+				fAcc += abs(arrOriginVec[j].Dot(arrProjVec[i]));
+
+			fAcc /= 2.f;
+
+			if (fCenter > fAcc)
+				return false;
+		}
+	}
+
 	return true;
 }
 #include "Camera.h"
@@ -647,8 +779,6 @@ void CCollisionMgr::RayCollision(const CLayer* _pLayer)
 
 
 		m_pCameraObject->InterSectsObject(pCollider1);
-
-
 
 
 

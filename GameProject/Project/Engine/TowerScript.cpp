@@ -135,6 +135,7 @@ void CTowerScript::Update()
 		m_uiDeadEnd = clock();
 		if ((m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC >= 0.5) {
 			DeleteObject(GetObj());
+			DeleteObject(m_pTowerColObject);
 			DeleteObject(m_pHPBar);
 		}
 		return;

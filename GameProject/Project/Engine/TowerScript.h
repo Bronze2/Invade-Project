@@ -38,6 +38,9 @@ private:
     CGameObject* m_pHPBar;
     CAMP_STATE m_eCampState;
     wstring m_CampName;
+
+    CGameObject* m_pTowerColObject;
+
 public:
     void SetHp(int hp) { m_iCurHp = hp; }
 
@@ -74,6 +77,9 @@ public:
 
     void m_SetId(int id) { m_id = id; }
     int  m_GetId() { return m_id; }
+
+    void SetColTower(CGameObject* _pObj) { m_pTowerColObject = _pObj; }
+    CGameObject* GetColTower() { return m_pTowerColObject; }
 
     CLONE(CTowerScript);
 };

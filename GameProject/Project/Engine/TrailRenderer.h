@@ -80,6 +80,8 @@ public:
 	void EmitPoint(Vec3 _vPos);
 	void ErasePoint();
 
+	void ClearPoint();
+
 	void Interpolate(size_t steps);
 
 public:
