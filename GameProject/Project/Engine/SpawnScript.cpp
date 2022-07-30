@@ -159,9 +159,11 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
 void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
 {
     Vec3 vPos = GetObj()->Transform()->GetLocalPos();
-    CGameObject* pObject = SpawnObject_Proejectile(L"MeshData\\redball.mdat", Pos,
-        Vec3(0.1f, 0.1f, 0.1f), Vec3(0.f, 0.f, 0.f), Vec3(100.f, 100.f, 100.f));
+    CGameObject* pObject = SpawnObject_Proejectile(L"FBX\\base3.fbx", Pos,
+        Vec3(10.f, 10.f, 10.f), Vec3(0.f, 0.f, 0.f), Vec3(10.f, 10.f, 10.f));
     pObject->GetScript<CProjectileScript>()->m_SetId(id);
+    //pObject->GetScript<CProjectileScript>()->SetL
+
     CreateObject(pObject, L"Blue");
 }
 
@@ -170,7 +172,12 @@ void CSpawnScript::SpawnObject_Pro(int id, Vec3 Pos)
 CGameObject* CSpawnScript::SpawnObject_Proejectile(const wstring& _strKey, Vec3 _vLocalPos,
     Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale)
 {
-    Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_strKey, _strKey);
+    //Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(_strKey, _strKey);
+    Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(_strKey);
+    pMeshData->Save(pMeshData->GetPath());
+
+
+
     CGameObject* pObject = pMeshData->Instantiate();
     pObject->AddComponent(new CTransform);
     pObject->AddComponent(new CCollider3D);

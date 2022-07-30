@@ -67,6 +67,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_DAMAGE_TOWER 32
 #define S2C_DELETE_TOWER 33
 #define S2C_CHAT_MSG 34
+#define S2C_DAMAGE_PLAYER 35
 
 
 
@@ -121,6 +122,7 @@ struct sc_packet_current_room {
 	int room_id;
 	int max_user;
 	int current_user;
+	char roomName[100];
 
 };
 
@@ -280,6 +282,13 @@ struct sc_chat_msg {
 };
 
 
+struct sc_damage_player {
+	char size;
+	char type;
+	int player_id;
+	int hp;
+};
+
 
 
 
@@ -326,6 +335,7 @@ struct cs_packet_make_room {
 	char type;
 	int room_id;
 	MATCH_TYPE match;
+	char roomName[100];
 };
 
 struct cs_packet_enter_room {

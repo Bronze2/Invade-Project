@@ -23,10 +23,12 @@ void CProjectileScript::Update()
 		if (m_pObject->GetScript<CMinionScript>() != nullptr) {
 			if (m_pObject->GetScript<CMinionScript>()->GetState() == MINION_STATE::WALK) {
 				CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
-				//DeleteObject(GetObj());
+				DeleteObject(GetObj());
 			}
 		}
 	}
+
+
 	else {
 		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		DeleteObject(GetObj());
@@ -67,6 +69,7 @@ void CProjectileScript::Update()
 
 		vLocalPos -= m_vDir * 500.f * DT;
 		//vLocalPos.y = vRestoreLocalPos.y;
+		
 	}
 
 	break;
@@ -101,7 +104,7 @@ void CProjectileScript::Update()
 		int a = 0;
 		float xvalue = m_vDir.x * 100.f * DT;
 
-		vLocalPos += m_vDir * 500.f * DT;
+		vLocalPos += m_vDir * 4500.f * DT;
 	}
 	break;
 	default:
@@ -119,12 +122,13 @@ void CProjectileScript::Update()
 
 
 #include "TowerScript.h"
+#include "PlayerScript.h"
 void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
 	if (_pOther->GetObj()->GetScript<CMinionScript>() != nullptr) {
 		if (nullptr != _pOther->GetObj()) {
 			if (m_pObject->GetScript<CMinionScript>() != nullptr) {
-				if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_pObject->GetScript<CMinionScript>()->GetCamp())
+				if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_eCamp)
 				{
 					_pOther->GetObj()->GetScript<CMinionScript>()->GetDamage(m_uiDamage);
 					CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
@@ -141,8 +145,18 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 		}
 
 	}
-	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr&& m_eProjectileType == PROJECTILE_TYPE::MINION) {
-		//_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
+
+
+	if (_pOther->GetObj()->GetScript<CTowerScript>() != nullptr && m_eProjectileType == PROJECTILE_TYPE::MINION) {
+		_pOther->GetObj()->GetScript<CTowerScript>()->GetDamage(m_uiDamage);
+		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
+		DeleteObject(GetObj());
+	}
+
+	if (_pOther->GetObj()->GetScript<CPlayerScript>() != nullptr && m_eProjectileType == PROJECTILE_TYPE::TOWER) {
+		
+
+		_pOther->GetObj()->GetScript<CPlayerScript>()->GetDamage(m_uiDamage);
 		CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 		DeleteObject(GetObj());
 	}
@@ -150,9 +164,15 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 void CProjectileScript::Init()
 {
+	m_uiDamage = 100;
 	m_SetId(SHARED_DATA::g_bulletindex);
 	SHARED_DATA::g_bullet[m_GetId()] = Transform()->GetLocalPos();
 	CServer::GetInst()->send_projectile_packet(m_GetId(), 0);
+
+	cout << "Projectile - " << m_GetId() << "Create - Pos ["
+		<< SHARED_DATA::g_bullet[m_GetId()].x<< ","
+		<< SHARED_DATA::g_bullet[m_GetId()].y<< ","
+		<< SHARED_DATA::g_bullet[m_GetId()].z << "]"<<endl;
 	SHARED_DATA::g_bulletindex++;
 }
 

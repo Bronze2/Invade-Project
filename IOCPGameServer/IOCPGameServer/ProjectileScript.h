@@ -21,6 +21,7 @@ private:
     Matrix m_matObjectWorldMatrix;
     int m_id;
 
+    CAMP_STATE m_eCamp;
 
     PROJECTILE_TYPE m_eProjectileType;
 public:
@@ -40,6 +41,7 @@ public:
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
 
+    void SetCamp(CAMP_STATE camp) { m_eCamp = camp; }
     void Init();
 
     void m_SetId(int id) { m_id = id; };

@@ -87,7 +87,7 @@ void CServer::send_my_client_enter_packet(int user_id)
 	send_packet(user_id, &p); 
 }
 
-void CServer::send_current_room(int user_id, int room_id, int current_user, int max_user)
+void CServer::send_current_room(int user_id, int room_id, int current_user, int max_user , string RoomName)
 {
 	sc_packet_current_room p;
 	p.size = sizeof(p);
@@ -95,6 +95,7 @@ void CServer::send_current_room(int user_id, int room_id, int current_user, int 
 	p.room_id = room_id;
 	p.current_user = current_user;
 	p.max_user = max_user;
+	strcpy(p.roomName, RoomName.c_str());
 	send_packet(user_id, &p);
 }
 
@@ -363,6 +364,23 @@ void CServer::send_projectile_packet(int projectile_id, int type)
 
 	for (int i = 0; i < SHARED_DATA::current_user; ++i)
 		send_packet(i, &packet);
+}
+
+//Projectile Ãß°¡
+void CServer::send_damage_player(int player_id, int hp)
+{
+	sc_damage_player packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_DAMAGE_PLAYER;
+	packet.player_id = player_id;
+	packet.hp = hp;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == SHARED_DATA::g_clients[player_id].room_id) {
+			send_packet(cl.second.m_id, &packet);
+		}
+	}
+
 }
 
 void CServer::send_create_arrow_packet(int client_id, int arrow_id, Vec3 Pos, Vec3 Rot, PACKET_SKILL skill)

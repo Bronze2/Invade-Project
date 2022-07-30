@@ -40,6 +40,9 @@ private:
     CAMP_STATE m_camp;
     bool isMain;
     CGameObject* m_pPlayer;
+
+
+    bool isFirstArrow;
 public:
 
     CGameObject* GetCurArrow() { return m_pArrow[m_iCurArrow]; }

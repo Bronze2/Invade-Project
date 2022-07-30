@@ -81,6 +81,7 @@ struct MINION {
 	float m_attack_max_time = 100;
 	float m_attack_current_time = 0;
 	bool m_during_attack = false;
+	std::chrono::high_resolution_clock::time_point AttackTime;
 };
 
 

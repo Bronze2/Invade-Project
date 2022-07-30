@@ -29,6 +29,7 @@ struct RoomInfo {
 	int room_id;
 	int roomMaxUser;
 	int roomCurrentUser;
+	char room_name[100];
 };
 
 struct CLIENT {
@@ -81,11 +82,11 @@ public:
 	void send_move_block_packet(int Client_id, Vec3 Pos);
 	void send_player_helemt(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 	//Room
-	void send_make_room_packet( MATCH_TYPE match_type);
+	void send_make_room_packet( MATCH_TYPE match_type, char RoomName[255]);
 	void send_enter_room_packet(int room_id);
 	void send_lobby_ready(bool isReady);
 	void send_lobby_change_skill(ELEMENT_TYPE skill);
-	void send_chat_msg(char msg[255]);
+	void send_chat_msg(char msg[100]);
 
 	void send_arrow_create_skill(Vec3 LocalPos, PACKET_SKILL skill);
 	void send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAMP_STATE camp);

@@ -40,6 +40,7 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
     pObject->GetScript<CMinionScript>()->SetIndex(index);
     pObject->GetScript<CMinionScript>()->SetFirstTower(m_pFirstTower);
     pObject->GetScript<CMinionScript>()->SetSecondTower(m_pSecondTower);
+    pObject->GetScript<CMinionScript>()->SetRect(25, 25);
 	pObject->GetScript<CMinionScript>()->Init();
 
 

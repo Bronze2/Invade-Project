@@ -30,6 +30,7 @@ void Network::Init()
 	//수민 192.168.203.24
 	//E320 실습실 10.30.2.115
 	//긱사 포트포워딩 121.190.132.143 : 8012
+	//10.30.2.19
 	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
@@ -295,13 +296,15 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_deleteMinion(my_packet->id);
 	}
 	break;
+	
+	
 	case S2C_DAMAGE_MINION:
 	{
 		sc_packet_damage_minion* my_packet = reinterpret_cast<sc_packet_damage_minion*>(ptr);
 		CSceneMgr::GetInst()->net_damageMinion(my_packet->minion_id, (int)my_packet->camp , my_packet->current_hp);
 
 	}
-		break;
+	break;
 
 	case S2C_DAMAGE_TOWER:
 	{
@@ -334,13 +337,23 @@ void Network::ProcessPacket(char* ptr)
 	}
 	break;
 
-
 	case S2C_ARROW_CREATE_SKILL:
 	{
 		sc_packet_arrow_create_skill* my_packet = reinterpret_cast<sc_packet_arrow_create_skill*>(ptr);
 
 		Vec3 LocalPos = Vec3(my_packet->LocalPos.x, my_packet->LocalPos.y, my_packet->LocalPos.z);
 		CSceneMgr::GetInst()->net_CreateSkill(LocalPos, (int)my_packet->skill, (int)my_packet->camp);
+	}
+	break;
+	
+
+	// 추가 --> hp == damage 이름 헷갈리지말기 hp가 받은 damage임 이름 잘못넣었음 난 바보 멍청이 똥개니까
+	case S2C_DAMAGE_PLAYER:
+	{
+		 
+		sc_damage_player* my_packet = reinterpret_cast<sc_damage_player*>(ptr);
+		CSceneMgr::GetInst()->net_damagePlayer(my_packet->player_id, my_packet->hp);
+		
 	}
 	break;
 
@@ -357,6 +370,7 @@ void Network::ProcessPacket(char* ptr)
 		room.room_id = my_packet->room_id;
 		room.roomCurrentUser = my_packet->current_user;
 		room.roomMaxUser = my_packet->max_user;
+		strcpy_s(room.room_name, my_packet->roomName);
 		cout << "==방 정보==" << endl;
 		cout << "RoomID : " << room.room_id << "Current :" << room.roomCurrentUser << "Max :" << room.roomMaxUser << endl;
 		roomInfo.push_back(room);
@@ -608,7 +622,7 @@ void Network::send_rotation_packet(Vec3 Rot)
 	send_packet(&m_packet);
 }
 
-void Network::send_make_room_packet(MATCH_TYPE match_type)
+void Network::send_make_room_packet(MATCH_TYPE match_type, char RoomName[255])
 {
 
 	m_Client.isHost = true;
@@ -617,6 +631,7 @@ void Network::send_make_room_packet(MATCH_TYPE match_type)
 	m_packet.size = sizeof(m_packet);
 	m_packet.room_id = m_Client.id;
 	m_packet.match = match_type;
+	strcpy_s(m_packet.roomName, RoomName);
 	send_packet(&m_packet);
 }
 

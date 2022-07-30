@@ -18,6 +18,8 @@ private:
 
 	map<int, vector<int>> LobbyBlue;
 	map<int, vector<int>> LobbyRed;
+	map<int, string> RoomName;
+
 
 
 public:
@@ -35,12 +37,13 @@ public:
 	map<int, vector<int>> getMatchRoom() {
 		return Match2by2;
 	}
+	string GetRoomName(int id) { return RoomName[id]; }
 
-	void makeRoom(int room_id, MATCH_TYPE matchType);
+
+	void makeRoom(int room_id, MATCH_TYPE matchType , char _RoomName[100]);
 	void enterRoom(int room_id, int clinet_id);
 	vector<int > getLobbyTeamBlue(int room_id) { return LobbyBlue[room_id]; }
 	vector<int > getLobbyTeamRed(int room_id) { return LobbyRed[room_id]; }
-
 };
 
 
