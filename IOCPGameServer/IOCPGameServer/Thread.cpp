@@ -444,6 +444,7 @@ void CThread::process_packet(int user_id, char* buf)
 		//CServer::GetInst()->send_collision_arrow(user_id, packet->arrow_id, packet->coll_id, packet->coll_type);
 
 	}
+	break;
 
 	case C2S_CHAT_MSG:
 	{

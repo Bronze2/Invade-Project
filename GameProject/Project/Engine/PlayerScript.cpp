@@ -451,7 +451,7 @@ void CPlayerScript::Awake()
 
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(m_pThunderParticle);
 		GetObj()->AddChild(m_pThunderParticle);
-		
+
 		m_pBuffParticle = new CGameObject;
 		m_pBuffParticle->AddComponent(new CTransform);
 		m_pBuffParticle->AddComponent(new CParticleSystem);
@@ -476,104 +476,110 @@ void CPlayerScript::Awake()
 		tResolution res = CRenderMgr::GetInst()->GetResolution();
 		Vec3 vHPBarScale = Vec3(res.fWidth / 6.f, res.fHeight / 25.f, 1.f);
 		Vec3 vPlayerTexScale = Vec3(res.fWidth / 20.f, res.fHeight / 11.f, 1.f);		// 80,. 77
-		
-																						//hp
-		m_pHPBar = new CGameObject;
-		m_pHPBar->SetName(L"MainClient HPBar");
-		m_pHPBar->AddComponent(new CTransform);
-		m_pHPBar->AddComponent(new CMeshRender);
-		m_pHPBar->FrustumCheck(false);
-		m_pHPBar->MeshRender()->SetDynamicShadow(false);
-		m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
-		m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x / 2 + vPlayerTexScale.x - 5.f, res.fHeight / 2.f - vPlayerTexScale.y / 2 - 10.f, 1.f));
-		m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
-		pUIHPBarMtrl->DisableFileSave();
-		pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
-		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
 
-		// UI수정 수민
-		m_pMainHelmetUI = new CGameObject;
-		m_pMainHelmetUI->SetName(L"MainClient UIHelmetTex");
-		m_pMainHelmetUI->AddComponent(new CTransform);
-		m_pMainHelmetUI->AddComponent(new CMeshRender);
-		m_pMainHelmetUI->FrustumCheck(false);
-		m_pMainHelmetUI->MeshRender()->SetDynamicShadow(false);
-		m_pMainHelmetUI->Transform()->SetLocalPos(Vec3(-res.fWidth / 2.f + vPlayerTexScale.x / 2 + 10.f, res.fHeight/2.f - vPlayerTexScale.y / 2 - 10.f, 1.f));
-		m_pMainHelmetUI->Transform()->SetLocalScale(vPlayerTexScale);
-		m_pMainHelmetUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
-		Ptr<CMaterial> pUIHelmetTexMtrl = new CMaterial;
-		pUIHelmetTexMtrl->DisableFileSave();
-		pUIHelmetTexMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-		m_pMainHelmetUI->MeshRender()->SetMaterial(pUIHelmetTexMtrl);
-		Ptr<CTexture> pPlayerTexTex;
-		if (m_eCamp == CAMP_STATE::BLUE) {
-			switch (m_iType) {
-			case ELEMENT_TYPE::WATER:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
-				break;
-			case ELEMENT_TYPE::FIRE:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
-				break;
-			case ELEMENT_TYPE::DARK:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
-				break;
-			case ELEMENT_TYPE::THUNDER:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
-				break;
-			case ELEMENT_TYPE::WIND:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
-				break;	
+
+																				//hp
+
+		if (isMain) {
+			m_pHPBar = new CGameObject;
+			m_pHPBar->SetName(L"MainClient HPBar");
+			m_pHPBar->AddComponent(new CTransform);
+			m_pHPBar->AddComponent(new CMeshRender);
+			m_pHPBar->FrustumCheck(false);
+			m_pHPBar->MeshRender()->SetDynamicShadow(false);
+			m_pHPBar->Transform()->SetLocalScale(vHPBarScale);
+			m_pHPBar->Transform()->SetLocalPos(Vec3(-res.fWidth / 2 + vHPBarScale.x / 2 + vPlayerTexScale.x + 20.f, res.fHeight / 2.f - vPlayerTexScale.y / 2 - 10.f, 1.f));
+			m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+			Ptr<CMaterial> pUIHPBarMtrl = new CMaterial;
+			pUIHPBarMtrl->DisableFileSave();
+			pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
+			m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
+
+			// UI수정 수민
+			m_pMainHelmetUI = new CGameObject;
+			m_pMainHelmetUI->SetName(L"MainClient UIHelmetTex");
+			m_pMainHelmetUI->AddComponent(new CTransform);
+			m_pMainHelmetUI->AddComponent(new CMeshRender);
+			m_pMainHelmetUI->FrustumCheck(false);
+			m_pMainHelmetUI->MeshRender()->SetDynamicShadow(false);
+			m_pMainHelmetUI->Transform()->SetLocalPos(Vec3(-res.fWidth / 2.f + vPlayerTexScale.x / 2 + 10.f, res.fHeight / 2.f - vPlayerTexScale.y / 2 - 10.f, 1.f));
+			m_pMainHelmetUI->Transform()->SetLocalScale(vPlayerTexScale);
+			m_pMainHelmetUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+			Ptr<CMaterial> pUIHelmetTexMtrl = new CMaterial;
+			pUIHelmetTexMtrl->DisableFileSave();
+			pUIHelmetTexMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+			m_pMainHelmetUI->MeshRender()->SetMaterial(pUIHelmetTexMtrl);
+			Ptr<CTexture> pPlayerTexTex;
+			if (m_eCamp == CAMP_STATE::BLUE) {
+				switch (m_iType) {
+				case ELEMENT_TYPE::WATER:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
+					break;
+				case ELEMENT_TYPE::FIRE:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+					break;
+				case ELEMENT_TYPE::DARK:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
+					break;
+				case ELEMENT_TYPE::THUNDER:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
+					break;
+				case ELEMENT_TYPE::WIND:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
+					break;
+				}
 			}
-		}
-		else if (m_eCamp == CAMP_STATE::RED) {
-			switch (m_iType) {
-			case ELEMENT_TYPE::WATER:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
-				break;
-			case ELEMENT_TYPE::FIRE:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
-				break;
-			case ELEMENT_TYPE::DARK:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
-				break;
-			case ELEMENT_TYPE::THUNDER:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
-				break;
-			case ELEMENT_TYPE::WIND:
-				pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
-				break;
+			else if (m_eCamp == CAMP_STATE::RED) {
+				switch (m_iType) {
+				case ELEMENT_TYPE::WATER:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
+					break;
+				case ELEMENT_TYPE::FIRE:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+					break;
+				case ELEMENT_TYPE::DARK:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
+					break;
+				case ELEMENT_TYPE::THUNDER:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
+					break;
+				case ELEMENT_TYPE::WIND:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
+					break;
+				}
 			}
+			m_pMainHelmetUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pMainHelmetUI);
+
+			// 사망
+			m_pDeadEffect = new CGameObject;
+			m_pDeadEffect->SetName(L"DeadEffect");
+			m_pDeadEffect->FrustumCheck(false);
+			m_pDeadEffect->AddComponent(new CTransform);
+			m_pDeadEffect->AddComponent(new CMeshRender);
+			m_pDeadEffect->SetActive(false);
+			tResolution res1 = CRenderMgr::GetInst()->GetResolution();
+			Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
+
+			m_pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+			m_pDeadEffect->Transform()->SetLocalScale(vScale1);
+
+			m_pDeadEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+			Ptr<CMaterial> pSkillMtrl = new CMaterial;
+			pSkillMtrl->DisableFileSave();
+			pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexEffectShader"));
+			CResMgr::GetInst()->AddRes(L"TexEffectMtrl", pSkillMtrl);
+			Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"DeadEffect", L"Texture\\DeadEffect.png");
+			m_pDeadEffect->MeshRender()->SetMaterial(pSkillMtrl);
+			m_pDeadEffect->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+				pTex.GetPointer());
+
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDeadEffect);
+
 		}
-		m_pMainHelmetUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pPlayerTexTex.GetPointer());
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pMainHelmetUI);
-
-		// 사망
-		m_pDeadEffect = new CGameObject;
-		m_pDeadEffect->SetName(L"DeadEffect");
-		m_pDeadEffect->FrustumCheck(false);
-		m_pDeadEffect->AddComponent(new CTransform);
-		m_pDeadEffect->AddComponent(new CMeshRender);
-		m_pDeadEffect->SetActive(false);
-		tResolution res1 = CRenderMgr::GetInst()->GetResolution();
-		Vec3 vScale1 = Vec3(res1.fWidth, res1.fHeight, 1.f);
-
-		m_pDeadEffect->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
-		m_pDeadEffect->Transform()->SetLocalScale(vScale1);
-
-		m_pDeadEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		Ptr<CMaterial> pSkillMtrl = new CMaterial;
-		pSkillMtrl->DisableFileSave();
-		pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexEffectShader"));
-		CResMgr::GetInst()->AddRes(L"TexEffectMtrl", pSkillMtrl);
-		Ptr<CTexture> pTex = CResMgr::GetInst()->Load<CTexture>(L"DeadEffect", L"Texture\\DeadEffect.png");
-		m_pDeadEffect->MeshRender()->SetMaterial(pSkillMtrl);
-		m_pDeadEffect->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
-			pTex.GetPointer());		
-
-		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDeadEffect);
 	}
+
 	Ptr<CMeshData> pHelmetMesh;
 
 	if (m_eCamp == CAMP_STATE::BLUE) {
@@ -621,6 +627,9 @@ void CPlayerScript::Awake()
 	m_pHelmetObject->SetName(L"Helmet");
 	m_pHelmetObject->Transform()->SetLocalScale(Vec3(0.1f, 0.09f, 0.1f));
 	GetObj()->AddChild(m_pHelmetObject);
+
+	m_iMaxHp = 1500;
+	m_iCurHp = 1500;
 }
 
 
@@ -631,28 +640,29 @@ void CPlayerScript::Update()
 	
 	AttachHelmet();
 	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {	
-		SkillCoolTimeCheck();
-		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
-		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
-		Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
-		Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
-
-		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-		CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
-		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-		CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
-		CGameObject* pBow = GetObj()->GetChild()[0];
-
-		Vec3 vPos = Transform()->GetLocalPos();
-		Vec3 vPos2 = Transform()->GetLocalPos();
-		Vec3 vPos3 = Transform()->GetWorldPos();
-		Vec3 vRot = Transform()->GetLocalRot();
-		Vec3 vRestoreRot;
-		int rotydegree = XMConvertToDegrees(vRot.y);
-		int reminder = rotydegree % 360 + 90;
-		Update_LerpPos();
-
 		if (isMain) {
+
+			SkillCoolTimeCheck();
+			Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+			Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+			Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
+			Transform()->SetWorldDir(DIR_TYPE::FRONT, vDirUp);
+
+			CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
+			CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
+			CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
+			//CCameraScript* pCameraScript = pCamera->GetScript<CCameraScript>();
+			//CGameObject* pBow = GetObj()->GetChild()[0];
+
+			Vec3 vPos = Transform()->GetLocalPos();
+			Vec3 vPos2 = Transform()->GetLocalPos();
+			Vec3 vPos3 = Transform()->GetWorldPos();
+			Vec3 vRot = Transform()->GetLocalRot();
+			Vec3 vRestoreRot;
+			int rotydegree = XMConvertToDegrees(vRot.y);
+			int reminder = rotydegree % 360 + 90;
+			Update_LerpPos();
+
 			if (0 <= reminder && reminder <= 180) {
 				m_bCheckDegree = true;
 			}
@@ -864,6 +874,7 @@ void CPlayerScript::Update()
 				}
 				Network::GetInst()->send_rotation_packet(vRot);
 			}
+
 			//if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 			//	m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 			//	// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)

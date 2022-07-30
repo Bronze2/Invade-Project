@@ -6,7 +6,8 @@
 
 void CPlayerScript::Init()
 {
-	m_iCurHp = 1000;
+	m_iCurHp = 1500;
+	m_uiMaxHp = 1500;
 }
 
 void CPlayerScript::GetDamage(const UINT& _uiDamage)
@@ -14,7 +15,8 @@ void CPlayerScript::GetDamage(const UINT& _uiDamage)
 	m_iCurHp -= _uiDamage;
 
 	if (m_iCurHp <= 0.f) {
-		//죽음상태 변경
+		CServer::GetInst()->send_damage_player(m_GetId(), _uiDamage);
+		//죽음상태 추가
 	}
 	else {
 		cout << "데미지" << _uiDamage << endl;

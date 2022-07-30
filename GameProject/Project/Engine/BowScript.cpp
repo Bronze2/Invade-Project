@@ -132,8 +132,8 @@ void CBowScript::Update()
 
 			
 			//다른클라 화살보내기 잠깐 주석
-			//Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
-			//	GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
+			Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
+				GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
 
 
 			cout << "CurArrow" << m_iCurArrow << endl;
