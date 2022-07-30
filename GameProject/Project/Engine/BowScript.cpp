@@ -44,7 +44,7 @@ void CBowScript::Update()
 		Vec3 vArrowPos = m_pArrow[m_iCurArrow]->Transform()->GetLocalPos();
 
 		if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed = 7000.f;
+			m_fArrowSpeed = 3000.f;
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->Init();
 			m_pArrow[m_iCurArrow]->SetActive(true);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetState(ARROW_STATE::ATTACK_READY);
@@ -59,12 +59,12 @@ void CBowScript::Update()
 		//}
 
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-			m_fArrowSpeed += 10000.f * DT;
-			if (m_fArrowSpeed < 7000.f) {
-				m_fArrowSpeed = 7000.f;
+			m_fArrowSpeed += 5000.f * DT;
+			if (m_fArrowSpeed < 3000.f) {
+				m_fArrowSpeed = 3000.f;
 			}
-			else if (m_fArrowSpeed > 10000.f) {
-				m_fArrowSpeed = 10000.f;
+			else if (m_fArrowSpeed > 5000.f) {
+				m_fArrowSpeed = 5000.f;
 				m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 			}
 		}
@@ -79,6 +79,8 @@ void CBowScript::Update()
 			Vec3 vCrossHairDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
 			Vec3 vCrossHairPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
 
+			vCrossHairDir = vCrossHairDir.Normalize();
+
 			//Vec3 vTargetDir = pCrossHair->GetScript<CCrossHairScript>()->GetDir();
 			//Vec3 vStartPos = pCrossHair->GetScript<CCrossHairScript>()->GetPos();
 
@@ -92,11 +94,10 @@ void CBowScript::Update()
 			Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 			Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 			float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, 50.f + fCamRotDegree, 0.f);
+			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetLocalDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, 80.f + fCamRotDegree, 0.f);
 			Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 
-			Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);
-			vArrowDir.y = vCrossHairDir.y;
+			Vec3 vArrowDir = vCrossHairPos - vArrowPos;
 			vArrowDir.Normalize();
 
 			//화살 수정
@@ -110,6 +111,7 @@ void CBowScript::Update()
 			m_pArrow[m_iCurArrow]->Transform()->SetLocalRot(vArrowRot);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetStartPos(vArrowPos);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vCrossHairDir);
+			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetHrztDir(vArrowDir);
 			Vec3 vQtrnDir = GetObj()->GetParent()->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 			m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetQtrnRotAxis(vQtrnDir);
 

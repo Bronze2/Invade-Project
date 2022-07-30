@@ -67,7 +67,9 @@ private:
     Vec4 m_LerpQut;
 
     CAMP_STATE m_eCamp;
-   
+
+    Vec3 m_vHrztDir;
+
 public:
     virtual void Awake();
     virtual void Update();
@@ -124,6 +126,8 @@ public:
 
     const UINT& GetDmg() { return m_iDamage; }
     void SetDmg(const UINT& _iDmg) { m_iDamage = _iDmg; }
+
+    void SetHrztDir(Vec3 _vDir) { m_vHrztDir = _vDir; }
     
     //½ºÅ³
     void WaterSkill0(CCollider3D* _pColldier);

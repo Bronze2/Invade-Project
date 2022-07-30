@@ -862,6 +862,13 @@ void CPlayerScript::Update()
 				else {
 					m_eState = PLAYER_STATE::ATTACK_READY;
 				}
+
+				if (m_tESkill->bUse) {
+					if ((UINT)SKILL_CODE::WIND_0 == m_tESkill->Code) {
+						m_eState = PLAYER_STATE::ATTACK_READY;
+					}
+				}
+
 				Network::GetInst()->send_rotation_packet(vRot);
 			}
 			//if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
@@ -1248,6 +1255,12 @@ void CPlayerScript::UseSkill()
 				m_tESkill->bUse = true;
 				m_tESkill->StartTime = chrono::system_clock::now();
 				m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tESkill);
+			
+				if ((UINT)SKILL_CODE::WIND_0 == m_tESkill->Code) {
+					CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
+					pCamera->GetScript<CCameraScript>()->SetWind0Cam(true);
+				}
+			
 			}
 		}
 	}

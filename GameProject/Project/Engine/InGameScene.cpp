@@ -276,8 +276,8 @@ void CInGameScene::Init()
 	pColObj->MeshRender()->SetMaterial(pMtrl);
 	pColObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pTransparency.GetPointer());
 	pColObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pColObj->Collider3D()->SetOffsetScale(Vec3(80.f, 200.f, 80.f));      // 80.f, 200.f, 80.f ?????
-	pColObj->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pColObj->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));      // 80.f, 200.f, 80.f ?????
+	pColObj->Collider3D()->SetOffsetPos(Vec3(0.f, 100.f, 0.f));
 	pColObj->GetScript<CPlayerColScript>()->SetPlayer(pObject);
 	pObject->GetScript<CPlayerScript>()->SetColPlayer(pColObj);
 	FindLayer(L"Blue")->AddGameObject(pColObj, false);

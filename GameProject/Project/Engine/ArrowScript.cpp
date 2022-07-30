@@ -12,6 +12,7 @@
 #include "CTowerColScript.h"
 #include "PlayerColScript.h"
 #include "BoxColScript.h"
+#include "CameraScript.h"
 
 void CArrowScript::SetSkill(SKILL* _pSkill)
 {
@@ -47,8 +48,6 @@ void CArrowScript::Awake()
 		m_pParticle->ParticleSystem()->SetEndColor(Vec4(1.f, 1.f, 1.f, 1.0f));
 		m_pParticle->ParticleSystem()->SetStartScale(2.f);
 		m_pParticle->ParticleSystem()->SetEndScale(5.f);
-
-
 		break;
 	case ELEMENT_TYPE::FIRE:
 		m_pParticle->AddComponent(new CParticleSystem);
@@ -76,6 +75,7 @@ void CArrowScript::Awake()
 		break;
 	case ELEMENT_TYPE::WIND:
 		m_pParticle->AddComponent(new CParticleSystem);
+		m_pParticle->ParticleSystem()->Init(CResMgr::GetInst()->FindRes<CTexture>(L"smokeparticle"), L"ParticleUpdateMtrl");
 		break;
 
 
@@ -145,7 +145,7 @@ void CArrowScript::Update()
 		if (m_isMain) {
 			if (!m_bMaxCharged) {
 				Vec3 vRestorePos = vPos;
-				vPos.x += 30.f * DT;			// 15.f
+				//vPos.x += 30.f * DT;			// 15.f
 			}
 			Transform()->SetLocalPos(vPos);
 		}
@@ -189,55 +189,73 @@ void CArrowScript::Update()
 				m_pTrail->TrailRenderer()->SetEmit(true);
 
 				// 화살 기존 코드
-
 				m_vXZDir = Vec3(m_vDir.x, 0.f, m_vDir.z);
 				m_vXZDir.Normalize();
 				m_fAngle = acos(Dot(m_vDir, m_vXZDir));
-				float fGravity;
-
-				float fDegree = XMConvertToDegrees(m_fAngle);
-				if (fDegree <= 25.f) {
-					m_fAngle -= PI / 8.f;
-					fGravity = GRAVITY * 250;
-				}
-				else if (fDegree > 25.f && fDegree <= 31.f) {
-					m_fAngle -= PI / 8.f;
-					fGravity = GRAVITY * 300;
-				}
-				else {
-					m_fAngle -= PI / 7.f;
-					fGravity = GRAVITY * 350;
-				}
-				
 				m_fTime += DT;
 
-				vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-				vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
-				//처음 화살 Update
-				if (m_fVelocityY == 5000) {
-					//  현재 포물선 운동을 하고 있는 Y값
-					// 
-					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+				
+				if (nullptr != m_pSkill) {
+					if ((UINT)SKILL_CODE::WIND_0 == m_pSkill->Code) {
+						
+						vPos.z += m_vXZDir.z * (m_fSpeed * m_fTime);
+						vPos.x += m_vXZDir.x * (m_fSpeed * m_fTime);
 
-					//최고점 높이 == velocity가 0이되는 지점. 
-					m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / (fGravity * 2);
-					m_fPerRotate = m_fHighest / m_fAngle;
-					Transform()->SetLocalPos(vPos);
+						Transform()->SetLocalPos(vPos);
 
+						CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
+						pCamera->GetScript<CCameraScript>()->SetWind0Cam(false);
+					}
 				}
 				else {
-					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
-					float fHigh = m_fHighest - m_fVelocityY;
-					m_fRotateAngle = fHigh / m_fPerRotate;
-					if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
-						m_fDir = -1;
-					}
-					m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
-					Transform()->SetQuaternion(m_qRot);
-					Transform()->SetLocalPos(vPos);
 
+					float fGravity;
+
+					float fDegree = XMConvertToDegrees(m_fAngle);
+					if (fDegree <= 25.f) {
+						m_fAngle -= PI / 8.f;
+						fGravity = GRAVITY * 70.f;
+					}
+					else if (fDegree > 25.f && fDegree <= 31.f) {
+						m_fAngle -= PI / 8.f;
+						fGravity = GRAVITY * 70.f;
+					}
+					else {
+						m_fAngle -= PI / 7.f;
+						fGravity = GRAVITY * 70.f;
+					}
+
+					vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+					vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+					vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+					//처음 화살 Update
+					if (m_fVelocityY == 5000) {
+						//  현재 포물선 운동을 하고 있는 Y값
+						// 
+						m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+
+						//최고점 높이 == velocity가 0이되는 지점. 
+						m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / (fGravity * 2);
+						m_fPerRotate = m_fHighest / m_fAngle;
+						Transform()->SetLocalPos(vPos);
+
+					}
+					else {
+						m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+						float fHigh = m_fHighest - m_fVelocityY;
+						m_fRotateAngle = fHigh / m_fPerRotate;
+						if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
+							m_fDir = -1;
+						}
+						m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
+						Transform()->SetQuaternion(m_qRot);
+						Transform()->SetLocalPos(vPos);
+
+					}
 				}
+				
+
+				
 
 				if (nullptr != m_pSkill) {
 					if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
@@ -503,6 +521,8 @@ void CArrowScript::FireSkill1(CCollider3D* _pCollider)
 
 void CArrowScript::WindSkill0(CCollider3D* _pCollider)
 {
+
+
 	if (nullptr != _pCollider->GetObj()->GetScript<CPlayerScript>())
 		_pCollider->GetObj()->GetScript<CPlayerScript>()->SetDamage(m_pSkill->fDamage);
 	else {

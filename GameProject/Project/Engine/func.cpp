@@ -567,3 +567,15 @@ void CreateBoxObject(const Vec3& _vPos, const UINT& _idx)
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pColObj, false);
 
 }
+
+Vec3 VectorRotate(const Vec3& _Value, const Vec3& _Axis, const float _angle)
+{
+	XMVECTOR v = XMLoadFloat3(&_Value);
+	XMVECTOR axis = XMLoadFloat3(&_Axis);
+	XMVECTOR qtrn = XMQuaternionRotationAxis(axis, _angle);
+
+	XMVECTOR R = XMVector3Rotate(v, qtrn);
+	Vec3 result;
+	XMStoreFloat3(&result, R);
+	return result;
+}

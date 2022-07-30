@@ -45,7 +45,7 @@ void CCrossHairScript::Update()
     //m_vDir = XMVector3TransformNormal(vView, matViewInv);
     m_vDir.Normalize();
 
-    m_vPos = m_vPos + m_vDir * 100.f;
+    m_vPos = vCrossHairPos + m_vDir * 100.f;
 
 
     if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
