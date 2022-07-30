@@ -23,6 +23,9 @@ void CProjectileScript::Update()
 	if (!CSceneMgr::GetInst()->get_ProjectileDelete(m_id)) {
 		Vec3 vPos = Vec3::Lerp(Transform()->GetLocalPos(), CSceneMgr::GetInst()->get_ProjectilePos(m_id), DT * 10.f);
 		Transform()->SetLocalPos(vPos);
+	
+		fAngle += PI / 18;
+		Transform()->SetLocalRot(Vec3(fAngle,0,0));
 	}
 	else {
 		DeleteObject(GetObj());
@@ -60,6 +63,7 @@ void CProjectileScript::OnCollision3DEnter(CCollider3D* _pOther)
 
 void CProjectileScript::Init()
 {
+	fAngle = 0.f;
 	//Vec3 vLocalPos = Transform()->GetLocalPos();
 	//Vec3 vLocalRot = Transform()->GetLocalRot();
 	//Vec3 vLocalScale = Transform()->GetLocalScale();

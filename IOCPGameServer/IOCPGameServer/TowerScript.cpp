@@ -33,7 +33,7 @@ void CTowerScript::GetDamage(const UINT& _uiDamage)
 	m_iCurHp -= _uiDamage;
 
 	if (m_iCurHp <= 0.f && !GetObj()->IsFallDown()) {
-		//CServer::GetInst()->send_delete_tower(m_GetId());
+		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
 		DeleteObject(GetObj());
 		//GetObj()->SetFallDown();
 	}
@@ -196,15 +196,16 @@ void CTowerScript::CreateProjectile(const wstring& _Layer)
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CProjectileScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(200.f, 200.f, 200.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
+	pObject->GetScript<CProjectileScript>()->SetCamp(m_eCampState);
 
 	Vec3 vPlayerTargetPos = Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z);
 	Vec3 vMinionTargetPos = Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z);
-	Vec3 vProjectileStartPos = Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + 185.f, GetObj()->Transform()->GetWorldPos().z);
+	Vec3 vProjectileStartPos = Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + 585.f, GetObj()->Transform()->GetWorldPos().z);
 
 	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
 		pObject->GetScript<CProjectileScript>()->SetTargetPos(vPlayerTargetPos);
@@ -216,7 +217,7 @@ void CTowerScript::CreateProjectile(const wstring& _Layer)
 	pObject->Transform()->SetLocalPos(vProjectileStartPos);
 
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	Vec3 vDir;
 	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {

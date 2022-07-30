@@ -11,7 +11,7 @@ class CTowerScript :
     public CScript
 {
 private:
-    UINT m_iMaxHp;
+    int m_iMaxHp;
     int m_iCurHp;
     float m_fAttackRange;
 

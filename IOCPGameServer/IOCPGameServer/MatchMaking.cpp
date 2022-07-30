@@ -43,10 +43,13 @@ void CMatchMaking::enterRoom(int room_id , int client_id)
 
 
 
-void CMatchMaking::makeRoom(int room_id, MATCH_TYPE matchType)
+void CMatchMaking::makeRoom(int room_id, MATCH_TYPE matchType ,char _RoomName[100])
 {
 	if (matchType == MATCH_TYPE::TWO) {
+		string temp(_RoomName);
 		Match2by2[room_id].push_back(room_id);
+		RoomName[room_id] = temp;
+		cout << RoomName[room_id] << endl;
 	}
 
 	for (auto room : Match2by2) {

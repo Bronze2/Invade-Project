@@ -173,6 +173,59 @@ void CButtonScript::ExecuteReady(int id)
 	}
 }
 
+//void CButtonScript::ExecuteChangeSkill(int id)
+//{
+//	int select_id = 999;
+//	for (int i = 0; i < 8; ++i) {
+//		if (m_pPlayerObj[i]->GetScript<CPlayerScript>()->m_GetId() == id) {
+//			select_id = i;
+//		}
+//	}
+//	switch (m_eType) {
+//	case BUTTON_TYPE::SELECT_WATER:
+//		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx")->GetMesh());
+//		}
+//		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx")->GetMesh());
+//		}
+//		break;
+//	case BUTTON_TYPE::SELECT_DARK:
+//		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx")->GetMesh());
+//		}
+//		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx")->GetMesh());
+//		}
+//		break;
+//	case BUTTON_TYPE::SELECT_WIND:
+//		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx")->GetMesh());
+//		}
+//		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx")->GetMesh());
+//		}
+//		break;
+//	case BUTTON_TYPE::SELECT_THUNDER:
+//		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx")->GetMesh());
+//		}
+//		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx")->GetMesh());
+//		}
+//		break;
+//	case BUTTON_TYPE::SELECT_FIRE:
+//		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx")->GetMesh());
+//		}
+//		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+//			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx")->GetMesh());
+//		}
+//		break;
+//	}
+//}
+
+
 void CButtonScript::ExecuteChangeSkill(int id)
 {
 	int select_id = 999;
@@ -184,47 +237,47 @@ void CButtonScript::ExecuteChangeSkill(int id)
 	switch (m_eType) {
 	case BUTTON_TYPE::SELECT_WATER:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_DARK:
-		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_WIND:
-		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_THUNDER:
-		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx")->GetMesh());
-		}
-		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red01.mdat", L"MeshData\\Helmet_Red01.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_FIRE:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat")->GetMesh());
+		}
+		break;
+	case BUTTON_TYPE::SELECT_DARK:
+		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat")->GetMesh());
+		}
+		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat")->GetMesh());
+		}
+		break;
+	case BUTTON_TYPE::SELECT_THUNDER:
+		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+			// helmet_blue_04.mdat ¾ÈµÊ
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat")->GetMesh());
+		}
+		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red04.mdat", L"MeshData\\Helmet_Red04.mdat")->GetMesh());
+		}
+		break;
+	case BUTTON_TYPE::SELECT_WIND:
+		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue05.mdat", L"MeshData\\Helmet_Blue05.mdat")->GetMesh());
+		}
+		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red05.mdat", L"MeshData\\Helmet_Red05.mdat")->GetMesh());
 		}
 		break;
 	}
 }
-
 
 void CButtonScript::StatusCheck()
 {

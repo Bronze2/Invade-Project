@@ -69,7 +69,7 @@ private:
     float m_fCurDegree;
     int m_iKeyHoldCnt;
     UINT m_iMaxHp;
-    UINT m_iCurHp = 1500;
+    int m_iCurHp = 1000;
     CAMP_STATE m_eCamp;
     Vec3 restorePos;
     CGameObject* m_pBowObject;

@@ -196,7 +196,7 @@ void CArrowScript::Update()
 
 				vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
 				vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+				vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 170) * m_fTime * m_fTime));
 				//처음 화살 Update
 				if (m_fVelocityY == 5000) {
 					//  현재 포물선 운동을 하고 있는 Y값
@@ -204,13 +204,13 @@ void CArrowScript::Update()
 					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
 
 					//최고점 높이 == velocity가 0이되는 지점. 
-					m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 70) * 2);
+					m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / ((GRAVITY * 170) * 2);
 					m_fPerRotate = m_fHighest / m_fAngle;
 					Transform()->SetLocalPos(vPos);
 
 				}
 				else {
-					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 70) * m_fTime * m_fTime));
+					m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * (GRAVITY * 170) * m_fTime * m_fTime));
 					float fHigh = m_fHighest - m_fVelocityY;
 					m_fRotateAngle = fHigh / m_fPerRotate;
 					if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
@@ -359,7 +359,7 @@ void CArrowScript::Init()
 	//GetObj()->SetActive(false);
 	//SetState(ARROW_STATE::IDLE);
 
-	m_pBow->AddChild(GetObj());
+	//m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
 #include "MinionScript.h"

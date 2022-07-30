@@ -62,7 +62,14 @@ class CMinionScript :
     int coll_id;
     int coll_index_x;
     int coll_index_y;
+
+    std::chrono::high_resolution_clock::time_point AttackTime;
+    RECT bound;
+
 public:
+    RECT GetRect() { return bound; }
+    void SetPrevRect(int w, int h, Vec3 Pos);
+    void SetRect(int w, int h);
     void SetPrioty(int p) { movePrioty = p; }
     void SetFirstTower(CGameObject* _pObject) { m_pFirstTower = _pObject; }
     void SetSecondTower(CGameObject* _pObject) { m_pSecondTower = _pObject; }

@@ -61,10 +61,10 @@ void CBowScript::Update()
 		if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
 			m_fArrowSpeed += 3000.f * DT;
 			if (m_fArrowSpeed < 1500.f) {
-				m_fArrowSpeed = 1500.f;
+				m_fArrowSpeed = 5000.f;
 			}
 			else if (m_fArrowSpeed > 3000.f) {
-				m_fArrowSpeed = 3000.f;
+				m_fArrowSpeed = 7000.f;
 				m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetMaxCharged(true);
 			}
 		}
@@ -129,9 +129,13 @@ void CBowScript::Update()
 
 			
 			//다른클라 화살보내기 잠깐 주석
-			//Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
-			//	GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
-
+			if (!isFirstArrow) {
+				Network::GetInst()->send_arrow_packet(m_pPlayer->GetScript<CPlayerScript>()->m_GetId(),
+					GetCurArrow()->GetScript<CArrowScript>()->GetPacketSkill());
+			}
+			else {
+				isFirstArrow = false;
+			}
 
 			cout << "CurArrow" << m_iCurArrow << endl;
 			m_iCurArrow++;
@@ -196,9 +200,7 @@ void CBowScript::CreateArrow(PACKET_SKILL skill)
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetSpeed(m_fArrowSpeed);
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetisMain(false);
 	m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetCamp(pPlayer->GetScript<CPlayerScript>()->GetCamp());
-
 	//m_pArrow[m_iCurArrow]->GetScript<CArrowScript>()->SetDir(vTargetDir);
-
 	Vec3 vPlayerPos = pPlayer->Transform()->GetWorldPos();
 	Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 	Vec3 vArrowRot = Vec3(vPlayerRot.x, XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
@@ -418,6 +420,7 @@ void CBowScript::Awake()
 	m_iCurArrow = 0;
 	m_iPower = 1;
 	m_bMaxCharged = false;
+	isFirstArrow = true;
 }
 
 

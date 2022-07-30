@@ -459,48 +459,60 @@ void CPlayerScript::Awake()
 		m_pHPBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
 		CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pHPBar);
 
+
+		m_iMaxHp = 1000;
+		m_iCurHp = 1000;
+
 	}
 	Ptr<CMeshData> pHelmetMesh;
-
 	if (m_eCamp == CAMP_STATE::BLUE) {
-		switch (m_iType) {
-		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx");
-			break;
-		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx");
-			break;
-		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx");
-			break;
-		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx");
-			break;
-		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx");
-			break;
+		pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat");
 
-		}
 	}
-	else if (m_eCamp == CAMP_STATE::RED) {
-		switch (m_iType) {
-		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx");
-			break;
-		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx");
-			break;
-		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx");
-			break;
-		case ELEMENT_TYPE::THUNDER:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx");
-			break;
-		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx");
-			break;
-		}
+	else {
+		pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red01.mdat", L"MeshData\\Helmet_Red01.mdat");
 	}
+	//if (m_eCamp == CAMP_STATE::BLUE) {
+	//	switch (m_iType) {
+	//	case ELEMENT_TYPE::WATER:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue01.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::FIRE:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue02.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::DARK:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue03.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::THUNDER:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue04.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::WIND:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Blue05.fbx");
+	//		break;
+	//	}
+	//		pHelmetMesh->Save(pHelmetMesh->GetPath());
+	//}
+	//else if (m_eCamp == CAMP_STATE::RED) {
+	//	switch (m_iType) {
+	//	case ELEMENT_TYPE::WATER:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red01.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::FIRE:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red02.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::DARK:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red03.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::THUNDER:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red04.fbx");
+	//		break;
+	//	case ELEMENT_TYPE::WIND:
+	//		pHelmetMesh = CResMgr::GetInst()->LoadFBX(L"FBX\\Helmet_Red05.fbx");
+	//		break;
+	//	}
+	//	pHelmetMesh->Save(pHelmetMesh->GetPath());
+
+	//}
 	m_pHelmetObject = pHelmetMesh->Instantiate();
 	m_pHelmetObject->MeshRender()->SetDynamicShadow(true);
 	m_pHelmetObject->FrustumCheck(false);
@@ -517,7 +529,6 @@ void CPlayerScript::Update()
 	
 	AttachHelmet();
 	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {	
-		SkillCoolTimeCheck();
 		Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 		Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
 		Transform()->SetWorldDir(DIR_TYPE::UP, vDirFront);
@@ -539,6 +550,8 @@ void CPlayerScript::Update()
 		Update_LerpPos();
 
 		if (isMain) {
+			SkillCoolTimeCheck();
+
 			if (0 <= reminder && reminder <= 180) {
 				m_bCheckDegree = true;
 			}
@@ -1286,6 +1299,8 @@ void CPlayerScript::GetDamage(const UINT& _uiDamage)
 	else {
 		SetState((int)PLAYER_STATE::DEMAGED);
 	}
+
+	
 }
 
 

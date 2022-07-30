@@ -26,7 +26,7 @@ public:
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, PACKET_SKILL skill);
 
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
-    void GetDamage(const UINT& _uiDamage) { m_iCurHp -= _uiDamage; }
+    void GetDamage(const UINT& _uiDamage);
 
     void SetCamp(CAMP_STATE _eCamp) { m_eCamp = _eCamp; }
     const CAMP_STATE& GetCamp()const { return m_eCamp; }

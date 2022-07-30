@@ -35,7 +35,7 @@ void CMinionScript::Init()
 	m_iCurHp = m_uiMaxHp;
 	m_pTarget = m_pNexus;
 
-
+	std::chrono::high_resolution_clock::time_point AttackTime = std::chrono::high_resolution_clock::now();
 }
 
 
@@ -130,6 +130,25 @@ void CMinionScript::Init()
 //
 //}
 
+void CMinionScript::SetRect(int w, int h)
+{
+	Vec3 Pos = Transform()->GetLocalPos();
+	bound.left = Pos.x - w;
+	bound.right = Pos.x + w;
+	bound.top = Pos.z - h;
+	bound.bottom = Pos.z + h;
+
+}
+
+void CMinionScript::SetPrevRect(int w, int h , Vec3 Pos)
+{
+	bound.left = Pos.x - w;
+	bound.right = Pos.x + w;
+	bound.top = Pos.z - h;
+	bound.bottom = Pos.z + h;
+
+}
+
 void CMinionScript::Update()
 {
 	CheckHp();
@@ -140,7 +159,7 @@ void CMinionScript::Update()
 
 	Vec3 vLocalPos = Transform()->GetLocalPos();
 	if (m_eCamp == CAMP_STATE::BLUE) {
-		if(vLocalPos.z > 7500)		//9500
+		if(vLocalPos.z > 9500)		//9500
 			FindNearObject(m_arrEnemy);
 		else
 			m_pTarget = m_pNexus;
@@ -181,11 +200,13 @@ void CMinionScript::Update()
 		int Prioty = 1;
 		if (movePrioty == 0) Prioty = -1;
 		
-		Vec3 vTargetDir = m_pTarget->Transform()->GetLocalPos() - vLocalPos;
+		Vec3 vTargetPos = m_pTarget->Transform()->GetLocalPos();
+		vTargetPos.y = 0;
+
+		vLocalPos.y = 0;
+		Vec3 vTargetDir = vTargetPos - vLocalPos;
 		vTargetDir.Normalize();
 
-
-		Vec3 vTargetPos = m_pTarget->Transform()->GetWorldPos();
 
 		Vec3 vWorldDir = GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 		
@@ -212,47 +233,93 @@ void CMinionScript::Update()
 				}
 			}
 		}
-		//아래
-		vLocalPos.z += 10 * vTargetDir.z;
-		vLocalPos.x += 10 * vTargetDir.x;
+		/// //////////////////////////////////////////////////////////////////////////////////////////
+		RECT tempRect;
+		Vec3 RightDir  = VectorRotate(vTargetDir, Vec3(0,1,0), PI / 2);
+		Vec3 LeftDir  = VectorRotate(vTargetDir, Vec3(0, 1, 0), -PI / 2);
+		vector<Vec3> CurrentDir{ vTargetDir ,-vTargetDir ,RightDir , LeftDir };
+		map<int, Vec3> nearDir;
 
-
-		vLocalPos.y = 0;
-		for (auto other : temp)
-		{
-			Vec3 DisPos = other->Transform()->GetLocalPos();
-
-			if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
-				other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE) {
-				if (Vec3::Distance(vLocalPos, DisPos) < 150) {
-					vLocalPos.z -= 10 * vTargetDir.z;
-					vLocalPos.x -= 10 * vTargetDir.x;
-
-					vTargetDir = VectorRotate(vTargetDir, Transform()->GetWorldDir(DIR_TYPE::UP), PI / 2 * Prioty);
-					vLocalPos.z += 10 * vTargetDir.z;
-					vLocalPos.x += 10 * vTargetDir.x;
-					Down = true;
-					break;
-				}
-			}
-		}
-		//오른쪽 가보기
-		if (Down) {
-			for (auto other : temp)
-			{
-				Vec3 DisPos = other->Transform()->GetLocalPos();
-
+		//4방향 검사를 진행
+		for (auto& dir : CurrentDir) {
+			// 방향마다 몬스터 검사.
+			Vec3 Pos = Transform()->GetLocalPos() + (dir * 10);
+			SetPrevRect(100,100,Pos);	//충돌체 업데이트
+			for (auto& other : temp) {
 				if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
 					other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE) {
-					if (Vec3::Distance(vLocalPos, DisPos) < 120) {
-						vLocalPos.z += 10 * vTargetDir.z;
-						vLocalPos.x += 10 * vTargetDir.x;
-						Right = true;
-						break;
+					//상대 몬스터의 충돌체 정보를 가져옴
+					RECT otherbound = other->GetScript<CMinionScript>()->GetRect();
+					//충돌 검사
+					if (IntersectRect(&tempRect, &bound, &otherbound)) {
+						continue;
+					}
+					else {
+						nearDir.try_emplace(Vec3::Distance(Pos, m_pTarget->Transform()->GetLocalPos()), dir);
+						cout << "[" << Vec3::Distance(Pos, m_pTarget->Transform()->GetLocalPos()) << "]" << endl;
 					}
 				}
 			}
 		}
+			Vec3 FinalDir = vTargetDir;
+			int dis = 999;
+			for (auto dir : nearDir) {
+				if (dir.first < dis) {
+					dis = dir.first;
+					FinalDir = dir.second;
+				}
+			}
+			vLocalPos.z += 10 * FinalDir.z;
+			vLocalPos.x += 10 * FinalDir.x;
+
+			SetPrevRect(100, 100, vLocalPos);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////
+		////아래
+		//vLocalPos.z += 10 * vTargetDir.z;
+		//vLocalPos.x += 10 * vTargetDir.x;
+
+		//vLocalPos.y = 0;
+
+
+		//for (auto other : temp)
+		//{
+		//	Vec3 DisPos = other->Transform()->GetLocalPos();
+
+		//	if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
+		//		other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE) {
+		//		//if (Vec3::Distance(vLocalPos, DisPos) < 150) {
+		//		RECT otherbound = other->GetScript<CMinionScript>()->GetRect();
+		//		if (IntersectRect(&tempRect, &bound, &otherbound)) {
+		//			vLocalPos.z -= 10 * vTargetDir.z;
+		//			vLocalPos.x -= 10 * vTargetDir.x;
+		//			vTargetDir = VectorRotate(vTargetDir, Transform()->GetWorldDir(DIR_TYPE::UP), PI / 2 * Prioty);
+		//			vLocalPos.z += 10 * vTargetDir.z;
+		//			vLocalPos.x += 10 * vTargetDir.x;
+		//			Down = true;
+		//			break;
+		//		}
+		//	}
+		//}
+		////오른쪽 가보기
+		//if (Down) {
+		//	for (auto other : temp)
+		//	{
+		//		Vec3 DisPos = other->Transform()->GetLocalPos();
+
+		//		if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
+		//			other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE) {
+		//			//if (Vec3::Distance(vLocalPos, DisPos) < 120) {
+		//			RECT otherbound = other->GetScript<CMinionScript>()->GetRect();
+		//				if (IntersectRect(&tempRect, &bound, &otherbound)) {
+		//				vLocalPos.z += 10 * vTargetDir.z;
+		//				vLocalPos.x += 10 * vTargetDir.x;
+		//				Right = true;
+		//				break;
+		//			}
+		//		}
+		//	}
+		//}
 
 
 		//왼쪽 가보기
@@ -302,6 +369,7 @@ void CMinionScript::Update()
 			float rotate = angle * 0.0174532925f;
 			vRot.y = rotate;
 		}
+		Transform()->SetLocalPos(vLocalPos);
 	}
 		break;
 	case MINION_STATE::DIE:
@@ -310,7 +378,7 @@ void CMinionScript::Update()
 		break;
 	}
 
-	//Transform()->SetLocalPos(vLocalPos);
+	//
 	Transform()->SetLocalRot(vRot);
 
 	/*if (m_id == 0 || m_id == 1)
@@ -325,7 +393,7 @@ void CMinionScript::Update()
 	SHARED_DATA::g_minion[m_GetId()].Rot.x = vRot.x;
 	SHARED_DATA::g_minion[m_GetId()].Rot.y = vRot.y;
 	SHARED_DATA::g_minion[m_GetId()].Rot.z = vRot.z;
-	SHARED_DATA::g_minion[m_GetId()].State = m_eState;
+	//SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 
 	//SHARED_DATA::g_minion[m_GetId()].m_cLock.unlock();
 	//std::cout << GetObj()->GetId() << endl;
@@ -465,20 +533,17 @@ void CMinionScript::CheckHp()
 #include "TowerScript.h"
 void CMinionScript::CheckRange()
 {
-	if (SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
-		SHARED_DATA::g_minion[m_GetId()].m_attack_current_time += 1;
-	}
-
 	if (m_pTarget == nullptr)return;
 	Vec3 vTargetPos=m_pTarget->Transform()->GetWorldPos();
 	Vec3 vPos = Transform()->GetWorldPos();
 	float length = sqrt(pow(vTargetPos.x - vPos.x, 2) + pow(vTargetPos.z - vPos.z, 2));
 	if (m_fAttackRange >= length) {
-		if (!SHARED_DATA::g_minion[m_GetId()].m_during_attack) {
-			//cout << "[" << m_GetId() << "] 공격하라~" << endl;
+		if (AttackTime < std::chrono::high_resolution_clock::now()) {
+			AttackTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(2000);	//2초간격
 			m_eState = MINION_STATE::ATTACK;
+			//SHARED_DATA::g_minion[m_GetId()].State = m_eState;
 			SHARED_DATA::g_minion[m_GetId()].State = m_eState;
-
+			CServer::GetInst()->send_anim_minion_packet(m_GetId(), index);
 			switch (m_eAttackType)
 			{
 			case MINION_ATTACK_TYPE::MELEE: {
@@ -516,35 +581,23 @@ void CMinionScript::CheckRange()
 				//	CreateProjectile(L"Blue");
 				//else
 				//	CreateProjectile(L"Red");
+
 			}
 			break;
 
 			}
-			
-			CServer::GetInst()->send_anim_minion_packet(m_GetId(),index);
-
-			SHARED_DATA::g_minion[m_GetId()].m_during_attack = true;
-			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time++;
-
 
 		}
-		else if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
-			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
-			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
-			m_eState = MINION_STATE::WALK;
+		else{
+			m_eState = MINION_STATE::IDLE;
 
 		}
 
 	}
 	else {
-		if (SHARED_DATA::g_minion[m_GetId()].m_attack_current_time >= SHARED_DATA::g_minion[m_GetId()].m_attack_max_time) {
-			
-			SHARED_DATA::g_minion[m_GetId()].m_during_attack = false;
-			SHARED_DATA::g_minion[m_GetId()].m_attack_current_time = 0;
-			m_eState = MINION_STATE::WALK;
-				
-		}
-		
+		m_eState = MINION_STATE::WALK;
+		SHARED_DATA::g_minion[m_GetId()].State = m_eState;
+		CServer::GetInst()->send_anim_minion_packet(m_GetId(), index);
 	}
 }
 
@@ -676,6 +729,10 @@ void CMinionScript::OnCollision3DExit(CCollider3D* _pOther)
 #include "PlayerScript.h"
 void CMinionScript::CreateProjectile(const wstring& _Layer)
 {
+
+	if (_Layer == L"Red") {
+		wcout << m_pTarget->GetName() << endl;
+	}
 	if (nullptr == m_pTarget)
 		return;
 	if (m_pTarget->IsDead())
@@ -685,11 +742,12 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
 	pObject->AddComponent(new CCollider3D);
 	pObject->AddComponent(new CProjectileScript);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(500.f, 500.f, 500.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pObject->GetScript<CProjectileScript>()->SetObject(GetObj());
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::MINION);
+	pObject->GetScript<CProjectileScript>()->SetCamp(m_eCamp);
 	if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
 		pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z));
 	}
@@ -698,10 +756,16 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
 	}
 
 	pObject->Transform()->SetLocalPos(Vec3(GetObj()->Transform()->GetWorldPos().x, GetObj()->Transform()->GetWorldPos().y + GetObj()->Collider3D()->GetOffsetPos().y, GetObj()->Transform()->GetWorldPos().z));
-
+	Vec3 vTargetPos = m_pTarget->Transform()->GetLocalPos() + Vec3(0.f, m_pTarget->Collider3D()->GetOffsetScale().y, 0.f);
+	Vec3 vPos = GetObj()->Transform()->GetLocalPos() + Vec3(0.f, GetObj()->Transform()->Collider3D()->GetOffsetScale().y, 0.f);
+	Vec3 vDir = vTargetPos - vPos;
+	vDir = vDir.Normalize();
 	pObject->Transform()->SetLocalRot(Vec3(0.f, 0.f, 0.f));
-	pObject->Transform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	pObject->GetScript<CProjectileScript>()->SetDir(GetObj()->Transform()->GetWorldDir(DIR_TYPE::FRONT));
+	pObject->Transform()->SetLocalScale(Vec3(1.f, 1.0f, 1.f));
+	pObject->GetScript<CProjectileScript>()->SetDir(vDir);
+	//근데 미니언이 공격을하고 회전을하면
+	// 공격때 만든 Front는 사실 뒤로날리는거다. 
+	// 
 	pObject->GetScript<CProjectileScript>()->Init();
 
 

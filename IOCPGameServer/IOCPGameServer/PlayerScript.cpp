@@ -9,6 +9,19 @@ void CPlayerScript::Init()
 	m_iCurHp = 1000;
 }
 
+void CPlayerScript::GetDamage(const UINT& _uiDamage)
+{
+	m_iCurHp -= _uiDamage;
+
+	if (m_iCurHp <= 0.f) {
+		//죽음상태 변경
+	}
+	else {
+		cout << "데미지" << _uiDamage << endl;
+		CServer::GetInst()->send_damage_player(m_GetId(), _uiDamage);
+	}
+}
+
 void CPlayerScript::Awake()
 {
 	CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene(index);

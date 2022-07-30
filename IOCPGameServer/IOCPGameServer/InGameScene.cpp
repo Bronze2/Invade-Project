@@ -42,7 +42,6 @@ void CInGameScene::Init(int index)
 	GetLayer(10)->SetIndex(index);
 
 
-
 	for ( auto &cl : SHARED_DATA::g_clients) {
 		if (cl.second.room_id == index) {
 			CGameObject* pObject = new CGameObject;
@@ -54,11 +53,10 @@ void CInGameScene::Init(int index)
 			pObject->Sensor()->SetRadius(300.f);
 
 			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-			pObject->Collider3D()->SetOffsetScale(Vec3(80.f, 80.f, 200.f));    // 80.f, 200.f, 80.f ?????
-			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+			pObject->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));     // 80.f, 200.f, 80.f ?????
+			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 			pObject->GetScript<CPlayerScript>()->m_SetId(cl.second.m_id);
-			pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
-			pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
+			pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.5f, 0.4f));
 			pObject->GetScript<CPlayerScript>()->Init();
 			pObject->GetScript<CPlayerScript>()->SetIndex(index);
 			if (cl.second.m_camp == CAMP_STATE::BLUE) {
@@ -190,6 +188,7 @@ void CInGameScene::Init(int index)
 	CGameObject* pBlueNexus = new CGameObject;
 	//   pMeshData = CResMgr::GetInst()->LoadFBX(L"FBX\\Nexus01.fbx");
 	//pMeshData->Save(pMeshData->GetPath());
+	pBlueNexus->SetName(L"BlueNexus");
 	pBlueNexus->AddComponent(new CTransform);
 	pBlueNexus->AddComponent(new CTowerScript);
 	pBlueNexus->AddComponent(new CCollider3D);
@@ -200,7 +199,7 @@ void CInGameScene::Init(int index)
 	pBlueNexus->Transform()->SetLocalRot(Vec3(0, PI, 0.f));
 
 
-	pBlueNexus->Transform()->SetLocalScale(Vec3(130.f, 130.f, 130.f));
+	pBlueNexus->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueNexus->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
 	pBlueNexus->GetScript<CTowerScript>()->SetType(TOWER_TYPE::NEXUS);
 	pBlueNexus->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
@@ -222,6 +221,7 @@ void CInGameScene::Init(int index)
 
 	// ·¹µå ³Ø¼­½º
 	CGameObject* pRedNexus = new CGameObject;
+	pRedNexus->SetName(L"RedNexus");
 	pRedNexus->AddComponent(new CTransform);
 	pRedNexus->AddComponent(new CCollider3D);
 	pRedNexus->AddComponent(new CTowerScript);
@@ -395,6 +395,7 @@ void CInGameScene::Init(int index)
 		}
 	}
 
+	SHARED_DATA::g_bulletindex = 0;
 
 
 

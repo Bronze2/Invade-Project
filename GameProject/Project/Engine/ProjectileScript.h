@@ -31,9 +31,11 @@ private:
 
     float m_fRoty;
     int m_id;
-
+    float fAngle;
 public:
     void m_SetId(int id) { m_id = id; }
+    int m_GetId() { return m_id; }
+
 
     void SetRotY(float _fRotY) { m_fRoty = _fRotY; }
     void SetLaunch(UINT _bLaunch) { m_bLaunch = _bLaunch; }

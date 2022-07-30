@@ -86,6 +86,9 @@ public:
 	void net_damageTower(int id, int camp, int damage);
 	void net_deleteTower(int id);
 
+	void net_damagePlayer(int player_id, int hp);
+
+
 	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
 	Vec3 get_arrowRot(int p_id, int m_id) { return m_arrow[p_id][m_id].Rot; }

@@ -50,7 +50,7 @@ public:
 
 	void send_delete_arrow_packet(int clinet_id, int arrow_id, int coll_type,int coll_id ,int damage, PACKET_SKILL skill);
 
-	void send_current_room(int user_id, int room_id, int max_user, int current_user);
+	void send_current_room(int user_id, int room_id, int max_user, int current_user, string RoomName);
 
 	void send_lobby_team_packet(int room_id, int client_id);
 
@@ -74,7 +74,9 @@ public:
 
 	void send_damage_tower(int tower_id,int  hp, CAMP_STATE camp);
 
-	void send_chat_msg(int clinet_id, char msg[255]);
+	void send_chat_msg(int clinet_id, char msg[100]);
+
+	void send_damage_player(int player_id, int hp);
 private:
 
 };

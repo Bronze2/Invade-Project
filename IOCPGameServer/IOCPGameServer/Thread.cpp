@@ -268,19 +268,26 @@ void CThread::process_packet(int user_id, char* buf)
 		t_userid.assign(packet->loginid.begin(), packet->loginid.end());
 		t_userpw.assign(packet->loginpw.begin(), packet->loginpw.end());
 
-		if (CDataBase::GetInst()->CheckAdminLogin(t_userid, t_userpw))
-		{
-			CServer::GetInst()->send_lobby_login_ok_packet(user_id);
-			if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
-				for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
-					CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4);
-				}
+		CServer::GetInst()->send_lobby_login_ok_packet(user_id);
+		if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
+			for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
+				CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4,
+					CMatchMaking::GetInst()->GetRoomName(room.first));
 			}
 		}
-		else {
-			CServer::GetInst()->send_login_fail_packet();
-		}
-		
+		//if (CDataBase::GetInst()->CheckAdminLogin(t_userid, t_userpw))
+		//{
+		//	CServer::GetInst()->send_lobby_login_ok_packet(user_id);
+		//	if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
+		//		for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
+		//			CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4);
+		//		}
+		//	}
+		//}
+		//else {
+		//	CServer::GetInst()->send_login_fail_packet();
+		//}
+		//
 	}
 	break;
 	case C2S_LOBBY_READY:
@@ -300,7 +307,7 @@ void CThread::process_packet(int user_id, char* buf)
 	break;
 	case C2S_MAKE_ROOM:
 	{	cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
-		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match);
+		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match , packet->roomName);
 		SHARED_DATA::g_clients[user_id].room_id = user_id;
 		SHARED_DATA::g_clients[user_id].m_isHost = true;
 		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;

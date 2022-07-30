@@ -126,7 +126,7 @@ void CInGameScene::Init()
 
 	Ptr<CMeshData> pMeshDataRed = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_red.mdat", L"MeshData\\player_red.mdat");
 	Ptr<CMeshData> pMeshDataBlue = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\player_blue.mdat", L"MeshData\\player_blue.mdat");
-	Ptr<CMeshData> pMeshbowData = CResMgr::GetInst()->LoadFBX(L"FBX\\bow_big.fbx");
+	Ptr<CMeshData> pMeshbowData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\bow_big.mdat", L"MeshData\\bow_big.mdat");
 
 	Ptr<CTexture>pPlayerRed = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Red");
 	Ptr<CTexture>pPlayerBlue = CResMgr::GetInst()->FindRes<CTexture>(L"Player_Blue");
@@ -193,7 +193,6 @@ void CInGameScene::Init()
 	}
 	pObject->GetScript<CPlayerScript>()->SetType(Network::GetInst()->getMainClient().skill);
 	//pObject->GetScript<CPlayerScript>()->SetType(ELEMENT_TYPE::THUNDER);
-
 
 	pObject->Transform()->SetLocalScale(Vec3(0.4f, 0.4f, 0.5f));
 	pObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-90.f), 0.f, 0.f));
@@ -529,10 +528,10 @@ void CInGameScene::Init()
 	pBlueNexus->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueNexus->MeshRender()->SetDynamicShadow(true);
 	pBlueNexus->GetScript<CTowerScript>()->SetCampState(CAMP_STATE::BLUE);
+	pBlueNexus->GetScript<CTowerScript>()->m_SetId(4);
 	pBlueNexus->GetScript<CTowerScript>()->Init();
 	pBlueNexus->GetScript<CTowerScript>()->SetFirstTower(pBlueFirstTower);
 	pBlueNexus->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
-	pBlueNexus->GetScript<CTowerScript>()->m_SetId(4);
 
 
 	FindLayer(L"Blue")->AddGameObject(pBlueNexus);
@@ -973,10 +972,10 @@ void CInGameScene::Init()
 	Ptr<CMaterial> pSkillMtrl = new CMaterial;
 	pSkillMtrl->DisableFileSave();
 	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
-	CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
-	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
-	pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+	pSkillMtrl->SetData(SHADER_PARAM::TEX_0,
 		pPlayer->GetScript<CPlayerScript>()->GetESkill()->pTex);
+	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+	CResMgr::GetInst()->AddRes(L"SkillTexMtrl", pSkillMtrl);
 	pPlayer->GetScript<CPlayerScript>()->SetESkillObj(pUISkill);
 	FindLayer(L"UI")->AddGameObject(pUISkill);
 
@@ -1002,10 +1001,10 @@ void CInGameScene::Init()
 	pSkillMtrl = new CMaterial;
 	pSkillMtrl->DisableFileSave();
 	pSkillMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexUIShader"));
-	CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
-	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
-	pUISkill->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0,
+	pSkillMtrl->SetData(SHADER_PARAM::TEX_0,
 		pPlayer->GetScript<CPlayerScript>()->GetZSkill()->pTex);
+	pUISkill->MeshRender()->SetMaterial(pSkillMtrl);
+	CResMgr::GetInst()->AddRes(L"SkillTex2Mtrl", pSkillMtrl);
 	pPlayer->GetScript<CPlayerScript>()->SetZSkillObj(pUISkill);
 	FindLayer(L"UI")->AddGameObject(pUISkill);
 

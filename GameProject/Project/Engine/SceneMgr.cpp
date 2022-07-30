@@ -685,7 +685,6 @@ void CSceneMgr::net_damageTower(int id, int camp, int hp)
 			if (cl->GetScript<CTowerScript>() != nullptr) {
 				if (cl->GetScript<CTowerScript>()->m_GetId() == id) {
 					cl->GetScript<CTowerScript>()->SetHp(hp);
-					break;
 				}
 			}
 		}
@@ -773,7 +772,6 @@ void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 	// 3 tower;
 	if ((PACKET_COLLTYPE)coll_type == PACKET_COLLTYPE::WALL) return;
 	else if ((PACKET_COLLTYPE)coll_type == PACKET_COLLTYPE::PLAYER) {
-		cout << "PlayerArrow Coll -" <<coll_id << endl;
 		for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
 			if (cl->GetScript<CPlayerScript>()->m_GetId() == coll_id) {
 				cl->GetScript<CPlayerScript>()->GetDamage(damage);
@@ -791,9 +789,39 @@ void CSceneMgr::net_DamagedByArrow(int coll_type, int coll_id, int damage)
 
 
 }
+
+void CSceneMgr::net_damagePlayer(int player_id, int damage)
+{
+
+	for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+		if (cl->GetScript<CPlayerScript>()->m_GetId() == player_id) {
+			cl->GetScript<CPlayerScript>()->GetDamage(damage);
+			break;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
 void CSceneMgr::net_deletProjectile(int id)
 {
 	m_projectile_die[id] = true;
+
+	//for (auto pro : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+	//	if (pro->GetScript<CProjectileScript>() != nullptr) {
+	//		if (pro->GetScript<CProjectileScript>()->m_GetId() == id)
+	//		{
+	//			DeleteObject(pro);
+
+	//		}
+	//	}
+	//}
 }
 
 
