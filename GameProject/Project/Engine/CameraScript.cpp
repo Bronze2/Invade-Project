@@ -33,7 +33,7 @@ void CCameraScript::Update()
         switch (m_tEffectType)
         {
         case CAMERA_EFFECT_TYPE::NONE:
-            if (KEY_NONE(KEY_TYPE::KEY_LBTN)) {
+            if (KEY_NONE(KEY_TYPE::KEY_LBTN) && !m_bWind0Camera) {
                 if (!m_bCheckStartMousePoint) {
                     m_bCheckStartMousePoint = true;
                 }
@@ -50,6 +50,9 @@ void CCameraScript::Update()
                         vRot.x = XMConvertToRadians(m_fDegree);
                     }
                 }
+            }
+            else if (m_bWind0Camera) {
+                vRot.x = 0.f;
             }
             break;
         case CAMERA_EFFECT_TYPE::ZOOMIN:
@@ -98,6 +101,9 @@ Vec3 CCameraScript::CameraZoom(Vec3 _vPos)
 		//Vec3 vDir = Vec3::Right;
 
 		_vPos += vDir * m_fZoomSpeed * DT;
+        if (m_bWind0Camera) {
+            _vPos.y = m_vRestorePos.y;
+        }
 		m_fZoomElapsedTime += DT;
 	}
 	else
@@ -126,7 +132,7 @@ void CCameraScript::SetDistanceOffset(CGameObject* _pObject)
 
 
 
-CCameraScript::CCameraScript() :CScript(0), m_fSpeed(200.f), m_fScaleSpeed(1.f), m_fZoomElapsedTime(0.0f), m_bCheckStartMousePoint(false), m_tEffectType(CAMERA_EFFECT_TYPE::NONE)
+CCameraScript::CCameraScript() :CScript(0), m_fSpeed(200.f), m_fScaleSpeed(1.f), m_fZoomElapsedTime(0.0f), m_bCheckStartMousePoint(false), m_tEffectType(CAMERA_EFFECT_TYPE::NONE), m_bWind0Camera(false)
 {
 }
 

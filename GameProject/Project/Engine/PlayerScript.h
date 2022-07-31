@@ -97,6 +97,9 @@ private:
 
     CGameObject* m_pColPlayer;
 
+    // 바람스킬
+    bool m_bWind0OnceUsed = false;
+
 public:
     void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
@@ -165,6 +168,8 @@ public:
     void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
     PLAYER_STATE GetAnimaionState() { return m_eState; }
     
+    // 결과씬
+    void SetResultAnim(bool _bWin);
 
     //hp
     UINT GetCurHp() { return m_iCurHp; }

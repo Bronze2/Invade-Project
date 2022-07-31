@@ -206,6 +206,7 @@ void CInGameScene::Init()
 	pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
 	pNewAnimation->InsertAnimClip(L"WALK", 44, 73);
 	pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
+	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
 	pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_1", 202, 207);
@@ -214,7 +215,6 @@ void CInGameScene::Init()
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_4", 202, 210);
 	pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_5", 202, 212);
 	pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
-	pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261
 	pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 	//pNewAnimation->InsertAnimation(L"DIE", 269, 289, false, false);
 
@@ -361,6 +361,7 @@ void CInGameScene::Init()
 		pNewAnimation->InsertAnimClip(L"IDLE", 0, 37);
 		pNewAnimation->InsertAnimClip(L"WALK", 44, 73);
 		pNewAnimation->InsertAnimClip(L"JUMP", 81, 100);
+		pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261
 		pNewAnimation->InsertAnimClip(L"ATTACK_READY", 145, 167);
 		pNewAnimation->InsertAnimClip(L"ATTACK", 168, 175);
 		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_1", 202, 207);
@@ -369,7 +370,6 @@ void CInGameScene::Init()
 		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_4", 202, 210);
 		pNewAnimation->InsertAnimClip(L"ATTACK_READY_HIGH_5", 202, 212);
 		pNewAnimation->InsertAnimClip(L"DEMAGED", 235, 240);
-		pNewAnimation->InsertAnimClip(L"DIE", 242, 261);      //           240, 261
 		pNewAnimation->InsertAnimClip(L"RUN", 298, 319);      // 305, 320
 
 		pObject->Animator3D()->SetAnimation(pNewAnimation);

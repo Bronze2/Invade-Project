@@ -255,15 +255,30 @@ void CPlayerScript::m_FAnimation()
 		break;
 		case PLAYER_STATE::JUMP:
 		{
-			if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
-				if (!GetObj()->Animator3D()->GetBlendState()) {
-					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
-
-					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-						m_eState = PLAYER_STATE::IDLE;
+			// 결과씬
+			if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::RESULT) {
+				if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
+					if (!GetObj()->Animator3D()->GetBlendState()) {
+						m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
+						if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+							GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::JUMP);
+							GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+							GetObj()->Animator3D()->SetCurTime(0.f);
+							GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+						}
 					}
 				}
+			}
+			else {
+				if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
+					if (!GetObj()->Animator3D()->GetBlendState()) {
+						m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
 
+						if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
+							m_eState = PLAYER_STATE::IDLE;
+						}
+					}
+				}
 			}
 		}
 		break;
@@ -588,7 +603,7 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue02.mdat", L"MeshData\\Helmet_Blue02.mdat");
 			break;
 		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat");
@@ -608,7 +623,7 @@ void CPlayerScript::Awake()
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red01.mdat", L"MeshData\\Helmet_Red01.mdat");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red02.mdat", L"MeshData\\Helmet_Red02.mdat");
 			break;
 		case ELEMENT_TYPE::DARK:
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat");
@@ -838,39 +853,49 @@ void CPlayerScript::Update()
 
 			//}
 
+
 			if (KEY_TAB(KEY_TYPE::KEY_LBTN)) {
 				m_fRotateDegree = XMConvertToDegrees(pEmptyObject->Transform()->GetLocalRot().y) - 90.f;
 				// 공격 시 무조건 카메라가 바라보는 방향으로 플레이어 회전시키기 (화살 개발 이후 주석 풀기)
 				vRot.y = XMConvertToRadians(m_fRotateDegree + 10.f);   // 5.f 더 회전시킬건지?
 
-				// 화살 위아래 애니메이션
-				if (fCamRotDegree <= -3.f) {
-					m_eState = PLAYER_STATE::ATTACK_READY_HIGH_5;
-					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_5);
-
-				}
-				else if (fCamRotDegree <= -1.f) {
-					m_eState = PLAYER_STATE::ATTACK_READY_HIGH_4;
-					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_4);
-
-				}
-				else if (fCamRotDegree <= 1.f) {
-					m_eState = PLAYER_STATE::ATTACK_READY_HIGH_3;
-					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_3);
-
-				}
-				else if (fCamRotDegree <= 3.f) {
-					m_eState = PLAYER_STATE::ATTACK_READY_HIGH_2;
-					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_2);
-
-				}
-				else if (fCamRotDegree <= 5.f) {
-					m_eState = PLAYER_STATE::ATTACK_READY_HIGH_1;
-					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_1);
-
+				// 바람스킬
+				if (m_tESkill->bUse && m_tESkill->eElementType == ELEMENT_TYPE::WIND && m_bWind0OnceUsed) {
+					m_eState = PLAYER_STATE::ATTACK_READY;
+					Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY);
+					m_bWind0OnceUsed = false;
 				}
 				else {
-					m_eState = PLAYER_STATE::ATTACK_READY;
+					// 화살 위아래 애니메이션
+					if (fCamRotDegree <= -3.f) {
+						m_eState = PLAYER_STATE::ATTACK_READY_HIGH_5;
+						Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_5);
+
+					}
+					else if (fCamRotDegree <= -1.f) {
+						m_eState = PLAYER_STATE::ATTACK_READY_HIGH_4;
+						Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_4);
+
+					}
+					else if (fCamRotDegree <= 1.f) {
+						m_eState = PLAYER_STATE::ATTACK_READY_HIGH_3;
+						Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_3);
+
+					}
+					else if (fCamRotDegree <= 3.f) {
+						m_eState = PLAYER_STATE::ATTACK_READY_HIGH_2;
+						Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_2);
+
+					}
+					else if (fCamRotDegree <= 5.f) {
+						m_eState = PLAYER_STATE::ATTACK_READY_HIGH_1;
+						Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY_HIGH_1);
+
+					}
+					else {
+						m_eState = PLAYER_STATE::ATTACK_READY;
+						Network::GetInst()->send_attack_ready_packet(m_GetId(), (int)PLAYER_STATE::ATTACK_READY);
+					}
 				}
 				Network::GetInst()->send_rotation_packet(vRot);
 			}
@@ -1255,10 +1280,14 @@ void CPlayerScript::UseSkill()
 		if (m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->bSetSkill()) {
 			if (!m_tESkill->bUse)
 			{
-
 				m_tESkill->bUse = true;
 				m_tESkill->StartTime = chrono::system_clock::now();
 				m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tESkill);
+				if (m_tESkill->eElementType == ELEMENT_TYPE::WIND) {
+					m_bWind0OnceUsed = true;
+					CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
+					pCamera->GetScript<CCameraScript>()->SetWind0Camera(true);
+				}
 			}
 		}
 	}
@@ -1613,4 +1642,34 @@ void CPlayerScript::AttachHelmet()
 
 	}
 
+}
+
+// 결과씬
+void CPlayerScript::SetResultAnim(bool _bWin)
+{
+	if (_bWin)
+	{
+		m_eState = PLAYER_STATE::JUMP;
+		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP")) {
+			m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"JUMP");
+			GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::JUMP);
+			GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+			GetObj()->Animator3D()->SetCurTime(0.f);
+			GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+			m_eState = PLAYER_STATE::JUMP;
+			m_ePrevState = PLAYER_STATE::JUMP;
+		}
+	}
+	else {
+		m_eState = PLAYER_STATE::DIE;
+		if (nullptr != GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE")) {
+			m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
+			GetObj()->Animator3D()->SetCurClipIndex((UINT)PLAYER_STATE::DIE);
+			GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iStartFrame);
+			GetObj()->Animator3D()->SetCurTime(0.f);
+			GetObj()->Animator3D()->SetStartFrameTime(m_pCurAnimClip->dStartTime);
+			m_eState = PLAYER_STATE::DIE;
+			m_ePrevState = PLAYER_STATE::DIE;
+		}
+	}
 }

@@ -92,7 +92,7 @@ void CBowScript::Update()
 			Vec3 vPlayerRot = pPlayer->Transform()->GetLocalRot();
 			Vec3 vCamRot = pCamera->Transform()->GetLocalRot();
 			float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, 50.f + fCamRotDegree, 0.f);
+			Vec3 vArrowPos = vPlayerPos + pPlayer->Transform()->GetWorldDir(DIR_TYPE::RIGHT) * -20.f + Vec3(0.f, 60.f + fCamRotDegree, 0.f);
 			Vec3 vArrowRot = Vec3(XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 90.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.y) + 80.f), XMConvertToRadians(XMConvertToDegrees(vPlayerRot.z)));
 
 			Vec3 vArrowDir = pPlayer->Transform()->GetWorldDir(DIR_TYPE::UP);

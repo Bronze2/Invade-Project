@@ -245,10 +245,10 @@ void CButtonScript::ExecuteChangeSkill(int id)
 		break;
 	case BUTTON_TYPE::SELECT_FIRE:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue02.mdat", L"MeshData\\Helmet_Blue02.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red02.mdat", L"MeshData\\Helmet_Red02.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_DARK:

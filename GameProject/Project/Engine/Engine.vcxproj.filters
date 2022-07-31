@@ -363,6 +363,9 @@
     <ClInclude Include="SafeZone.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="ResultScene.h">
+      <Filter>Manager\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp">
@@ -622,6 +625,9 @@
     </ClCompile>
     <ClCompile Include="SafeZone.cpp">
       <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultScene.cpp">
+      <Filter>Manager\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,7 @@ private:
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
-
+    bool m_bWind0Camera;
 
 public:
 
@@ -42,6 +42,8 @@ public:
 
     void SetBackMode(bool _bTrue) { m_bBackMode = _bTrue; }
     void SetBackRestorePos(Vec3 _vPos) { m_vBackRestorePos = _vPos; }
+
+    void SetWind0Camera(bool _bTrue) { m_bWind0Camera = _bTrue; }
 
     void Init();
 

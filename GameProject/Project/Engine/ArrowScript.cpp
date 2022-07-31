@@ -12,6 +12,7 @@
 #include "CTowerColScript.h"
 #include "PlayerColScript.h"
 #include "BoxColScript.h"
+#include "CameraScript.h"
 
 void CArrowScript::SetSkill(SKILL* _pSkill)
 {
@@ -195,51 +196,61 @@ void CArrowScript::Update()
                 m_vXZDir.Normalize();
                 m_fAngle = acos(Dot(m_vDir, m_vXZDir));
                 float fGravity;
-
-                float fDegree = XMConvertToDegrees(m_fAngle);
-                if (fDegree <= 25.f) {
-                    m_fAngle -= PI / 8.f;
-                    fGravity = GRAVITY * 250;
-                }
-                else if (fDegree > 25.f && fDegree <= 31.f) {
-                    m_fAngle -= PI / 8.f;
-                    fGravity = GRAVITY * 300;
-                }
-                else {
-                    m_fAngle -= PI / 7.f;
-                    fGravity = GRAVITY * 350;
-                }
-
                 m_fTime += DT;
 
-                vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-                vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
-                vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
-                //처음 화살 Update
-                if (m_fVelocityY == 5000) {
-                    //  현재 포물선 운동을 하고 있는 Y값
-                    // 
-                    m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
-
-                    //최고점 높이 == velocity가 0이되는 지점. 
-                    m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / (fGravity * 2);
-                    m_fPerRotate = m_fHighest / m_fAngle;
+                if (m_pSkill != nullptr && (UINT)SKILL_CODE::WIND_0 == m_pSkill->Code)
+                {
+                    vPos.x += m_vXZDir.x * m_fSpeed * m_fTime;
+                    vPos.z += m_vXZDir.z * m_fSpeed * m_fTime;
                     Transform()->SetLocalPos(vPos);
-
+                    CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
+                    pCamera->GetScript<CCameraScript>()->SetWind0Camera (false);
                 }
-                else {
-                    m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
-                    float fHigh = m_fHighest - m_fVelocityY;
-                    m_fRotateAngle = fHigh / m_fPerRotate;
-                    if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
-                        m_fDir = -1;
+                else
+                {
+                    float fDegree = XMConvertToDegrees(m_fAngle);
+                    if (fDegree <= 25.f) {
+                        m_fAngle -= PI / 8.f;
+                        fGravity = GRAVITY * 250;
                     }
-                    m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
-                    Transform()->SetQuaternion(m_qRot);
-                    Transform()->SetLocalPos(vPos);
+                    else if (fDegree > 25.f && fDegree <= 31.f) {
+                        m_fAngle -= PI / 8.f;
+                        fGravity = GRAVITY * 300;
+                    }
+                    else {
+                        m_fAngle -= PI / 7.f;
+                        fGravity = GRAVITY * 350;
+                    }
 
+
+                    vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+                    vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
+                    vPos.y = m_vStartPos.y + ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+                    //처음 화살 Update
+                    if (m_fVelocityY == 5000) {
+                        //  현재 포물선 운동을 하고 있는 Y값
+                        // 
+                        m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+
+                        //최고점 높이 == velocity가 0이되는 지점. 
+                        m_fHighest = (m_fSpeed * sin(m_fAngle)) * (m_fSpeed * sin(m_fAngle)) / (fGravity * 2);
+                        m_fPerRotate = m_fHighest / m_fAngle;
+                        Transform()->SetLocalPos(vPos);
+
+                    }
+                    else {
+                        m_fVelocityY = ((m_fSpeed * m_fTime * sin(m_fAngle)) - (0.5 * fGravity * m_fTime * m_fTime));
+                        float fHigh = m_fHighest - m_fVelocityY;
+                        m_fRotateAngle = fHigh / m_fPerRotate;
+                        if (m_fRotateAngle <= 0.005f && m_fDir == 1) {
+                            m_fDir = -1;
+                        }
+                        m_qRot = Quaternion::CreateFromAxisAngle(m_vQtrnRotAxis, m_fRotateAngle * m_fDir);
+                        Transform()->SetQuaternion(m_qRot);
+                        Transform()->SetLocalPos(vPos);
+
+                    }
                 }
-
                 if (nullptr != m_pSkill) {
                     if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
                         if (vPos.y <= 1.f) {

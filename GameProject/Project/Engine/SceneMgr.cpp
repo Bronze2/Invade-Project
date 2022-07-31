@@ -54,6 +54,7 @@
 #include "SkillMgr.h"
 #include "Network.h"
 #include "SpawnMgr.h"
+#include "ResultScene.h"
 
 
 CScene* CSceneMgr::GetCurScene()
@@ -92,6 +93,7 @@ void CSceneMgr::ChangeScene(SCENE_TYPE _Type)
         m_pCurScene = new CInGameScene;
         break;
     case SCENE_TYPE::RESULT:
+        m_pCurScene = new CResultScene;
         break;
     case SCENE_TYPE::END:
         assert(false);
@@ -176,11 +178,11 @@ void CSceneMgr::Init()
 
     CResMgr::GetInst()->Load<CTexture>(L"PlayerBlue", L"Texture\\ArchersTextureBlue.png");
     CResMgr::GetInst()->Load<CTexture>(L"PlayerRed", L"Texture\\ArchersTextureRed.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\property_water.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyDark", L"Texture\\property_dark.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyWind", L"Texture\\property_wind.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\property_thunder.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\property_fire.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\UI\\water_lobby.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyDark", L"Texture\\UI\\dark_lobby.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyWind", L"Texture\\UI\\wind_lobby.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\UI\\thunder_lobby.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\UI\\ire_lobby.png");
 
     CResMgr::GetInst()->Load<CTexture>(L"Stop", L"Texture\\Stop.png");
 
