@@ -32,7 +32,7 @@ void CBowScript::Update()
 	Transform()->SetLocalRot(vRot);
 
 
-	if (isMain) {
+	if (isMain && !m_pPlayer->GetScript<CPlayerScript>()->GetisDead()) {
 		CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
 		CGameObject* pEmptyObject = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1]);
 		CGameObject* pCamera = dynamic_cast<CGameObject*>(pCurScene->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];

@@ -665,7 +665,7 @@ void CServer::send_create_box(int room_id, int id)
 }
 
 
-void CServer::send_arrow_skill(int user_id, PACKET_SKILL skill)
+void CServer::send_arrow_skill(int client_id, int user_id, PACKET_SKILL skill)
 {
 	sc_packet_arrowskill packet;
 	packet.size = sizeof(packet);
@@ -674,7 +674,38 @@ void CServer::send_arrow_skill(int user_id, PACKET_SKILL skill)
 	packet.skill = skill;
 
 	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == client_id) continue;
+		if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
+}
+
+void CServer::send_arrow_particle(int user_id, PACKET_SKILL skill)
+{
+	sc_packet_arrowskill packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ARROW_PARTICLE;
+	packet.id = user_id;
+	packet.skill = skill;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.m_id == user_id) continue;
+		if (cl.second.room_id == SHARED_DATA::g_clients[user_id].room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
+}
+
+void CServer::send_player_spawn(int user_id, Vec3 Pos)
+{
+	sc_packet_playerSpawn packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_PLAYER_RESPAWN;
+	packet.id = user_id;
+	packet.Pos.x = Pos.x;
+	packet.Pos.y = Pos.y;
+	packet.Pos.z = Pos.z;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.room_id == SHARED_DATA::g_clients[user_id].room_id)
 			send_packet(cl.second.m_id, &packet);
 	}

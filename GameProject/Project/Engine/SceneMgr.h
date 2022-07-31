@@ -90,7 +90,9 @@ public:
 
 	void net_CreateBox(int box_id, int buff);
 
-	void net_arrowSkill(int id, PACKET_SKILL skill);
+	void net_arrowSkill(int id, int skill);
+	void net_arrowParticle(int id, int skill);
+	void net_playerRespawn(int id, Vec3 pos);
 
 	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }
@@ -98,7 +100,6 @@ public:
 	void set_arrowPos(int p_id, int m_id,Vec3 pos) {  m_arrow[p_id][m_id].Pos = pos; }
 	void set_arrowRot(int p_id, int m_id,Vec3 rot) {  m_arrow[p_id][m_id].Rot = rot; }
 	void set_arrowSkill(int p_id, int m_id, bool b) { m_arrow[p_id][m_id].skill = b; }
-
 
 	Vec3 get_towerRot(int id) { return m_tower[id]; }
 	void set_towerRot(int id, Vec3 rot) { m_tower[id] = rot; };

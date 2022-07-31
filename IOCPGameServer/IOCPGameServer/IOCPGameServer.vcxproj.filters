@@ -141,6 +141,9 @@
     <ClInclude Include="MatchMaking.h">
       <Filter>소스 파일\Server</Filter>
     </ClInclude>
+    <ClInclude Include="ObstacleScript.h">
+      <Filter>소스 파일\GameLogic\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -235,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="MatchMaking.cpp">
       <Filter>소스 파일\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="ObstacleScript.cpp">
+      <Filter>소스 파일\GameLogic\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ private:
 	CScene* m_arrScene[(UINT)SCENE_TYPE::END];
 	vector<CGameObject*> m_player;
 
+
 public:
 	void Init(int index);
 	void Update();
@@ -33,7 +34,7 @@ public:
 	void InitArrowByPlayerId(int index, int ClientId,int ArrowId ,Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp , PACKET_SKILL skill);
 	void collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE camp);
 	void setDamage(int index, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE camp , int damage);
-
+	void player_spawnTimer(int index, int id);
 
 
 };

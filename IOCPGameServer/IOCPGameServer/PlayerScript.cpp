@@ -62,8 +62,19 @@ void CPlayerScript::Awake()
 
 void CPlayerScript::Update()
 {
-	SHARED_DATA::g_clients[m_id].Pos.y = 0;
-	Transform()->SetLocalPos(SHARED_DATA::g_clients[m_id].Pos);
+
+	if (!isDead) {
+		SHARED_DATA::g_clients[m_id].Pos.y = 0;
+		Transform()->SetLocalPos(SHARED_DATA::g_clients[m_id].Pos);
+	}
+	else {
+		if (playerSpawner < std::chrono::high_resolution_clock::now()) {
+			isDead = false;
+			SHARED_DATA::g_clients[m_id].Pos = SpawnPlace;
+			SHARED_DATA::g_clients[m_id].Pos.y = 0;
+			CServer::GetInst()->send_player_spawn(m_id, SpawnPlace);
+		}
+	}
 	//Transform()->SetLocalRot(SHARED_DATA::g_clients[m_id].Rot);
 
 }
@@ -93,6 +104,16 @@ void CPlayerScript::InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float P
 #include "Collider3D.h"
 void CPlayerScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
+	if (_pOther->GetObj()->GetName() == L"obstalce") {
+		cout << " obstacle Collsion" << endl;
+	}
+}
+
+void CPlayerScript::SetPlayerSpawner()
+{
+	cout << "PlayerSpawner On" << endl;
+	isDead = true;
+	playerSpawner = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(10000);
 }
 
 

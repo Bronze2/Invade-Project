@@ -206,6 +206,13 @@ void CMinionScript::Update()
                 }
             }
         }
+
+        for (auto obs : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Obstacle")->GetParentObj())
+        {
+           temp.push_back(obs);
+        }
+
+
         //¾Æ·¡
         vLocalPos.z += 10 * vTargetDir.z;
         vLocalPos.x += 10 * vTargetDir.x;
@@ -215,10 +222,25 @@ void CMinionScript::Update()
         for (auto other : temp)
         {
             Vec3 DisPos = other->Transform()->GetLocalPos();
+            DisPos.y = 0;
+            if (other->GetScript<CMinionScript>() != nullptr) {
+                if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
+                    other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
+                    if (Vec3::Distance(vLocalPos, DisPos) < 150) {
+                        vLocalPos.z -= 10 * vTargetDir.z;
+                        vLocalPos.x -= 10 * vTargetDir.x;
 
-            if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
-                other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
-                if (Vec3::Distance(vLocalPos, DisPos) < 150) {
+                        vTargetDir = VectorRotate(vTargetDir, Vec3(0.f, 1.f, 0.f), PI / 2 * Prioty);
+                        vLocalPos.z += 10 * vTargetDir.z;
+                        vLocalPos.x += 10 * vTargetDir.x;
+                        Down = true;
+                        break;
+                    }
+                }
+            }
+            else if (other->GetName() == L"obstacle")
+            {
+                if (Vec3::Distance(vLocalPos, DisPos) < 300) {
                     vLocalPos.z -= 10 * vTargetDir.z;
                     vLocalPos.x -= 10 * vTargetDir.x;
 
@@ -235,13 +257,29 @@ void CMinionScript::Update()
             for (auto other : temp)
             {
                 Vec3 DisPos = other->Transform()->GetLocalPos();
+                DisPos.y = 0;
+                if (other->GetScript<CMinionScript>() != nullptr) {
 
-                if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
-                    other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
-                    if (Vec3::Distance(vLocalPos, DisPos) < 120) {
+                    if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
+                        other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
+                        if (Vec3::Distance(vLocalPos, DisPos) < 120) {
+                            vLocalPos.z += 10 * vTargetDir.z;
+                            vLocalPos.x += 10 * vTargetDir.x;
+                            Right = true;
+                            break;
+                        }
+                    }
+                }
+                else if (other->GetName() == L"obstacle")
+                {
+                    if (Vec3::Distance(vLocalPos, DisPos) < 300) {
+                        vLocalPos.z -= 10 * vTargetDir.z;
+                        vLocalPos.x -= 10 * vTargetDir.x;
+
+                        vTargetDir = VectorRotate(vTargetDir, Vec3(0.f, 1.f, 0.f), PI / 2 * Prioty);
                         vLocalPos.z += 10 * vTargetDir.z;
                         vLocalPos.x += 10 * vTargetDir.x;
-                        Right = true;
+                        Down = true;
                         break;
                     }
                 }
@@ -678,8 +716,8 @@ static bool iSeparate = true;
 
 void CMinionScript::OnCollision3DEnter(CCollider3D* _pOther)
 {
-    if (_pOther->GetObj()->GetScript<CMinionScript>() == nullptr) {
-
+    if (_pOther->GetObj()->GetName() == L"obstalce") {
+        cout << " obstacle Collsion" << endl;
     }
     else {
         //if (_pOther->GetObj()->GetScript<CMinionScript>()->GetCamp() == m_eCamp /*&& m_eState == MINION_STATE::WALK*/) {

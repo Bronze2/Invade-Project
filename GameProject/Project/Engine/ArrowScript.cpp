@@ -171,6 +171,7 @@ void CArrowScript::Update()
                 {
                     delete m_pSkill;
                     m_pSkill = nullptr;
+                    m_pParticle->SetActive(false);
                 }
                 Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
                 //vPos.y = 5.f;
@@ -217,6 +218,7 @@ void CArrowScript::Update()
                         {
                             delete m_pSkill;
                             m_pSkill = nullptr;
+                            m_pParticle->SetActive(false);
                         }
                         m_eState = ARROW_STATE::IDLE;
                         GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
@@ -230,18 +232,18 @@ void CArrowScript::Update()
                 {
                     float fDegree = XMConvertToDegrees(m_fAngle);
                     if (fDegree <= 25.f) {
-                        m_fAngle -= PI / 8.f;
-                        fGravity = GRAVITY * 250;
+                        fDegree -= 20.f;
+                        fGravity = GRAVITY * 200;
                     }
                     else if (fDegree > 25.f && fDegree <= 31.f) {
-                        m_fAngle -= PI / 8.f;
-                        fGravity = GRAVITY * 300;
+                        fDegree -= 20.f;
+                        fGravity = GRAVITY * 600;
                     }
                     else {
-                        m_fAngle -= PI / 7.f;
-                        fGravity = GRAVITY * 350;
+                        fDegree -= 25.f;;
+                        fGravity = GRAVITY * 1000;
                     }
-
+                    m_fAngle = XMConvertToRadians(fDegree);
 
                     vPos.z = m_vStartPos.z + m_vXZDir.z * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
                     vPos.x = m_vStartPos.x + m_vXZDir.x * (m_fSpeed * m_fTime * cos(m_fAngle)) / 2;
@@ -404,32 +406,71 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 
             }
             else {
-                if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
-                        Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
-                        vPos3.y = 1.f;
-                        if (m_eCamp == CAMP_STATE::BLUE) {
-                            cout << "BLUE ARROW" << endl;
-                            cout << " ARROW ---" << (int)m_eCamp << endl;
-                        }
-                        else {
-                            cout << " ARROW ---" << (int)m_eCamp << endl;
-                        }
-                        CreateThunderObject(vPos3, (int)m_eCamp);
-                        delete m_pSkill;
-                        m_pSkill = nullptr;
-                        Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
-                        Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-                }
-                else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
-                        Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
-                        vPos3.y = 1.f;
-                        CreateBoomParticleObject(vPos3, L"smokeparticle");
+                    if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+                            Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
+                            vPos3.y = 1.f;
+                            if (m_eCamp == CAMP_STATE::BLUE) {
+                                cout << "BLUE ARROW" << endl;
+                                cout << " ARROW ---" << (int)m_eCamp << endl;
+                            }
+                            else {
+                                cout << " ARROW ---" << (int)m_eCamp << endl;
+                            }
+                            CreateThunderObject(vPos3, (int)m_eCamp);
+                            delete m_pSkill;
+                            m_pSkill = nullptr;
+                            m_pParticle->SetActive(false);
+                            Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
+                            Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                    }
+                    else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+                            Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+                            vPos3.y = 1.f;
+                            CreateBoomParticleObject(vPos3, L"smokeparticle");
 
-                        Collision();
+                            Collision();
+                            Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_FIRE);
+
+                            delete m_pSkill;
+                            m_pSkill = nullptr;
+                            m_pParticle->SetActive(false);
+                            Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                    }
+                    else if ((UINT)SKILL_CODE::FIRE_0 == m_pSkill->Code) {
+                        _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetDamage(500);
+                        _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+                        Network::GetInst()->send_arrow_skill(_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_SKILL::E_FIRE);
+                        Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
+
                         delete m_pSkill;
                         m_pSkill = nullptr;
+                        m_pParticle->SetActive(false);
                         Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
-                }
+                    }
+                    else if ((UINT)SKILL_CODE::THUNDER_0 == m_pSkill->Code) {
+                        _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetDamage(500);
+                        _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+                        Network::GetInst()->send_arrow_skill(_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_SKILL::E_THUNDER);
+                        Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
+
+                        delete m_pSkill;
+                        m_pSkill = nullptr;
+                        m_pParticle->SetActive(false);
+                        Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                    }
+
+                    else if ((UINT)SKILL_CODE::DARK_0 == m_pSkill->Code) {
+                        _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetDamage(500);
+                        _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+                        Network::GetInst()->send_arrow_skill(_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_SKILL::E_DARK);
+                        Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
+
+                        delete m_pSkill;
+                        m_pSkill = nullptr;
+                        m_pParticle->SetActive(false);
+                        Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                    }
+
             }
         }
     }
@@ -460,17 +501,19 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
                     Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
                     delete m_pSkill;
                     m_pSkill = nullptr;
+                    m_pParticle->SetActive(false);
                     Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
                 }
                 else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
                     Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
                     vPos3.y = 1.f;
                     CreateBoomParticleObject(vPos3, L"smokeparticle");
-
+                    Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_FIRE);
                     Collision();
 
                     delete m_pSkill;
                     m_pSkill = nullptr;
+                    m_pParticle->SetActive(false);
                     Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
 
                 }
@@ -497,6 +540,7 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
             else if (L"obstacle" == _pColldier->GetObj()->GetName()) {
                 GetObj()->SetActive(false);
                 m_pParticle->SetActive(false);
+
             }
 
         }

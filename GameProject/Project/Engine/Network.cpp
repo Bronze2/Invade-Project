@@ -449,7 +449,23 @@ void Network::ProcessPacket(char* ptr)
 	{
 		sc_packet_arrowskill* my_packet = reinterpret_cast<sc_packet_arrowskill*>(ptr);
 
-		CSceneMgr::GetInst()->net_arrowSkill(my_packet->id, my_packet->skill);
+		CSceneMgr::GetInst()->net_arrowSkill(my_packet->id, (int)my_packet->skill);
+	}
+	break;
+
+	case S2C_ARROW_PARTICLE:
+	{
+		sc_packet_arrowskill* my_packet = reinterpret_cast<sc_packet_arrowskill*>(ptr);
+
+		CSceneMgr::GetInst()->net_arrowParticle(my_packet->id, (int)my_packet->skill);
+	}
+	break;
+
+	case S2C_PLAYER_RESPAWN:
+	{
+		sc_packet_playerSpawn* my_packet = reinterpret_cast<sc_packet_playerSpawn*>(ptr);
+
+		CSceneMgr::GetInst()->net_playerRespawn(my_packet->id, Vec3(my_packet->Pos.x, my_packet->Pos.y, my_packet->Pos.z));
 	}
 	break;
 
@@ -795,6 +811,26 @@ void Network::send_arrow_skill(int id, PACKET_SKILL skill)
 	send_packet(&m_packet);
 }
 
+
+void Network::send_arrow_particle(int id, PACKET_SKILL skill)
+{
+	cs_packet_arrowskill m_packet;
+	m_packet.type = C2S_ARROW_PARTICLE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	m_packet.skill = skill;
+	send_packet(&m_packet);
+}
+
+void Network::send_player_die(int id)
+{
+	cs_packet_playerdie m_packet;
+	m_packet.type = C2S_PLAYER_DIE;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	send_packet(&m_packet);
+	cout << "죽음패킷 전송" << endl;
+}
 
 void Network::debug_checkclient()
 {

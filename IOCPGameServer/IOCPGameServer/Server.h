@@ -80,7 +80,12 @@ public:
 
 	void send_create_box(int room_id, int id);
 
-	void send_arrow_skill(int user_id, PACKET_SKILL skill);
+	void send_arrow_skill(int client_id, int user_id, PACKET_SKILL skill);
+	
+	void send_arrow_particle(int user_id, PACKET_SKILL skill);
+
+
+	void send_player_spawn(int user_id , Vec3 Pos);
 
 private:
 

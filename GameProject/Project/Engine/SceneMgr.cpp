@@ -902,14 +902,81 @@ void CSceneMgr::net_CreateSkill(Vec3 LocalPos, int skill, int camp)
 }
 
 
-void CSceneMgr::net_arrowSkill(int id, PACKET_SKILL skill)
+void CSceneMgr::net_arrowSkill(int id, int skill)
 {
- 
+
+    if ((PACKET_SKILL)skill == PACKET_SKILL::Z_WATER) {
+        for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+            if (cl->GetScript<CPlayerScript>() != nullptr) {
+                if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+                    cl->GetScript<CPlayerScript>()->DamageBySkill(CSkillMgr::GetInst()->FindSkill(1));
+                    break;
+                }
+            }
+        }
+    }
+
+    if ((PACKET_SKILL)skill == PACKET_SKILL::E_THUNDER) {
+        for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+            if (cl->GetScript<CPlayerScript>() != nullptr) {
+                if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+                    cl->GetScript<CPlayerScript>()->DamageBySkill(CSkillMgr::GetInst()->FindSkill(skill));
+                    break;
+                }
+            }
+        }
+    }
+
+    if ((PACKET_SKILL)skill == PACKET_SKILL::E_FIRE) {
+        for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+            if (cl->GetScript<CPlayerScript>() != nullptr) {
+                if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+                    cl->GetScript<CPlayerScript>()->DamageBySkill(CSkillMgr::GetInst()->FindSkill(skill));
+                    break;
+                }
+            }
+        }
+    }
+
+    if ((PACKET_SKILL)skill == PACKET_SKILL::E_DARK) {
+        for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+            if (cl->GetScript<CPlayerScript>() != nullptr) {
+                if (cl->GetScript<CPlayerScript>()->m_GetId() == id && cl->GetScript<CPlayerScript>()->GetIsMain()) {
+                    cl->GetScript<CPlayerScript>()->DamageBySkill(CSkillMgr::GetInst()->FindSkill(skill));
+                    break;
+                }
+            }
+        }
+    }
+
+}
+
+
+void CSceneMgr::net_arrowParticle(int id, int skill)
+{
+
     for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
         if (cl->GetScript<CPlayerScript>() != nullptr) {
             if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
-                cl->GetChild()[0]->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill(skill);
+                cl->GetChild()[0]->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill((PACKET_SKILL)skill);
                 cl->GetChild()[0]->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill((int)skill));
+                break;
+            }
+        }
+    }
+
+}
+
+
+void CSceneMgr::net_playerRespawn(int id, Vec3 pos)
+{
+    for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+        if (cl->GetScript<CPlayerScript>() != nullptr) {
+            if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+                cl->GetScript<CPlayerScript>()->SetLerpPos(pos);
+                cl->Transform()->SetLocalPos(pos);
+                cl->GetScript<CPlayerScript>()->Respawn();
+
                 break;
             }
         }

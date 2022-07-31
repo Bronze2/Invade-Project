@@ -14,17 +14,22 @@ private:
     int m_iCurHp;
     CAMP_STATE m_eCamp;
 
+    Vec3 SpawnPlace;
 
+    chrono::high_resolution_clock::time_point playerSpawner;
+    bool isDead;
 public:
     void Init();
     virtual void Awake();
     virtual void Update();
 
+    void SetPlayerSpawner();
+
     CPlayerScript();
     virtual ~CPlayerScript();
 
     void InitArrow(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, PACKET_SKILL skill);
-
+    void SetSpawnPlace(Vec3 pos) { SpawnPlace = pos; }
     virtual void OnCollision3DEnter(CCollider3D* _pOther);
     void GetDamage(const UINT& _uiDamage);
 

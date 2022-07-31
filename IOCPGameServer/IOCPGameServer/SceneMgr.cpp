@@ -154,19 +154,25 @@ void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 P
 {
 	if (camp == CAMP_STATE::RED) {
 		for (auto obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
-			if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
-				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power , skill);
-				break;
+			if (obj->GetScript<CPlayerScript>() != nullptr) {
+
+				if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
+					obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
+					break;
+				}
 			}
 		}
 	}
 
 	if (camp == CAMP_STATE::BLUE) {
 		for (auto obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
-			if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
-				obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
-				break;
+			if (obj->GetScript<CPlayerScript>() != nullptr) {
 
+				if (obj->GetScript<CPlayerScript>()->m_GetId() == ClientId) {
+					obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
+					break;
+
+				}
 			}
 		}
 	}
@@ -219,6 +225,31 @@ void CSceneMgr::setDamage(int index, int coll_id, PACKET_COLLTYPE coll_type, CAM
 					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
 					break;
 
+				}
+			}
+		}
+	}
+}
+
+void CSceneMgr::player_spawnTimer(int index, int id)
+{
+	if (SHARED_DATA::g_clients[id].m_camp == CAMP_STATE::RED) {
+		for (auto obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
+			if (obj->GetScript<CPlayerScript>() != nullptr) {
+				if (obj->GetScript<CPlayerScript>()->m_GetId() == id) {
+					obj->GetScript<CPlayerScript>()->SetPlayerSpawner();
+					break;
+				}
+			}
+		}
+	}
+
+	if (SHARED_DATA::g_clients[id].m_camp == CAMP_STATE::BLUE) {
+		for (auto obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
+			if (obj->GetScript<CPlayerScript>() != nullptr) {
+				if (obj->GetScript<CPlayerScript>()->m_GetId() == id) {
+					obj->GetScript<CPlayerScript>()->SetPlayerSpawner();
+					break;
 				}
 			}
 		}

@@ -65,6 +65,8 @@ void CInGameScene::Init(int index)
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 				
 				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f + cl.second.m_id * 50));
+				pObject->GetScript<CPlayerScript>()->SetSpawnPlace(Vec3(0.f, 0.f, 1125.f + cl.second.m_id * 50));
+
 				cl.second.Pos = Vec3(0.f, 0.f, 1125.f + cl.second.m_id * 200);
 
 				cout << "BLUE - " << cl.second.m_id << endl;
@@ -75,6 +77,8 @@ void CInGameScene::Init(int index)
 				FindLayer(L"Red")->AddGameObject(pObject, false);
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 				pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f + cl.second.m_id * 50));
+				pObject->GetScript<CPlayerScript>()->SetSpawnPlace(Vec3(0.f, 0.f, 5800.f + cl.second.m_id * 50));
+
 				cl.second.Pos = Vec3(0.f, 0.f, 5800.f + cl.second.m_id * 200);
 				cout << "RED - " << cl.second.m_id << endl;
 
@@ -259,67 +263,127 @@ void CInGameScene::Init(int index)
 
 
 
-	CGameObject* pObstacle;
+	CGameObject* pColObstacle;
 	Quaternion qRot;
 
 	for (int i = 0; i < 8; ++i) {
-		pObstacle = new CGameObject;
-		pObstacle->AddComponent(new CCollider3D);
-		pObstacle->AddComponent(new CTransform);
-		pObstacle->SetName(L"obstacle");
-		pObstacle->FrustumCheck(false);
-		pObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		pObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 500.f));
-		pObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 250.f));
-		pObstacle->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-		pObstacle->Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(90.f), 0.f));
-
 		switch (i) {
 		case 0:
 			// R2 앞
-			pObstacle->Transform()->SetLocalPos(Vec3(1000.f, 80.f, 4400.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Transform()->SetLocalPos(Vec3(2725, 40.f, 13400.f));
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 230.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 80.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-39.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 1:
 			// R1 앞
-			pObstacle->Transform()->SetLocalPos(Vec3(-1975.f, 80.f, 2100.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pColObstacle->Transform()->SetLocalPos(Vec3(-350.f, 40.f, 10600.f));      // R1 기준 (-300, -900)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 230.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 80.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-43.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 2:
 			// B1 앞
-			pObstacle->Transform()->SetLocalPos(Vec3(875.f, 80.f, 1000.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pColObstacle->Transform()->SetLocalPos(Vec3(2500.f, 40.f, 9700.f));         // B1 기준 (500, 700)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 230.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 80.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-35.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 3:
 			// B2 앞
-			pObstacle->Transform()->SetLocalPos(Vec3(-2725.f, 80.f, -900.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+
+			pColObstacle->Transform()->SetLocalPos(Vec3(-1100.f, 40.f, 6800.f));      // B2 기준 (-600, 1300)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 230.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 80.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(31.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 4:
 			// R2 뒤
-			pObstacle->Transform()->SetLocalPos(Vec3(1400.f, 80.f, 6600.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(75.f));
+			pColObstacle->Transform()->SetLocalPos(Vec3(3000.f, 107.f, 15600.f));      // R2 기준 (525, 1100)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(520.f, 280.f, 240.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, -55.f, 0.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 5:
 			// R1 뒤
-			pObstacle->Transform()->SetLocalPos(Vec3(-2170.f, 80.f, 4200.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pColObstacle->Transform()->SetLocalPos(Vec3(-500.f, 107.f, 12700.f));      // R1 기준 (-500, 1200)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(520.f, 280.f, 240.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, -55.f, 0.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(72.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 6:
 			// B1 뒤
-			pObstacle->Transform()->SetLocalPos(Vec3(1080.f, 80.f, -1000.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pColObstacle->Transform()->SetLocalPos(Vec3(2700.f, 107.f, 7700.f));      // B1 기준 (700, -1300)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(520.f, 280.f, 240.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, -55.f, 0.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(60.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		case 7:
 			// B2 뒤
-			pObstacle->Transform()->SetLocalPos(Vec3(-2800.f, 80.f, -3000.f));
+			pColObstacle = new CGameObject;
+			pColObstacle->SetName(L"obstacle");
+			pColObstacle->AddComponent(new CCollider3D);
+			pColObstacle->AddComponent(new CTransform);
+			pColObstacle->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+			pColObstacle->Transform()->SetLocalPos(Vec3(-1200.f, 107.f, 4700.f));      // B2 기준 (-675, -800)
+			pColObstacle->Collider3D()->SetOffsetScale(Vec3(520.f, 280.f, 240.f));
+			pColObstacle->Collider3D()->SetOffsetPos(Vec3(0.f, -55.f, 0.f));
 			qRot = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(-27.f));
+			pColObstacle->Transform()->SetQuaternion(qRot);
+			FindLayer(L"Obstacle")->AddGameObject(pColObstacle);
 			break;
 		}
-		pObstacle->Transform()->SetQuaternion(qRot);
-		FindLayer(L"Obstacle")->AddGameObject(pObstacle);
 	}
-
 
 
 
@@ -399,6 +463,10 @@ void CInGameScene::Init(int index)
 	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Red", L"Blue");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Red", L"Arrow");
 	CCollisionMgr::GetInst()->CheckCollisionLayer(index,L"Blue", L"Arrow");
+
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(index, L"Blue", L"Obstacle");
+	//CCollisionMgr::GetInst()->CheckCollisionLayer(index, L"Red", L"Obstacle");
+
 
 
 

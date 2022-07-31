@@ -102,7 +102,13 @@ private:
 
     CGameObject* m_pDarkUI;
 
+    tMTBone* m_pChestBone;
+    tMTBone* m_pHeadBone;
+    tMTBone* m_pHandBone;
+
 public:
+
+    bool GetisDead() { return m_bDead; }
     void SetDarkUIRender(bool _bTrue) { m_pDarkUI->SetActive(_bTrue); }
     void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
@@ -184,6 +190,8 @@ public:
 
     void SetColPlayer(CGameObject* _pObj) { m_pColPlayer = _pObj; }
     CGameObject* GetColObj() { return m_pColPlayer; }
+
+    void Respawn();
 
     CLONE(CPlayerScript);
 };

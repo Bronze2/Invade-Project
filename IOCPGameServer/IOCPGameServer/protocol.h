@@ -32,6 +32,9 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_CHAT_MSG 18
 #define C2S_CREATE_BOX 19
 #define C2S_ARROW_SKILL 20
+#define C2S_ARROW_PARTICLE 21
+#define C2S_PLAYER_DIE 22
+
 
 #define S2C_LOGIN_OK		1
 #define S2C_KEY_DOWN		2
@@ -72,6 +75,10 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_DAMAGE_PLAYER 35
 #define S2C_CREATE_BOX 36
 #define S2C_ARROW_SKILL 37
+#define S2C_ARROW_PARTICLE 38
+#define S2C_PLAYER_DIE 39
+#define S2C_PLAYER_RESPAWN 40
+
 
 
 
@@ -622,8 +629,20 @@ struct sc_packet_arrowskill
 	PACKET_SKILL skill;
 };
 
+struct cs_packet_playerdie
+{
+	char size;
+	char type;
+	int id;
+};
 
-
+struct sc_packet_playerSpawn
+{
+	char size;
+	char type;
+	int id;
+	p_Vec3 Pos;
+};
 
 
 #pragma pack (pop)

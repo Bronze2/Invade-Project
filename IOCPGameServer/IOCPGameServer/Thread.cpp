@@ -423,6 +423,13 @@ void CThread::process_packet(int user_id, char* buf)
 	}
 	break;
 
+
+	case C2S_PLAYER_DIE:
+	{
+		cs_packet_playerdie* packet = reinterpret_cast<cs_packet_playerdie*>(buf);
+		CSceneMgr::GetInst()->player_spawnTimer(SHARED_DATA::g_clients[user_id].room_id,packet->id);
+	}
+	break;
 	case C2S_COLLISION_ARROW:
 	{
 		cs_packet_collsion_arrow* packet = reinterpret_cast<cs_packet_collsion_arrow*>(buf);
@@ -486,7 +493,14 @@ void CThread::process_packet(int user_id, char* buf)
 	case C2S_ARROW_SKILL:
 	{
 		cs_packet_arrowskill* packet = reinterpret_cast<cs_packet_arrowskill*>(buf);
-		CServer::GetInst()->send_arrow_skill(packet->id,packet->skill);
+		CServer::GetInst()->send_arrow_skill(user_id, packet->id,packet->skill);
+	}
+	break;
+
+	case C2S_ARROW_PARTICLE:
+	{
+		cs_packet_arrowskill* packet = reinterpret_cast<cs_packet_arrowskill*>(buf);
+		CServer::GetInst()->send_arrow_particle(packet->id, packet->skill);
 	}
 	break;
 
