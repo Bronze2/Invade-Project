@@ -88,7 +88,7 @@ void CProjectileScript::Update()
 					if (obj->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
 
 						if (m_eProjectileType == PROJECTILE_TYPE::TOWER) {
-							if (Vec3::Distance(obj->Transform()->GetLocalPos(), vLocalPos) < 20) {
+							if (Vec3::Distance(obj->Transform()->GetLocalPos(), vLocalPos) < 50) {
 								obj->GetScript<CPlayerScript>()->GetDamage(m_uiDamage);
 								CServer::GetInst()->send_projectile_packet(m_GetId(), 2);
 								DeleteObject(GetObj());
@@ -240,7 +240,7 @@ void CProjectileScript::Update()
 		int a = 0;
 		float xvalue = m_vDir.x * 100.f * DT;
 
-		vLocalPos += m_vDir * 3000.f * DT;
+		vLocalPos += m_vDir * 100;
 	}
 	break;
 	default:

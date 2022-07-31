@@ -30,6 +30,8 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_ARROW_CREATE_SKILL 16
 #define C2S_SET_DAMAGE 17
 #define C2S_CHAT_MSG 18
+#define C2S_CREATE_BOX 19
+#define C2S_ARROW_SKILL 20
 
 #define S2C_LOGIN_OK		1
 #define S2C_KEY_DOWN		2
@@ -68,12 +70,14 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_DELETE_TOWER 33
 #define S2C_CHAT_MSG 34
 #define S2C_DAMAGE_PLAYER 35
+#define S2C_CREATE_BOX 36
+#define S2C_ARROW_SKILL 37
 
 
 
 
 enum class  MATCH_TYPE { TWO = 0, THREE, FOUR ,END };
-enum class PACKET_SKILL { E_WATER = 0, Z_WATER, E_FIRE,  Z_FIRE, E_THUNDER, Z_TUNDER, E_DARK, Z_DARK, E_WIND,Z_WIND ,NONE};
+enum class PACKET_SKILL { E_WATER = 0, Z_WATER, E_WIND, Z_WIND, E_DARK, Z_DARK, E_THUNDER, Z_TUNDER, E_FIRE,  Z_FIRE,  NONE};
 enum class PACKET_COLLTYPE { PLAYER = 0 , MONSTER =1 , TOWER =2 , NEXSUS =3 , WALL = 4 };
 enum class PACKET_ELEMENT_TYPE {
 
@@ -587,6 +591,36 @@ struct sc_packet_lobby2ingame {
 };
 
 
+
+struct sc_packet_createbox {
+	char size;
+	char type;
+	int id;
+	int buf;
+};
+
+
+struct cs_packet_createbox {
+	char size;
+	char type;
+	int id;
+};
+
+struct cs_packet_arrowskill
+{
+	char size;
+	char type;
+	int id;
+	PACKET_SKILL skill;
+};
+
+struct sc_packet_arrowskill
+{
+	char size;
+	char type;
+	int id;
+	PACKET_SKILL skill;
+};
 
 
 

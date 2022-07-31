@@ -42,6 +42,9 @@ public:
 	template<typename T>
 	Ptr<T> LoadFBXTexture(const wstring& _strKey, const wstring& _strPath/*��� ���*/);
 
+	template<typename T>
+	Ptr<T> Load3D(const wstring& _strKey, const wstring& _strPath);
+
 
 	Ptr<CTexture> CreateTexture(const wstring& _strName, UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
 		, const D3D12_HEAP_PROPERTIES& _HeapProperty, D3D12_HEAP_FLAGS _eHeapFlag
@@ -303,4 +306,29 @@ inline bool CResMgr::DestroyResource(const wstring& _strKey)
 	m_mapRes[(UINT)eType].erase(iter);
 
 	return true;
+}
+
+template<typename T>
+inline Ptr<T> CResMgr::Load3D(const wstring& _strKey, const wstring& _strPath)
+{
+	Ptr<T> pRes = FindRes<T>(_strKey);
+
+	// 중복키 문제
+	if (nullptr != pRes)
+		return pRes;
+
+	pRes = new T;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _strPath;
+	pRes->Load3D(strFullPath);
+
+
+	RES_TYPE eType = GetType<T>();
+
+	CResource** ppRes = (CResource**)&pRes;
+	m_mapRes[(UINT)eType].insert(make_pair(_strKey, *ppRes));
+	pRes->SetName(_strKey);
+	pRes->SetPath(_strPath);
+
+	return pRes;
 }

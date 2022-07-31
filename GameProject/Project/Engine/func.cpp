@@ -362,6 +362,11 @@ void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey)
 	pHitParticle->ParticleSystem()->SetMaxLifeTime(1.5f);
 	pHitParticle->FrustumCheck(false);
 
+	Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"explosion");
+	m_pSound->PlaySound3D(_Pos, 1000.f);
+
+	pHitParticle->GetScript<CParticleScript>()->SetSound(m_pSound);
+
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->AddGameObject(pHitParticle);
 
 }
@@ -390,7 +395,10 @@ void CreateThunderObject(const Vec3& _Pos, int e_camp)
 	else {
 		pMagicTexture = CResMgr::GetInst()->FindRes<CTexture>(L"MagicCircle2");
 	}
+	Ptr<CSound> m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"SparkSound");
+	m_pSound->PlaySound3D(_Pos, 1000.f);
 
+	pThunderObject->GetScript<CThunderSkill1Script>()->SetSound(m_pSound);
 
 
 	CGameObject* pObject = new CGameObject;
@@ -515,7 +523,7 @@ void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey)
 #include "BoxScript.h"
 #include "Collider3D.h"
 #include "BoxColScript.h"
-void CreateBoxObject(const Vec3& _vPos, const UINT& _idx)
+void CreateBoxObject(const Vec3& _vPos, const UINT& _idx , BUFF_TYPE buff)
 {
 	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\box_Up.mdat", L"MeshData\\box_Up.mdat");
 	CGameObject* pBoxUp = pMeshData->Instantiate();
@@ -535,7 +543,7 @@ void CreateBoxObject(const Vec3& _vPos, const UINT& _idx)
 	CGameObject* pBoxBottom = pMeshData->Instantiate();
 	pBoxBottom->AddComponent(new CBoxScript);
 	pBoxBottom->GetScript<CBoxScript>()->SetUp(pBoxUp);
-
+	pBoxBottom->GetScript<CBoxScript>()->SetBuff(buff);
 	pBoxBottom->GetScript<CBoxScript>()->SetIdx(_idx);
 	pBoxBottom->Transform()->SetLocalPos(Vec3(_vPos.x, 50.f, _vPos.z));
 	pBoxBottom->Transform()->SetLocalRot(Vec3(-PI / 2, 0.f, 0.f));
@@ -566,4 +574,57 @@ void CreateBoxObject(const Vec3& _vPos, const UINT& _idx)
 
 	CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Box")->AddGameObject(pColObj, false);
 
+}
+
+
+
+
+//»ç¿îµå
+CSound* SetSound2D(const wstring& _Path)
+{
+	CSound* pSound = new CSound;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _Path;
+	pSound->Load(strFullPath);
+
+	return pSound;
+}
+
+CSound* SetSound3D(const wstring& _Path)
+{
+	CSound* pSound = new CSound;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _Path;
+	pSound->Load3D(strFullPath);
+
+	return pSound;
+}
+
+
+void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos)
+{
+	Matrix invView = _ViewMatrix;
+	FMOD_3D_ATTRIBUTES listener;
+	listener.position = VecToFMOD(_PlayerPos);
+	Vec3 vZAxis = invView.Front();
+	vZAxis.Normalize();
+	Vec3 vYAxis = invView.Up();
+	vYAxis.Normalize();
+	listener.forward = VecToFMOD(vZAxis);
+	listener.up = VecToFMOD(vYAxis);
+	listener.velocity = { (_PlayerPos.x - _PlayerlastPos.x) * DT,(_PlayerPos.y - _PlayerlastPos.y) * DT,(_PlayerPos.z - _PlayerlastPos.z) * DT };
+	CSound::g_pFMOD->set3DListenerAttributes(0, &listener.position, &listener.velocity, &listener.forward, &listener.up);
+}
+
+void SetListener(const Vec3& _vFrontDir, const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos)
+{
+	FMOD_3D_ATTRIBUTES listener;
+	listener.position = VecToFMOD(_PlayerPos);
+	Vec3 vZAxis = _vFrontDir;
+
+	Vec3 vYAxis = _vUpDir;
+	listener.forward = VecToFMOD(vZAxis);
+	listener.up = VecToFMOD(vYAxis);
+	listener.velocity = { (_PlayerPos.x - _PlayerlastPos.x) * DT,(_PlayerPos.y - _PlayerlastPos.y) * DT,(_PlayerPos.z - _PlayerlastPos.z) * DT };
+	CSound::g_pFMOD->set3DListenerAttributes(0, &listener.position, &listener.velocity, &listener.forward, &listener.up);
 }

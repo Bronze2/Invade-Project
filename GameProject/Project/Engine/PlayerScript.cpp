@@ -592,6 +592,24 @@ void CPlayerScript::Awake()
 
 			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDeadEffect);
 
+
+			// 어둠스킬
+			m_pDarkUI = new CGameObject;
+			m_pDarkUI->SetName(L"UIDark");
+			m_pDarkUI->FrustumCheck(false);
+			m_pDarkUI->AddComponent(new CTransform);
+			m_pDarkUI->AddComponent(new CMeshRender);
+			m_pDarkUI->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1.f));
+			m_pDarkUI->Transform()->SetLocalScale(Vec3(res.fWidth, res.fHeight, 1.f));
+			m_pDarkUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+			Ptr<CMaterial> pDarkUIMtrl = new CMaterial;
+			pDarkUIMtrl->DisableFileSave();
+			pDarkUIMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+			m_pDarkUI->MeshRender()->SetMaterial(pDarkUIMtrl);
+			Ptr<CTexture> pDarkUITex = CResMgr::GetInst()->FindRes<CTexture>(L"DarkUITex");
+			m_pDarkUI->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pDarkUITex.GetPointer());
+			m_pDarkUI->SetActive(false);
+			CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"UI")->AddGameObject(m_pDarkUI);
 		}
 	}
 
@@ -600,19 +618,19 @@ void CPlayerScript::Awake()
 	if (m_eCamp == CAMP_STATE::BLUE) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue05.mdat", L"MeshData\\Helmet_Blue05.mdat");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue02.mdat", L"MeshData\\Helmet_Blue02.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat");
 			break;
 		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue02.mdat", L"MeshData\\Helmet_Blue02.mdat");
 			break;
-		case ELEMENT_TYPE::THUNDER:	// hetlmet_blue_04 좀 이상..
+		case ELEMENT_TYPE::THUNDER:  
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue04.mdat", L"MeshData\\Helmet_Blue04.mdat");
 			break;
 		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue05.mdat", L"MeshData\\Helmet_Blue05.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat");
 			break;
 
 		}
@@ -620,19 +638,19 @@ void CPlayerScript::Awake()
 	else if (m_eCamp == CAMP_STATE::RED) {
 		switch (m_iType) {
 		case ELEMENT_TYPE::WATER:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red01.mdat", L"MeshData\\Helmet_Red01.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red05.mdat", L"MeshData\\Helmet_Red05.mdat");
 			break;
 		case ELEMENT_TYPE::FIRE:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red02.mdat", L"MeshData\\Helmet_Red02.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red01.mdat", L"MeshData\\Helmet_Red01.mdat");
 			break;
 		case ELEMENT_TYPE::DARK:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red02.mdat", L"MeshData\\Helmet_Red02.mdat");
 			break;
 		case ELEMENT_TYPE::THUNDER:
 			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red04.mdat", L"MeshData\\Helmet_Red04.mdat");
 			break;
 		case ELEMENT_TYPE::WIND:
-			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red05.mdat", L"MeshData\\Helmet_Red05.mdat");
+			pHelmetMesh = CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat");
 			break;
 		}
 	}
@@ -656,7 +674,6 @@ void CPlayerScript::Update()
 	AttachHelmet();
 	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {	
 		if (isMain) {
-
 			SkillCoolTimeCheck();
 			Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
 			Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
@@ -925,9 +942,9 @@ void CPlayerScript::Update()
 			{
 				m_eState = PLAYER_STATE::DIE;
 			}
+
 			Transform()->SetLocalRot(vRot);
 			UseSkill();
-			GetDamage();
 			CheckHpAndDead();	// 수민
 			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
 			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
@@ -943,8 +960,8 @@ void CPlayerScript::Update()
 			// }
 
 		}
+		GetDamage();
 		StatusCheck();
-
 		Update_LerpPos();
 	}
 	m_FAnimation();
@@ -1051,10 +1068,11 @@ bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 			if (bTrue) {
 				if (L"BoxCol" == vecObj[j]->GetName()) 
 				{
-					if (
-						BOX_STATE::CLOSE == vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->GetOpen()) {
+					if (BOX_STATE::CLOSE == vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->GetOpen()) {
+						
 						vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->SetOpen((UINT)BOX_STATE::OPEN);
 						vecObj[j]->GetScript<CBoxColScript>()->GetBox()->GetScript<CBoxScript>()->SetPlayer(GetObj());
+					
 					}
 				}
 
@@ -1287,6 +1305,7 @@ void CPlayerScript::UseSkill()
 					m_bWind0OnceUsed = true;
 					CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
 					pCamera->GetScript<CCameraScript>()->SetWind0Camera(true);
+					Network::GetInst()->send_arrow_skill(m_GetId(), PACKET_SKILL::E_WIND);
 				}
 			}
 		}
@@ -1318,6 +1337,8 @@ void CPlayerScript::UseSkill()
 					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tZSkill);
 					m_currentSkill = m_tZSkill;
 					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill(PACKET_SKILL::Z_FIRE);
+					Network::GetInst()->send_arrow_skill(m_GetId(), PACKET_SKILL::E_FIRE);
+
 				}
 			}
 
@@ -1328,6 +1349,8 @@ void CPlayerScript::UseSkill()
 					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(m_tZSkill);
 					m_currentSkill = m_tZSkill;
 					m_pBowObject->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill(PACKET_SKILL::Z_TUNDER);
+					Network::GetInst()->send_arrow_skill(m_GetId(), PACKET_SKILL::E_THUNDER);
+
 
 				}
 			}
@@ -1460,12 +1483,25 @@ void CPlayerScript::Update_LerpPos()
 				vPos = Vec3::Lerp(vPos, m_LerpPos, DT * (5.f));
 				Transform()->SetLocalPos(vPos);
 			}
+			//수정
+			if (isMain) {
+				Vec3 vDirUp = Transform()->GetLocalDir(DIR_TYPE::UP);
+				Vec3 vDirFront = Transform()->GetLocalDir(DIR_TYPE::FRONT);
+				SetListener(-1 * vDirFront, vDirUp, vPos, vPos2);
+
+			}
+
+
 		}
-	if (!isMain) {
-		Vec3 vRot = Transform()->GetLocalRot();
-		vRot = Vec3::Lerp(Transform()->GetLocalRot(), m_LerpRot, DT * (10.f));
-		Transform()->SetLocalRot(vRot);
-	}
+
+
+
+		if (!isMain) {
+			Vec3 vRot = Transform()->GetLocalRot();
+			vRot = Vec3::Lerp(Transform()->GetLocalRot(), m_LerpRot, DT * (10.f));
+			Transform()->SetLocalRot(vRot);
+		}
+
 
 }
 

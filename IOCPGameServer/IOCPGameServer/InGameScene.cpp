@@ -387,14 +387,6 @@ void CInGameScene::Init(int index)
 
 
 
-	for (int i = 0; i < 40; ++i) {
-		for (int j = 0; j < 400; ++j) {
-			SHARED_DATA::map_info[i][j].x = i * 150 + 25;	
-			SHARED_DATA::map_info[i][j].y = j * 50 + 25;
-			SHARED_DATA::map_info[i][j].MinionID = 999;
-		}
-	}
-
 	SHARED_DATA::g_bulletindex = 0;
 
 

@@ -88,6 +88,9 @@ public:
 
 	void net_damagePlayer(int player_id, int hp);
 
+	void net_CreateBox(int box_id, int buff);
+
+	void net_arrowSkill(int id, PACKET_SKILL skill);
 
 	bool get_arrowSkill(int p_id, int m_id) { return m_arrow[p_id][m_id].skill; }
 	Vec3 get_arrowPos(int p_id, int m_id) { return m_arrow[p_id][m_id].Pos; }

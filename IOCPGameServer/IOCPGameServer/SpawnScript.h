@@ -31,6 +31,10 @@ private:
 
     int Protiy = 0;
 
+
+    bool isFirstBox = false;
+    std::chrono::high_resolution_clock::time_point CreateTime;
+
 private:
     CGameObject* SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos,Vec3 _vOffsetScale, MINION_ATTACK_TYPE _eAttackRange ,CAMP_STATE _eState);
     CGameObject* SpawnPlayer(int p_id, Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 _vOffsetPos, Vec3 _vOffsetScale, CAMP_STATE _eCamp);

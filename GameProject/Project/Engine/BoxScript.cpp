@@ -12,10 +12,10 @@
 
 void CBoxScript::Init()
 {
-	mt19937 engine((unsigned int)time(NULL));
-	uniform_int_distribution<int> distribution(0, (UINT)BUFF_TYPE::DAMAGE);
-	auto generator = bind(distribution, engine);
-	m_eBuffType = (BUFF_TYPE)generator();
+	//mt19937 engine((unsigned int)time(NULL));
+	//uniform_int_distribution<int> distribution(0, (UINT)BUFF_TYPE::DAMAGE);
+	//auto generator = bind(distribution, engine);
+	//m_eBuffType = (BUFF_TYPE)generator();
 	m_bOpen = BOX_STATE::CLOSE;
 
 

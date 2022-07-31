@@ -23,6 +23,7 @@ private:
     Ptr<CSound> m_pSound;
     bool m_bParticle;
     CGameObject* m_pBoxCol;
+ 
 public:
     void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
     void SetBoxCol(CGameObject* _pObj) { m_pBoxCol = _pObj; }
@@ -30,6 +31,7 @@ public:
     UINT GetIdx() { return m_iIdx; }
     void SetIdx(const UINT& _iIdx) { m_iIdx = _iIdx; }
     BUFF_TYPE GiveBuff();
+    void SetBuff(BUFF_TYPE buff) { m_eBuffType = buff; }
 
     void SetUp(CGameObject* _pObj) { m_pUpObj = _pObj; }
     BOX_STATE GetOpen() { return m_bOpen; }

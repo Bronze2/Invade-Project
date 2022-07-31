@@ -19,6 +19,7 @@ private:
 	CAMP_STATE m_eCampState;
 
 	bool isMain = true;
+	Ptr<CSound> m_pSound;
 public:
 
 	void SetIsMain(bool m_isMain) { isMain = m_isMain; }
@@ -26,6 +27,7 @@ public:
 	void Collision();
 	CThunderSkill1Script();
 	virtual ~CThunderSkill1Script();
+	void SetSound(Ptr<CSound> _pSound) { m_pSound = _pSound; }
 
 	void SetLayer(const UINT& _iLayerIdx) { m_iLayerIdx = _iLayerIdx; }
 

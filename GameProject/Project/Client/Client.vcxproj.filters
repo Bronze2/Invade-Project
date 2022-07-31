@@ -49,4 +49,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\File\bin\content\Texture\CursorCursor.cur">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
 </Project>

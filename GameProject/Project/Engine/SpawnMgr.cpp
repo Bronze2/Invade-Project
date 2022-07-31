@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SpawnMgr.h"
-
+#include "Network.h"
 
 void CSpawnMgr::Init()
 {
@@ -44,27 +44,37 @@ void CSpawnMgr::Init()
 	spawn8.vPos = Vec3(2500.f, 0.f, 16000.f);
 	m_vSpawn.push_back(spawn8);
 
-	engine = mt19937((unsigned int)time(NULL));
-	uniform_int_distribution<int> distribution(0, 7);
-	auto generator = bind(distribution, engine);
+	//engine = mt19937((unsigned int)time(NULL));
+	//uniform_int_distribution<int> distribution(0, 7);
+	//auto generator = bind(distribution, engine);
 
-	while (m_uiSum < 2)
-	{
-		int a = generator();
-		if (!m_vSpawn[a].bSpawn)
-		{
-			m_vSpawn[a].bSpawn = true;
-			m_uiSum += 1;
-			CreateBoxObject(m_vSpawn[a].vPos, a);
-		}
-	}
 
+	//초기 위치값 고정으로 박아버리고
+
+	
+	//while (m_uiSum < 2)
+	//{
+	//	int a = generator();
+	//	if (!m_vSpawn[a].bSpawn)
+	//	{
+	//		m_vSpawn[a].bSpawn = true;
+	//		m_uiSum += 1;
+	//		CreateBoxObject(m_vSpawn[a].vPos, a);
+	//	}
+	//}
+
+}
+
+void CSpawnMgr::net_CreateBox(int id, int buff)
+{
+	m_vSpawn[id].bSpawn = true;
+	m_uiSum += 1;
+	CreateBoxObject(m_vSpawn[id].vPos, id , (BUFF_TYPE)buff);
 }
 
 void CSpawnMgr::Update()
 {
 	CheckSum();
-
 }
 
 void CSpawnMgr::CheckSum()
@@ -76,6 +86,7 @@ void CSpawnMgr::CheckSum()
 	if (BOX_SITUATION::eWAIT == m_bFirstBox) {
 		if (CoolTimeCheck(m_tFirstStart, BOX_SPWANTIME)) {
 			m_bFirstBox = BOX_SITUATION::eSPAWN;
+
 			uniform_int_distribution<int> distribution(0, 7);
 			engine = mt19937((unsigned int)time(NULL));
 			auto generator = bind(distribution, engine);
@@ -85,8 +96,7 @@ void CSpawnMgr::CheckSum()
 				if (!m_vSpawn[a].bSpawn)
 				{
 					m_vSpawn[a].bSpawn = true;
-					m_uiSum += 1;
-					CreateBoxObject(m_vSpawn[a].vPos, a);
+					Network::GetInst()->send_create_Box(a);
 					break;
 				}
 			}
@@ -109,8 +119,7 @@ void CSpawnMgr::CheckSum()
 				if (!m_vSpawn[a].bSpawn)
 				{
 					m_vSpawn[a].bSpawn = true;
-					m_uiSum += 1;
-					CreateBoxObject(m_vSpawn[a].vPos, a);
+					Network::GetInst()->send_create_Box(a);
 					break;
 				}
 			}

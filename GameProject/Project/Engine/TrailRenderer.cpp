@@ -53,6 +53,13 @@ void CatmullRomSpline::interpolate(size_t segment, vector<Vec3>& vInterpolatedDa
 
 void CTrailRenderer::Update()
 {
+
+	if (nullptr != m_pObj->GetScript<CArrowScript>() && m_pObj->GetScript<CArrowScript>()->GetVelocityY() == 5000)
+	{
+		m_vecPosLeft.clear();
+		m_vecPosRight.clear();
+		m_pTrails.clear();
+	}
 	m_fCurTime += DT * 3;
 
 	if (m_bEmit)
@@ -116,9 +123,11 @@ void CTrailRenderer::FinalUpdate()
 			, DXGI_FORMAT_R32_UINT, (UINT)vecIdx.size(), (BYTE*)vecIdx.data());
 		
 		GetObj()->MeshRender()->SetMesh(m_pMesh);
+		GetObj()->MeshRender()->SetRender(true);
 	}
 	else {
 		GetObj()->MeshRender()->SetMesh(nullptr);
+		GetObj()->MeshRender()->SetRender(false);
 	}
 
 	vecVTX.clear();

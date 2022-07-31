@@ -475,6 +475,22 @@ void CThread::process_packet(int user_id, char* buf)
 		CServer::GetInst()->send_update_player_helmet(user_id, SHARED_DATA::g_clients[user_id].room_id,packet->LocalPos, packet->Quaternion, packet->LocalRot, packet->RevolutionRot);
 	}
 	break;
+
+	case C2S_CREATE_BOX:
+	{
+		cs_packet_createbox* packet = reinterpret_cast<cs_packet_createbox*>(buf);
+		CServer::GetInst()->send_create_box(SHARED_DATA::g_clients[user_id].room_id, packet->id);
+	}
+	break;
+
+	case C2S_ARROW_SKILL:
+	{
+		cs_packet_arrowskill* packet = reinterpret_cast<cs_packet_arrowskill*>(buf);
+		CServer::GetInst()->send_arrow_skill(packet->id,packet->skill);
+	}
+	break;
+
+
 	default:
 		cout << "unknown packet type error \n";
 

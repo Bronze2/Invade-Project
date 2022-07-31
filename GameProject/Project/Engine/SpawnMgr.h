@@ -35,12 +35,15 @@ private:
 
 public:
 
+	void net_CreateBox(int id, int buff);
 	vector<SPAWN_LOCATE> GetSpawnArray() { return m_vSpawn; }
 	void SetSpawnFalse(int _id) { m_vSpawn[_id].bSpawn = false; }
 	void Init();
 	void Update();
 	void CheckSum();
 	void SetRandom();
+
+
 	void SubSum() {
 		if (m_uiSum < 0)
 			assert(nullptr);

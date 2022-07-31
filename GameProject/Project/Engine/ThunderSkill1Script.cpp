@@ -93,6 +93,8 @@ void CThunderSkill1Script::Update()
 		if(nullptr!=GetObj() && isMain)
 			Collision();
 		if (CoolTimeCheck(m_pSkill->StartTime, m_pSkill->fDuration)) {
+			if(m_pSound != nullptr)
+				m_pSound->Stop();
 			//DeleteObject(GetObj()->GetChild()[0]);
 			DeleteObject(GetObj());
 			DeleteObject(m_pTarget);

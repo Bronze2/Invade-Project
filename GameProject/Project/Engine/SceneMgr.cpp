@@ -178,11 +178,11 @@ void CSceneMgr::Init()
 
     CResMgr::GetInst()->Load<CTexture>(L"PlayerBlue", L"Texture\\ArchersTextureBlue.png");
     CResMgr::GetInst()->Load<CTexture>(L"PlayerRed", L"Texture\\ArchersTextureRed.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\UI\\water_lobby.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyDark", L"Texture\\UI\\dark_lobby.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyWind", L"Texture\\UI\\wind_lobby.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\UI\\thunder_lobby.png");
-    CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\UI\\ire_lobby.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyWater", L"Texture\\UI\\water_lobby_2.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyDark", L"Texture\\UI\\dark_lobby_2.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyWind", L"Texture\\UI\\wind_lobby_2.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\UI\\thunder_lobby_2.png");
+    CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\UI\\ire_lobby_2.png");
 
     CResMgr::GetInst()->Load<CTexture>(L"Stop", L"Texture\\Stop.png");
 
@@ -208,6 +208,21 @@ void CSceneMgr::Init()
     Ptr<CTexture> pTreeTex2 = CResMgr::GetInst()->Load<CTexture>(L"TreeTex2", L"Texture\\Tree02.png");
     Ptr<CTexture> pLobbyTex = CResMgr::GetInst()->Load<CTexture>(L"LobbyTex", L"Texture\\Lobby.png");
     Ptr<CTexture> pTransparency = CResMgr::GetInst()->Load<CTexture>(L"Transparency", L"Texture\\Transparency.png");
+
+
+
+    Ptr<CSound> pSound = CResMgr::GetInst()->Load3D<CSound>(L"SparkSound", L"Sound\\Spark.wav");
+    pSound = CResMgr::GetInst()->Load3D<CSound>(L"TowerHitSound", L"Sound\\TowerHit.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"explosion", L"Sound\\explosion.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"ArrowShoot", L"Sound\\ArrowShoot.mp3");
+    CResMgr::GetInst()->Load3D<CSound>(L"MinionRangeHit", L"Sound\\MinionRangeHIt.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"MinionMeleeHit", L"Sound\\MinionMeleeHit.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"MainMusic", L"Sound\\MainMusic.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"PlayerDie", L"Sound\\PlayerDie.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"PlayerHit", L"Sound\\PlayerHit.wav");
+
+
+
 
     Ptr<CMaterial> pMtrl = new CMaterial;
     pMtrl->DisableFileSave();
@@ -391,7 +406,10 @@ void CSceneMgr::Update()
     m_pCurScene->LateUpdate();
 
     m_pCurScene->FinalUpdate();
-    CSpawnMgr::GetInst()->Update();
+
+    if (Network::GetInst()->getMainClient().id == 0) {
+        CSpawnMgr::GetInst()->Update();
+    }
     CSensorMgr::GetInst()->Update();
     CCollisionMgr::GetInst()->Update();
     // 충돌 처리
@@ -874,5 +892,32 @@ void CSceneMgr::net_updateArrow(int id, int arrow_id, Vec3 LocalPos, Vec4 Quater
 
 void CSceneMgr::net_CreateSkill(Vec3 LocalPos, int skill, int camp)
 {
-    Net_CreateThunderObject(LocalPos, camp);
+    if ((PACKET_SKILL)skill == PACKET_SKILL::Z_TUNDER) {
+        Net_CreateThunderObject(LocalPos, camp);
+    }
+    else if ((PACKET_SKILL)skill == PACKET_SKILL::Z_FIRE)
+    {
+        CreateBoomParticleObject(LocalPos, L"smokeparticle");
+    }
+}
+
+
+void CSceneMgr::net_arrowSkill(int id, PACKET_SKILL skill)
+{
+ 
+    for (auto cl : m_pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+        if (cl->GetScript<CPlayerScript>() != nullptr) {
+            if (cl->GetScript<CPlayerScript>()->m_GetId() == id) {
+                cl->GetChild()[0]->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetPacketSkill(skill);
+                cl->GetChild()[0]->GetScript<CBowScript>()->GetCurArrow()->GetScript<CArrowScript>()->SetSkill(CSkillMgr::GetInst()->FindSkill((int)skill));
+                break;
+            }
+        }
+    }
+}
+
+
+void CSceneMgr::net_CreateBox(int box_id, int buff)
+{
+
 }

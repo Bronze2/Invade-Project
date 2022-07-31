@@ -639,3 +639,43 @@ void CServer::send_lobby_change_skill_pacekt(int room_id, PACKET_ELEMENT_TYPE sk
 			send_packet(cl.second.m_id, &packet);
 	}
 }
+
+#include <random>
+#include <ctime>
+#include <functional>
+
+void CServer::send_create_box(int room_id, int id)
+{
+
+	mt19937 engine((unsigned int)time(NULL));
+	uniform_int_distribution<int> distributionBuff(0, 2);
+
+	auto generator = bind(distributionBuff, engine);
+	int buff = generator();
+
+	sc_packet_createbox packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_CREATE_BOX;
+	packet.id = id;
+	packet.buf = buff;
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
+}
+
+
+void CServer::send_arrow_skill(int user_id, PACKET_SKILL skill)
+{
+	sc_packet_arrowskill packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_ARROW_SKILL;
+	packet.id = user_id;
+	packet.skill = skill;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.m_id == user_id) continue;
+		if (cl.second.room_id == SHARED_DATA::g_clients[user_id].room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
+}

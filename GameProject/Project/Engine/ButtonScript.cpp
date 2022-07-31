@@ -237,26 +237,26 @@ void CButtonScript::ExecuteChangeSkill(int id)
 	switch (m_eType) {
 	case BUTTON_TYPE::SELECT_WATER:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue05.mdat", L"MeshData\\Helmet_Blue05.mdat")->GetMesh());
+		}
+		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red05.mdat", L"MeshData\\Helmet_Red05.mdat")->GetMesh());
+		}
+		break;
+	case BUTTON_TYPE::SELECT_FIRE:
+		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
 			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue01.mdat", L"MeshData\\Helmet_Blue01.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
 			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red01.mdat", L"MeshData\\Helmet_Red01.mdat")->GetMesh());
 		}
 		break;
-	case BUTTON_TYPE::SELECT_FIRE:
+	case BUTTON_TYPE::SELECT_DARK:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
 			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue02.mdat", L"MeshData\\Helmet_Blue02.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
 			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red02.mdat", L"MeshData\\Helmet_Red02.mdat")->GetMesh());
-		}
-		break;
-	case BUTTON_TYPE::SELECT_DARK:
-		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat")->GetMesh());
-		}
-		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat")->GetMesh());
 		}
 		break;
 	case BUTTON_TYPE::SELECT_THUNDER:
@@ -270,10 +270,10 @@ void CButtonScript::ExecuteChangeSkill(int id)
 		break;
 	case BUTTON_TYPE::SELECT_WIND:
 		if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::BLUE) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue05.mdat", L"MeshData\\Helmet_Blue05.mdat")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Blue03.mdat", L"MeshData\\Helmet_Blue03.mdat")->GetMesh());
 		}
 		else if (m_pPlayerObj[select_id]->GetScript<CPlayerScript>()->GetCamp() == CAMP_STATE::RED) {
-			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red05.mdat", L"MeshData\\Helmet_Red05.mdat")->GetMesh());
+			m_pPlayerHelmet[select_id]->MeshRender()->SetMesh(CResMgr::GetInst()->Load<CMeshData>(L"MeshData\\Helmet_Red03.mdat", L"MeshData\\Helmet_Red03.mdat")->GetMesh());
 		}
 		break;
 	}

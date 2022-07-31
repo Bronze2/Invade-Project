@@ -34,7 +34,7 @@ void CArrowScript::SetSkill(SKILL* _pSkill)
 }
 void CArrowScript::Awake()
 {
-
+    m_pSound = SetSound2D(L"Sound\\Hit.wav");
     CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
     m_pParticle = new CGameObject;
     m_pParticle->SetName(L"Particle");
@@ -163,16 +163,15 @@ void CArrowScript::Update()
 
                 m_pTrail->TrailRenderer()->SetEmit(false);      // 여기요 여기요 여기요
 
+                m_eState = ARROW_STATE::IDLE;
+                GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+                //GetObj()->MeshRender()->SetRender(false);
+                m_fTime = 0;
                 if (nullptr != m_pSkill)
                 {
                     delete m_pSkill;
                     m_pSkill = nullptr;
                 }
-                m_eState = ARROW_STATE::IDLE;
-                GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
-                //GetObj()->MeshRender()->SetRender(false);
-                m_fTime = 0;
-
                 Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
                 //vPos.y = 5.f;
                 //Transform()->SetLocalPos(vPos);
@@ -198,6 +197,8 @@ void CArrowScript::Update()
                 float fGravity;
                 m_fTime += DT;
 
+
+                // 바람스킬
                 if (m_pSkill != nullptr && (UINT)SKILL_CODE::WIND_0 == m_pSkill->Code)
                 {
                     vPos.x += m_vXZDir.x * m_fSpeed * m_fTime;
@@ -205,6 +206,25 @@ void CArrowScript::Update()
                     Transform()->SetLocalPos(vPos);
                     CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
                     pCamera->GetScript<CCameraScript>()->SetWind0Camera (false);
+                    if (m_fVelocityY == 5000) {
+                        m_fVelocityY += 1;
+                    }
+                    if (Vec3::Distance(vPos, m_vRestorePos) > 3000.f)
+                    {
+                        m_pTrail->TrailRenderer()->SetEmit(false);      // 여기요 여기요 여기요
+
+                        if (nullptr != m_pSkill)
+                        {
+                            delete m_pSkill;
+                            m_pSkill = nullptr;
+                        }
+                        m_eState = ARROW_STATE::IDLE;
+                        GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+                        //GetObj()->MeshRender()->SetRender(false);
+                        m_fTime = 0;
+
+                        Network::GetInst()->send_collision_arrow(m_id, 999, PACKET_COLLTYPE::WALL, m_eCamp);
+                    }
                 }
                 else
                 {
@@ -251,6 +271,8 @@ void CArrowScript::Update()
 
                     }
                 }
+
+                // 번개스킬, 화염스킬
                 if (nullptr != m_pSkill) {
                     if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
                         if (vPos.y <= 1.f) {
@@ -264,6 +286,8 @@ void CArrowScript::Update()
                             else {
                                 cout << " ARROW ---" << (int)m_eCamp << endl;
                             }
+                            delete m_pSkill;
+                            m_pSkill = nullptr;
                             CreateThunderObject(vPos3, (int)m_eCamp);
                             Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
                             Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
@@ -274,32 +298,22 @@ void CArrowScript::Update()
                             Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
                             vPos3.y = 1.f;
                             CreateBoomParticleObject(vPos3, L"smokeparticle");
-
                             Collision();
+                            delete m_pSkill;
+                            m_pSkill = nullptr;
+                            Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_FIRE);
                             Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
                         }
                     }
                 }
+
+                //화살 움직임 센드
                 Network::GetInst()->send_update_arrow_move(m_id, vPos, m_qRot);
 
             }
         }
         else {
-
             LerpUpdate();
-
-
-            //vPos = Vec3::Lerp(vPos, CSceneMgr::GetInst()->get_arrowPos(m_ParentId, m_id), DT * 10.f);
-            //vRot = Vec3::Lerp(vRot, CSceneMgr::GetInst()->get_arrowRot(m_ParentId, m_id), DT * 10.f);
-            //if (CSceneMgr::GetInst()->get_arrowSkill(m_ParentId, m_id)) {
-            //   EnterSkill(vPos);
-            //   CSceneMgr::GetInst()->set_arrowSkill(m_ParentId, m_id, false);
-            //}
-            ////cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
-
-
-            //Transform()->SetLocalPos(vPos);
-            //Transform()->SetLocalRot(vRot);
         }
     }
     break;
@@ -319,11 +333,6 @@ void CArrowScript::LerpUpdate()
 
     vPos = Vec3::Lerp(vPos, m_LerpPos, DT * 10.f);
     m_qRot = Vec4::Lerp(m_qRot, m_LerpQut, DT * 10.f);
-    //if (CSceneMgr::GetInst()->get_arrowSkill(m_ParentId, m_id)) {
-    //   EnterSkill(vPos);
-    //   CSceneMgr::GetInst()->set_arrowSkill(m_ParentId, m_id, false);
-    //}
-    //cout << "클라[" << m_ParentId << "] 화살[" << m_id << "] Update " << vPos.x << "," << vPos.z << endl;
 
 
     Transform()->SetLocalPos(vPos);
@@ -375,20 +384,6 @@ void CArrowScript::Init()
     Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(80.f), XMConvertToRadians(0.f)));
     m_pTrail->TrailRenderer()->ClearPoint();
 
-    //---수정전
-    //m_bSetDotValue = false;
-    //m_fVelocityY = 0.f;
-    //m_fFallSpeed = 0.f;
-    //m_bMaxCharged = false;
-    //Transform()->SetQuaternion(Vec4(0.f, 0.f, 0.f, 1.f));
-    //Transform()->SetLocalPos(Vec3(0.f, 0.f, 0.f));
-    //Transform()->SetLocalRot(Vec3(0.f, XMConvertToRadians(0.f), XMConvertToRadians(0.f)));
-    // --- 수정전
-
-    //GetObj()->SetActive(false);
-    //SetState(ARROW_STATE::IDLE);
-
-    //m_pBow->AddChild(GetObj());
 }
 #include "Collider3D.h"
 #include "MinionScript.h"
@@ -396,24 +391,95 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
     if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>() && GetObj()->Transform()->GetLocalPos().y < 150 && m_eState == ARROW_STATE::ATTACK) {
         if (_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
-            cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId() << endl;
-            m_eState = ARROW_STATE::IDLE;
-            m_pTrail->TrailRenderer()->SetEmit(false);      // 여기요 여기요 여기요
-            GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
-            _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetDamage(500);
-            Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
+
+            if (m_pSkill == nullptr) {
+                if (m_pPlayer->GetScript<CPlayerScript>()->GetIsMain())
+                    m_pSound->PlaySoundOnce(100.f);
+                cout << " Coll Other Camp Player Index - " << _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId() << endl;
+                m_eState = ARROW_STATE::IDLE;
+                m_pTrail->TrailRenderer()->SetEmit(false);      // 여기요 여기요 여기요
+                GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+                _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetDamage(500);
+                Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->m_GetId(), PACKET_COLLTYPE::PLAYER, m_eCamp);
+
+            }
+            else {
+                if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+                        Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
+                        vPos3.y = 1.f;
+                        if (m_eCamp == CAMP_STATE::BLUE) {
+                            cout << "BLUE ARROW" << endl;
+                            cout << " ARROW ---" << (int)m_eCamp << endl;
+                        }
+                        else {
+                            cout << " ARROW ---" << (int)m_eCamp << endl;
+                        }
+                        CreateThunderObject(vPos3, (int)m_eCamp);
+                        delete m_pSkill;
+                        m_pSkill = nullptr;
+                        Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
+                        Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                }
+                else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+                        Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+                        vPos3.y = 1.f;
+                        CreateBoomParticleObject(vPos3, L"smokeparticle");
+
+                        Collision();
+                        delete m_pSkill;
+                        m_pSkill = nullptr;
+                        Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                }
+            }
         }
     }
     else if (nullptr != _pColldier->GetObj()->GetScript<CMinionScript>() && m_eState == ARROW_STATE::ATTACK) {
         if (_pColldier->GetObj()->GetScript<CMinionScript>()->GetCamp() != m_eCamp) {
-            cout << " Coll Other Camp Minion Index - " << _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId() << endl;
-            m_eState = ARROW_STATE::IDLE;
-            m_pTrail->TrailRenderer()->SetEmit(false);      // 여기요 여기요 여기요
-            GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
-            Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId(), PACKET_COLLTYPE::MONSTER, m_eCamp);
+            if (m_pSkill == nullptr) {
+
+                if (m_pPlayer->GetScript<CPlayerScript>()->GetIsMain())
+                    m_pSound->PlaySoundOnce(100.f);
+                cout << " Coll Other Camp Minion Index - " << _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId() << endl;
+                m_eState = ARROW_STATE::IDLE;
+                m_pTrail->TrailRenderer()->SetEmit(false);      // 여기요 여기요 여기요
+                GetObj()->Transform()->SetLocalPos(Vec3(-1000, -1000, -1000));
+                Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CMinionScript>()->m_GetId(), PACKET_COLLTYPE::MONSTER, m_eCamp);
+            }
+            else {
+                if ((UINT)SKILL_CODE::THUNDER_1 == m_pSkill->Code) {
+                    Vec3 vPos3 = GetObj()->Transform()->GetLocalPos();
+                    vPos3.y = 1.f;
+                    if (m_eCamp == CAMP_STATE::BLUE) {
+                        cout << "BLUE ARROW" << endl;
+                        cout << " ARROW ---" << (int)m_eCamp << endl;
+                    }
+                    else {
+                        cout << " ARROW ---" << (int)m_eCamp << endl;
+                    }
+                    CreateThunderObject(vPos3, (int)m_eCamp);
+                    Network::GetInst()->send_arrow_create_skill(vPos3, PACKET_SKILL::Z_TUNDER);
+                    delete m_pSkill;
+                    m_pSkill = nullptr;
+                    Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+                }
+                else if ((UINT)SKILL_CODE::_FIRE_1 == m_pSkill->Code) {
+                    Vec3 vPos3 = GetObj()->Transform()->GetWorldPos();
+                    vPos3.y = 1.f;
+                    CreateBoomParticleObject(vPos3, L"smokeparticle");
+
+                    Collision();
+
+                    delete m_pSkill;
+                    m_pSkill = nullptr;
+                    Transform()->SetLocalPos(Vec3(-1000.f, -1000.f, -1000.f));
+
+                }
+            }
         }
     }
     else if (nullptr != _pColldier->GetObj()->GetScript<CTowerColScript>()) {
+        if (m_pPlayer->GetScript<CPlayerScript>()->GetIsMain())
+            m_pSound->PlaySoundOnce(100.f);
         cout << "tower collision on~!" << endl;
     }
 
@@ -447,6 +513,11 @@ CArrowScript::~CArrowScript()
     {
         delete m_pSkill;
         m_pSkill = nullptr;
+    }
+
+    if (nullptr != m_pSound) {
+        delete m_pSound;
+        m_pSound = nullptr;
     }
 
 }
@@ -539,37 +610,67 @@ void CArrowScript::WindSkill1(CCollider3D* _pCollider)
 
 }
 
-
-
+// BoomBoomBoomBoomBoomBoomBoomBoomBommBoomBoom
 void CArrowScript::Collision()
 {
     CScene* pCurScene = CSceneMgr::GetInst()->GetCurScene();
-    CLayer* pLayer = nullptr;
-    if (L"Red" == pCurScene->GetLayer(m_iLayerIdx)->GetName())
-    {
-        pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Blue");
-    }
-    else if (L"Blue" == pCurScene->GetLayer(m_iLayerIdx)->GetName()) {
-        pLayer = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Red");
-    }
-    if (nullptr == pLayer)
-        return;
 
-    const vector<CGameObject*>& vecObj = pLayer->GetObjects();
-    for (int i = 0; i < vecObj.size(); ++i) {
-        CGameObject* pObject1 = vecObj[i];
-        CGameObject* pObject2 = GetObj();
-        Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
-        Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
-        float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
-        if (Radius < 400.f)
-        {
-            if (nullptr != vecObj[i]->GetScript<CPlayerScript>())
-            {
-                vecObj[i]->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+    //블루에 플레이어 있고 블루 레드 따로 미니언있음.
 
+    //플레이어 충돌
+    for (auto obj : pCurScene->FindLayer(L"Blue")->GetParentObj()) {
+        if (obj->GetScript<CPlayerScript>() != nullptr) {
+            if (obj->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
+                CGameObject* pObject1 = obj;
+                CGameObject* pObject2 = GetObj();
+                Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+                Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+                float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+                if (Radius < 400.f)
+                {
+                    obj->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
+
+                }
+         
             }
         }
-
+        if (m_eCamp == CAMP_STATE::RED) {
+            if (obj->GetScript<CMinionScript>() != nullptr) {
+                if (obj->GetScript<CMinionScript>()->GetCamp() != m_eCamp) {
+                    CGameObject* pObject1 = obj;
+                    CGameObject* pObject2 = GetObj();
+                    Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+                    Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+                    float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+                    if (Radius < 400.f)
+                    {
+                        Network::GetInst()->send_set_damage(obj->GetScript<CMinionScript>()->m_GetId(),100 ,PACKET_COLLTYPE::MONSTER, m_eCamp);
+                    }
+                }
+            }
+        }
     }
+
+
+    if (m_eCamp == CAMP_STATE::BLUE) {
+        for (auto obj : pCurScene->FindLayer(L"Red")->GetParentObj()) {
+            if (obj->GetScript<CMinionScript>() != nullptr) {
+                if (obj->GetScript<CMinionScript>()->GetCamp() != m_eCamp) {
+                    CGameObject* pObject1 = obj;
+                    CGameObject* pObject2 = GetObj();
+                    Vec3 vPos1 = pObject1->Transform()->GetWorldPos();
+                    Vec3 vPos2 = pObject2->Transform()->GetWorldPos();
+                    float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
+                    if (Radius < 400.f)
+                    {
+                        Network::GetInst()->send_set_damage(obj->GetScript<CMinionScript>()->m_GetId(), 100, PACKET_COLLTYPE::MONSTER, m_eCamp);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
 }

@@ -64,4 +64,15 @@ void Net_CreateThunderObject(const Vec3& _Pos, int e_camp);
 
 void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey);
 
-void CreateBoxObject(const Vec3& _vPos, const UINT& _idx);
+void CreateBoxObject(const Vec3& _vPos, const UINT& _idx, BUFF_TYPE buff);
+
+
+class CSound;
+
+
+CSound* SetSound2D(const wstring& _Path);
+CSound* SetSound3D(const wstring& _Path);
+
+void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);
+
+void SetListener(const Vec3& _vFrontDir, const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);

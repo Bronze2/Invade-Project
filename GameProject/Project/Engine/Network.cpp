@@ -3,6 +3,7 @@
 #include "SceneMgr.h"
 #include "TimeMgr.h"
 #include "GameObject.h"
+#include "SpawnMgr.h"
 
 
 Network::Network() {}
@@ -435,6 +436,23 @@ void Network::ProcessPacket(char* ptr)
 	}
 	break;
 
+
+	case S2C_CREATE_BOX:
+	{
+		sc_packet_createbox* my_packet = reinterpret_cast<sc_packet_createbox*>(ptr);
+
+		CSpawnMgr::GetInst()->net_CreateBox(my_packet->id , my_packet->buf);
+	}
+	break;
+
+	case S2C_ARROW_SKILL:
+	{
+		sc_packet_arrowskill* my_packet = reinterpret_cast<sc_packet_arrowskill*>(ptr);
+
+		CSceneMgr::GetInst()->net_arrowSkill(my_packet->id, my_packet->skill);
+	}
+	break;
+
 	case S2C_CHAT_MSG:
 	{
 		sc_chat_msg* my_packet = reinterpret_cast<sc_chat_msg*>(ptr);
@@ -456,14 +474,6 @@ void Network::ProcessPacket(char* ptr)
 				ChatisMax = true;
 			}
 		}
-
-
-
-		//veiwChatItmes[13][255];
-		//chatCount = 0;
-		//ChatisMax = false;
-
-
 	}
 	break;
 	break;
@@ -762,6 +772,26 @@ void Network::send_chat_msg(char msg[100])
 	m_packet.size = sizeof(m_packet);
 	strcpy_s(m_packet.msg, msg);
 	cout <<"SEND CHAT - " <<m_packet.msg << endl;
+	send_packet(&m_packet);
+}
+
+void Network::send_create_Box(int id)
+{
+	cs_packet_createbox m_packet;
+	m_packet.type = C2S_CREATE_BOX;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	send_packet(&m_packet);
+
+}
+
+void Network::send_arrow_skill(int id, PACKET_SKILL skill)
+{
+	cs_packet_arrowskill m_packet;
+	m_packet.type = C2S_ARROW_SKILL;
+	m_packet.size = sizeof(m_packet);
+	m_packet.id = id;
+	m_packet.skill = skill;
 	send_packet(&m_packet);
 }
 

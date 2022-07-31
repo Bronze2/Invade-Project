@@ -73,6 +73,16 @@ CGameObject* CSpawnScript::SpawnPlayer(int p_id,Vec3 _vLocalPos, Vec3 _vLocalSca
 
 void CSpawnScript::Update()
 {
+    //Box
+    if (m_eCampState == CAMP_STATE::BLUE && !isFirstBox) {
+        if (CreateTime < std::chrono::high_resolution_clock::now()) {
+            isFirstBox = true;
+            CServer::GetInst()->send_create_box(index, 0);
+            CServer::GetInst()->send_create_box(index, 1);
+
+       }
+    }
+
     if (!m_bClockStart) {
         m_uiPatternStart = clock();
         m_bClockStart = true;
@@ -515,6 +525,9 @@ void CSpawnScript::Update()
 CSpawnScript::CSpawnScript() :CScript((UINT)SCRIPT_TYPE::SPAWNSCRIPT),m_bClockStart(false),m_eSpawnPattern(SPAWN_PATTERN::PATTERN1)
 ,m_bSpawnStart(false),m_uiCount(0),m_bPatternOn(false)
 {
+    CreateTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(5000);
+    isFirstBox = false;
+
 }
 
 CSpawnScript::~CSpawnScript()

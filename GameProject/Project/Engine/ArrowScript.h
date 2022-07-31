@@ -67,6 +67,7 @@ private:
     Vec4 m_LerpQut;
 
     CAMP_STATE m_eCamp;
+    CSound* m_pSound;
    
 public:
     virtual void Awake();
@@ -79,7 +80,7 @@ public:
     void SetLayerIdx(UINT _Idx) { m_iLayerIdx = _Idx; }
     UINT GetLayerIdx() { return m_iLayerIdx; }
     void SkillCheck();
-
+    float GetVelocityY() { return m_fVelocityY; }
     PACKET_SKILL GetPacketSkill() { return m_PacketSkill; }
     void SetPacketSkill(PACKET_SKILL paket_skill) {  m_PacketSkill = paket_skill; }
 

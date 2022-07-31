@@ -83,7 +83,6 @@ void CSceneMgr::Init(int index)
 	// 필요한 리소스 로딩
 	// Texture 로드
 
-
 	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
@@ -112,6 +111,8 @@ void CSceneMgr::Update()
 			CEventMgr::GetInst()->Update(scene.first);
 		}
 	}
+
+
 	// 충돌 처리
 
 }

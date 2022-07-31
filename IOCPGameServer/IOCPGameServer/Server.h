@@ -77,6 +77,11 @@ public:
 	void send_chat_msg(int clinet_id, char msg[100]);
 
 	void send_damage_player(int player_id, int hp);
+
+	void send_create_box(int room_id, int id);
+
+	void send_arrow_skill(int user_id, PACKET_SKILL skill);
+
 private:
 
 };

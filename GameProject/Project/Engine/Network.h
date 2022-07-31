@@ -87,6 +87,8 @@ public:
 	void send_lobby_ready(bool isReady);
 	void send_lobby_change_skill(ELEMENT_TYPE skill);
 	void send_chat_msg(char msg[100]);
+	void send_create_Box(int id);
+	void send_arrow_skill(int id, PACKET_SKILL skill);
 
 	void send_arrow_create_skill(Vec3 LocalPos, PACKET_SKILL skill);
 	void send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAMP_STATE camp);

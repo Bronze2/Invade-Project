@@ -100,7 +100,10 @@ private:
     // 바람스킬
     bool m_bWind0OnceUsed = false;
 
+    CGameObject* m_pDarkUI;
+
 public:
+    void SetDarkUIRender(bool _bTrue) { m_pDarkUI->SetActive(_bTrue); }
     void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
     void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
     void AttachHelmet();

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <FMOD/fmod.h>
 #include <FMOD/fmod.hpp>
 #include <FMOD/fmod_codec.h>
@@ -8,9 +9,12 @@
 #else
 #pragma comment(lib, "FMOD/x64/fmod64_vc.lib")
 #endif
+
+
 #include "Resource.h"
+
 class CSound :
-    public CResource
+	public CResource
 {
 public:
 	static FMOD::System* g_pFMOD;
@@ -22,14 +26,22 @@ private:
 
 
 public:
+	FMOD::Sound* GetSound() { return m_pSound; }
+
 	// 0 (무한반복) 
-	void Play(int _iRoopCount, bool _bOverlap = false);
+	void Play(int _iRoopCount, float _fVolume, bool _bOverlap = false);
+	void PlaySoundOnce(const float& _fVolume);
+	void PlaySound3D(const Vec3& _Pos, const float& _fVolume);
 	void Stop();
 
 	void RemoveChannel(FMOD::Channel* _pTargetChannel);
 
 public:
 	virtual void Load(const wstring& _strFilePath);
+
+	virtual void Load3D(const wstring& _strFilePath);
+
+
 
 public:
 	CSound();
