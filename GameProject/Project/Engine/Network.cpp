@@ -26,13 +26,13 @@ void Network::Init()
 	m_Client.socket_info.m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	setsockopt(m_Client.socket_info.m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(optval));
 
-	ServerAddr.sin_port = htons(SERVER_PORT);
+	ServerAddr.sin_port = htons(8012);
 	//과방 192.168.207.150
 	//수민 192.168.203.24
 	//E320 실습실 10.30.2.115
 	//긱사 포트포워딩 121.190.132.143 : 8012
 	//10.30.2.19
-	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	ServerAddr.sin_addr.s_addr = inet_addr("192.168.204.192");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
@@ -121,7 +121,7 @@ void Network::ProcessPacket(char* ptr)
 			m_otherClients[id].camp = my_packet->camp;
 			m_otherClients[id].isHost = my_packet->isHost;
 			m_otherClients[id].id = my_packet->id;
-
+			strcpy_s(m_otherClients[id].name, my_packet->name);
 			cout << "Other Client ID :" << m_otherClients[id].id <<
 				"	Camp :" << (int)m_otherClients[id].camp <<
 				"	isHost:" << boolalpha << m_otherClients[id].isHost << endl;
@@ -223,7 +223,6 @@ void Network::ProcessPacket(char* ptr)
 			CSceneMgr::GetInst()->net_spawnMinion_red(my_packet->id, my_packet->mtype,my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
 		else if(my_packet->camp == CAMP_STATE::BLUE)
 			CSceneMgr::GetInst()->net_spawnMinion_blue(my_packet->id, my_packet->mtype,my_packet->pos.x, my_packet->pos.y, my_packet->pos.z);
-		cout << "spawn id: " << my_packet->id <<endl;
 	}
 	break;
 	case S2C_MOVE_MINION:
@@ -468,6 +467,14 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_playerRespawn(my_packet->id, Vec3(my_packet->Pos.x, my_packet->Pos.y, my_packet->Pos.z));
 	}
 	break;
+	case S2C_END_GAME:
+	{
+		sc_packet_endgame* my_packet = reinterpret_cast<sc_packet_endgame*>(ptr);
+
+		CSceneMgr::GetInst()->net_change_result();
+	}
+	break;
+	
 
 	case S2C_CHAT_MSG:
 	{

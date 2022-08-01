@@ -2,7 +2,7 @@
 #include "Script.h"
 #include "MinionScript.h"
 
-#define PATTERNINTEVAL 15
+#define PATTERNINTEVAL 30
 #define SPAWNINTEVAL 2
 class CAnimation;
 class CSpawnScript :

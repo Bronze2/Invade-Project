@@ -182,6 +182,7 @@ void CInGameScene::Init()
         //pObject->GetScript<CPlayerScript>()->SetType(Network::GetInst()->getMainClient().skill);
         pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 
+  
     }
 
     else if (Network::GetInst()->getMainClient().camp == CAMP_STATE::RED) {
@@ -283,12 +284,17 @@ void CInGameScene::Init()
     FindLayer(L"Blue")->AddGameObject(pColObj, false);
 
 
-
     //pEmptyCam->Transform()->SetLocalPos(Vec3(-300, 130, -50));
     //pEmptyCam->Transform()->SetLocalRot(Vec3(0, XMConvertToRadians(90.f), XMConvertToRadians(0.f)));
  //   pEmptyPlayer->AddChild(pEmptyCam);
     FindLayer(L"Default")->AddGameObject(pEmptyPlayer, false);
 
+
+    Reuslt result;
+    result.camp = (int)Network::GetInst()->getMainClient().camp;
+    result.element = Network::GetInst()->getMainClient().skill;
+    CSceneMgr::GetInst()->PushResult(result);
+    CGameObject* pMainPlayer = pObject;
 
     for (auto& cl : Network::GetInst()->getOtherClients())
     {
@@ -331,6 +337,12 @@ void CInGameScene::Init()
         pColObj->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
         pColObj->GetScript<CPlayerColScript>()->SetPlayer(pObject);
         pObject->GetScript<CPlayerScript>()->SetColPlayer(pColObj);
+
+
+        //추가
+        string name(cl.second.name);
+        pObject->GetScript<CPlayerScript>()->name.assign(name.begin(), name.end());
+
         FindLayer(L"Blue")->AddGameObject(pColObj, false);
 
 
@@ -379,9 +391,16 @@ void CInGameScene::Init()
 
         if (pObject->GetScript<CPlayerScript>()->GetCamp() == Network::GetInst()->getMainClient().camp) {
             TeamPlayer.push_back(pObject);
+            pMainPlayer->GetScript<CPlayerScript>()->AddTeamPlayer(pObject);
+;
         }
 
 
+
+        Reuslt result;
+        result.camp = (int)cl.second.camp;
+        result.element = cl.second.skill;
+        CSceneMgr::GetInst()->PushResult(result);
 
         FindLayer(L"Blue")->AddGameObject(pObject, false);
 
@@ -1138,7 +1157,7 @@ void CInGameScene::Init()
     Vec3 vESkillScale = Vec3(res.fWidth / 18, res.fWidth / 18, 1.f);
     Vec3 vZSkillScale = Vec3(res.fWidth / 13, res.fWidth / 13, 1.f);
 
-    pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vESkillScale.x * 0.5f - vZSkillScale.x - res.fWidth / 30, -res.fHeight / 2 + vESkillScale.y / 2, 1.f));
+    pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vESkillScale.x * 0.5f - vZSkillScale.x - res.fWidth / 30, -res.fHeight / 2 + vESkillScale.y / 2 + 50.f, 1.f));
     pUISkill->Transform()->SetLocalScale(vESkillScale);
 
 
@@ -1184,8 +1203,8 @@ void CInGameScene::Init()
     FindLayer(L"UI")->AddGameObject(pUISkill);
 
     // 스킬쿨타임 글씨 수민
-    CFontMgr::GetInst()->AddText(L"Eskill", L"E", Vec2(0.8f, 0.95f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
-    CFontMgr::GetInst()->AddText(L"Zskill", L"Z", Vec2(0.9f, 0.95f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
+    CFontMgr::GetInst()->AddText(L"Eskill", L"E", Vec2(0.8f, 0.9f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
+    CFontMgr::GetInst()->AddText(L"Zskill", L"Z", Vec2(0.9f, 0.9f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
 
 
 
@@ -1196,7 +1215,7 @@ void CInGameScene::Init()
     CGameObject* pHpBar;
 
     int i = 0;
-    for (auto tPlayer : TeamPlayer) {
+    for (auto tPlayer : pMainPlayer->GetScript<CPlayerScript>()->GetTeamPlayer()) {
         // 사진
         pPlayerInfoTex = new CGameObject;
         pPlayerInfoTex->SetName(L"PlayerInfoTex");
@@ -1223,16 +1242,16 @@ void CInGameScene::Init()
                 pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
                 break;
             case 1:
-                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
                 break;
             case 2:
-                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
-                break;
-            case 3:
                 pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
                 break;
+            case 3:
+                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+                break;
             case 4:
-                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
+                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
                 break;
 
             }
@@ -1243,16 +1262,16 @@ void CInGameScene::Init()
                 pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
                 break;
             case 1:
-                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
                 break;
             case 2:
-                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
-                break;
-            case 3:
                 pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
                 break;
+            case 3:
+                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+                break;
             case 4:
-                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
+                pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
                 break;
             }
         }
@@ -1260,8 +1279,8 @@ void CInGameScene::Init()
         FindLayer(L"UI")->AddGameObject(pPlayerInfoTex);
         int index = tPlayer->GetScript<CPlayerScript>()->m_GetId();
         // 플레이어 id
-        CFontMgr::GetInst()->AddText(wstring(L"PlayerID") + to_wstring(index),
-            wstring(L"PlayerID"), Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
+        CFontMgr::GetInst()->AddText(tPlayer->GetScript<CPlayerScript>()->name,
+            tPlayer->GetScript<CPlayerScript>()->name, Vec2(0.05f, 0.44f + 0.09f * i), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 0.f, 1.f, 1.f));
         //위에있는거에 이름 넣어주기
 
      // 에이치피바
@@ -1279,7 +1298,7 @@ void CInGameScene::Init()
         pUIHPBarMtrl->DisableFileSave();
         pUIHPBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"UIHPBarShader"));
         pHpBar->MeshRender()->SetMaterial(pUIHPBarMtrl);
-        tPlayer->GetScript<CPlayerScript>()->AddUIHpBarObj(pHpBar);
+        pMainPlayer->GetScript<CPlayerScript>()->AddUIHpBarObj(pHpBar);
         FindLayer(L"UI")->AddGameObject(pHpBar);
         i++;
     }
@@ -1349,14 +1368,20 @@ void CInGameScene::Init()
     FindLayer(L"Default")->AddGameObject(pRangeObject);
 
 
-    Ptr<CMaterial> m_pMtrl = new CMaterial;
-    m_pMtrl->SetName(L"Texture00");
-    m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-    CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
-    m_pMtrl = new CMaterial;
-    m_pMtrl->SetName(L"Texture01");
-    m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-    CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
+
+
+
+    CResMgr::GetInst()->FindRes<CSound>(L"LobbyBGM")->Stop();
+
+    CResMgr::GetInst()->FindRes<CSound>(L"InGameBGM")->Play(0, 1.f, 0);
+    //Ptr<CMaterial> m_pMtrl = new CMaterial;
+    //m_pMtrl->SetName(L"Texture00");
+    //m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+    //CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
+    //m_pMtrl = new CMaterial;
+    //m_pMtrl->SetName(L"Texture01");
+    //m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
+    //CResMgr::GetInst()->AddRes<CMaterial>(m_pMtrl->GetName(), m_pMtrl);
 
 
     //CCollisionMgr::GetInst()->CheckCollisionLayer(L"Blue", L"Blue");

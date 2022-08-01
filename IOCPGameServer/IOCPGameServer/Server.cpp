@@ -25,7 +25,7 @@ void CServer::Init()
 	SOCKADDR_IN serverAddr;
 	memset(&serverAddr, 0, sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(SERVER_PORT); //host to network 해서 넣어야 한다
+	serverAddr.sin_port = htons(8012); //host to network 해서 넣어야 한다
 	serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY); //모든 클라로부터 접속을 받아야 한다
 	::bind(SHARED_DATA::listenSocket, reinterpret_cast<SOCKADDR*>(&serverAddr), sizeof(serverAddr)); //그냥 bind를 쓰면 c++11에 있는 키워드로 연결된다. 따라서 앞에 ::를 붙인다.
 
@@ -179,6 +179,7 @@ void CServer::send_enter_lobby_packet(int user_id, int o_id)
 	p.type = S2C_LOBBY_ENTER;
 	p.camp = SHARED_DATA::g_clients[o_id].m_camp;
 	p.isHost = SHARED_DATA::g_clients[o_id].m_isHost;
+	strcpy_s(p.name, SHARED_DATA::g_clients[o_id].m_name);
 	send_packet(user_id, &p);
 }
 void CServer::send_near_packet(int client, int new_id)
@@ -458,7 +459,6 @@ void CServer::send_chat_msg(int client_id, char msg[100])
 	packet.size = sizeof(packet);
 	packet.type = S2C_CHAT_MSG;
 	strcpy_s(packet.msg, msg);
-	cout << packet.msg << endl;
 
 	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.room_id == SHARED_DATA::g_clients[client_id].room_id) {
@@ -709,4 +709,19 @@ void CServer::send_player_spawn(int user_id, Vec3 Pos)
 		if (cl.second.room_id == SHARED_DATA::g_clients[user_id].room_id)
 			send_packet(cl.second.m_id, &packet);
 	}
+}
+
+
+void CServer::send_end_game(int index)
+{
+
+	sc_packet_endgame packet;
+	packet.size = sizeof(packet);
+	packet.type = S2C_END_GAME;
+
+	for (auto& cl : SHARED_DATA::g_clients) {
+		if (cl.second.room_id == SHARED_DATA::g_clients[index].room_id)
+			send_packet(cl.second.m_id, &packet);
+	}
+	
 }

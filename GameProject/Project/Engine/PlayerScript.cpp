@@ -30,23 +30,6 @@ void CPlayerScript::GetBuff()
 }
 void CPlayerScript::m_FAnimation()
 {
-	CGameObject* pCamera;
-	Vec3 vCamRot;
-	float fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-
-	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME)
-	{
-		pCamera = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1])->GetChild()[0];
-		vCamRot = pCamera->Transform()->GetLocalRot();
-		fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-	}
-	else
-	{
-		pCamera = dynamic_cast<CGameObject*>(CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[0]);
-		vCamRot = pCamera->Transform()->GetLocalRot();
-		fCamRotDegree = XMConvertToDegrees(vCamRot.x);
-	}
-
 	// 로비씬 RUN과 JUMP 순서 바꿈
 	if (m_ePrevState != m_eState) {
 		// Blend  ʿ 
@@ -231,27 +214,6 @@ void CPlayerScript::m_FAnimation()
 		default:
 			break;
 		}
-		// Helmet 달기
-		Vec3 vChestTrans = m_pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
-		Vec3 vHeadTrans = m_pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
-		Vec4 qHatRot = m_pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
-
-		float fFactor = GetObj()->Animator3D()->GetRatio();
-
-		Vec3 vTransDir = vHeadTrans - vChestTrans;
-		vTransDir.Normalize();
-		Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
-		vRotDir.Normalize();
-		Vec3 vTrans = vHeadTrans; // +vTransDir * 30.f;
-
-		m_pHelmetObject->Transform()->SetLocalPos(vTrans);
-		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
-		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f));
-		m_pHelmetObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
-
-		Network::GetInst()->send_player_helemt(m_id, vTrans, qHatRot,
-			Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f), Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
-
 	}
 	else {
 		switch (m_eState)
@@ -410,9 +372,7 @@ void CPlayerScript::m_FAnimation()
 				if (!GetObj()->Animator3D()->GetBlendState()) {
 					m_pCurAnimClip = GetObj()->Animator3D()->GetAnimation()->FindAnimClip(L"DIE");
 					if (GetObj()->Animator3D()->GetFrameIdx() >= (m_pCurAnimClip->iEndFrame - GetObj()->Animator3D()->GetBlendMaxFrame())) {
-						// 누워있는 상태로 멈춰이아어리ㅏ어리어라ㅓ이리ㅏㅓ
 						GetObj()->Animator3D()->SetFrameIdx(m_pCurAnimClip->iEndFrame);
-						//m_eState = PLAYER_STATE::IDLE;
 					}
 				}
 			}
@@ -438,37 +398,8 @@ void CPlayerScript::m_FAnimation()
 		default:
 			break;
 		}
-
-		Vec3 vChestTrans1 = m_pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
-		Vec3 vChestTrans2 = m_pChestBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
-		Vec3 vTrans1 = m_pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].vTranslate;
-		Vec3 vTrans2 = m_pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].vTranslate;
-		Vec4 qRot1 = m_pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetFrameIdx()].qRot;
-		Vec4 qRot2 = m_pHeadBone->vecKeyFrame[GetObj()->Animator3D()->GetNextFrameIdx()].qRot;
-
-		float fFactor = GetObj()->Animator3D()->GetRatio();
-
-		Vec3 vHeadTrans = Vec3::Lerp(vTrans1, vTrans2, fFactor);
-		Vec3 vChestTrans = Vec3::Lerp(vChestTrans1, vChestTrans2, fFactor);
-		Vec3 vTransDir = vHeadTrans - vChestTrans;
-		vTransDir.Normalize();
-		Vec3 vRotDir = vHeadTrans - Vec3(vHeadTrans.x + 10.f, vHeadTrans.y, vHeadTrans.z);
-		vRotDir.Normalize();
-		Vec3 vTrans = vHeadTrans; // +vTransDir * 30.f;
-		Vec4 qHatRot = Vec4::Lerp(qRot1, qRot2, fFactor);
-
-		m_pHelmetObject->Transform()->SetLocalPos(vTrans);
-		m_pHelmetObject->Transform()->SetQuaternion(qHatRot);
-		m_pHelmetObject->Transform()->SetLocalRot(Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f));
-		m_pHelmetObject->Transform()->SetRevolutionRot(Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
-
-		Network::GetInst()->send_player_helemt(m_id, vTrans, qHatRot,
-			Vec3(XMConvertToRadians(-fCamRotDegree * 3 + 90.f), 0.f, 0.f), Vec3(XMConvertToRadians(-fCamRotDegree * 0.6f), 0.f, 0.f));
-
 	}
-	//AttachHelmet();
 }
-
 void CPlayerScript::Init()
 {
 	m_eState = PLAYER_STATE::IDLE;
@@ -600,16 +531,16 @@ void CPlayerScript::Awake()
 			if (m_eCamp == CAMP_STATE::BLUE) {
 				switch (m_iType) {
 				case ELEMENT_TYPE::WATER:
-					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
-					break;
-				case ELEMENT_TYPE::FIRE:
 					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Blue");
 					break;
+				case ELEMENT_TYPE::FIRE:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Blue");
+					break;
 				case ELEMENT_TYPE::DARK:
-					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
 					break;
 				case ELEMENT_TYPE::THUNDER:
-					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Blue");
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Blue");
 					break;
 				case ELEMENT_TYPE::WIND:
 					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Blue");
@@ -619,16 +550,16 @@ void CPlayerScript::Awake()
 			else if (m_eCamp == CAMP_STATE::RED) {
 				switch (m_iType) {
 				case ELEMENT_TYPE::WATER:
-					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
-					break;
-				case ELEMENT_TYPE::FIRE:
 					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_01_Red");
 					break;
+				case ELEMENT_TYPE::FIRE:
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_05_Red");
+					break;
 				case ELEMENT_TYPE::DARK:
-					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
 					break;
 				case ELEMENT_TYPE::THUNDER:
-					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_04_Red");
+					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_02_Red");
 					break;
 				case ELEMENT_TYPE::WIND:
 					pPlayerTexTex = CResMgr::GetInst()->FindRes<CTexture>(L"helmet_03_Red");
@@ -725,6 +656,8 @@ void CPlayerScript::Awake()
 			break;
 		}
 	}
+
+
 	m_pHelmetObject = pHelmetMesh->Instantiate();
 	m_pHelmetObject->MeshRender()->SetDynamicShadow(true);
 	m_pHelmetObject->FrustumCheck(false);
@@ -742,7 +675,7 @@ void CPlayerScript::Update()
 
 // Z-up To Y-up
 	
-	//AttachHelmet();
+	AttachHelmet();
 	if (CSceneMgr::GetInst()->GetCurScene()->GetCurScene() == SCENE_TYPE::INGAME) {	
 		if (isMain && !m_bDead) {
 			SkillCoolTimeCheck();
@@ -1016,7 +949,6 @@ void CPlayerScript::Update()
 
 			Transform()->SetLocalRot(vRot);
 			UseSkill();
-			CheckHpAndDead();	// 수민
 			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
 			m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
 
@@ -1031,6 +963,7 @@ void CPlayerScript::Update()
 			// }
 
 		}
+		CheckHpAndDead();	// 수민
 		GetDamage();
 		StatusCheck();
 		Update_LerpPos();
@@ -1043,58 +976,18 @@ void CPlayerScript::Update()
 
 void CPlayerScript::CheckHpAndDead()
 {
-	//if (isMain) {
-	//	int iToRestartTime;
-	//	wstring wCoolTime;
-	//	// 사망처리 
-	//	if (m_iCurHp <= 0 && !m_bDead) {
-	//		m_bDead = true;
-	//		m_pDeadEffect->SetActive(true);
-	//		m_uiDeadStart = clock();
-	//		m_iCurHp = 0.f;
-	//	}
-	//	if (m_bDead) {
-	//		CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
-	//		m_uiDeadEnd = clock();
-	//		m_uiDeadInterval = (m_uiDeadEnd - m_uiDeadStart) / CLOCKS_PER_SEC;
-
-	//		iToRestartTime = DEADTIME - m_uiDeadInterval;
-	//		wCoolTime = to_wstring(iToRestartTime);
-
-	//		CFontMgr::GetInst()->AddText(L"DeadCoolTime", wCoolTime, Vec2(0.06f, 0.01f), Vec2(3.f, 3.f), Vec2(0.5f, 0.f), Vec4(0.f, 0.f, 1.f, 1.f));
-
-	//		// 아군 플레이어 죽었을 때 파티창 HpBar에 부활까지 남은 시간(그 플레이어의 wCoolTime) 써주기 (Add, DeleteText 첫번째 인자에 키값은 죽은 플레이어의 인덱스)
-	//		CFontMgr::GetInst()->AddText(wstring(L"DeadPlayerID") + to_wstring(0), wCoolTime, Vec2(0.071f, 0.47f), Vec2(1.5f, 1.5f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 1.f, 1.f));
-
-	//		if (m_uiDeadInterval == DEADTIME) {
-	//			Transform()->SetLocalPos(Vec3(0.f, 0.f, 1000.f));
-	//			m_pDeadEffect->SetActive(false);
-	//			m_bDead = false;
-	//			m_iCurHp = m_iMaxHp;
-	//			m_uiDeadStart = m_uiDeadEnd;
-	//			Init();
-	//			CFontMgr::GetInst()->DeleteText(L"DeadCoolTime");
-	//			CFontMgr::GetInst()->DeleteText(wstring(L"DeadPlayerID") + to_wstring(0));
-	//		}
-	//	}
-	//	else {
-	//		//m_iCurHp -= 3 * DT;	// 임시임요 
-	//	}
-
-	//	// 본인 에이치피바
-	//	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &m_iCurHp);
-	//	m_pHPBar->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-
-	//	// 파티창 에이치피바
-	//	//for (int i = 1; i < m_vecUIHpBar.size(); ++i) {		// 0부터
-	//	//	//int iCurHp = m_arrAlliance[i]->GetScript<CPlayerScript>()->GetCurHp();
-	//	//	int iCurHp = 100 + 30 * i;
-	//	//	m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
-	//	//	m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &m_iMaxHp);
-	//	//}
-	//}
+	if (isMain) {
+		// 파티창 에이치피바
+		for (int i = 0; i < m_vecTeamPlayer.size(); ++i) {
+			if (m_vecTeamPlayer[i]->GetScript<CPlayerScript>() != nullptr) {
+				int iCurHp = m_vecTeamPlayer[i]->GetScript<CPlayerScript>()->GetCurHp();
+				int iMaxHp = m_iMaxHp;
+				m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_0, &iCurHp);
+				m_vecUIHpBar[i]->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::INT_1, &iMaxHp);
+			}
+		}
+	}
 }
-
 bool CPlayerScript::MoveCheck(const Vec3& _vPos)
 {
 	m_bColBox = false;
@@ -1263,7 +1156,7 @@ void CPlayerScript::SkillCoolTimeCheck()
 		Value = Value / m_tESkill->fCoolTime;
 		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
 
-		CFontMgr::GetInst()->AddText(L"ECoolTime", wSkillCoolTextTime, Vec2(0.8f, 0.905f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+		CFontMgr::GetInst()->AddText(L"ECoolTime", wSkillCoolTextTime, Vec2(0.8f, 0.855f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
 
 		if (CoolTimeCheck(m_tESkill->StartTime, m_tESkill->fCoolTime)) {
 
@@ -1286,7 +1179,7 @@ void CPlayerScript::SkillCoolTimeCheck()
 		Value = Value / m_tZSkill->fCoolTime;
 		wSkillCoolTextTime = to_wstring(iSkiilCoolTextTime);
 
-		CFontMgr::GetInst()->AddText(L"ZCoolTime", wSkillCoolTextTime, Vec2(0.9f, 0.905f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
+		CFontMgr::GetInst()->AddText(L"ZCoolTime", wSkillCoolTextTime, Vec2(0.9f, 0.855f), Vec2(4.f, 4.f), Vec2(0.5f, 0.f), Vec4(1.f, 1.f, 0.f, 1.f));
 
 		if (CoolTimeCheck(m_tZSkill->StartTime, m_tZSkill->fCoolTime)) {
 			m_tZSkill->bUse = false;
@@ -1697,11 +1590,17 @@ void CPlayerScript::GetDamage(const UINT& _uiDamage)
 		SetState((int)PLAYER_STATE::DIE);
 		if (isMain && !m_bDead) {
 			m_bDead = true;
+			CResMgr::GetInst()->FindRes<CSound>(L"PlayerDie")->PlaySoundOnce(0.5f);
 			Network::GetInst()->send_player_die(m_GetId());
 		}
 		m_bDead = true;
 	}
 	else {
+		if (isMain) {
+			if(_uiDamage > 200)
+				CResMgr::GetInst()->FindRes<CSound>(L"PlayerHit")->PlaySoundOnce(0.5f);
+
+		}
 		SetState((int)PLAYER_STATE::DEMAGED);
 	}
 }

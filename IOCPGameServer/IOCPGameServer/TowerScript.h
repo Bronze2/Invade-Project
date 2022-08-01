@@ -16,7 +16,7 @@ private:
     CAMP_STATE  m_eCampState;
 
     UINT m_uiDef;
-    UINT m_uiAttackDamage = 50;
+    UINT m_uiAttackDamage = 250;
     TOWER_TYPE m_eType;
     CGameObject* m_pNexus;
     CGameObject* m_pFirstTower;
@@ -31,6 +31,8 @@ private:
     bool m_bFindNear;
     int m_id;
 
+    std::chrono::high_resolution_clock::time_point EndTime;
+    int GameDone = 0;
 
 public:
     void SetCamp(CAMP_STATE _eCamp) { m_eCampState = _eCamp; }

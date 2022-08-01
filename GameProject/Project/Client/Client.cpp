@@ -143,8 +143,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
  //   g_hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP|WS_EX_WINDOWEDGE,
  //      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-    g_hWnd = CreateWindowExW(WS_EX_APPWINDOW, szWindowClass, szTitle, WS_CAPTION,
-
+    g_hWnd = CreateWindowExW(WS_EX_APPWINDOW, szWindowClass, szTitle, WS_POPUP,
         0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), nullptr, nullptr, hInstance, nullptr);
     if (!g_hWnd)
     {

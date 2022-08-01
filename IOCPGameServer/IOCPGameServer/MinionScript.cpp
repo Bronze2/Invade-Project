@@ -214,8 +214,8 @@ void CMinionScript::Update()
 
 
         //¾Æ·¡
-        vLocalPos.z += 10 * vTargetDir.z;
-        vLocalPos.x += 10 * vTargetDir.x;
+        vLocalPos.z += 6 * vTargetDir.z;
+        vLocalPos.x += 6 * vTargetDir.x;
 
 
         vLocalPos.y = 0;
@@ -227,12 +227,12 @@ void CMinionScript::Update()
                 if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
                     other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
                     if (Vec3::Distance(vLocalPos, DisPos) < 150) {
-                        vLocalPos.z -= 10 * vTargetDir.z;
-                        vLocalPos.x -= 10 * vTargetDir.x;
+                        vLocalPos.z -= 6 * vTargetDir.z;
+                        vLocalPos.x -= 6 * vTargetDir.x;
 
                         vTargetDir = VectorRotate(vTargetDir, Vec3(0.f, 1.f, 0.f), PI / 2 * Prioty);
-                        vLocalPos.z += 10 * vTargetDir.z;
-                        vLocalPos.x += 10 * vTargetDir.x;
+                        vLocalPos.z += 6 * vTargetDir.z;
+                        vLocalPos.x += 6 * vTargetDir.x;
                         Down = true;
                         break;
                     }
@@ -241,12 +241,12 @@ void CMinionScript::Update()
             else if (other->GetName() == L"obstacle")
             {
                 if (Vec3::Distance(vLocalPos, DisPos) < 300) {
-                    vLocalPos.z -= 10 * vTargetDir.z;
-                    vLocalPos.x -= 10 * vTargetDir.x;
+                    vLocalPos.z -= 6 * vTargetDir.z;
+                    vLocalPos.x -= 6 * vTargetDir.x;
 
                     vTargetDir = VectorRotate(vTargetDir, Vec3(0.f, 1.f, 0.f), PI / 2 * Prioty);
-                    vLocalPos.z += 10 * vTargetDir.z;
-                    vLocalPos.x += 10 * vTargetDir.x;
+                    vLocalPos.z += 6 * vTargetDir.z;
+                    vLocalPos.x += 6 * vTargetDir.x;
                     Down = true;
                     break;
                 }
@@ -263,8 +263,8 @@ void CMinionScript::Update()
                     if (other->GetScript<CMinionScript>()->GetState() == MINION_STATE::ATTACK ||
                         other->GetScript<CMinionScript>()->GetState() == MINION_STATE::IDLE && !other->IsDead()) {
                         if (Vec3::Distance(vLocalPos, DisPos) < 120) {
-                            vLocalPos.z += 10 * vTargetDir.z;
-                            vLocalPos.x += 10 * vTargetDir.x;
+                            vLocalPos.z += 6 * vTargetDir.z;
+                            vLocalPos.x += 6 * vTargetDir.x;
                             Right = true;
                             break;
                         }
@@ -273,12 +273,12 @@ void CMinionScript::Update()
                 else if (other->GetName() == L"obstacle")
                 {
                     if (Vec3::Distance(vLocalPos, DisPos) < 300) {
-                        vLocalPos.z -= 10 * vTargetDir.z;
-                        vLocalPos.x -= 10 * vTargetDir.x;
+                        vLocalPos.z -= 6 * vTargetDir.z;
+                        vLocalPos.x -= 6 * vTargetDir.x;
 
                         vTargetDir = VectorRotate(vTargetDir, Vec3(0.f, 1.f, 0.f), PI / 2 * Prioty);
-                        vLocalPos.z += 10 * vTargetDir.z;
-                        vLocalPos.x += 10 * vTargetDir.x;
+                        vLocalPos.z += 6 * vTargetDir.z;
+                        vLocalPos.x += 6 * vTargetDir.x;
                         Down = true;
                         break;
                     }
@@ -558,6 +558,9 @@ void CMinionScript::CheckRange()
                 }
                 else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
                     m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+                }
+                else if (m_pTarget->GetScript<CPlayerScript>() != nullptr) {
+                    m_pTarget->GetScript<CPlayerScript>()->GetDamage(m_uiAttackDamage);
                 }
             }
                                           break;

@@ -26,11 +26,15 @@ void CTowerScript::Init()
 		break;
 	}
 	m_iCurHp = m_iMaxHp;
+	GameDone = 0;
 }
 
 void CTowerScript::GetDamage(const UINT& _uiDamage)
 {
-	m_iCurHp -= _uiDamage;
+
+	if (m_pTarget != nullptr) {
+		m_iCurHp -= _uiDamage;
+	}
 
 	if (m_iCurHp <= 0.f) {
 		if (m_eCampState == CAMP_STATE::BLUE) {
@@ -57,6 +61,11 @@ void CTowerScript::GetDamage(const UINT& _uiDamage)
 		}
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
 		DeleteObject(GetObj());
+
+		if (TOWER_TYPE::NEXUS == m_eType) {
+			GameDone = 1;
+			EndTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(3000);
+		}
 	}
 	else {
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
@@ -137,9 +146,18 @@ void CTowerScript::m_FRotate()
 
 void CTowerScript::Update()
 {
-	FindNearObject(m_arrEnemy);
-	m_FRotate();
-	m_FAttack();
+	if (GameDone == 0) {
+		FindNearObject(m_arrEnemy);
+		m_FRotate();
+		m_FAttack();
+	}
+	else if(GameDone==1){
+		if (EndTime < std::chrono::high_resolution_clock::now()) {
+			CSceneMgr::GetInst()->EndGame(index);
+		}
+	}
+	else if (GameDone == 2) {
+	}
 }
 
 void CTowerScript::FinalUpdate()

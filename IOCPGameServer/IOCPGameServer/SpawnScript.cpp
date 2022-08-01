@@ -15,7 +15,7 @@ CGameObject* CSpawnScript::SpawnObject(Vec3 _vLocalPos, Vec3 _vLocalScale, Vec3 
 	pObject->AddComponent(new CMinionScript);
 	pObject->AddComponent(new CSensor);
     pObject->SetName(L"Minion");
-	pObject->Sensor()->SetRadius(500.f);
+	pObject->Sensor()->SetRadius(800.f);
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pObject->Transform()->SetLocalPos(_vLocalPos);
 //	pObject->Collider3D()->SetOffsetPos(_vOffsetPos);

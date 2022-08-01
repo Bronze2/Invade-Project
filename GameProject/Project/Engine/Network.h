@@ -41,6 +41,8 @@ struct CLIENT {
 	p_Vec3 rot;
 	p_Vec3 dir;
 	ELEMENT_TYPE skill;
+	char name[100];
+
 };
 
 struct OTHER_CLINET {
@@ -51,7 +53,7 @@ struct OTHER_CLINET {
 	p_Vec3 rot;
 	p_Vec3 dir;
 	ELEMENT_TYPE skill;
-
+	char name[100];
 };
 
 

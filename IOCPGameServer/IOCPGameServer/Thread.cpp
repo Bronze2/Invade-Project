@@ -267,7 +267,7 @@ void CThread::process_packet(int user_id, char* buf)
 		//wstring t_userpw;
 		//t_userid.assign(packet->loginid.begin(), packet->loginid.end());
 		//t_userpw.assign(packet->loginpw.begin(), packet->loginpw.end());
-
+		strcpy_s(SHARED_DATA::g_clients[user_id].m_name, packet->loginid.c_str());
 		CServer::GetInst()->send_lobby_login_ok_packet(user_id);
 		if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
 			for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
@@ -457,7 +457,6 @@ void CThread::process_packet(int user_id, char* buf)
 	{
 		cs_chat_msg* packet = reinterpret_cast<cs_chat_msg*>(buf);
 		CServer::GetInst()->send_chat_msg(user_id, packet->msg);
-		cout << "RECV CHAT - " << packet->msg << endl;
 	}
 	break;
 

@@ -324,3 +324,4 @@ struct TextVTX
 	Vec4 vColor;
 	TextVTX(float r, float g, float b, float a, float u, float v, float tw, float th, float x, float y, float w, float h) : vColor(Vec4(r, g, b, a)), vUV(Vec4(u, v, tw, th)), vPos(Vec4(x, y, w, h)) {}
 };
+

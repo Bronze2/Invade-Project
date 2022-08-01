@@ -78,7 +78,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define S2C_ARROW_PARTICLE 38
 #define S2C_PLAYER_DIE 39
 #define S2C_PLAYER_RESPAWN 40
-
+#define S2C_END_GAME	41
 
 
 
@@ -112,6 +112,9 @@ enum class CAMP_STATE {
 	RED,
 	BLUE,
 };
+
+
+
 
 #pragma pack(push ,1)
 
@@ -555,6 +558,7 @@ struct sc_packet_lobby_enter {
 	char type;
 	//char camp;
 	CAMP_STATE camp;
+	char name[100];
 
 	int id;
 	bool isHost;
@@ -642,6 +646,12 @@ struct sc_packet_playerSpawn
 	char type;
 	int id;
 	p_Vec3 Pos;
+};
+
+struct sc_packet_endgame
+{
+	char size;
+	char type;
 };
 
 

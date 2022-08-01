@@ -248,8 +248,8 @@ void CIMGUIMgr::Progress()
             ZeroMemory(&buffer, sizeof(buffer));
         }
 
-        ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight));
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(m_tResloution.fWidth, m_tResloution.fHeight -32));
+        ImGui::SetNextWindowPos(ImVec2(0, - 32));
         bool bOpen = true;
         ImGui::Begin("IMGUI Login Scene", &bOpen, iw.window_flags);
         {
@@ -290,8 +290,8 @@ void CIMGUIMgr::Progress()
                             ImGui::InputText("##Passowrd", UserInformations.m_cUserPassWord, IM_ARRAYSIZE(UserInformations.m_cUserPassWord), ImGuiInputTextFlags_Password);
                         }
                         ImGui::PopItemWidth();
-                        //ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 220));//130
-                        ImGui::SetCursorPos(ImVec2(22, 190));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 220));//130
+                        //ImGui::SetCursorPos(ImVec2(22, 190));
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                         {
@@ -400,8 +400,8 @@ void CIMGUIMgr::Progress()
                             }
                             ImGui::PopStyleVar();
                         }
-                        //ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 + 525, m_tResloution.fHeight - 150));//130
-                        ImGui::SetCursorPos(ImVec2(22, 190));
+                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 + 525, m_tResloution.fHeight - 150));//130
+                       // ImGui::SetCursorPos(ImVec2(22, 190));
 
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Create Room", ImVec2(260.f, 30.f)))
@@ -414,7 +414,7 @@ void CIMGUIMgr::Progress()
                         ImGui::PopStyleVar();
 
                         if (m_MakeRoomOpen) {
-                            ImGui::Begin("Register", &m_MakeRoomOpen, ImGuiWindowFlags_AlwaysAutoResize);
+                            ImGui::Begin("Create Room", &m_MakeRoomOpen, ImGuiWindowFlags_AlwaysAutoResize);
                             //   ImGui::Separator();
 
                             ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.054, 0.054, 0.054, 255));

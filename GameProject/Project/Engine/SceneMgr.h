@@ -1,5 +1,5 @@
 #pragma once
-#include "pch.h"
+//#include "pch.h"
 //#include "Network.h"
 class CScene;
 class CCamera;
@@ -30,6 +30,10 @@ struct arrowMove {
 	Vec3 Rot;
 	bool skill = false;
 };
+struct Reuslt {
+	int camp;
+	ELEMENT_TYPE element;
+};
 
 
 class CSceneMgr
@@ -46,8 +50,17 @@ private:
 
 	map<int, map<int,arrowMove>> m_arrow;
 
+	vector<Reuslt> result;
+
+	bool isWin;
 public:
 
+	vector<Reuslt> GetResult() { return result; }
+	void PushResult(Reuslt rs) { result.push_back(rs); }
+
+
+	bool getIsWin() { return isWin; }
+	void endText(int camp);
 	void Init();
 	void Update();
 	void Update_Tool();
@@ -85,6 +98,8 @@ public:
 	void net_damageMinion(int id, int camp, int damage);
 	void net_damageTower(int id, int camp, int damage);
 	void net_deleteTower(int id);
+
+	void net_change_result();
 
 	void net_damagePlayer(int player_id, int hp);
 

@@ -521,9 +521,12 @@ void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
         }
     }
     else if (nullptr != _pColldier->GetObj()->GetScript<CTowerColScript>()) {
-        if (m_pPlayer->GetScript<CPlayerScript>()->GetIsMain())
+        if (m_pPlayer->GetScript<CPlayerScript>()->GetIsMain()) {
             m_pSound->PlaySoundOnce(100.f);
-        cout << "tower collision on~!" << endl;
+            cout << "tower collision on~!" << endl;
+            Network::GetInst()->send_collision_arrow(m_id, _pColldier->GetObj()->GetScript<CTowerColScript>()->GetTower()->GetScript<CTowerScript>()->m_GetId(),
+                PACKET_COLLTYPE::TOWER, m_eCamp);
+        }
     }
 
     if (nullptr == m_pSkill) {

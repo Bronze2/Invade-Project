@@ -21,6 +21,7 @@
 //#include "SpawnScript.h"
 //#include "Sensor.h"
 //#include "TowerScript.h"
+#include "Server.h"
 
 
 CScene* CSceneMgr::GetCurScene(int index)
@@ -82,7 +83,7 @@ void CSceneMgr::Init(int index)
 {
 	// 필요한 리소스 로딩
 	// Texture 로드
-
+	isEndGame = false;
 	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
@@ -102,7 +103,7 @@ void CSceneMgr::Update()
 {
 
 	for (auto scene : m_pCurScene) {
-		if (scene.second->isinit) {
+		if (scene.second->isinit&&!isEndGame) {
 			scene.second->Update();
 			scene.second->LateUpdate();
 			scene.second->FinalUpdate();
@@ -128,6 +129,10 @@ void CSceneMgr::Init(SCENE_TYPE _eType)
 {
 }
 
+void CSceneMgr::EndGame(int index)
+{
+	CServer::GetInst()->send_end_game(index);
+}
 
 
 void CSceneMgr::FindGameObjectByTag(int index, const wstring& _strTag, vector<CGameObject*>& _vecFindObj )
@@ -179,13 +184,14 @@ void CSceneMgr::InitArrowByPlayerId(int index , int ClientId,int ArrowId ,Vec3 P
 }
 
 #include "MinionScript.h"
+#include "TowerScript.h"
 void CSceneMgr::collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE Arrow_camp)
 {
 	if (coll_type == PACKET_COLLTYPE::MONSTER) {
 		if (Arrow_camp == CAMP_STATE::RED) {
 			for (auto &obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
 				if (obj->GetScript<CMinionScript>() != nullptr && obj->GetScript<CMinionScript>()->m_GetId() == coll_id) {
-					obj->GetScript<CMinionScript>()->GetDamage(500);
+					obj->GetScript<CMinionScript>()->GetDamage(350);
 					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
 					break;
 				}
@@ -195,7 +201,7 @@ void CSceneMgr::collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type
 		if (Arrow_camp == CAMP_STATE::BLUE) {
 			for (auto &obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
 				if (obj->GetScript<CMinionScript>() != nullptr &&  obj->GetScript<CMinionScript>()->m_GetId() == coll_id) {
-					obj->GetScript<CMinionScript>()->GetDamage(500);
+					obj->GetScript<CMinionScript>()->GetDamage(350);
 					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
 					break;
 
@@ -203,6 +209,31 @@ void CSceneMgr::collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type
 			}
 		}
 	}
+
+	if (coll_type == PACKET_COLLTYPE::TOWER) {
+		if (Arrow_camp == CAMP_STATE::RED) {
+			for (auto& obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
+				if (obj->GetScript<CTowerScript>() != nullptr && obj->GetScript<CTowerScript>()->m_GetId() == coll_id) {
+					obj->GetScript<CMinionScript>()->GetDamage(200);
+					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
+					break;
+				}
+			}
+		}
+
+		if (Arrow_camp == CAMP_STATE::BLUE) {
+			for (auto& obj : m_pCurScene[index]->FindLayer(L"Red")->GetParentObj()) {
+				if (obj->GetScript<CTowerScript>() != nullptr && obj->GetScript<CTowerScript>()->m_GetId() == coll_id) {
+					obj->GetScript<CTowerScript>()->GetDamage(200);
+					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
+					break;
+
+				}
+			}
+		}
+	}
+
+
 }
 
 void CSceneMgr::setDamage(int index, int coll_id, PACKET_COLLTYPE coll_type, CAMP_STATE camp , int damage)

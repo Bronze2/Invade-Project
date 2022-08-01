@@ -34,7 +34,7 @@ void CCollider3D::FinalUpdate()
 
 void CCollider3D::Render()
 {
-	static bool bRender = true;
+	static bool bRender = false;
 	if (KEY_AWAY(KEY_TYPE::KEY_T)) {
 		bRender = !bRender;
 	}

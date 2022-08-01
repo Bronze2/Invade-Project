@@ -184,6 +184,8 @@ void CSceneMgr::Init()
     CResMgr::GetInst()->Load<CTexture>(L"PropertyThunder", L"Texture\\UI\\thunder_lobby_2.png");
     CResMgr::GetInst()->Load<CTexture>(L"PropertyFire", L"Texture\\UI\\ire_lobby_2.png");
 
+
+
     CResMgr::GetInst()->Load<CTexture>(L"Stop", L"Texture\\Stop.png");
 
 
@@ -218,9 +220,14 @@ void CSceneMgr::Init()
     CResMgr::GetInst()->Load3D<CSound>(L"MinionRangeHit", L"Sound\\MinionRangeHIt.wav");
     CResMgr::GetInst()->Load3D<CSound>(L"MinionMeleeHit", L"Sound\\MinionMeleeHit.wav");
     CResMgr::GetInst()->Load3D<CSound>(L"MainMusic", L"Sound\\MainMusic.wav");
-    CResMgr::GetInst()->Load3D<CSound>(L"PlayerDie", L"Sound\\PlayerDie.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"PlayerDie", L"Sound\\PlayerOOO.wav");
     CResMgr::GetInst()->Load3D<CSound>(L"PlayerHit", L"Sound\\PlayerHit.wav");
-
+    CResMgr::GetInst()->Load3D<CSound>(L"BuffSound", L"Sound\\Roar.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"PoisonSound", L"Sound\\Poison.wav");
+    CResMgr::GetInst()->Load3D<CSound>(L"HealSound", L"Sound\\heal2.wav");
+    CResMgr::GetInst()->Load<CSound>(L"InGameBGM", L"Sound\\BGM00.wav");
+    CResMgr::GetInst()->Load<CSound>(L"LobbyBGM", L"Sound\\Lobby.wav");
+    CResMgr::GetInst()->Load<CSound>(L"ResultBGM", L"Sound\\Victory.wav");
 
 
 
@@ -507,11 +514,28 @@ void CSceneMgr::LobbySetSkill(int id, ELEMENT_TYPE skill)
     }
 }
 
+void CSceneMgr::endText(int camp)
+{
+    if (Network::GetInst()->getMainClient().camp != (CAMP_STATE)camp) {
+        isWin = true;
+    }
+    else {
+        isWin = false;
+    }
+}
+
 
 
 void CSceneMgr::EnterGame()
 {
     ChangeScene(SCENE_TYPE::INGAME);
+}
+
+
+
+void CSceneMgr::net_change_result()
+{
+    ChangeScene(SCENE_TYPE::RESULT);
 }
 
 

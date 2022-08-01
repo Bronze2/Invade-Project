@@ -87,6 +87,8 @@ public:
 
 	void send_player_spawn(int user_id , Vec3 Pos);
 
+	void send_end_game(int index);
+
 private:
 
 };

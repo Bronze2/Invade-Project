@@ -105,9 +105,10 @@ private:
     tMTBone* m_pChestBone;
     tMTBone* m_pHeadBone;
     tMTBone* m_pHandBone;
+    vector<CGameObject*> m_vecTeamPlayer;
 
 public:
-
+    wstring name;
     bool GetisDead() { return m_bDead; }
     void SetDarkUIRender(bool _bTrue) { m_pDarkUI->SetActive(_bTrue); }
     void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
@@ -168,7 +169,8 @@ public:
 
     // ¼ö¹Î
     void CheckHpAndDead();
-
+    void AddTeamPlayer(CGameObject* _pObj) { m_vecTeamPlayer.push_back(_pObj); }
+    vector<CGameObject*> GetTeamPlayer() { return m_vecTeamPlayer; }
     void UpdateHelmet(Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 
     //Lobby

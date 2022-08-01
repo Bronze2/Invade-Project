@@ -18,14 +18,14 @@ private:
 	map<int, CScene*> m_pCurScene;
 	CScene* m_arrScene[(UINT)SCENE_TYPE::END];
 	vector<CGameObject*> m_player;
-
+	bool isEndGame = false;
 
 public:
 	void Init(int index);
 	void Update();
 	void Init(SCENE_TYPE _eType);
 	
-
+	void EndGame(int index);
 	CScene* GetCurScene(int index);
 	void ChangeScene(CScene* _pNextScene , int index);
 	void ChangeScene(SCENE_TYPE _Type, int index);

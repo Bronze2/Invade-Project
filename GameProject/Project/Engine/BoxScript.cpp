@@ -93,6 +93,22 @@ void CBoxScript::Update()
 		if (!m_bParticle) {
 			m_bParticle = true;
 			m_pBuffParticle->SetActive(true);
+			switch (m_eBuffType)
+			{
+			case BUFF_TYPE::HEAL:
+				CResMgr::GetInst()->FindRes<CSound>(L"HealSound")->PlaySoundOnce(0.5f);
+
+				break;
+			case BUFF_TYPE::STRENGTH:
+				CResMgr::GetInst()->FindRes<CSound>(L"BuffSound")->PlaySoundOnce(0.5f);
+				break;
+			case BUFF_TYPE::DAMAGE:
+				CResMgr::GetInst()->FindRes<CSound>(L"PoisonSound")->PlaySoundOnce(0.5f);
+				break;
+			default:
+				break;
+			}
+
 		}
 
 		Vec3 vRot = m_pUpObj->Transform()->GetLocalRot();

@@ -397,7 +397,9 @@ void CLobbyScene::Init()
 
 	FindLayer(L"Default")->AddGameObject(pSkyBox);
 
-
+	CResMgr::GetInst()->FindRes<CSound>(L"ResultBGM")->Stop();
+	CResMgr::GetInst()->FindRes<CSound>(L"LobbyBGM");
+	CResMgr::GetInst()->FindRes<CSound>(L"LobbyBGM")->Play(0, 1.f, 0);
 
 
 
