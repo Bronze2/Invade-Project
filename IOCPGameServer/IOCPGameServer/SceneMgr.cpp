@@ -214,7 +214,7 @@ void CSceneMgr::collisionArrow(int index, int coll_id, PACKET_COLLTYPE coll_type
 		if (Arrow_camp == CAMP_STATE::RED) {
 			for (auto& obj : m_pCurScene[index]->FindLayer(L"Blue")->GetParentObj()) {
 				if (obj->GetScript<CTowerScript>() != nullptr && obj->GetScript<CTowerScript>()->m_GetId() == coll_id) {
-					obj->GetScript<CMinionScript>()->GetDamage(200);
+					obj->GetScript<CTowerScript>()->GetDamage(200);
 					//obj->GetScript<CPlayerScript>()->InitArrow(ArrowId, Pos, Rot, Dir, Power, skill);
 					break;
 				}

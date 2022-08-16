@@ -32,7 +32,7 @@ void Network::Init()
 	//E320 실습실 10.30.2.115
 	//긱사 포트포워딩 121.190.132.143 : 8012
 	//10.30.2.19
-	ServerAddr.sin_addr.s_addr = inet_addr("192.168.204.192");
+	ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 

@@ -490,42 +490,42 @@ void CMinionScript::AddObject(CGameObject* _pObject)
 }
 void CMinionScript::GetDamage(const UINT& _uiDamage)
 {
-    m_iCurHp -= _uiDamage;
+        m_iCurHp -= _uiDamage;
 
-    if (m_iCurHp <= 0.f) {
-        m_eState = MINION_STATE::DIE;
-        if (m_eCamp == CAMP_STATE::BLUE) {
-            for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Red")->GetParentObj()) {       // P : ³ª Á×ÀÎ ³ð
-                if (nullptr != p->GetScript<CMinionScript>()) {
-                    if (nullptr != p->GetScript<CMinionScript>()->GetTarget()) {
-                        if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()) {
-                            if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()->m_GetId()) {
-                                p->GetScript<CMinionScript>()->RemoveTarget();
+        if (m_iCurHp <= 0.f) {
+            m_eState = MINION_STATE::DIE;
+            if (m_eCamp == CAMP_STATE::BLUE) {
+                for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Red")->GetParentObj()) {       // P : ³ª Á×ÀÎ ³ð
+                    if (nullptr != p->GetScript<CMinionScript>()) {
+                        if (nullptr != p->GetScript<CMinionScript>()->GetTarget()) {
+                            if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()) {
+                                if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()->m_GetId()) {
+                                    p->GetScript<CMinionScript>()->RemoveTarget();
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        else if (m_eCamp == CAMP_STATE::RED) {
-            for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Blue")->GetParentObj()) {
-                if (nullptr != p->GetScript<CMinionScript>()) {
-                    if (nullptr != p->GetScript<CMinionScript>()->GetTarget()) {
-                        if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()) {
-                            if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()->m_GetId()) {
-                                p->GetScript<CMinionScript>()->RemoveTarget();
+            else if (m_eCamp == CAMP_STATE::RED) {
+                for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Blue")->GetParentObj()) {
+                    if (nullptr != p->GetScript<CMinionScript>()) {
+                        if (nullptr != p->GetScript<CMinionScript>()->GetTarget()) {
+                            if (nullptr != p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()) {
+                                if (m_id == p->GetScript<CMinionScript>()->GetTarget()->GetScript<CMinionScript>()->m_GetId()) {
+                                    p->GetScript<CMinionScript>()->RemoveTarget();
+                                }
                             }
                         }
                     }
                 }
             }
+            CServer::GetInst()->send_delete_minion(m_GetId());
+            DeleteObject(GetObj());
         }
-        CServer::GetInst()->send_delete_minion(m_GetId());
-        DeleteObject(GetObj());
-    }
-    else {
-        CServer::GetInst()->send_damage_minion(m_GetId(), m_iCurHp, m_eCamp);
-    }
+        else {
+            CServer::GetInst()->send_damage_minion(m_GetId(), m_iCurHp, m_eCamp);
+        }
 }
 void CMinionScript::CheckHp()
 {

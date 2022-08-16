@@ -394,7 +394,7 @@ void CBowScript::Awake()
 
 		m_pArrow[i]->AddComponent(new CCollider3D);
 		m_pArrow[i]->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(10.f, 4.f, 2.f));
+		m_pArrow[i]->Collider3D()->SetOffsetScale(Vec3(2.f, 1.f, 1.f));
 		m_pArrow[i]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 
 

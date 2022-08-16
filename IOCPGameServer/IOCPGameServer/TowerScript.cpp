@@ -32,7 +32,7 @@ void CTowerScript::Init()
 void CTowerScript::GetDamage(const UINT& _uiDamage)
 {
 
-	if (m_pTarget != nullptr) {
+	if (m_pTarget != nullptr || m_eType == TOWER_TYPE::NEXUS) {
 		m_iCurHp -= _uiDamage;
 	}
 
