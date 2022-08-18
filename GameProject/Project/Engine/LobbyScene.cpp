@@ -138,7 +138,7 @@ void CLobbyScene::Init()
 		CAnimation* pPlayerAnimation = new CAnimation;
 		pPlayerAnimation->InsertAnimClip(L"IDLE", 0, 37);
 		pPlayerAnimation->InsertAnimClip(L"WALK", 44, 73);
-		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 100);
+		pPlayerAnimation->InsertAnimClip(L"JUMP", 81, 104);
 
 		pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);
 		pPlayerObj->Animator3D()->SetAnimClip(pPlayerAnimation->GetAnimClip());

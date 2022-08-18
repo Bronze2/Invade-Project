@@ -3,6 +3,7 @@
 #include <chrono>
 #include "MinionScript.h"
 #include "PlayerScript.h"
+#include "SceneMgr.h"
 #include "Collider3D.h"
 #include "Sensor.h"
 #include "Server.h"
@@ -73,6 +74,8 @@ CGameObject* CSpawnScript::SpawnPlayer(int p_id,Vec3 _vLocalPos, Vec3 _vLocalSca
 
 void CSpawnScript::Update()
 {
+    if (CSceneMgr::GetInst()->GetisEndGame())
+        return;
     //Box
     if (m_eCampState == CAMP_STATE::BLUE && !isFirstBox) {
         if (CreateTime < std::chrono::high_resolution_clock::now()) {

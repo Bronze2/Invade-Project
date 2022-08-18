@@ -522,6 +522,7 @@ void CSceneMgr::endText(int camp)
     else {
         isWin = false;
     }
+    iLoseCamp = camp;
 }
 
 
@@ -649,17 +650,21 @@ void CSceneMgr::net_setAnimationByID(int id, int state)
 
 void CSceneMgr::net_spawnMinion_blue(int id, int mtype, float x, float y, float z)
 {
-    Vec3 Pos{ x,y,z };
-    m_minion[id].pos = Pos;
+    if (m_pCurScene->GetCurScene() == SCENE_TYPE::INGAME) {
+        Vec3 Pos{ x,y,z };
+        m_minion[id].pos = Pos;
 
-    m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);
+        m_pCurScene->FindLayer(L"BlueSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Blue(id, Pos, (MINION_ATTACK_TYPE)mtype);
+    }
 }
 void CSceneMgr::net_spawnMinion_red(int id, int mtype, float x, float y, float z)
 {
-    Vec3 Pos{ x,y,z };
-    m_minion[id].pos = Pos;
+    if (m_pCurScene->GetCurScene() == SCENE_TYPE::INGAME) {
+        Vec3 Pos{ x,y,z };
+        m_minion[id].pos = Pos;
 
-    m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, (MINION_ATTACK_TYPE)mtype);
+        m_pCurScene->FindLayer(L"RedSpawnPlace")->GetGameObjectById(0)->GetScript<CSpawnScript>()->SpawnObject_Red(id, Pos, (MINION_ATTACK_TYPE)mtype);
+    }
 }
 
 void CSceneMgr::net_moveMinion(int id, float x, float y, float z, float r_x, float r_y, float r_z, int state)

@@ -363,6 +363,7 @@ void Network::ProcessPacket(char* ptr)
 		CSceneMgr::GetInst()->net_deletProjectile(my_packet->id);
 	}
 	break;
+
 	case S2C_CURRENT_ROOM:
 	{
 		sc_packet_current_room* my_packet = reinterpret_cast<sc_packet_current_room*>(ptr);
@@ -373,7 +374,13 @@ void Network::ProcessPacket(char* ptr)
 		strcpy_s(room.room_name, my_packet->roomName);
 		cout << "==방 정보==" << endl;
 		cout << "RoomID : " << room.room_id << "Current :" << room.roomCurrentUser << "Max :" << room.roomMaxUser << endl;
-		roomInfo.push_back(room);
+		
+		bool check = false;
+		for (auto Room : roomInfo) {
+			if (Room.room_id == room.room_id) check = true;
+		}
+		if(!check)
+			roomInfo.push_back(room);
 	}
 	break;
 
@@ -704,6 +711,16 @@ void Network::send_arrow_packet(int id, PACKET_SKILL skill)
 	m_packet.skill = skill;
 	send_packet(&m_packet);
 
+}
+
+void Network::send_search_room_pacekt()
+{
+	cout << "갱신" << endl;
+	cs_packet_find_room m_packet;
+	m_packet.type = C2S_FIND_ROOM;
+	m_packet.size = sizeof(m_packet);
+
+	send_packet(&m_packet);
 }
 
 void Network::send_player_helemt(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot)

@@ -1373,7 +1373,8 @@ void CInGameScene::Init()
 
     CResMgr::GetInst()->FindRes<CSound>(L"LobbyBGM")->Stop();
 
-    CResMgr::GetInst()->FindRes<CSound>(L"InGameBGM")->Play(0, 1.f, 0);
+    //CResMgr::GetInst()->FindRes<CSound>(L"InGameBGM")->Play(0, 1.f, 0);
+    
     //Ptr<CMaterial> m_pMtrl = new CMaterial;
     //m_pMtrl->SetName(L"Texture00");
     //m_pMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));

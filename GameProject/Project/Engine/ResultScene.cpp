@@ -15,7 +15,7 @@
 
 void CResultScene::Init()
 {
-    //ShowCursor(false);
+    ShowCursor(true);
 
     GetLayer(0)->SetName(L"Default");
     GetLayer(3)->SetName(L"Blue");
@@ -113,19 +113,24 @@ void CResultScene::Init()
     Ptr<CTexture> pBlueTex = CResMgr::GetInst()->FindRes<CTexture>(L"PlayerBlue");
     Ptr<CTexture> pRedTex = CResMgr::GetInst()->FindRes<CTexture>(L"PlayerRed");
 
+    int iBlueCnt = 0;
+    int iRedCnt = 0;
+
     for (int i = 0; i < CSceneMgr::GetInst()->GetResult().size(); i++) {
+        cout << "result : " << i << endl;
         CGameObject* pPlayerObj = new CGameObject;
 
         if ((CAMP_STATE)CSceneMgr::GetInst()->GetResult()[i].camp == CAMP_STATE::BLUE) {
             pPlayerObj = pPlayerBlueMeshData->Instantiate();
             pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pBlueTex.GetPointer());
-            pPlayerObj->Transform()->SetLocalPos(Vec3(-400.f + i * 100.f, -70.f, 650.f));   // -525.f + i * 150.f, 0.f, 1000.f
-
+            pPlayerObj->Transform()->SetLocalPos(Vec3(-400.f + iBlueCnt * 100.f, -70.f, 650.f));   // -525.f + i * 150.f, 0.f, 1000.f
+            iBlueCnt++;
         }
         else {
             pPlayerObj = pPlayerRedMeshData->Instantiate();
             pPlayerObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pRedTex.GetPointer());
-            pPlayerObj->Transform()->SetLocalPos(Vec3(100.f + (i - 4) * 100.f, -70.f, 650.f));   // -525.f + i * 150.f, 0.f, 1000.f
+            pPlayerObj->Transform()->SetLocalPos(Vec3(100.f + iRedCnt * 100.f, -70.f, 650.f));   // -525.f + i * 150.f, 0.f, 1000.f
+            iRedCnt++;
         }
 
         pPlayerObj->SetName(L"Monster");
@@ -144,43 +149,19 @@ void CResultScene::Init()
         pPlayerObj->Animator3D()->SetAnimation(pPlayerAnimation);
         pPlayerObj->Animator3D()->SetAnimClip(pPlayerAnimation->GetAnimClip());
 
-  
-        pPlayerObj->GetScript<CPlayerScript>()->SetType(CSceneMgr::GetInst()->GetResult()[i].element);
 
-        if ((CAMP_STATE)CSceneMgr::GetInst()->GetResult()[i].camp == CAMP_STATE::BLUE) {
-            FindLayer(L"Blue")->AddGameObject(pPlayerObj);
-            pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(true);      //  ¸   
+        pPlayerObj->GetScript<CPlayerScript>()->SetType(CSceneMgr::GetInst()->GetResult()[i].element);
+        // 결과씬수정
+        pPlayerObj->GetScript<CPlayerScript>()->SetCamp((CAMP_STATE)CSceneMgr::GetInst()->GetResult()[i].camp);
+
+        FindLayer(L"Blue")->AddGameObject(pPlayerObj);
+
+        if ((CAMP_STATE)CSceneMgr::GetInst()->GetResult()[i].camp == (CAMP_STATE)CSceneMgr::GetInst()->GetLoseCamp()) {
+            pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(false);
         }
         else {
-            FindLayer(L"Red")->AddGameObject(pPlayerObj);
-            pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(false);      //  й   
-            pPlayerObj->Transform()->SetLocalPos(Vec3(100.f + (i - 4) * 100.f, -70.f, 580.f));   //  й     ִϸ  ̼Ƕ                       
+            pPlayerObj->GetScript<CPlayerScript>()->SetResultAnim(true);      //  й   
         }
-
-        //CGameObject* pReadyBarObj = new CGameObject;
-        //pReadyBarObj->SetName(L"UIReadyBar");
-        //pReadyBarObj->FrustumCheck(false);   //     ü  ø              
-        //pReadyBarObj->AddComponent(new CTransform);
-        //pReadyBarObj->AddComponent(new CMeshRender);
-        //pReadyBarObj->SetActive(false);
-
-        //Vec3 vUIReadyBarScale = Vec3(100.f, 40.f, 1.f);
-        //pReadyBarObj->Transform()->SetLocalPos(Vec3(0.f, 0.f, 300.f));
-        //pReadyBarObj->Transform()->SetLocalRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
-        //pReadyBarObj->Transform()->SetLocalScale(vUIReadyBarScale);
-        //pReadyBarObj->Transform()->SetBillBoard(false);
-        //pReadyBarObj->Transform()->SetCamera(pMainCam);
-
-        //pReadyBarObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-        //Ptr<CMaterial> pUIReadyBarMtrl = new CMaterial;
-        //pUIReadyBarMtrl->DisableFileSave();
-        //pUIReadyBarMtrl->SetShader(CResMgr::GetInst()->FindRes<CShader>(L"TexShader"));
-        //pReadyBarObj->MeshRender()->SetMaterial(pUIReadyBarMtrl);
-        //Ptr<CTexture> pUIReadyBarTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIReadyBar");
-        //pReadyBarObj->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pUIReadyBarTex.GetPointer());
-
-        //pPlayerObj->AddChild(pReadyBarObj);
-        //FindLayer(L"Blue")->AddGameObject(pReadyBarObj);
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -221,10 +202,10 @@ void CResultScene::Init()
 
 
     if (CSceneMgr::GetInst()->getIsWin()) {
-       pResultTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIWIN");
+        pResultTex = CResMgr::GetInst()->FindRes<CTexture>(L"UIWIN");
     }
     else {
-       pResultTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOSE");
+        pResultTex = CResMgr::GetInst()->FindRes<CTexture>(L"UILOSE");
     }
 
     pResult->MeshRender()->GetSharedMaterial()->SetData(SHADER_PARAM::TEX_0, pResultTex.GetPointer());

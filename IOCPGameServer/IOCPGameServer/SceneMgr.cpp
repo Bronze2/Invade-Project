@@ -131,6 +131,7 @@ void CSceneMgr::Init(SCENE_TYPE _eType)
 
 void CSceneMgr::EndGame(int index)
 {
+	isEndGame = true;
 	CServer::GetInst()->send_end_game(index);
 }
 

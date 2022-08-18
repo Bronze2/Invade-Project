@@ -26,12 +26,18 @@ private:
 
     bool m_bWind0Camera;
 
+    // 사망수정
+    bool m_bDead;
+
 public:
 
     CCameraScript();
     virtual ~CCameraScript();
 
     virtual void Update();
+
+    void SetDead(bool _bTrue) { m_bDead = _bTrue; }
+    bool GetDead() { return m_bDead; }
 
     float GetDegree() { return m_fDegree; }
 

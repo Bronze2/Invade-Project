@@ -6,6 +6,7 @@
 #include "RenderMgr.h"
 #include "Camera.h"
 #include "BowScript.h"
+#include "CameraScript.h"
 
 void CCrossHairScript::Init()
 {
@@ -47,15 +48,18 @@ void CCrossHairScript::Update()
 
     m_vPos = m_vPos + m_vDir * 100.f;
 
+    CGameObject* pCamera = CSceneMgr::GetInst()->GetCurScene()->FindLayer(L"Default")->GetParentObj()[1]->GetChild()[0];
 
-    if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
-        if (vScale.x >= 30.f && vScale.y >= 30.f) {
-            vScale.x -= 170.f * DT;
-            vScale.y -= 170.f * DT;
+    if (!pCamera->GetScript<CCameraScript>()->GetDead()) {
+        if (KEY_HOLD(KEY_TYPE::KEY_LBTN)) {
+            if (vScale.x >= 30.f && vScale.y >= 30.f) {
+                vScale.x -= 170.f * DT;
+                vScale.y -= 170.f * DT;
+            }
         }
-    }
-    if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
-        vScale = m_vRestoreScale;
+        if (KEY_AWAY(KEY_TYPE::KEY_LBTN)) {
+            vScale = m_vRestoreScale;
+        }
     }
 
     Vec3 vPos = vTargetPos;

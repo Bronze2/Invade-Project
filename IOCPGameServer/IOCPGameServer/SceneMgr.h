@@ -21,6 +21,8 @@ private:
 	bool isEndGame = false;
 
 public:
+
+	bool GetisEndGame() { return isEndGame; }
 	void Init(int index);
 	void Update();
 	void Init(SCENE_TYPE _eType);

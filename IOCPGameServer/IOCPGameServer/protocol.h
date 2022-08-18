@@ -34,6 +34,7 @@ constexpr auto VIEW_RADIUS = 600;
 #define C2S_ARROW_SKILL 20
 #define C2S_ARROW_PARTICLE 21
 #define C2S_PLAYER_DIE 22
+#define C2S_FIND_ROOM 23
 
 
 #define S2C_LOGIN_OK		1
@@ -278,10 +279,16 @@ struct sc_packet_damage_tower
 	CAMP_STATE camp;
 };
 
+
+struct cs_packet_find_room
+{
+	char size;
+	char type;
+};
+
 //OBJECT TYPE
 constexpr unsigned char O_PLAYER = 0;
 constexpr unsigned char O_NPC = 1;
-
 
 struct cs_chat_msg {
 	char size;

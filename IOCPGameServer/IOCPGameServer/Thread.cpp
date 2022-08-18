@@ -291,7 +291,7 @@ void CThread::process_packet(int user_id, char* buf)
 	}
 	break;
 	case C2S_LOBBY_READY:
-	{	
+	{
 		cs_packet_lobby_ready* packet = reinterpret_cast<cs_packet_lobby_ready*>(buf);
 		//팀 정보 갱신
 		SHARED_DATA::g_clients[user_id].isReady = packet->isReady;
@@ -299,7 +299,7 @@ void CThread::process_packet(int user_id, char* buf)
 	}
 	break;
 	case C2S_LOBBY_CHAGNE_SKILL:
-	{	
+	{
 		cs_packet_lobby_change_skill* packet = reinterpret_cast<cs_packet_lobby_change_skill*>(buf);
 		SHARED_DATA::g_clients[user_id].skill = packet->skill;
 		CServer::GetInst()->send_lobby_change_skill_pacekt(SHARED_DATA::g_clients[user_id].room_id, packet->skill, user_id);
@@ -307,44 +307,56 @@ void CThread::process_packet(int user_id, char* buf)
 	break;
 	case C2S_MAKE_ROOM:
 	{	cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
-		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match , packet->roomName);
-		SHARED_DATA::g_clients[user_id].room_id = user_id;
-		SHARED_DATA::g_clients[user_id].m_isHost = true;
-		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;
-		//팀 정보 갱신
-		CServer::GetInst()->send_lobby_team_packet(user_id, user_id);
+	CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match, packet->roomName);
+	SHARED_DATA::g_clients[user_id].room_id = user_id;
+	SHARED_DATA::g_clients[user_id].m_isHost = true;
+	SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;
+	//팀 정보 갱신
+	CServer::GetInst()->send_lobby_team_packet(user_id, user_id);
 	}
 	break;
 	case C2S_ENTER_ROOM:
 	{	cs_packet_enter_room* packet = reinterpret_cast<cs_packet_enter_room*>(buf);
 
-		//팀 정보 갯인
-		CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
-		SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
-		//팀 정보 갱신
-		CServer::GetInst()->send_lobby_team_packet(packet->room_id, user_id);
+	//팀 정보 갯인
+	CMatchMaking::GetInst()->enterRoom(packet->room_id, user_id);
+	SHARED_DATA::g_clients[user_id].room_id = packet->room_id;
+	//팀 정보 갱신
+	CServer::GetInst()->send_lobby_team_packet(packet->room_id, user_id);
 
-		//SHARED_DATA::g_clients[user_id].m_camp
-		//Room에 들어온 클라이언트들을 서로 알려주기.
-		//방금 들어온놈이 들어와있는놈들 확인
+	//SHARED_DATA::g_clients[user_id].m_camp
+	//Room에 들어온 클라이언트들을 서로 알려주기.
+	//방금 들어온놈이 들어와있는놈들 확인
 
-		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
-			if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
-			else {
-				CServer::GetInst()->send_enter_lobby_packet(user_id, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);
-				CServer::GetInst()->send_lobby_change_skill_pacekt(SHARED_DATA::g_clients[user_id].room_id, SHARED_DATA::g_clients[CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]].skill, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);
+	for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
+		if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
+		else {
+			CServer::GetInst()->send_enter_lobby_packet(user_id, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);
+			CServer::GetInst()->send_lobby_change_skill_pacekt(SHARED_DATA::g_clients[user_id].room_id, SHARED_DATA::g_clients[CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]].skill, CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i]);
 
-			}
 		}
-		//들어와 있는 놈들이 방금 들어온놈 확인
-		for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
-			if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
-			else
-				CServer::GetInst()->send_enter_lobby_packet(CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i],user_id);
-		}
+	}
+	//들어와 있는 놈들이 방금 들어온놈 확인
+	for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
+		if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
+		else
+			CServer::GetInst()->send_enter_lobby_packet(CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i], user_id);
+	}
 
 	}
 	break;
+
+	case C2S_FIND_ROOM:
+	{
+		cout << "FIND ROOM" << endl;
+		if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
+			for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
+				CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4,
+					CMatchMaking::GetInst()->GetRoomName(room.first));
+			}
+		}
+	}
+		break;
 	case C2S_KEY_DOWN:
 	{	cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(buf);
 		SHARED_DATA::g_clients[user_id].m_move_time = packet->move_time;

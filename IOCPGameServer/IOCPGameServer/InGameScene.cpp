@@ -66,7 +66,7 @@ void CInGameScene::Init(int index)
 				pObject->Transform()->SetLocalPos(Vec3(0.f + cl.second.m_id * 500, 0.f, 1000.f));
 				pObject->GetScript<CPlayerScript>()->SetSpawnPlace(Vec3(0.f + cl.second.m_id * 500, 0.f, 1000));
 
-				cl.second.Pos = Vec3(0.f, 0.f, 1125.f + cl.second.m_id * 200);
+				cl.second.Pos = Vec3(0.f + cl.second.m_id * 500, 0.f, 1000.f);
 
 				cout << "BLUE - " << cl.second.m_id << endl;
 
@@ -78,7 +78,7 @@ void CInGameScene::Init(int index)
 				pObject->Transform()->SetLocalPos(Vec3(0.f + cl.second.m_id * 500, 0.f, 18600.f));
 				pObject->GetScript<CPlayerScript>()->SetSpawnPlace(Vec3(0.f + cl.second.m_id * 500, 0.f, 18600));
 
-				cl.second.Pos = Vec3(0.f, 0.f, 5800.f + cl.second.m_id * 200);
+				cl.second.Pos = Vec3(0.f + cl.second.m_id * 500, 0.f, 18600.f);
 				cout << "RED - " << cl.second.m_id << endl;
 
 

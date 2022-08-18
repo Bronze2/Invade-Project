@@ -154,6 +154,7 @@ void CTowerScript::Update()
 	else if(GameDone==1){
 		if (EndTime < std::chrono::high_resolution_clock::now()) {
 			CSceneMgr::GetInst()->EndGame(index);
+			GameDone = 2;
 		}
 	}
 	else if (GameDone == 2) {

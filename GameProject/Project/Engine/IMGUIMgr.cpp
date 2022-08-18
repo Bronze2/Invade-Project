@@ -290,8 +290,8 @@ void CIMGUIMgr::Progress()
                             ImGui::InputText("##Passowrd", UserInformations.m_cUserPassWord, IM_ARRAYSIZE(UserInformations.m_cUserPassWord), ImGuiInputTextFlags_Password);
                         }
                         ImGui::PopItemWidth();
-                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 220));//130
-                        //ImGui::SetCursorPos(ImVec2(22, 190));
+                        //ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 - 155, m_tResloution.fHeight / 2 + 220));//130
+                        ImGui::SetCursorPos(ImVec2(22, 190));
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Login", ImVec2(260.f, 30.f)))
                         {
@@ -400,8 +400,21 @@ void CIMGUIMgr::Progress()
                             }
                             ImGui::PopStyleVar();
                         }
-                        ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 + 525, m_tResloution.fHeight - 150));//130
-                       // ImGui::SetCursorPos(ImVec2(22, 190));
+
+                        //Ãß°¡
+                        //ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 + 355, m_tResloution.fHeight - 150));//130
+                        ImGui::SetCursorPos(ImVec2(22, 190));
+
+                        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
+                        if (ImGui::Button("Find Room", ImVec2(260.f, 30.f)))
+                        {
+                            Network::GetInst()->send_search_room_pacekt();
+                        }
+                        ImGui::PopStyleVar();
+
+
+                        //ImGui::SetCursorPos(ImVec2(m_tResloution.fWidth / 2 + 625, m_tResloution.fHeight - 150));//130
+                        ImGui::SetCursorPos(ImVec2(22, 300));
 
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
                         if (ImGui::Button("Create Room", ImVec2(260.f, 30.f)))
