@@ -54,6 +54,7 @@ public:
     Vec3 m_vFront;
 
     vector<CGameObject*> m_arrInterSectObject;
+    vector<CGameObject*> m_vecPlayer;
     Matrix m_matCamera;
 public:
     void SetMatrixCamera(const Matrix& _mat) { m_matCamera = _mat; }
@@ -70,6 +71,7 @@ public:
     void Render();
     void Render_ShadowMap();
 
+    
     void ClearInterSectObject() { m_arrInterSectObject.clear(); }
 
     void SetModule(bool _bModule) { m_bModule = _bModule; }
