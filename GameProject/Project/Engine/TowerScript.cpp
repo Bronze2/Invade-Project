@@ -130,8 +130,9 @@ void CTowerScript::Update()
 	if (m_iCurHp <= 0 && !m_bDeadTimeCheck) {
 		Vec3 vPos = GetObj()->Transform()->GetWorldPos() + Vec3(0.f, 350.f, 0.f);
 		CreateDestroyParticleObject(vPos, L"smokeparticle");
-		CSceneMgr::GetInst()->endText((int)m_eCampState);
-
+		if (m_eType == TOWER_TYPE::NEXUS) {
+			CSceneMgr::GetInst()->endText((int)m_eCampState);
+		}
 
 		m_uiDeadStart = clock();
 		m_bDeadTimeCheck = true;

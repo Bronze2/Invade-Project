@@ -30,7 +30,7 @@ void CThunderSkill1Script::Collision()
 					{
 						if (m_eCampState != vecObj[j]->GetScript<CPlayerScript>()->GetCamp()) {
 							vecObj[j]->GetScript<CPlayerScript>()->GetDamage(m_pSkill->DotDamage);
-							Network::GetInst()->send_set_damage(vecObj[j]->GetScript<CPlayerScript>()->m_GetId(),m_pSkill->DotDamage ,PACKET_COLLTYPE::PLAYER,m_eCampState);
+							Network::GetInst()->send_set_damage(vecObj[j]->GetScript<CPlayerScript>()->m_GetId(),m_pSkill->DotDamage *2 ,PACKET_COLLTYPE::PLAYER,m_eCampState);
 						}
 							m_pSkill->Count += 1;
 

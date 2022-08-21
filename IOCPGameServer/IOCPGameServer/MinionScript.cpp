@@ -582,6 +582,12 @@ void CMinionScript::CheckRange()
                 if (m_pTarget->GetScript<CMinionScript>() != nullptr) {
                     m_pTarget->GetScript<CMinionScript>()->GetDamage(m_uiAttackDamage);
                 }
+                else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
+                    m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
+                }
+                else if (m_pTarget->GetScript<CPlayerScript>() != nullptr) {
+                    m_pTarget->GetScript<CPlayerScript>()->GetDamage(m_uiAttackDamage);
+                }
                 /*         else if (m_pTarget->GetScript<CTowerScript>() != nullptr) {
                             m_pTarget->GetScript<CTowerScript>()->GetDamage(m_uiAttackDamage);
                          }*/

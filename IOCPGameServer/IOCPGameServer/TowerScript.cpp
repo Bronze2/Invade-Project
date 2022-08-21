@@ -32,6 +32,7 @@ void CTowerScript::Init()
 void CTowerScript::GetDamage(const UINT& _uiDamage)
 {
 
+	if (GameDone == 1) return;
 	if (m_pTarget != nullptr || m_eType == TOWER_TYPE::NEXUS) {
 		m_iCurHp -= _uiDamage;
 	}
@@ -60,12 +61,13 @@ void CTowerScript::GetDamage(const UINT& _uiDamage)
 			}
 		}
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
-		DeleteObject(GetObj());
 
 		if (TOWER_TYPE::NEXUS == m_eType) {
+			cout << " NEXSUS BOOM" << endl;
 			GameDone = 1;
 			EndTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(3000);
 		}
+		DeleteObject(GetObj());
 	}
 	else {
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);

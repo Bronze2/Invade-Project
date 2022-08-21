@@ -244,7 +244,7 @@ void CSceneMgr::Init()
     Skill->eElementType = ELEMENT_TYPE::WATER;
     Skill->fCoolTime = 10;
     Skill->fDuration = 3;
-    Skill->DotDamage = -16.40000000000f;
+    Skill->DotDamage = -52.40000000000f;
     Skill->fDamage = 0.f;
     Skill->bUse = false;
     Skill->Sum = 50.f;
@@ -258,7 +258,7 @@ void CSceneMgr::Init()
     Skill->eElementType = ELEMENT_TYPE::WATER;
     Skill->fCoolTime = 20;
     Skill->fDuration = 5;
-    Skill->DotDamage = -20.f;
+    Skill->DotDamage = -50.f;
     Skill->fDamage = 0.f;
     Skill->bUse = false;
     Skill->Sum = 100.f;

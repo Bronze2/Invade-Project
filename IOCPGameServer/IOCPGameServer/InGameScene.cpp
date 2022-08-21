@@ -207,6 +207,7 @@ void CInGameScene::Init(int index)
 	pBlueNexus->GetScript<CTowerScript>()->SetType(TOWER_TYPE::NEXUS);
 	pBlueNexus->GetScript<CTowerScript>()->SetSecondTower(pBlueSecondTower);
 	pBlueNexus->GetScript<CTowerScript>()->m_SetId(4);
+	pBlueNexus->GetScript<CTowerScript>()->SetIndex(index);
 
 	pBlueNexus->GetScript<CTowerScript>()->Init();
 	pBlueSecondTower->GetScript<CTowerScript>()->SetNexus(pBlueNexus);
@@ -219,6 +220,7 @@ void CInGameScene::Init(int index)
 	pBlueSpawnPlace->Transform()->SetLocalPos(Vec3(1000.f, 0.f, 2000.f));
 	pBlueSpawnPlace->Transform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	pBlueSpawnPlace->GetScript<CSpawnScript>()->SetSpawnState(CAMP_STATE::BLUE);
+	pBlueSpawnPlace->GetScript<CSpawnScript>()->SetIndex(index);
 
 	FindLayer(L"Blue")->AddGameObject(pBlueSpawnPlace);
 
@@ -240,6 +242,8 @@ void CInGameScene::Init(int index)
 	pRedNexus->GetScript<CTowerScript>()->SetSecondTower(pRedSecondTower);
 	pRedNexus->GetScript<CTowerScript>()->m_SetId(5);
 	pRedNexus->GetScript<CTowerScript>()->Init();
+	pRedNexus->GetScript<CTowerScript>()->SetIndex(index);
+
 	pRedSecondTower->GetScript<CTowerScript>()->SetNexus(pRedNexus);
 	FindLayer(L"Red")->AddGameObject(pRedNexus);
 
@@ -258,6 +262,8 @@ void CInGameScene::Init(int index)
 	pRedSpawnPlace->GetScript<CSpawnScript>()->SetFirstTower(pBlueFirstTower);
 	pBlueSpawnPlace->GetScript<CSpawnScript>()->SetSecondTower(pRedSecondTower);
 	pRedSpawnPlace->GetScript<CSpawnScript>()->SetSecondTower(pBlueSecondTower);
+	pRedSpawnPlace->GetScript<CSpawnScript>()->SetIndex(index);
+
 	FindLayer(L"Red")->AddGameObject(pRedSpawnPlace);
 
 

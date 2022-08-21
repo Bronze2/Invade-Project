@@ -33,9 +33,9 @@ void Network::Init()
 	//긱사 포트포워딩 121.190.132.143 : 8012
 	//10.30.2.19
 	string ip;
-	/*cout << "IP :";
-	cin >> ip;*/
-	ServerAddr.sin_addr.s_addr = inet_addr("121.190.132.143");
+	cout << "IP :";
+	cin >> ip;
+	ServerAddr.sin_addr.s_addr = inet_addr(ip.c_str());
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 
@@ -480,7 +480,6 @@ void Network::ProcessPacket(char* ptr)
 	case S2C_END_GAME:
 	{
 		sc_packet_endgame* my_packet = reinterpret_cast<sc_packet_endgame*>(ptr);
-
 		CSceneMgr::GetInst()->net_change_result();
 	}
 	break;

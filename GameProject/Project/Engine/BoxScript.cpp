@@ -73,13 +73,13 @@ BUFF_TYPE CBoxScript::GiveBuff()
 	switch (m_eBuffType)
 	{
 	case BUFF_TYPE::HEAL:
-		m_pPlayer->GetScript<CPlayerScript>()->SetDamage(-50.f);
+		m_pPlayer->GetScript<CPlayerScript>()->SetDamage(-150.f);
 		break;
 	case BUFF_TYPE::STRENGTH:
 		m_pPlayer->GetScript<CPlayerScript>()->GetBuff();
 		break;
 	case BUFF_TYPE::DAMAGE:
-		m_pPlayer->GetScript<CPlayerScript>()->SetDamage(50.f);
+		m_pPlayer->GetScript<CPlayerScript>()->SetDamage(150.f);
 		break;
 	default:
 		break;

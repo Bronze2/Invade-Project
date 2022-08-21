@@ -60,7 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 800, 600 }, true)))       //1982, 1080
+    if (FAILED(CGameFramework::GetInst()->Init(g_hWnd, tResolution{ 1920, 1080 }, true)))       //1982, 1080
     {
         return 0;
     }
@@ -143,7 +143,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     //WS_CAPTION
  //   g_hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP|WS_EX_WINDOWEDGE,
  //      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-    g_hWnd = CreateWindowExW(WS_EX_APPWINDOW, szWindowClass, szTitle, WS_CAPTION,
+    g_hWnd = CreateWindowExW(WS_EX_APPWINDOW, szWindowClass, szTitle, WS_POPUP,
         0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), nullptr, nullptr, hInstance, nullptr);
     if (!g_hWnd)
     {

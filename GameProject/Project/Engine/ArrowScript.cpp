@@ -676,7 +676,7 @@ void CArrowScript::Collision()
                 if (Radius < 400.f)
                 {
                     obj->GetScript<CPlayerScript>()->DamageBySkill(m_pSkill);
-
+                    Network::GetInst()->send_set_damage(obj->GetScript<CPlayerScript>()->m_GetId(), 300, PACKET_COLLTYPE::PLAYER, m_eCamp);
                 }
          
             }
@@ -691,7 +691,8 @@ void CArrowScript::Collision()
                     float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
                     if (Radius < 400.f)
                     {
-                        Network::GetInst()->send_set_damage(obj->GetScript<CMinionScript>()->m_GetId(),100 ,PACKET_COLLTYPE::MONSTER, m_eCamp);
+                        Network::GetInst()->send_set_damage(obj->GetScript<CMinionScript>()->m_GetId(), 350 ,PACKET_COLLTYPE::MONSTER, m_eCamp);
+
                     }
                 }
             }
@@ -710,7 +711,7 @@ void CArrowScript::Collision()
                     float Radius = sqrt(pow(vPos1.x - vPos2.x, 2) + pow(vPos1.z - vPos2.z, 2));
                     if (Radius < 400.f)
                     {
-                        Network::GetInst()->send_set_damage(obj->GetScript<CMinionScript>()->m_GetId(), 100, PACKET_COLLTYPE::MONSTER, m_eCamp);
+                        Network::GetInst()->send_set_damage(obj->GetScript<CMinionScript>()->m_GetId(), 350, PACKET_COLLTYPE::MONSTER, m_eCamp);
                     }
                 }
             }
