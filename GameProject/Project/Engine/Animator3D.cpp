@@ -84,6 +84,8 @@ void CAnimator3D::UpdateData_Inst(CStructuredBuffer* _pBoneBuffer, UINT _iRow)
 
         m_bFinalMatUpdate = true;
     }
+    //_pBoneBuffer->UpdateData(TEXTURE_REGISTER::t7);
+
 }
 
 

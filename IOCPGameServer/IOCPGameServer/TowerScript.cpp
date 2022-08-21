@@ -242,6 +242,8 @@ void CTowerScript::CreateProjectile(const wstring& _Layer)
 	pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
 	pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::TOWER);
 	pObject->GetScript<CProjectileScript>()->SetCamp(m_eCampState);
+	pObject->GetScript<CProjectileScript>()->SetIndex(index);
+
 
 	Vec3 vPlayerTargetPos = Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().z, m_pTarget->Transform()->GetWorldPos().z);
 	Vec3 vMinionTargetPos = Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z);

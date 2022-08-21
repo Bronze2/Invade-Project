@@ -391,7 +391,7 @@ void CArrowScript::Init()
 #include "MinionScript.h"
 void CArrowScript::OnCollision3DEnter(CCollider3D* _pColldier)
 {
-    if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>() && GetObj()->Transform()->GetLocalPos().y < 150 && m_eState == ARROW_STATE::ATTACK) {
+    if (nullptr != _pColldier->GetObj()->GetScript<CPlayerColScript>() && m_eState == ARROW_STATE::ATTACK) {
         if (_pColldier->GetObj()->GetScript<CPlayerColScript>()->GetPlayer()->GetScript<CPlayerScript>()->GetCamp() != m_eCamp) {
 
             if (m_pSkill == nullptr) {

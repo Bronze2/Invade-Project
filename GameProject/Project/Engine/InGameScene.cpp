@@ -1188,7 +1188,7 @@ void CInGameScene::Init()
     pUISkill->AddComponent(new CTransform);
     pUISkill->AddComponent(new CMeshRender);
 
-    pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vZSkillScale.x * 0.5, -res.fHeight / 2 + vZSkillScale.y / 2, 1.f));
+    pUISkill->Transform()->SetLocalPos(Vec3(res.fWidth / 2 - vZSkillScale.x * 0.5, -res.fHeight / 2 + vZSkillScale.y / 2 + 50.f, 1.f));
     pUISkill->Transform()->SetLocalScale(vZSkillScale);
 
     pUISkill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

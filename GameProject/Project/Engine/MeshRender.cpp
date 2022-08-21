@@ -5,7 +5,7 @@
 #include "ResMgr.h"
 #include "Animator3D.h"
 #include "Animator2D.h"
-
+#include "InstancingMgr.h"
 
 CMeshRender::CMeshRender()
     : CComponent(COMPONENT_TYPE::MESHRENDER), m_bDynamicShadow(false)

@@ -797,6 +797,8 @@ void CMinionScript::CreateProjectile(const wstring& _Layer)
     pObject->GetScript<CProjectileScript>()->SetDamage(m_uiAttackDamage);
     pObject->GetScript<CProjectileScript>()->SetProjectileType(PROJECTILE_TYPE::MINION);
     pObject->GetScript<CProjectileScript>()->SetCamp(m_eCamp);
+    pObject->GetScript<CProjectileScript>()->SetIndex(index);
+
  /*   if (nullptr != m_pTarget->GetScript<CPlayerScript>()) {
         pObject->GetScript<CProjectileScript>()->SetTargetPos(Vec3(m_pTarget->Transform()->GetWorldPos().x, m_pTarget->Transform()->GetWorldPos().y + m_pTarget->Collider3D()->GetOffsetPos().y, m_pTarget->Transform()->GetWorldPos().z));
     }

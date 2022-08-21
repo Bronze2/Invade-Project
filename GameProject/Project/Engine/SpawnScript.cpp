@@ -59,7 +59,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
         pNewAnimation->InsertAnimClip(L"DIE", 75, 114);
         CGameObject* pObject = SpawnObject(L"MeshData\\sword_min1.mdat",
-            Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 100.f, 100.f),
+            Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 150.f, 100.f),
             MINION_ATTACK_TYPE::MELEE, pNewAnimation, CAMP_STATE::RED);
         pObject->GetScript<CMinionScript>()->m_SetId(id);
 
@@ -73,7 +73,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"ATTACK", 50, 74);
         pNewAnimation->InsertAnimClip(L"DIE", 100, 149);
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min1.mdat", 
-            Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 100.f, 100.f),
+            Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 150.f, 100.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::RED);
         pObject->GetScript<CMinionScript>()->m_SetId(id);
 
@@ -87,7 +87,7 @@ void CSpawnScript::SpawnObject_Red(int id, Vec3 Pos , MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"ATTACK", 75, 99);
         pNewAnimation->InsertAnimClip(L"DIE", 125, 174);
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min1.mdat", 
-            Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 220.f, 100.f),
+            Pos, Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 250.f, 100.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::RED);
         pObject->GetScript<CMinionScript>()->m_SetId(id);
 
@@ -117,7 +117,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
 
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\sword_min.mdat", Pos, 
-            Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3( 100.f, 100.f, 100.f), 
+            Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3( 100.f, 150.f, 100.f), 
             MINION_ATTACK_TYPE::MELEE, pNewAnimation, CAMP_STATE::BLUE);
         pObject->GetScript<CMinionScript>()->m_SetId(id);
         CreateObject(pObject, L"Blue");
@@ -131,7 +131,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 110, 159);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\wizard_min.mdat", Pos, 
-            Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 100.f, 100.f),
+            Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 150.f, 100.f),
             MINION_ATTACK_TYPE::RANGE, pNewAnimation, CAMP_STATE::BLUE);
         pObject->GetScript<CMinionScript>()->m_SetId(id);
         CreateObject(pObject, L"Blue");
@@ -145,7 +145,7 @@ void CSpawnScript::SpawnObject_Blue(int id, Vec3 Pos, MINION_ATTACK_TYPE type)
         pNewAnimation->InsertAnimClip(L"DIE", 105, 154);
         Vec3 vPos = GetObj()->Transform()->GetLocalPos();
         CGameObject* pObject = SpawnObject(L"MeshData\\Canon_min.mdat", Pos, 
-            Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 220.f, 100.f),
+            Vec3(1.f, 1.f, 1.f), Vec3(0.f, 70.f, 0.f), Vec3(100.f, 250.f, 100.f),
             MINION_ATTACK_TYPE::CANON, pNewAnimation, CAMP_STATE::BLUE);
         pObject->GetScript<CMinionScript>()->m_SetId(id);
         CreateObject(pObject, L"Blue");
