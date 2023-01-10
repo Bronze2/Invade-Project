@@ -16,20 +16,20 @@ public:
 	void SetShader(Ptr<CShader> _pShader);
 	void SetData(SHADER_PARAM _eParam, void* _pData);
 	void DisableFileSave() { m_bFileSave = false; }
-	void UpdateData(bool _bInstancing=false);
+	void UpdateData(bool _bInstancing = false);
 	void UpdateData_CS();
 
+	tMtrlParam* GetParam() { return &m_tParam; }
 	void Dispatch(UINT _x, UINT _y, UINT _z);
 
 
 	virtual void Load(const wstring& _strFullPath);
 	virtual void Save(const wstring& _strPath);
 
-	Ptr<CShader> GetShader() { return m_pShader;}
+	Ptr<CShader> GetShader() { return m_pShader; }
 	virtual CMaterial* Clone();
 
 	CMaterial();
 	virtual ~CMaterial();
 
 };
-

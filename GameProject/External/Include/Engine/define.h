@@ -1,7 +1,7 @@
 #pragma once
 #define PI 3.14152
 #define GRAVITY 9.8
-#define INSTANCING_COUNT 2 // 인스턴싱 제한조건( n 개 이상 중복 시 인스턴싱으로 전환)
+#define INSTANCING_COUNT 7 // 인스턴싱 제한조건( n 개 이상 중복 시 인스턴싱으로 전환)
 #define SINGLE(type) private: type(); ~type();\
 public:\
 static type* GetInst()\
@@ -42,6 +42,7 @@ static type* GetInst()\
 typedef DirectX::SimpleMath::Vector2 Vec2;
 typedef DirectX::SimpleMath::Vector3 Vec3;
 typedef DirectX::SimpleMath::Vector4 Vec4;
+typedef DirectX::SimpleMath::Quaternion Quaternion;
 using DirectX::SimpleMath::Matrix;
 
 enum class CONST_REGISTER
@@ -90,6 +91,7 @@ enum class RES_TYPE
 	TEXTURE,
 	SOUND,
 	SHADER,
+	FONT,
 	END,
 };
 
@@ -150,6 +152,7 @@ enum class COMPONENT_TYPE
 	PARTICLESYSTEM,
 	TERRAIN,
 	SENSOR,
+	TRAILRENDERER,
 	END,
 	SCRIPT,
 };
@@ -210,6 +213,7 @@ enum class BLEND_TYPE
 	DEFAULT,
 	ALPHABLEND,
 	ONEBLEND,
+	ALPHATOCOVERAGE,
 	END,
 };
 
@@ -354,12 +358,17 @@ enum class SPAWN_COUNT {
 enum class PLAYER_STATE {
 	IDLE,
 	WALK,
-	RUN,
 	JUMP,
+	DIE,
 	ATTACK_READY,
 	ATTACK,
+	ATTACK_READY_HIGH_1,
+	ATTACK_READY_HIGH_2,
+	ATTACK_READY_HIGH_3,
+	ATTACK_READY_HIGH_4,
+	ATTACK_READY_HIGH_5,
 	DEMAGED,
-	DIE,
+	RUN,
 	END,
 };
 
@@ -370,15 +379,32 @@ enum class CAMERA_EFFECT_TYPE {
 	DAMAGED,
 	LIGHTNING,
 };
+
 enum class ELEMENT_TYPE {
-	FROZEN = 0,
+
+	START = -1,
+	WATER = 0,
 	FIRE = 1,
 	DARK = 2,
 	THUNDER = 3,
 	WIND = 4
 };
-
 enum class SKILL_TYPE {
 	ACT,
 	PASSIVE,
+};
+
+enum class BUTTON_TYPE {
+	READY,
+	GAMESTART,
+	SELECT_WATER,
+	SELECT_FIRE,
+	SELECT_DARK,
+	SELECT_THUNDER,
+	SELECT_WIND,
+};
+enum class BUFF_TYPE {
+	HEAL,
+	STRENGTH,
+	DAMAGE,
 };

@@ -13,6 +13,11 @@ class CArrowScript :
     public CScript
 {
 private:
+
+    float m_fDir = 1;
+    float m_fHighest = 0;
+    float m_fPerRotate = 1;
+
     float m_fSpeed;
     Vec3 m_vDir;
     Vec3 m_vStartPos;
@@ -23,6 +28,7 @@ private:
     float a;
     ELEMENT_TYPE m_iType;
     CGameObject* m_pParticle;
+    PACKET_SKILL m_PacketSkill;
     bool m_bMove;
     float m_fFallSpeed;
 
@@ -44,12 +50,42 @@ private:
 
     int m_ParentId;
     int m_id;
+    UINT m_iLayerIdx;
+    UINT m_iDamage;
+    SKILL* m_pSkill;
+    CGameObject* m_pPlayer;
+    bool m_isMain;
+
+    CGameObject* m_pTrail;
+    float m_fAngle;
+    float m_fRotateAngle;
+    Vec3 m_vXZDir;
+    Vec3 m_vQtrnRotAxis;
+    Quaternion m_qRot;
+
+    Vec3 m_LerpPos;
+    Vec4 m_LerpQut;
+
+    CAMP_STATE m_eCamp;
+    CSound* m_pSound;
+   
 public:
     virtual void Awake();
     virtual void Update();
 
-    void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
+    void SetQtrnRotAxis(Vec3 _Axis) { m_vQtrnRotAxis = _Axis; }
+    void SetPlayer(CGameObject* _pPlayer) { m_pPlayer = _pPlayer; }
+    bool bSetSkill() { if (nullptr == m_pSkill)return true; else return false; }
+    void SetSkill(SKILL* _pSkill);
+    void SetLayerIdx(UINT _Idx) { m_iLayerIdx = _Idx; }
+    UINT GetLayerIdx() { return m_iLayerIdx; }
+    void SkillCheck();
+    float GetVelocityY() { return m_fVelocityY; }
+    PACKET_SKILL GetPacketSkill() { return m_PacketSkill; }
+    void SetPacketSkill(PACKET_SKILL paket_skill) {  m_PacketSkill = paket_skill; }
 
+    void SetSpeed(float _fSpeed) { m_fSpeed = _fSpeed; }
+    void SetCamp(CAMP_STATE camp) { m_eCamp = camp; }
     void SetFallSpeed(float _fSpeed) { m_fFallSpeed = _fSpeed; }
     void SetDir(Vec3 _vDir) { m_vDir = _vDir; }
     void SetTime(float _fTime) { m_fTime = _fTime; }
@@ -73,7 +109,32 @@ public:
 
     void SetBow(CGameObject* _Obj) { m_pBow = _Obj; }
 
+    void EnterSkill(Vec3 vPos);
+
+    void SetisMain(bool isMain) { m_isMain = isMain; }
+
     virtual void OnCollision3DEnter(CCollider3D* _pColldier);
+
+    void LerpUpdate();
+    void SetLerp(Vec3 LocalPos, Vec4 Quaternion) { m_LerpPos = LocalPos; m_LerpQut = Quaternion; }
+    
+    void StopTrail();
+    void StartTrail();
+
+    void Collision();
+
+    const UINT& GetDmg() { return m_iDamage; }
+    void SetDmg(const UINT& _iDmg) { m_iDamage = _iDmg; }
+    
+    //½ºÅ³
+    void WaterSkill0(CCollider3D* _pColldier);
+    void DarkSkill0(CCollider3D* _pCollider);
+    void ThunderSkill0(CCollider3D* _pCollider);
+    void ThunderSkill1(CCollider3D* _pCollider);
+    void FireSkill0(CCollider3D* _pCollider);
+    void FireSkill1(CCollider3D* _pCollider);
+    void WindSkill0(CCollider3D* _pCollider);
+    void WindSkill1(CCollider3D* _pCollider);
 private:
 
 public:

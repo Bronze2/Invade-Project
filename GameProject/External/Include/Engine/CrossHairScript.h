@@ -10,6 +10,7 @@ class CCrossHairScript
 private:
 	Vec3 m_vDir;
 	Vec3 m_vPos;
+	Vec3 m_vRestoreScale;
 
 	CGameObject* m_pMainCam;
 

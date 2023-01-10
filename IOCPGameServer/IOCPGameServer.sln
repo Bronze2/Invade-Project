@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.705
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IOCPGameServer", "IOCPGameServer\IOCPGameServer.vcxproj", "{3191641A-AC61-48B5-B43C-EAB214DE792B}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{A7F0FF35-5FF6-4861-910A-A8319D292C3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3191641A-AC61-48B5-B43C-EAB214DE792B}.Release|x64.Build.0 = Release|x64
 		{3191641A-AC61-48B5-B43C-EAB214DE792B}.Release|x86.ActiveCfg = Release|Win32
 		{3191641A-AC61-48B5-B43C-EAB214DE792B}.Release|x86.Build.0 = Release|Win32
+		{A7F0FF35-5FF6-4861-910A-A8319D292C3E}.Debug|x64.ActiveCfg = Debug
+		{A7F0FF35-5FF6-4861-910A-A8319D292C3E}.Debug|x86.ActiveCfg = Debug
+		{A7F0FF35-5FF6-4861-910A-A8319D292C3E}.Release|x64.ActiveCfg = Release
+		{A7F0FF35-5FF6-4861-910A-A8319D292C3E}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

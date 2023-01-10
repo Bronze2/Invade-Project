@@ -50,3 +50,29 @@ void ChangeScene(SCENE_TYPE _eNextScene);
 
 
 Vec2 GetDiagnal(const float& _fDestination, const float& _fxvalue, const float& _fzvalue);
+int TickCheck(std::chrono::system_clock::time_point start, int _Time);
+bool CoolTimeCheck(std::chrono::system_clock::time_point start, int _Time);
+bool SkillFinalCheck(SKILL* _pSkill);
+
+void CreateHitParticleObject(const Vec3& _Pos, const wstring& _strKey);
+void CreateBoomParticleObject(const Vec3& _Pos, const wstring& _strKey);
+
+
+void CreateThunderObject(const Vec3& _Pos,  int e_camp);
+
+void Net_CreateThunderObject(const Vec3& _Pos, int e_camp);
+
+void CreateDestroyParticleObject(const Vec3& _Pos, const wstring& _strKey);
+
+void CreateBoxObject(const Vec3& _vPos, const UINT& _idx, BUFF_TYPE buff);
+
+
+class CSound;
+
+
+CSound* SetSound2D(const wstring& _Path);
+CSound* SetSound3D(const wstring& _Path);
+
+void SetListener(const Matrix& _ViewMatrix, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);
+
+void SetListener(const Vec3& _vFrontDir, const Vec3& _vUpDir, const Vec3& _PlayerPos, const Vec3& _PlayerlastPos);

@@ -48,10 +48,8 @@ void CInGameScene::Init(int index)
 			pObject->AddComponent(new CTransform);
 			pObject->AddComponent(new CCollider3D);
 			pObject->AddComponent(new CPlayerScript);
-
 			pObject->AddComponent(new CSensor);
 			pObject->Sensor()->SetRadius(300.f);
-
 			pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 			pObject->Collider3D()->SetOffsetScale(Vec3(200.f, 300.f, 200.f));     // 80.f, 200.f, 80.f ?????
 			pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
@@ -62,13 +60,9 @@ void CInGameScene::Init(int index)
 			if (cl.second.m_camp == CAMP_STATE::BLUE) {
 				pObject->GetScript<CPlayerScript>()->SetCamp(CAMP_STATE::BLUE);
 				FindLayer(L"Blue")->AddGameObject(pObject, false);
-				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 1125.f));
 				pObject->Transform()->SetLocalPos(Vec3(0.f + cl.second.m_id * 500, 0.f, 1000.f));
 				pObject->GetScript<CPlayerScript>()->SetSpawnPlace(Vec3(0.f + cl.second.m_id * 500, 0.f, 1000));
-
 				cl.second.Pos = Vec3(0.f + cl.second.m_id * 500, 0.f, 1000.f);
-
-				cout << "BLUE - " << cl.second.m_id << endl;
 
 			}
 			else if(cl.second.m_camp == CAMP_STATE::RED) {
@@ -77,11 +71,7 @@ void CInGameScene::Init(int index)
 				//pObject->Transform()->SetLocalPos(Vec3(0.f, 0.f, 5800.f));
 				pObject->Transform()->SetLocalPos(Vec3(0.f + cl.second.m_id * 500, 0.f, 18600.f));
 				pObject->GetScript<CPlayerScript>()->SetSpawnPlace(Vec3(0.f + cl.second.m_id * 500, 0.f, 18600));
-
 				cl.second.Pos = Vec3(0.f + cl.second.m_id * 500, 0.f, 18600.f);
-				cout << "RED - " << cl.second.m_id << endl;
-
-
 			}
 
 			//if (i % 2 == 0) {

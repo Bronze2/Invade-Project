@@ -2,12 +2,15 @@
 #include "Script.h"
 #include "Animation3D.h"
 
+// 熱團
+#define DEADTIME 15
 
 class CTexture;
 class CPlayerScript :
     public CScript
 {
 private:
+    vector<CGameObject* >m_arrAlliance;
     bool m_bCheckStartMousePoint;
     Vec3 m_vZoomPos;
     Vec3 m_vRestorePos;
@@ -44,19 +47,80 @@ private:
 
     Vec3 m_LerpRot;
 
+
+    CGameObject* m_pHealParticle;
+    CGameObject* m_pFlameParticle;
+    CGameObject* m_pThunderParticle;
+    CGameObject* m_pBuffParticle;
+    bool m_bHealCheck;
+    bool m_bFlameCheck;
+    bool m_bThunderCheck;
+    bool m_bDarkCheck;
+
+    SKILL* m_tESkill;
+    SKILL* m_tZSkill;
+    SKILL* m_currentSkill = nullptr;
+
+    CGameObject* m_pESkillObject;
+    CGameObject* m_pZSkillObject;
+
+    vector<SKILL*> m_arrSkill;
+
+    CGameObject* m_pHelmetObject;
+
+    
     float m_fCurDegree;
     int m_iKeyHoldCnt;
-    UINT m_uiMaxHp;
+    int m_iMaxHp;
     int m_iCurHp = 1500;
     CAMP_STATE m_eCamp;
     Vec3 restorePos;
+    CGameObject* m_pBowObject;
+    bool m_bReady;
+
+    CGameObject* m_pHPBar;
+    vector<CGameObject*> m_vecUIHpBar;
+
+    // UI熱薑 熱團
+    CGameObject* m_pMainHelmetUI;
+    bool m_bDead;
+    CGameObject* m_pDeadEffect;
+    clock_t m_uiDeadStart;
+    clock_t m_uiDeadEnd;
+    clock_t m_uiDeadInterval;
+
+    std::chrono::system_clock::time_point m_tBuffTime;
+    bool m_bCanAttack;
+    bool m_bColBox;
+
+    UINT m_uiStrength;
+
+    CGameObject* m_pColPlayer;
+
+    // 夥塋蝶鑒
+    bool m_bWind0OnceUsed = false;
+
+    CGameObject* m_pDarkUI;
+
+    tMTBone* m_pChestBone;
+    tMTBone* m_pHeadBone;
+    tMTBone* m_pHandBone;
+    vector<CGameObject*> m_vecTeamPlayer;
+
 public:
+    wstring name;
+    bool GetisDead() { return m_bDead; }
+    void SetDarkUIRender(bool _bTrue) { m_pDarkUI->SetActive(_bTrue); }
+    void SetCanAttack(const bool& _bCanAttack) { m_bCanAttack = _bCanAttack; }
+    void AddUIHpBarObj(CGameObject* _pObj) { m_vecUIHpBar.emplace_back(_pObj); }
+    void AttachHelmet();
     void m_FAnimation();
     void Init();
     virtual void Awake();
     virtual void Update();
-    void SetType(ELEMENT_TYPE _iType) { m_iType = _iType; }
+    void SetType(ELEMENT_TYPE _iType);
     void SetMain() { isMain = true; }
+    bool GetIsMain() { return isMain; }
     void SetState(int state);
     void m_SetId(int id) { m_id = id; }
     int m_GetId() { return m_id; }
@@ -68,6 +132,12 @@ public:
     CPlayerScript();
     virtual ~CPlayerScript();
     void GetDamage(const UINT& _uiDamage);
+    void SetDamage(const int& _Damage);
+    void SetCamp(CAMP_STATE camp) { m_eCamp = camp; }
+    CAMP_STATE GetCamp() { return m_eCamp; }
+    bool MoveCheck(const Vec3& _vPos);
+
+    UINT GetType() { return (UINT)m_iType; }
 
     void m_FColCheck(Vec3 _vBeforePos, Vec3 _vAfterPos);
     bool GetCollCheck(){return m_bColCheck;}
@@ -76,6 +146,54 @@ public:
     virtual void OnCollision3D(CCollider3D* _pOther);
     virtual void OnCollision3DExit(CCollider3D* _pOther);
 
+
+    virtual void OnDetectionEnter(CGameObject* _pOther);
+    virtual void OnDetection(CGameObject* _pOther);
+    virtual void OnDetectionExit(CGameObject* _pOther);
+    void SetBowObject(CGameObject* _pObj) { m_pBowObject = _pObj; }
+
+    void SkillCoolTimeCheck();
+
+    void StatusCheck();
+
+    void UseSkill();
+    void DamageBySkill(SKILL* _pSkill);
+    void GetDamage();
+    SKILL* GetSkill_E() { return m_tESkill; }
+    SKILL* GetSkill_Z() { return m_tZSkill; }
+    SKILL* GetCurrentSkill() { return m_currentSkill; }
+    SKILL* GetESkill() { return m_tESkill; }
+    SKILL* GetZSkill() { return m_tZSkill; }
+    void SetESkillObj(CGameObject* _pObj) { m_pESkillObject = _pObj; }
+    void SetZSkillObj(CGameObject* _pObj) { m_pZSkillObject = _pObj; }
+
+    // 熱團
+    void CheckHpAndDead();
+    void AddTeamPlayer(CGameObject* _pObj) { m_vecTeamPlayer.push_back(_pObj); }
+    vector<CGameObject*> GetTeamPlayer() { return m_vecTeamPlayer; }
+    void UpdateHelmet(Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
+
+    //Lobby
+    void SetReady(bool _bTrue) { m_bReady = _bTrue; }
+    bool GetReady() { return m_bReady; }
+    void SetAnimationState(PLAYER_STATE _eState) { m_eState = _eState; }
+    PLAYER_STATE GetAnimaionState() { return m_eState; }
+    
+    // 唸婁壁
+    void SetResultAnim(bool _bWin);
+
+    //hp
+    UINT GetCurHp() { return m_iCurHp; }
+    void SetCurHp(int _hp) { m_iCurHp = _hp; }
+
+    void SetStrength(const UINT& _Dmg) { m_uiStrength = _Dmg; }
+    const UINT& GetStrength() { return m_uiStrength; }
+    void GetBuff();
+
+    void SetColPlayer(CGameObject* _pObj) { m_pColPlayer = _pObj; }
+    CGameObject* GetColObj() { return m_pColPlayer; }
+
+    void Respawn();
 
     CLONE(CPlayerScript);
 };

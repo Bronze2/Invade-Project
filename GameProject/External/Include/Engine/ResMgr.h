@@ -7,6 +7,7 @@
 #include "Ptr.h"
 #include "PathMgr.h"
 #include "MeshData.h"
+#include "Font.h"
 class CResMgr
 {
 	SINGLE(CResMgr);
@@ -40,7 +41,10 @@ public:
 	Ptr<T> Load(const wstring& _strKey, const wstring& _strPath);
 	template<typename T>
 	Ptr<T> LoadFBXTexture(const wstring& _strKey, const wstring& _strPath/*��� ���*/);
-	
+
+	template<typename T>
+	Ptr<T> Load3D(const wstring& _strKey, const wstring& _strPath);
+
 
 	Ptr<CTexture> CreateTexture(const wstring& _strName, UINT _iWidth, UINT _iHeight, DXGI_FORMAT _eFormat
 		, const D3D12_HEAP_PROPERTIES& _HeapProperty, D3D12_HEAP_FLAGS _eHeapFlag
@@ -67,6 +71,8 @@ RES_TYPE GetType()
 		return RES_TYPE::TEXTURE;
 	if (typeid(T).hash_code() == typeid(CSound).hash_code())
 		return RES_TYPE::SOUND;
+	if (typeid(T).hash_code() == typeid(CFont).hash_code())
+		return RES_TYPE::FONT;
 	return RES_TYPE::END;
 }
 
@@ -121,7 +127,7 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 	Ptr<T> pRes = FindRes<T>(_strKey);
 
 	// 중복키 문제
-	if (nullptr != pRes)
+	if (nullptr != pRes && RES_TYPE::FONT != GetType<T>())      // 폰트수정
 		return pRes;
 	pRes = new T;
 	wstring strFullPath = CPathMgr::GetResPath();
@@ -149,7 +155,7 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 		for (int j = 0; j < rFileName.length(); ++j) {
 			FileName.push_back(rFileName[rFileName.length() - j - 1]);
 		}
-	
+
 		i = 1;
 		if (rFileName == L"dsp.") {
 			while (true)
@@ -158,19 +164,19 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 					wstring& strPath = const_cast<wstring&>(_strPath);
 					strPath[length - i] = 'g';
 				}
-					
+
 				else if (i == 2) {
 					wstring& strPath = const_cast<wstring&>(_strPath);
 					strPath[length - i] = 'n';
-					
+
 				}
-					
+
 				else if (i == 3) {
 					wstring& strPath = const_cast<wstring&>(_strPath);
 					strPath[length - i] = 'p';
-				
+
 				}
-				
+
 				if (_strPath[length - i] == path) {
 					break;
 				}
@@ -180,7 +186,7 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strPath)
 		}
 
 		int c = 0;
-	//	strFullPath += wFBXLoad;
+		//	strFullPath += wFBXLoad;
 	}
 
 	strFullPath += _strPath;
@@ -300,4 +306,29 @@ inline bool CResMgr::DestroyResource(const wstring& _strKey)
 	m_mapRes[(UINT)eType].erase(iter);
 
 	return true;
+}
+
+template<typename T>
+inline Ptr<T> CResMgr::Load3D(const wstring& _strKey, const wstring& _strPath)
+{
+	Ptr<T> pRes = FindRes<T>(_strKey);
+
+	// 중복키 문제
+	if (nullptr != pRes)
+		return pRes;
+
+	pRes = new T;
+	wstring strFullPath = CPathMgr::GetResPath();
+	strFullPath += _strPath;
+	pRes->Load3D(strFullPath);
+
+
+	RES_TYPE eType = GetType<T>();
+
+	CResource** ppRes = (CResource**)&pRes;
+	m_mapRes[(UINT)eType].insert(make_pair(_strKey, *ppRes));
+	pRes->SetName(_strKey);
+	pRes->SetPath(_strPath);
+
+	return pRes;
 }

@@ -151,28 +151,6 @@ void CThread::worker_Thread()
 
 		case OP_ACCEPT:			//CreateIoCompletionPort으로 클라소켓 iocp에 등록 -> 초기화 -> recv -> accept 다시(다중접속)
 		{
-			//int user_id = -1;
-			//for (int i = 0; i < MAX_USER; ++i)
-			//{
-			//	lock_guard<mutex> gl{ SHARED_DATA::g_clients[i].m_cLock }; //이렇게 하면 unlock이 필요 없다. 이 블록에서 빠져나갈때 unlock을 자동으로 해준다.
-			//	if (ST_FREE == SHARED_DATA::g_clients[i].m_status)
-			//	{
-			//		SHARED_DATA::g_clients[i].m_status = ST_ALLOCATED;
-			//		user_id = i;
-			//		break;
-			//	}
-			//}
-
-			//for (auto& cl : SHARED_DATA::g_clients) {
-			//	lock_guard<mutex> gl{ cl.second.m_cLock };
-			//	if (ST_FREE == cl.second.m_status)
-			//	{
-			//		cl.second.m_status = ST_ALLOCATED;
-			//		user_id = cl.second;
-			//		break;
-			//	}
-			//}
-			//main에서 소켓을 worker스레드로 옮겨오기 위해 listen소켓은 전역변수로, client소켓은 멤버로 가져왔다.
 			SOCKET clientSocket = exover->c_socket;
 
 			if (-1 == user_id)
@@ -191,24 +169,6 @@ void CThread::worker_Thread()
 				SHARED_DATA::g_clients[accept_user_id].m_recv_over.wsabuf.len = MAX_BUF_SIZE;
 
 				SHARED_DATA::g_clients[accept_user_id].m_id = accept_user_id;
-				
-				
-				//if (user_id == 0)
-				//	SHARED_DATA::g_clients[user_id].m_isHost = true;
-
-				//if (user_id % 2 == 0) {
-				//	SHARED_DATA::g_clients[user_id].m_camp = RED;
-				//	SHARED_DATA::g_clients[user_id].Pos = Vec3(0,0,1125);
-
-				//}
-				//else {
-				//	SHARED_DATA::g_clients[user_id].Pos = Vec3(0, 0, 5800);
-				//	SHARED_DATA::g_clients[user_id].m_camp = BLUE;
-				//}
-
-
-
-				//SHARED_DATA::g_clients[user_id].view_list.clear();
 
 				DWORD flags = 0;
 				WSARecv(clientSocket, &SHARED_DATA::g_clients[accept_user_id].m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_DATA::g_clients[accept_user_id].m_recv_over.over, NULL);
@@ -242,8 +202,6 @@ void CThread::worker_Thread()
 			CTimeMgr::GetInst()->Update();
 			CEventMgr::GetInst()->Clear();
 			CSceneMgr::GetInst()->Update();
-			//CService::GetInst()->update_minion();
-
 			CService::GetInst()->add_timer(user_id, OP_UPDATE, 33);	//30fps
 		}
 		break;
@@ -306,13 +264,14 @@ void CThread::process_packet(int user_id, char* buf)
 	}
 	break;
 	case C2S_MAKE_ROOM:
-	{	cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
-	CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match, packet->roomName);
-	SHARED_DATA::g_clients[user_id].room_id = user_id;
-	SHARED_DATA::g_clients[user_id].m_isHost = true;
-	SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;
-	//팀 정보 갱신
-	CServer::GetInst()->send_lobby_team_packet(user_id, user_id);
+	{	
+		cs_packet_make_room* packet = reinterpret_cast<cs_packet_make_room*>(buf);
+		CMatchMaking::GetInst()->makeRoom(packet->room_id, packet->match, packet->roomName);
+		SHARED_DATA::g_clients[user_id].room_id = user_id;
+		SHARED_DATA::g_clients[user_id].m_isHost = true;
+		SHARED_DATA::g_clients[user_id].m_camp = CAMP_STATE::BLUE;
+		//팀 정보 갱신
+		CServer::GetInst()->send_lobby_team_packet(user_id, user_id);
 	}
 	break;
 	case C2S_ENTER_ROOM:
@@ -324,10 +283,7 @@ void CThread::process_packet(int user_id, char* buf)
 	//팀 정보 갱신
 	CServer::GetInst()->send_lobby_team_packet(packet->room_id, user_id);
 
-	//SHARED_DATA::g_clients[user_id].m_camp
 	//Room에 들어온 클라이언트들을 서로 알려주기.
-	//방금 들어온놈이 들어와있는놈들 확인
-
 	for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
 		if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
 		else {
@@ -336,7 +292,7 @@ void CThread::process_packet(int user_id, char* buf)
 
 		}
 	}
-	//들어와 있는 놈들이 방금 들어온놈 확인
+	//들어와 있는 클라이언트 확인
 	for (int i = 0; i < CMatchMaking::GetInst()->getMatchRoom()[packet->room_id].size(); ++i) {
 		if (CMatchMaking::GetInst()->getMatchRoom()[packet->room_id][i] == user_id) continue;
 		else
@@ -348,7 +304,6 @@ void CThread::process_packet(int user_id, char* buf)
 
 	case C2S_FIND_ROOM:
 	{
-		cout << "FIND ROOM" << endl;
 		if (CMatchMaking::GetInst()->getMatch2by2Size() > 0) {
 			for (auto room : CMatchMaking::GetInst()->getMatchRoom()) {
 				CServer::GetInst()->send_current_room(user_id, room.first, room.second.size(), 4,
@@ -390,18 +345,11 @@ void CThread::process_packet(int user_id, char* buf)
 	break;
 	case C2S_GAMESTART:
 	{
-		cout << "C2S_GAMESTRAT" << endl;
 		cs_packet_lobby_gamestart* packet = reinterpret_cast<cs_packet_lobby_gamestart*>(buf);
 		if (packet->id == user_id) {
 			if (SHARED_DATA::g_clients[user_id].m_isHost) {
-				//for (auto& cl : SHARED_DATA::g_clients) {
-				//	if(cl.second.room_id == user_id)
-				//		CService::GetInst()->enter_game(cl.second.m_id);
-				//}
-				//플레이어 진입 후 미니언 생성 시작
 				CSceneMgr::GetInst()->Init(user_id);
 				CService::GetInst()->add_timer(user_id, OP_UPDATE, 10);
-				
 			}
 
 		}

@@ -33,9 +33,9 @@ void Network::Init()
 	//긱사 포트포워딩 121.190.132.143 : 8012
 	//10.30.2.19
 	string ip;
-	cout << "IP :";
-	cin >> ip;
-	ServerAddr.sin_addr.s_addr = inet_addr(ip.c_str());
+	//cout << "IP :";
+	//cin >> ip;
+	ServerAddr.sin_addr.s_addr = inet_addr("192.168.207.191");
 	m_Client.socket_info.serverAddr = ServerAddr;
 	m_Client.socket_info.connect = false;
 

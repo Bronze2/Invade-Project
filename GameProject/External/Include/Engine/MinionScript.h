@@ -42,7 +42,16 @@ class CMinionScript :
 
     MINION_ATTACK_TYPE m_eAttackType;
     bool m_bSeparate;
+    int m_id;
+    
+    //Ã¼·Â¹Ù
+    CGameObject* m_pHPBar;
+    float m_fHPBarHeight;
+
+    int dieCount = 0;
+
 public:
+    void SetHp(int hp) { m_iCurHp = hp; }
     void CheckHp();
     CLONE(CMinionScript)
     void Init();
@@ -58,8 +67,8 @@ public:
     const CAMP_STATE& GetCamp()const { return m_eCamp; }
 
     void SetSeparate(bool _bSeparate) { m_bSeparate = _bSeparate; }
-
-    
+    int m_GetId() { return m_id; }
+    void m_SetId(int id) { m_id = id; }
     virtual void OnDetectionEnter(CGameObject* _pOther);
     virtual void OnDetection(CGameObject* _pOther);
     virtual void OnDetectionExit(CGameObject* _pOther);
@@ -75,6 +84,7 @@ public:
 
     void CheckRange();
 
+    void SetDamage(const int& _Damage);
 
     void FindNearObject(const vector<CGameObject*>& _pObject);
     

@@ -33,11 +33,15 @@ void CTowerScript::GetDamage(const UINT& _uiDamage)
 {
 
 	if (GameDone == 1) return;
+	if (GameDone == 2) return;
 	if (m_pTarget != nullptr || m_eType == TOWER_TYPE::NEXUS) {
 		m_iCurHp -= _uiDamage;
 	}
 
 	if (m_iCurHp <= 0.f) {
+
+
+
 		if (m_eCampState == CAMP_STATE::BLUE) {
 			for (auto& p : CSceneMgr::GetInst()->GetCurScene(index)->FindLayer(L"Red")->GetParentObj()) {       
 				if (nullptr != p->GetScript<CMinionScript>()) {
@@ -60,14 +64,18 @@ void CTowerScript::GetDamage(const UINT& _uiDamage)
 				}
 			}
 		}
-		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
 
 		if (TOWER_TYPE::NEXUS == m_eType) {
 			cout << " NEXSUS BOOM" << endl;
 			GameDone = 1;
 			EndTime = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(3000);
 		}
-		DeleteObject(GetObj());
+		else {
+			GameDone = 2;
+		}
+
+		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
+
 	}
 	else {
 		CServer::GetInst()->send_damage_tower(m_GetId(), m_iCurHp, m_eCampState);
@@ -157,9 +165,12 @@ void CTowerScript::Update()
 		if (EndTime < std::chrono::high_resolution_clock::now()) {
 			CSceneMgr::GetInst()->EndGame(index);
 			GameDone = 2;
+
 		}
 	}
 	else if (GameDone == 2) {
+		if(GetObj() != nullptr)
+			DeleteObject(GetObj());
 	}
 }
 

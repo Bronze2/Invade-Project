@@ -81,10 +81,7 @@ CSceneMgr::~CSceneMgr()
 
 void CSceneMgr::Init(int index)
 {
-	// 필요한 리소스 로딩
-	// Texture 로드
 	isEndGame = false;
-	//m_arrScene[(UINT)SCENE_TYPE::LOBBY] = new CLobbyScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME] = new CInGameScene;
 	m_arrScene[(UINT)SCENE_TYPE::INGAME]->SetName(L"PlayScene");
 	m_pCurScene[index] = m_arrScene[(UINT)SCENE_TYPE::INGAME];
@@ -93,7 +90,6 @@ void CSceneMgr::Init(int index)
 
 	for (auto& cl : SHARED_DATA::g_clients) {
 		if (cl.second.room_id == index) {
-			cout << "ID ["<<cl.second.m_id << "] 방입장 패킷 전송" << endl;
 			CService::GetInst()->enter_game(cl.second.m_id);
 		}
 	}
@@ -112,9 +108,6 @@ void CSceneMgr::Update()
 			CEventMgr::GetInst()->Update(scene.first);
 		}
 	}
-
-
-	// 충돌 처리
 
 }
 

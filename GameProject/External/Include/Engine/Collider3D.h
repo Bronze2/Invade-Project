@@ -19,11 +19,15 @@ private:
     Matrix m_matColWorld;
     UINT m_iColID;
     BoundingBox m_bBound;
+    Matrix m_matColWorldNotify;
 
 public:
     virtual void Update();
     virtual void FinalUpdate();
 
+    const Matrix& GetColliderWorldMatNotify() {
+        return m_matColWorldNotify;
+    }
     BoundingBox GetBox() { return m_bBound; }
     void Render();
 

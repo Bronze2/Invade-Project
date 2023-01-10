@@ -1,5 +1,17 @@
 #pragma once
 #include "Entity.h"
+#include <FMOD/fmod.hpp>
+namespace {
+    FMOD_VECTOR VecToFMOD(const Vec3& _In)
+    {
+        FMOD_VECTOR v;
+        v.x = _In.x;
+        v.y = _In.y;
+        v.z = _In.z;
+        return v;
+    }
+}
+
 class CResource :
     public CEntity
 {

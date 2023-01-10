@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 constexpr auto BUF_SIZE = 8192;
+
 //int NPC_ID_START = 10000;
 #define MAX_BUF	8192
 #define MAX_PACKET_SIZE	8192
@@ -28,6 +29,7 @@ struct RoomInfo {
 	int room_id;
 	int roomMaxUser;
 	int roomCurrentUser;
+	char room_name[100];
 };
 
 struct CLIENT {
@@ -38,6 +40,9 @@ struct CLIENT {
 	p_Vec3 pos;
 	p_Vec3 rot;
 	p_Vec3 dir;
+	ELEMENT_TYPE skill;
+	char name[100];
+
 };
 
 struct OTHER_CLINET {
@@ -47,6 +52,8 @@ struct OTHER_CLINET {
 	p_Vec3 pos;
 	p_Vec3 rot;
 	p_Vec3 dir;
+	ELEMENT_TYPE skill;
+	char name[100];
 };
 
 
@@ -68,14 +75,28 @@ public:
 	void send_rotation_packet(Vec3 Rot);
 	void send_game_start_packet();
 	void send_attack_ready_packet(int id,int state);
-	void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp);
+	
+
+	//void send_arrow_packet(int ArrowId, Vec3 Pos, Vec3 Rot, Vec3 Dir, float Power, CAMP_STATE camp, PACKET_SKILL skill);
+	void send_arrow_packet(int ArrowId, PACKET_SKILL skill);
+	void send_update_arrow_move(int arrow_id, Vec3 LocalPos, Vec4 Quaternion);
+	void send_collision_arrow(int arrow_id, int coll_id, PACKET_COLLTYPE coll_type , CAMP_STATE camp);
 	void send_move_block_packet(int Client_id, Vec3 Pos);
-
+	void send_player_helemt(int id, Vec3 LocalPos, Vec4 Quaternion, Vec3 LocalRot, Vec3 RevolutionRot);
 	//Room
-	void send_make_room_packet( MATCH_TYPE match_type);
+	void send_make_room_packet( MATCH_TYPE match_type, char RoomName[255]);
 	void send_enter_room_packet(int room_id);
+	void send_lobby_ready(bool isReady);
+	void send_lobby_change_skill(ELEMENT_TYPE skill);
+	void send_chat_msg(char msg[100]);
+	void send_create_Box(int id);
+	void send_arrow_skill(int id, PACKET_SKILL skill);
+	void send_arrow_particle(int id, PACKET_SKILL skill);
+	void send_player_die(int id);
+	void send_search_room_pacekt();
 
-
+	void send_arrow_create_skill(Vec3 LocalPos, PACKET_SKILL skill);
+	void send_set_damage(int id, int damage, PACKET_COLLTYPE coll_type, CAMP_STATE camp);
 	bool getClientConnect() { return m_Client.socket_info.connect; };
 
 	int getOtherClientCount() {	return m_OtherClientCount; };
@@ -86,6 +107,16 @@ public:
 	CLIENT getMainClient() { return m_Client; };
 	void debug_checkclient();
 	vector<RoomInfo> roomInfo;
+
+	int Blue[4];
+	int Red[4];
+	bool isNewState = false;
+
+
+	char veiwChatItmes[13][100];
+	int chatCount = 0;
+	bool ChatisMax = false;
+
 
 private:
 	CLIENT m_Client;
@@ -98,5 +129,10 @@ private:
 	int my_room_id;
 	int enter_count = 1;
 	int current_enter_count = 0;
+
+
+
+
+
 };
 

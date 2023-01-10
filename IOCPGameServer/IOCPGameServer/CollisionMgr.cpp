@@ -27,7 +27,6 @@ void CCollisionMgr::Update(int index)
 		{
 			if (m_LayerCheck[i] & (1 << j))
 			{
-				// i <= j
 				CollisionLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
 				Collision3DLayer(pCurScene->GetLayer(i), pCurScene->GetLayer(j));
 			}

@@ -25,6 +25,7 @@ public:
 
     COMPONENT_TYPE GetComponentType() { return m_eComType; }
     CGameObject* GetObj() { return m_pObject; }
+    CTrailRenderer* TrailRenderer() { return m_pObject->TrailRenderer(); }
     CTransform* Transform() { return m_pObject->Transform(); }
     CMeshRender* MeshRender() { return m_pObject->MeshRender(); }
     CAnimator2D* Animator2D() { return m_pObject->Animator2D(); }

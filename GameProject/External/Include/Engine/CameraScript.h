@@ -24,7 +24,10 @@ private:
 
     CAMERA_EFFECT_TYPE m_tEffectType;
 
+    bool m_bWind0Camera;
 
+    // 사망수정
+    bool m_bDead;
 
 public:
 
@@ -32,6 +35,9 @@ public:
     virtual ~CCameraScript();
 
     virtual void Update();
+
+    void SetDead(bool _bTrue) { m_bDead = _bTrue; }
+    bool GetDead() { return m_bDead; }
 
     float GetDegree() { return m_fDegree; }
 
@@ -42,6 +48,8 @@ public:
 
     void SetBackMode(bool _bTrue) { m_bBackMode = _bTrue; }
     void SetBackRestorePos(Vec3 _vPos) { m_vBackRestorePos = _vPos; }
+
+    void SetWind0Camera(bool _bTrue) { m_bWind0Camera = _bTrue; }
 
     void Init();
 

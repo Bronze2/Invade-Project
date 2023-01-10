@@ -42,14 +42,19 @@ private:
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D; // Deferred
     map<INT_PTR, vector<tInstObj>>		m_mapSingleObj; // Single Object
 
+    SimpleMath::Ray* m_pRay;
+
+public:
+
+
 
     CGameObject* m_pPlayer;
-    SimpleMath::Ray* m_pRay;
     Vec3 m_vLook;
     bool m_bPlayer = false;
     Vec3 m_vFront;
 
     vector<CGameObject*> m_arrInterSectObject;
+    vector<CGameObject*> m_vecPlayer;
     Matrix m_matCamera;
 public:
     void SetMatrixCamera(const Matrix& _mat) { m_matCamera = _mat; }
@@ -66,6 +71,7 @@ public:
     void Render();
     void Render_ShadowMap();
 
+    
     void ClearInterSectObject() { m_arrInterSectObject.clear(); }
 
     void SetModule(bool _bModule) { m_bModule = _bModule; }
@@ -76,6 +82,8 @@ public:
     void SetScale(float _fScale) { m_fScale = _fScale; if (m_fScale < 0.01f)m_fScale = 0.01f; Changed(); }
     void SetFov(float _fAngle) { m_fFOV = _fAngle; Changed(); }
     void SetNear(float _fNear) { m_fNear = _fNear; Changed(); }
+
+    void SetRay(Vec3 _vPos, Vec3 _vDir);
 
     float GetFar() { return m_fFar; }
     float GetScale() { return m_fScale; }

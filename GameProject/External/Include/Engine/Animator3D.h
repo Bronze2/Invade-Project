@@ -14,13 +14,13 @@ private:
 	const vector<tMTBone>* m_pVecBones;
 	const vector<tMTAnimClip>* m_pVecClip;
 
-	vector<float>					m_vecClipUpdateTime;
+	vector<float>               m_vecClipUpdateTime;
 
-	int							m_iFrameCount; // 30
-	double						m_dCurTime;
-	int							m_iCurClip; // ≈¨∏≥ ¿Œµ¶Ω∫
-	int							m_iNextClip;
-	double						m_dNextTime;
+	int                     m_iFrameCount; // 30
+	double                  m_dCurTime;
+	int                     m_iCurClip; // ≈¨∏≥ ¿Œµ¶Ω∫
+	int                     m_iNextClip;
+	double                  m_dNextTime;
 
 	int m_iFrameIdx;
 	int m_iNextFrameIdx;
@@ -37,9 +37,14 @@ private:
 	float m_fBlendMaxFrame;
 
 	CAnimation* m_pAnimation;
+	float m_fDegree;
+	float m_fAnimationSpeed;
 
 public:
 
+	void SetAnimationSpeed(const  float& _fSpeed) { m_fAnimationSpeed = _fSpeed; }
+
+	float GetBoneDegree() { return m_fDegree; }
 	void SetAnimation(CAnimation* _pAni) { m_pAnimation = _pAni; }
 	CAnimation* GetAnimation() { return m_pAnimation; }
 
@@ -47,6 +52,7 @@ public:
 	void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
 	void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
 
+	int GetCurClipIndex() { return m_iCurClip; }
 	void SetCurClipIndex(const UINT& _iCurClip) { m_iCurClip = _iCurClip; }
 	void SetNextClipIndex(const UINT& _iNextClip) { m_iNextClip = _iNextClip; }
 	int GetFrameIdx() { return m_iFrameIdx; }
@@ -98,4 +104,3 @@ public:
 	CAnimator3D();
 	virtual ~CAnimator3D();
 };
-

@@ -25,7 +25,7 @@ private:
 
     ComPtr<ID3D12PipelineState> m_pPipeLineState_CS;
     D3D12_COMPUTE_PIPELINE_STATE_DESC m_tCSStateDesc;
-    
+
 
 
     D3D_PRIMITIVE_TOPOLOGY				m_eTopology;
@@ -38,7 +38,7 @@ private:
     SHADER_POV m_ePov;
 
 public:
-    void Create(SHADER_POV _ePov,D3D_PRIMITIVE_TOPOLOGY _eTopology=D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    void Create(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     void CreateVertexShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateVertexInstShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreatePixelShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
@@ -46,7 +46,7 @@ public:
     void CreateComputeShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateHullShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
     void CreateDomainShader(const wstring& _strPath, const string& _strFuncName, const string& _strhlslVersion);
-
+    void CreateFontShader(SHADER_POV _ePov, D3D_PRIMITIVE_TOPOLOGY _eTopology);
 
     void SetBlendState(BLEND_TYPE _eType) { m_eBlendType = _eType; }
     void SetDepthStencilType(DEPTH_STENCIL_TYPE _eType) { m_eDSType = _eType; }
